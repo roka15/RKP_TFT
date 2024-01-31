@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs />
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>C:\Users\skagu\OneDrive\Desktop\Yeram\[P]TFT\AR46_3D\External\Library\Engine\animation3d.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\skagu\OneDrive\Desktop\Yeram\[P]TFT\AR46_3D\External\Library\Engine\copybone.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\skagu\OneDrive\Desktop\Yeram\[P]TFT\AR46_3D\External\Library\Engine\decal.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\skagu\OneDrive\Desktop\Yeram\[P]TFT\AR46_3D\External\Library\Engine\heightmap.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\skagu\OneDrive\Desktop\Yeram\[P]TFT\AR46_3D\External\Library\Engine\landscape.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\skagu\OneDrive\Desktop\Yeram\[P]TFT\AR46_3D\External\Library\Engine\light.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\skagu\OneDrive\Desktop\Yeram\[P]TFT\AR46_3D\External\Library\Engine\raycast.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\skagu\OneDrive\Desktop\Yeram\[P]TFT\AR46_3D\External\Library\Engine\skybox.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\skagu\OneDrive\Desktop\Yeram\[P]TFT\AR46_3D\External\Library\Engine\std3d.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\skagu\OneDrive\Desktop\Yeram\[P]TFT\AR46_3D\External\Library\Engine\std3d_deferred.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\skagu\OneDrive\Desktop\Yeram\[P]TFT\AR46_3D\External\Library\Engine\tess.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\skagu\OneDrive\Desktop\Yeram\[P]TFT\AR46_3D\External\Library\Engine\test.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\skagu\OneDrive\Desktop\Yeram\[P]TFT\AR46_3D\External\Library\Engine\weightmap.cso</FullPath>
+    </ContentFile>
+  </ContentFiles>
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>
