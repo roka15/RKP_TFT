@@ -35,4 +35,10 @@
 *.out
 *.app
 
+
+*.pdb
+*.idb
+*.cso
+
+
 # End of https://www.toptal.com/developers/gitignore/api/c++
