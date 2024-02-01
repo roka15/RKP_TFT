@@ -15,10 +15,7 @@ class CMeshData :
 		Ptr<CMesh> m_pMesh;
 		vector<Ptr<CMaterial>>	m_vecMtrl;
 	};
-	vector<CMeshDataNode> m_vecDataNode;
-	Ptr<CMesh>				m_pMesh;
-	vector<Ptr<CMaterial>>	m_vecMtrl;
-
+	vector<CMeshDataNode*> m_vecDataNode;
 public:
 	static CMeshData* LoadFromFBX(const wstring& _strFilePath);
 

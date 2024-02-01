@@ -474,6 +474,8 @@ void CFBXLoader::CreateMesh()
 		std::wstring strMeshName = m_vecContainer[i].strName;
 		strPath = L"mesh\\";
 		strPath += strMeshName + L".mesh";
+		m_vecContainer[i].strName = strPath;
+
 		Ptr<CMesh> pMesh = nullptr;
 		pMesh = CResMgr::GetInst()->FindRes<CMesh>(strPath);
 		if (pMesh != nullptr)
@@ -481,7 +483,7 @@ void CFBXLoader::CreateMesh()
 			continue;
 		}
 
-		pMesh = CMesh::CreateFromContainer(*this);
+		pMesh = CMesh::CreateFromContainer(*this,i);
 		pMesh->SetName(strMeshName);
 		pMesh->SetKey(strPath);
 		pMesh->SetRelativePath(strPath);

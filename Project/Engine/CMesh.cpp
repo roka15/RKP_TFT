@@ -35,9 +35,9 @@ CMesh::~CMesh()
 }
 
 
-CMesh* CMesh::CreateFromContainer(CFBXLoader& _loader)
+CMesh* CMesh::CreateFromContainer(CFBXLoader& _loader, int _idx)
 {
-	const tContainer* container = &_loader.GetContainer(0);
+	const tContainer* container = &_loader.GetContainer(_idx);
 
 	UINT iVtxCount = (UINT)container->vecPos.size();
 
