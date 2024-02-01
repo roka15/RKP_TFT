@@ -115,11 +115,23 @@ void CreateTestLevel()
 		pObj->SetName(L"Attrox");
 		SpawnGameObject(pObj, Vec3(0 * 300.f, 200.f, 500.f), 0);
 
-	/*	pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\AhriIdleResult8.fbx");
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Leona.fbx");
+		pObj = nullptr;
 		pObj = pMeshData->Instantiate();
-		pObj->SetName(L"AhriIdleResult8");
-		SpawnGameObject(pObj, Vec3(1 * 300.f, 200.f, 500.f), 0);*/
+		pObj->SetName(L"Leona");
+		SpawnGameObject(pObj, Vec3(1 * 300.f, 200.f, 500.f), 0);
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Ezreal.fbx");
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Ezreal");
+		SpawnGameObject(pObj, Vec3(2 * 300.f, 200.f, 500.f), 0);
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Ahri2.fbx");
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Ahri");
+		SpawnGameObject(pObj, Vec3(3 * 300.f, 200.f, 500.f), 0);
 	}
+
 	//{
 	//	// 인스턴싱 테스트
 	//	Ptr<CMeshData> pMeshData = nullptr;
