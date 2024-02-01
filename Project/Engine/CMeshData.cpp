@@ -60,7 +60,6 @@ CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath)
 
 	// 메쉬 가져오기
 	CMesh* pMesh = nullptr;
-	pMesh = CMesh::CreateFromContainer(loader);
 
 	// ResMgr 에 메쉬 등록
 	if (nullptr != pMesh)
@@ -86,6 +85,7 @@ CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath)
 
 		vecMtrl.push_back(pMtrl);
 	}
+
 
 	CMeshData* pMeshData = new CMeshData(true);
 	pMeshData->m_pMesh = pMesh;

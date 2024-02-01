@@ -120,6 +120,7 @@ private:
 	wstring GetMtrlTextureName(FbxSurfaceMaterial* _pSurface, const char* _pMtrlProperty);
 
 	void LoadTexture();
+	void CreateMesh();
 	void CreateMaterial();
 
 	// Animation

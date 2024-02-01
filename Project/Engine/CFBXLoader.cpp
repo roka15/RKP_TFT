@@ -97,6 +97,8 @@ void CFBXLoader::LoadFbx(const wstring& _strPath)
 	// 필요한 텍스쳐 로드
 	LoadTexture();
 
+	// 필요한 메쉬 생성
+	CreateMesh();
 	// 필요한 메테리얼 생성
 	CreateMaterial();
 }
@@ -462,6 +464,32 @@ void CFBXLoader::LoadTexture()
 		path_origin = path_origin.parent_path();
 		remove_all(path_origin);
 	}
+}
+
+void CFBXLoader::CreateMesh()
+{
+	wstring strPath;
+	for (UINT i = 0; i < m_vecContainer.size(); ++i)
+	{
+		std::wstring strMeshName = m_vecContainer[i].strName;
+		strPath = L"mesh\\";
+		strPath += strMeshName + L".mesh";
+		Ptr<CMesh> pMesh = nullptr;
+		pMesh = CResMgr::GetInst()->FindRes<CMesh>(strPath);
+		if (pMesh != nullptr)
+		{
+			continue;
+		}
+
+		pMesh = CMesh::CreateFromContainer(*this);
+		pMesh->SetName(strMeshName);
+		pMesh->SetKey(strPath);
+		pMesh->SetRelativePath(strPath);
+		
+		CResMgr::GetInst()->AddRes(pMesh->GetKey(), pMesh);
+		pMesh->Save(strPath);
+	}
+
 }
 
 void CFBXLoader::CreateMaterial()

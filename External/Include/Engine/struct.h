@@ -19,7 +19,6 @@ struct tVertex
 
 typedef tVertex Vtx;
 
-
 //Texture UserMapping Info
 struct tTextureMappingData
 {

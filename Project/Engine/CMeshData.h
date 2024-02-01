@@ -9,6 +9,13 @@
 class CMeshData :
 	public CRes
 {
+	class CMeshDataNode
+	{
+	public:
+		Ptr<CMesh> m_pMesh;
+		vector<Ptr<CMaterial>>	m_vecMtrl;
+	};
+	vector<CMeshDataNode> m_vecDataNode;
 	Ptr<CMesh>				m_pMesh;
 	vector<Ptr<CMaterial>>	m_vecMtrl;
 
