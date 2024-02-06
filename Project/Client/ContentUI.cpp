@@ -87,6 +87,9 @@ void ContentUI::Reload()
 		case RES_TYPE::SOUND:
 			CResMgr::GetInst()->Load<CSound>(m_vecResPath[i], m_vecResPath[i]);
 			break;		
+		case RES_TYPE::ANICLIP:
+			CResMgr::GetInst()->Load<CAniClip>(m_vecResPath[i], m_vecResPath[i]);
+			break;
 		}
 	}
 
@@ -205,6 +208,8 @@ RES_TYPE ContentUI::GetResTypeByExt(const wstring& _relativepath)
 		return RES_TYPE::TEXTURE;
 	else if (L".mp3" == strExt || L".wav" == strExt || L".oga" == strExt)
 		return RES_TYPE::SOUND;
+	else if (L".anim" == strExt)
+		return RES_TYPE::ANICLIP;
 	else
 		return RES_TYPE::END;
 }

@@ -64,6 +64,7 @@ enum class RES_TYPE
 	MESH,			// 형태
 	TEXTURE,		// 이미지
 	SOUND,
+	ANICLIP,
 
 	GRAPHICS_SHADER,
 	COMPUTE_SHADER,

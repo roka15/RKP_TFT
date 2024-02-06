@@ -109,13 +109,7 @@ void CreateTestLevel()
 	{
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* pObj = nullptr;
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Attrox.fbx");
-		pObj = nullptr;
-		pObj = pMeshData->Instantiate();
-		pObj->SetName(L"Attrox");
-		SpawnGameObject(pObj, Vec3(0 * 300.f, 200.f, 500.f), 0);
-
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Leona.fbx");
+		/*pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Leona.fbx");
 		pObj = nullptr;
 		pObj = pMeshData->Instantiate();
 		pObj->SetName(L"Leona");
@@ -129,7 +123,13 @@ void CreateTestLevel()
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Ahri2.fbx");
 		pObj = pMeshData->Instantiate();
 		pObj->SetName(L"Ahri");
-		SpawnGameObject(pObj, Vec3(3 * 300.f, 200.f, 500.f), 0);
+		SpawnGameObject(pObj, Vec3(3 * 300.f, 200.f, 500.f), 0);*/
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Attrox.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Attrox");
+		SpawnGameObject(pObj, Vec3(0 * 300.f, 200.f, 500.f), 0);
 	}
 
 	//{

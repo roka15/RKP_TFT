@@ -1,5 +1,11 @@
 #include "pch.h"
 
+#include "C:\Users\skagu\OneDrive\Desktop\Yeram\[P]RK_TFT\Project\Engine\CGameObject.cpp"
+
+
+#include "C:\Users\skagu\OneDrive\Desktop\Yeram\[P]RK_TFT\Project\Engine\CGraphicsShader.cpp"
+
+
 #include "C:\Users\skagu\OneDrive\Desktop\Yeram\[P]RK_TFT\Project\Engine\CHeightMapShader.cpp"
 
 
@@ -55,7 +61,4 @@
 
 
 #include "C:\Users\skagu\OneDrive\Desktop\Yeram\[P]RK_TFT\Project\Engine\CPrefab.cpp"
-
-
-#include "C:\Users\skagu\OneDrive\Desktop\Yeram\[P]RK_TFT\Project\Engine\CRaycastShader.cpp"
 

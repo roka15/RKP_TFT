@@ -44,14 +44,12 @@ CGameObject* CMeshData::Instantiate()
 			pNewObj->MeshRender()->SetMaterial(vecMaterial[i], i);
 		}
 		// Animation 파트 추가
-		if (false == pMesh->IsAnimMesh())
+		if (false == pMesh->IsAni())
 			return pNewObj;
 
 		CAnimator3D* pAnimator = new CAnimator3D;
 		pNewObj->AddComponent(pAnimator);
-
-		pAnimator->SetBones(pMesh->GetBones());
-		pAnimator->SetAnimClip(pMesh->GetAnimClip());
+		pAnimator->SetAnimClip(pMesh->GetAniClipList());
 
 		parrentObj->AddChild(pNewObj);
 	}

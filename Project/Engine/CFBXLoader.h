@@ -80,6 +80,7 @@ struct tAnimClip
 
 
 class CMesh;
+class CAniClip;
 
 class CFBXLoader
 {
@@ -94,8 +95,6 @@ private:
 	vector<tBone*>					m_vecBone;
 	FbxArray<FbxString*>			m_arrAnimName;
 	vector<tAnimClip*>				m_vecAnimClip;
-
-
 public:
 	void init();
 	void LoadFbx(const wstring& _strPath);
@@ -122,7 +121,7 @@ private:
 	void LoadTexture();
 	void CreateMesh();
 	void CreateMaterial();
-
+	
 	// Animation
 	void LoadSkeleton(FbxNode* _pNode);
 	void LoadSkeleton_Re(FbxNode* _pNode, int _iDepth, int _iIdx, int _iParentIdx);
@@ -131,10 +130,9 @@ private:
 
 	void LoadAnimationData(FbxMesh* _pMesh, tContainer* _pContainer);
 	void LoadWeightsAndIndices(FbxCluster* _pCluster, int _iBoneIdx, tContainer* _pContainer);
-	void LoadOffsetMatrix(FbxCluster* _pCluster, const FbxAMatrix& _matNodeTransform, int _iBoneIdx, tContainer* _pContainer);
-	void LoadKeyframeTransform(FbxNode* _pNode, FbxCluster* _pCluster, const FbxAMatrix& _matNodeTransform
-		, int _iBoneIdx, tContainer* _pContainer);
-
+	void LoadOffsetMatrix(FbxCluster* _pCluster, const FbxAMatrix& _matNodeTransform, int _iBoneIdx);
+	void LoadKeyframeTransform(FbxNode* _pNode, FbxCluster* _pCluster, const FbxAMatrix& _matNodeTransform, int _iBoneIdx);
+	void AniClipPostProcess();
 	int FindBoneIndex(string _strBoneName);
 	FbxAMatrix GetTransform(FbxNode* _pNode);
 

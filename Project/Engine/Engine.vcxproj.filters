@@ -196,6 +196,12 @@
     <ClInclude Include="CCopyBoneShader.h">
       <Filter>Source\08. ShaderCode\Compute\CopyBone</Filter>
     </ClInclude>
+    <ClInclude Include="CAniClip.h">
+      <Filter>Source\07. Resource\8.AniClip</Filter>
+    </ClInclude>
+    <ClInclude Include="CAnimation3D.h">
+      <Filter>Source\06. Component\7. Animator3D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -383,6 +389,12 @@
     </ClCompile>
     <ClCompile Include="CCopyBoneShader.cpp">
       <Filter>Source\08. ShaderCode\Compute\CopyBone</Filter>
+    </ClCompile>
+    <ClCompile Include="CAniClip.cpp">
+      <Filter>Source\07. Resource\8.AniClip</Filter>
+    </ClCompile>
+    <ClCompile Include="CAnimation3D.cpp">
+      <Filter>Source\06. Component\7. Animator3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -583,6 +595,9 @@
     </Filter>
     <Filter Include="Source\08. ShaderCode\Compute\CopyBone">
       <UniqueIdentifier>{11818a48-63da-42c7-b283-5985397f9429}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\07. Resource\8.AniClip">
+      <UniqueIdentifier>{54f03193-0bbc-4aa5-a9ee-26a63cd4d9b9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

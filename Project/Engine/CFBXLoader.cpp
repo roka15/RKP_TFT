@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "CFBXLoader.h"
 #include "CMesh.h"
-
+#include "CAniClip.h"
+#include "CAnimation3D.h"
 #include "CResMgr.h"
 #include "CPathMgr.h"
 
@@ -108,13 +109,13 @@ void CFBXLoader::LoadMeshDataFromNode(FbxNode* _pNode)
 	// 노드의 메쉬정보 읽기
 	FbxNodeAttribute* pAttr = _pNode->GetNodeAttribute();
 
-
 	if (pAttr && FbxNodeAttribute::eMesh == pAttr->GetAttributeType())
 	{
 		FbxAMatrix matGlobal = _pNode->EvaluateGlobalTransform();
 		matGlobal.GetR();
 
 		FbxMesh* pMesh = _pNode->GetMesh();
+		pMesh->SetName(_pNode->GetName());
 		if (NULL != pMesh)
 			LoadMesh(pMesh);
 	}
@@ -469,6 +470,7 @@ void CFBXLoader::LoadTexture()
 void CFBXLoader::CreateMesh()
 {
 	wstring strPath;
+	Ptr<CMesh> pMesh = nullptr;
 	for (UINT i = 0; i < m_vecContainer.size(); ++i)
 	{
 		std::wstring strMeshName = m_vecContainer[i].strName;
@@ -476,22 +478,22 @@ void CFBXLoader::CreateMesh()
 		strPath += strMeshName + L".mesh";
 		m_vecContainer[i].strName = strPath;
 
-		Ptr<CMesh> pMesh = nullptr;
 		pMesh = CResMgr::GetInst()->FindRes<CMesh>(strPath);
 		if (pMesh != nullptr)
 		{
 			continue;
 		}
 
-		pMesh = CMesh::CreateFromContainer(*this,i);
+		pMesh = CMesh::CreateFromContainer(*this, i);
 		pMesh->SetName(strMeshName);
 		pMesh->SetKey(strPath);
 		pMesh->SetRelativePath(strPath);
-		
+
 		CResMgr::GetInst()->AddRes(pMesh->GetKey(), pMesh);
 		pMesh->Save(strPath);
 	}
-
+	
+	
 }
 
 void CFBXLoader::CreateMaterial()
@@ -560,6 +562,8 @@ void CFBXLoader::CreateMaterial()
 	}
 }
 
+
+
 void CFBXLoader::LoadSkeleton(FbxNode* _pNode)
 {
 	int iChildCount = _pNode->GetChildCount();
@@ -602,8 +606,6 @@ void CFBXLoader::LoadAnimationClip()
 
 		//FbxAnimEvaluator* pevaluator = m_pScene->GetAnimationEvaluator();
 		//m_pScene->SetCurrentAnimationStack();
-
-
 		if (!pAnimStack)
 			continue;
 
@@ -618,8 +620,6 @@ void CFBXLoader::LoadAnimationClip()
 
 		pAnimClip->eMode = m_pScene->GetGlobalSettings().GetTimeMode();
 		pAnimClip->llTimeLength = pAnimClip->tEndTime.GetFrameCount(pAnimClip->eMode) - pAnimClip->tStartTime.GetFrameCount(pAnimClip->eMode);
-
-
 
 		m_vecAnimClip.push_back(pAnimClip);
 	}
@@ -654,7 +654,7 @@ void CFBXLoader::LoadAnimationData(FbxMesh* _pMesh, tContainer* _pContainer)
 		return;
 
 	_pContainer->bAnimation = true;
-
+	int iContainSize = m_vecContainer.size();
 	// Skin 개수만큼 반복을하며 읽는다.	
 	for (int i = 0; i < iSkinCount; ++i)
 	{
@@ -686,11 +686,19 @@ void CFBXLoader::LoadAnimationData(FbxMesh* _pMesh, tContainer* _pContainer)
 					// Weights And Indices 정보를 읽는다.
 					LoadWeightsAndIndices(pCluster, iBoneIdx, _pContainer);
 
-					// Bone 의 OffSet 행렬 구한다.
-					LoadOffsetMatrix(pCluster, matNodeTransform, iBoneIdx, _pContainer);
+					if (iContainSize == 1)
+					{
+						// Bone 의 OffSet 행렬 구한다.
+						LoadOffsetMatrix(pCluster, matNodeTransform, iBoneIdx);
 
-					// Bone KeyFrame 별 행렬을 구한다.
-					LoadKeyframeTransform(_pMesh->GetNode(), pCluster, matNodeTransform, iBoneIdx, _pContainer);
+						// Bone KeyFrame 별 행렬을 구한다.
+						LoadKeyframeTransform(_pMesh->GetNode(), pCluster, matNodeTransform, iBoneIdx);
+					}
+				}
+				//aniClip Struct Buffer
+				if (iContainSize == 1)
+				{
+					AniClipPostProcess();
 				}
 			}
 		}
@@ -711,9 +719,9 @@ void CFBXLoader::CheckWeightAndIndices(FbxMesh* _pMesh, tContainer* _pContainer)
 			// 가중치 값 순으로 내림차순 정렬
 			sort((*iter).begin(), (*iter).end()
 				, [](const tWeightsAndIndices& left, const tWeightsAndIndices& right)
-			{
-				return left.dWeight > right.dWeight;
-			}
+				{
+					return left.dWeight > right.dWeight;
+				}
 			);
 
 			double dWeight = 0.f;
@@ -752,16 +760,16 @@ void CFBXLoader::CheckWeightAndIndices(FbxMesh* _pMesh, tContainer* _pContainer)
 }
 
 void CFBXLoader::LoadKeyframeTransform(FbxNode* _pNode, FbxCluster* _pCluster
-	, const FbxAMatrix& _matNodeTransform, int _iBoneIdx, tContainer* _pContainer)
+	, const FbxAMatrix& _matNodeTransform, int _iBoneIdx)
 {
 	if (m_vecAnimClip.empty())
 		return;
 
-	FbxVector4	v1 = { 1, 0, 0, 0 };
-	FbxVector4	v2 = { 0, 0, 1, 0 };
-	FbxVector4	v3 = { 0, 1, 0, 0 };
-	FbxVector4	v4 = { 0, 0, 0, 1 };
-	FbxAMatrix	matReflect;
+	FbxVector4   v1 = { 1, 0, 0, 0 };
+	FbxVector4   v2 = { 0, 0, 1, 0 };
+	FbxVector4   v3 = { 0, 1, 0, 0 };
+	FbxVector4   v4 = { 0, 0, 0, 1 };
+	FbxAMatrix   matReflect;
 	matReflect.mData[0] = v1;
 	matReflect.mData[1] = v2;
 	matReflect.mData[2] = v3;
@@ -771,30 +779,58 @@ void CFBXLoader::LoadKeyframeTransform(FbxNode* _pNode, FbxCluster* _pCluster
 
 	FbxTime::EMode eTimeMode = m_pScene->GetGlobalSettings().GetTimeMode();
 
-	FbxLongLong llStartFrame = m_vecAnimClip[0]->tStartTime.GetFrameCount(eTimeMode);
-	FbxLongLong llEndFrame = m_vecAnimClip[0]->tEndTime.GetFrameCount(eTimeMode);
-
-	for (FbxLongLong i = llStartFrame; i < llEndFrame; ++i)
+	for (size_t i = 0; i < m_vecAnimClip.size(); ++i)
 	{
-		tKeyFrame tFrame = {};
-		FbxTime   tTime = 0;
+		// AnimClip 이름으로 AnimStack 을 가져온다.
+		string strAnimName = string(m_vecAnimClip[i]->strName.begin(), m_vecAnimClip[i]->strName.end());
+		FbxAnimStack* pAnimStack = m_pScene->FindMember<FbxAnimStack>(strAnimName.c_str());
 
-		tTime.SetFrame(i, eTimeMode);
+		// 애니메이션 행렬 정보를 받아올 AnimStack 을 설정한다.      
+		m_pScene->SetCurrentAnimationStack(pAnimStack);
 
-		FbxAMatrix matFromNode = _pNode->EvaluateGlobalTransform(tTime) * _matNodeTransform;
-		FbxAMatrix matCurTrans = matFromNode.Inverse() * _pCluster->GetLink()->EvaluateGlobalTransform(tTime);
-		matCurTrans = matReflect * matCurTrans * matReflect;
+		// AnimClip 의 행렬을 연산해서 각 뼈의 KeyFrame 행렬에 추가한다.
+		FbxLongLong llStartFrame = m_vecAnimClip[i]->tStartTime.GetFrameCount(eTimeMode);
+		FbxLongLong llEndFrame = m_vecAnimClip[i]->tEndTime.GetFrameCount(eTimeMode);
 
-		tFrame.dTime = tTime.GetSecondDouble();
-		tFrame.matTransform = matCurTrans;
+		vector<tKeyFrame> vecKeyFrames = {};
+		for (FbxLongLong j = llStartFrame; j < llEndFrame; ++j)
+		{
+			tKeyFrame tFrame = {};
+			FbxTime   tTime = 0;
 
-		m_vecBone[_iBoneIdx]->vecKeyFrame.push_back(tFrame);
+			tTime.SetFrame(j, eTimeMode);
+
+			FbxAMatrix matFromNode = _pNode->EvaluateGlobalTransform(tTime) * _matNodeTransform;
+			FbxAMatrix matCurTrans = matFromNode.Inverse() * _pCluster->GetLink()->EvaluateGlobalTransform(tTime);
+			matCurTrans = matReflect * matCurTrans * matReflect;
+
+			tFrame.dTime = tTime.GetSecondDouble();
+			tFrame.matTransform = matCurTrans;
+			vecKeyFrames.push_back(tFrame);
+		}
+
+		CAniClip::CreateBoneFrameData(*this, m_vecAnimClip[i], vecKeyFrames, _iBoneIdx);
 	}
 }
 
+void CFBXLoader::AniClipPostProcess()
+{
+	int iClipSize = m_vecAnimClip.size();
+	for (int i = 0; i < iClipSize; ++i)
+	{
+		wstring strClipPath = L"anim3D\\" + m_vecAnimClip[i]->strName + L".anim";
+		Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(strClipPath);
+		pClip->CreateStructBuffer();
+		pClip->SetName(m_vecAnimClip[i]->strName);
+		pClip->SetKey(strClipPath);
+		pClip->SetRelativePath(strClipPath);
+		
+		pClip->Save(strClipPath);
+	}
+}
 void CFBXLoader::LoadOffsetMatrix(FbxCluster* _pCluster
 	, const FbxAMatrix& _matNodeTransform
-	, int _iBoneIdx, tContainer* _pContainer)
+	, int _iBoneIdx)
 {
 	FbxAMatrix matClusterTrans;
 	FbxAMatrix matClusterLinkTrans;

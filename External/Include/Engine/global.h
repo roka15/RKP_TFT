@@ -18,6 +18,7 @@ using std::string;
 
 // FileSystem
 #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
+#include <fstream>
 #include <experimental/filesystem>
 using namespace std::experimental;
 using namespace std::experimental::filesystem;

@@ -9,6 +9,7 @@
 #include "CMaterial.h"
 #include "CPrefab.h"
 #include "CSound.h"
+#include "CAniClip.h"
 #include "CMeshData.h"
 
 #include "CPathMgr.h"
@@ -77,6 +78,7 @@ RES_TYPE GetResType()
     const type_info& material = typeid(CMaterial);
     const type_info& texture = typeid(CTexture);
     const type_info& sound = typeid(CSound);
+    const type_info& clip = typeid(CAniClip);
     const type_info& prefab = typeid(CPrefab);
     const type_info& gs = typeid(CGraphicsShader);
     const type_info& cs = typeid(CComputeShader);
@@ -97,6 +99,8 @@ RES_TYPE GetResType()
         return RES_TYPE::PREFAB;
     if (typeid(T).hash_code() == sound.hash_code())
         return RES_TYPE::SOUND;
+    if (typeid(T).hash_code() == clip.hash_code())
+        return RES_TYPE::ANICLIP;
 
     return RES_TYPE::END;
 }

@@ -1,5 +1,14 @@
 #include "pch.h"
 
+#include "C:\Users\skagu\OneDrive\Desktop\Yeram\[P]RK_TFT\Project\Engine\CAniClip.cpp"
+
+
+#include "C:\Users\skagu\OneDrive\Desktop\Yeram\[P]RK_TFT\Project\Engine\CAnimation3D.cpp"
+
+
+#include "C:\Users\skagu\OneDrive\Desktop\Yeram\[P]RK_TFT\Project\Engine\CEngine.cpp"
+
+
 #include "C:\Users\skagu\OneDrive\Desktop\Yeram\[P]RK_TFT\Project\Engine\CAnim2D.cpp"
 
 
@@ -52,10 +61,4 @@
 
 
 #include "C:\Users\skagu\OneDrive\Desktop\Yeram\[P]RK_TFT\Project\Engine\CFrustum.cpp"
-
-
-#include "C:\Users\skagu\OneDrive\Desktop\Yeram\[P]RK_TFT\Project\Engine\CGameObject.cpp"
-
-
-#include "C:\Users\skagu\OneDrive\Desktop\Yeram\[P]RK_TFT\Project\Engine\CGraphicsShader.cpp"
 
