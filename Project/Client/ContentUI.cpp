@@ -208,7 +208,7 @@ RES_TYPE ContentUI::GetResTypeByExt(const wstring& _relativepath)
 		return RES_TYPE::TEXTURE;
 	else if (L".mp3" == strExt || L".wav" == strExt || L".oga" == strExt)
 		return RES_TYPE::SOUND;
-	else if (L".anim" == strExt)
+	else if (L".anm" == strExt)
 		return RES_TYPE::ANICLIP;
 	else
 		return RES_TYPE::END;

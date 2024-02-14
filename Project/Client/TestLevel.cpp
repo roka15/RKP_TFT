@@ -85,9 +85,9 @@ void CreateTestLevel()
 	pLightObj->Transform()->SetRelativeRot(Vec3(XM_PI / 4.f, XM_PI / 4.f, 0.f));
 	pLightObj->Light3D()->SetLightType(LIGHT_TYPE::DIRECTIONAL);
 	pLightObj->Light3D()->SetRadius(500.f);
-	pLightObj->Light3D()->SetLightColor(Vec3(1.f, 1.f, 1.f));	
+	pLightObj->Light3D()->SetLightColor(Vec3(1.f, 1.f, 1.f));
 	pLightObj->Light3D()->SetLightAmbient(Vec3(0.f, 0.f, 0.f));
-	
+
 	SpawnGameObject(pLightObj, Vec3(-2000, 2000.f, -2000.f), 0);
 
 	CGameObject* pObj = new CGameObject;
@@ -99,7 +99,7 @@ void CreateTestLevel()
 	pObj->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100));
 	pObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
 	pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
-	
+
 
 	SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), 0);
 
@@ -129,7 +129,20 @@ void CreateTestLevel()
 		pObj = nullptr;
 		pObj = pMeshData->Instantiate();
 		pObj->SetName(L"Attrox");
-		SpawnGameObject(pObj, Vec3(0 * 300.f, 200.f, 500.f), 0);
+		SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), 0);
+
+
+		CGameObject* pNewObj = new CGameObject;
+		pNewObj->SetName(L"Cube");
+		pNewObj->AddComponent(new CTransform);
+		pNewObj->AddComponent(new CMeshRender);
+		pNewObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+
+
+		pNewObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"),0);
+
+		pNewObj->Transform()->SetRelativeScale(Vec3(500.f, 500.f, 500.f));
+		SpawnGameObject(pNewObj, Vec3(0.f, 0.f, 0.f), 0);
 	}
 
 	//{
@@ -171,5 +184,5 @@ void CreateTestLevel()
 	//SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 0);
 
 	// 충돌 시킬 레이어 짝 지정
-	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");	
+	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");
 }

@@ -37,6 +37,7 @@ struct tContainer
 
 	// Animation 관련 정보
 	bool								bAnimation;
+
 	vector<vector<tWeightsAndIndices>>	vecWI;
 
 	void Resize(UINT _iSize)
@@ -65,12 +66,14 @@ struct tBone
 	int					iParentIndx;	// 부모 Bone 의 인덱스
 	FbxAMatrix			matOffset;		// Offset 행렬( -> 뿌리 -> Local)
 	FbxAMatrix			matBone;
+	FbxAMatrix			matLinke;
 	vector<tKeyFrame>	vecKeyFrame;
 };
 
 struct tAnimClip
 {
 	wstring		strName;
+	wstring     originName;
 	FbxTime		tStartTime;
 	FbxTime		tEndTime;
 	FbxLongLong	llTimeLength;
@@ -95,6 +98,7 @@ private:
 	vector<tBone*>					m_vecBone;
 	FbxArray<FbxString*>			m_arrAnimName;
 	vector<tAnimClip*>				m_vecAnimClip;
+	bool							m_bLoadAni;
 public:
 	void init();
 	void LoadFbx(const wstring& _strPath);
@@ -125,16 +129,21 @@ private:
 	// Animation
 	void LoadSkeleton(FbxNode* _pNode);
 	void LoadSkeleton_Re(FbxNode* _pNode, int _iDepth, int _iIdx, int _iParentIdx);
+	
 	void LoadAnimationClip();
 	void Triangulate(FbxNode* _pNode);
 
 	void LoadAnimationData(FbxMesh* _pMesh, tContainer* _pContainer);
 	void LoadWeightsAndIndices(FbxCluster* _pCluster, int _iBoneIdx, tContainer* _pContainer);
-	void LoadOffsetMatrix(FbxCluster* _pCluster, const FbxAMatrix& _matNodeTransform, int _iBoneIdx);
+	void LoadOffsetMatrix(FbxMesh* _pMesh,FbxCluster* _pCluster, const FbxAMatrix& _matNodeTransform, int _iBoneIdx);
 	void LoadKeyframeTransform(FbxNode* _pNode, FbxCluster* _pCluster, const FbxAMatrix& _matNodeTransform, int _iBoneIdx);
 	void AniClipPostProcess();
 	int FindBoneIndex(string _strBoneName);
 	FbxAMatrix GetTransform(FbxNode* _pNode);
+
+	FbxCluster* GetParrentCluster(FbxMesh* _pMesh, FbxCluster* _pCluster);
+	FbxCluster* FindParrentCluster(FbxNode* _pNode);
+
 
 	void CheckWeightAndIndices(FbxMesh* _pMesh, tContainer* _pContainer);
 public:

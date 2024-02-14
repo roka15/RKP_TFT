@@ -330,80 +330,13 @@ int CMesh::Load(const wstring& _strFilePath)
 		m_vecIdxInfo.push_back(info);
 	}
 
-	// Animation3D 정보 읽기
-	//int iCount = 0;
-	//fread(&iCount, sizeof(int), 1, pFile);
-	//for (int i = 0; i < iCount; ++i)
-	//{
-	//	tMTAnimClip tClip = {};
-
-	//	LoadWString(tClip.strAnimName, pFile);
-	//	fread(&tClip.dStartTime, sizeof(double), 1, pFile);
-	//	fread(&tClip.dEndTime, sizeof(double), 1, pFile);
-	//	fread(&tClip.dTimeLength, sizeof(double), 1, pFile);
-	//	fread(&tClip.eMode, sizeof(int), 1, pFile);
-	//	fread(&tClip.fUpdateTime, sizeof(float), 1, pFile);
-	//	fread(&tClip.iStartFrame, sizeof(int), 1, pFile);
-	//	fread(&tClip.iEndFrame, sizeof(int), 1, pFile);
-	//	fread(&tClip.iFrameLength, sizeof(int), 1, pFile);
-
-	//	m_vecAnimClip.push_back(tClip);
-	//}
-
-	//iCount = 0;
-	//fread(&iCount, sizeof(int), 1, pFile);
-	//m_vecBones.resize(iCount);
-
-	//UINT _iFrameCount = 0;
-	//for (int i = 0; i < iCount; ++i)
-	//{
-	//	LoadWString(m_vecBones[i].strBoneName, pFile);
-	//	fread(&m_vecBones[i].iDepth, sizeof(int), 1, pFile);
-	//	fread(&m_vecBones[i].iParentIndx, sizeof(int), 1, pFile);
-	//	fread(&m_vecBones[i].matBone, sizeof(Matrix), 1, pFile);
-	//	fread(&m_vecBones[i].matOffset, sizeof(Matrix), 1, pFile);
-
-	//	UINT iFrameCount = 0;
-	//	fread(&iFrameCount, sizeof(int), 1, pFile);
-	//	m_vecBones[i].vecKeyFrame.resize(iFrameCount);
-	//	_iFrameCount = max(_iFrameCount, iFrameCount);
-	//	for (UINT j = 0; j < iFrameCount; ++j)
-	//	{
-	//		fread(&m_vecBones[i].vecKeyFrame[j], sizeof(tMTKeyFrame), 1, pFile);
-	//	}
-	//}
-
-	//// Animation 이 있는 Mesh 경우 Bone StructuredBuffer 만들기
-	//if (m_vecAnimClip.size() > 0 && m_vecBones.size() > 0)
-	//{
-	//	wstring strBone = GetName();
-
-	//	// BoneOffet 행렬
-	//	vector<Matrix> vecOffset;
-	//	vector<tFrameTrans> vecFrameTrans;
-	//	vecFrameTrans.resize((UINT)m_vecBones.size() * _iFrameCount);
-
-	//	for (size_t i = 0; i < m_vecBones.size(); ++i)
-	//	{
-	//		vecOffset.push_back(m_vecBones[i].matOffset);
-
-	//		for (size_t j = 0; j < m_vecBones[i].vecKeyFrame.size(); ++j)
-	//		{
-	//			vecFrameTrans[(UINT)m_vecBones.size() * j + i]
-	//				= tFrameTrans{ Vec4(m_vecBones[i].vecKeyFrame[j].vTranslate, 0.f)
-	//				, Vec4(m_vecBones[i].vecKeyFrame[j].vScale, 0.f)
-	//				, Vec4(m_vecBones[i].vecKeyFrame[j].qRot) };
-	//		}
-	//	}
-
-	//	m_pBoneOffset = new CStructuredBuffer;
-	//	m_pBoneOffset->Create(sizeof(Matrix), (UINT)vecOffset.size(), SB_TYPE::READ_ONLY, false, vecOffset.data());
-
-	//	m_pBoneFrameData = new CStructuredBuffer;
-	//	m_pBoneFrameData->Create(sizeof(tFrameTrans), (UINT)vecOffset.size() * (UINT)_iFrameCount
-	//		, SB_TYPE::READ_ONLY, false, vecFrameTrans.data());
-	//}
-
+	UINT iCount = 0;
+	fread(&iCount, sizeof(int), 1, pFile);
+	m_strAniClipNameList.resize(iCount);
+	for (UINT i = 0; i < iCount; ++i)
+	{
+		LoadWString(m_strAniClipNameList[i], pFile);
+	}
 	fclose(pFile);
 
 	return S_OK;

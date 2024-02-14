@@ -34,6 +34,8 @@ CGameObject* CMeshData::Instantiate()
 		vector<Ptr<CMaterial>> vecMaterial = m_vecDataNode[i]->m_vecMtrl;
 
 		CGameObject* pNewObj = new CGameObject;
+		parrentObj->AddChild(pNewObj);
+
 		pNewObj->SetName(pMesh->GetName());
 		pNewObj->AddComponent(new CTransform);
 		pNewObj->AddComponent(new CMeshRender);
@@ -44,14 +46,12 @@ CGameObject* CMeshData::Instantiate()
 			pNewObj->MeshRender()->SetMaterial(vecMaterial[i], i);
 		}
 		// Animation 파트 추가
-		if (false == pMesh->IsAni())
-			return pNewObj;
+		if (pMesh->GetAniClipList().size() == 0)
+			continue;
 
 		CAnimator3D* pAnimator = new CAnimator3D;
 		pNewObj->AddComponent(pAnimator);
 		pAnimator->SetAnimClip(pMesh->GetAniClipList());
-
-		parrentObj->AddChild(pNewObj);
 	}
 	return parrentObj;
 }

@@ -15,7 +15,7 @@
 
 CAnimator3D::CAnimator3D()
 	:m_pBoneFinalMatBuffer(nullptr)
-	, m_iCurIdx(0)
+	, m_iCurIdx(90)
 	,CComponent(COMPONENT_TYPE::ANIMATOR3D)
 {
 	m_pBoneFinalMatBuffer = new CStructuredBuffer;
@@ -23,7 +23,7 @@ CAnimator3D::CAnimator3D()
 
 CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
 	: m_pBoneFinalMatBuffer(nullptr)
-	, m_iCurIdx(0)
+	, m_iCurIdx(90)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
 {
 	m_pBoneFinalMatBuffer = new CStructuredBuffer;

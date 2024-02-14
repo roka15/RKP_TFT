@@ -19,35 +19,33 @@ CAniClip::~CAniClip()
 void CAniClip::CreateBoneFrameData(CFBXLoader& _loader, tAnimClip*& _pClipData, vector<tKeyFrame> _vecframeData, int _iBoneIdx)
 {
 	Ptr<CAniClip> pClip = nullptr;
-	wstring strPath = L"anim3D\\";
-	strPath += _pClipData->strName + L".anim";
+	wstring strPath;
+	strPath = _pClipData->strName;
 	pClip = CResMgr::GetInst()->FindRes<CAniClip>(strPath).Get();
 
 	if (pClip == nullptr)
 	{
 		pClip = new CAniClip();
-	
+		UINT iBoneCount = _loader.GetBones().size();
+		pClip->m_vecBones.resize(iBoneCount);
 		CResMgr::GetInst()->AddRes<CAniClip>(strPath, pClip);
 	}
 	
 	//이미 이전 Mesh에서 다 설정해두었다면
-	if (pClip->m_vecBones.size() > _iBoneIdx)
-	{
-		return;
-	}
 	vector<tBone*> Bones = _loader.GetBones();
 	tBone* CurBone = Bones[_iBoneIdx];
 	FbxAMatrix MatBone = Bones[_iBoneIdx]->matBone;
 	FbxAMatrix MatBoneOffset = Bones[_iBoneIdx]->matOffset;
 
-	
+	if (CurBone->strBoneName.compare(L"R_Foot") == 0 || CurBone->strBoneName.compare(L"L_Foot") == 0)
+		int a = 0;
 	tMTAnimClip tClip = {};
 	tClip.strAnimName = _pClipData->strName;
 	tClip.dStartTime = _pClipData->tStartTime.GetSecondDouble();
 	tClip.dEndTime = _pClipData->tEndTime.GetSecondDouble();
 	tClip.dTimeLength = tClip.dEndTime - tClip.dStartTime;
 
-	tClip.iStartFrame = (int)_pClipData->tStartTime.GetFrameCount(_pClipData->eMode);
+ 	tClip.iStartFrame = (int)_pClipData->tStartTime.GetFrameCount(_pClipData->eMode);
 	tClip.iEndFrame = (int)_pClipData->tEndTime.GetFrameCount(_pClipData->eMode);
 	tClip.iFrameLength = tClip.iEndFrame - tClip.iStartFrame;
 	tClip.eMode = _pClipData->eMode;
@@ -83,7 +81,8 @@ void CAniClip::CreateBoneFrameData(CFBXLoader& _loader, tAnimClip*& _pClipData, 
 		Bone.vecKeyFrame.push_back(tKeyFrame);
 	}
 
-	pClip->m_vecBones.push_back(Bone);
+	pClip->m_vecBones[_iBoneIdx] = Bone;
+	//pClip->m_vecBones.push_back(Bone);
 
 	return;
 }
@@ -206,40 +205,18 @@ int CAniClip::Load(const wstring& _strFilePath)
 		fread(&m_vecBones[i].matOffset, sizeof(Matrix), 1, pFile);
 
 		UINT iFrameCount = 0;
-		_iFrameCount = iFrameCount;
 		fread(&iFrameCount, sizeof(int), 1, pFile);
-		m_vecBones.resize(iFrameCount);
+		_iFrameCount = iFrameCount;
+		m_vecBones[i].vecKeyFrame.resize(iFrameCount);
 		for (UINT j = 0; j < iFrameCount; ++j)
 		{
 			fread(&m_vecBones[i].vecKeyFrame[j], sizeof(tMTKeyFrame), 1, pFile);
 		}
 	}
-
+	
 	if (m_vecBones.size() > 0)
 	{
-		vector<Matrix> vecOffset;
-		vector<tFrameTrans> vecFrameTrans;
-		vecFrameTrans.resize((UINT)m_vecBones.size() * _iFrameCount);
-
-		for (size_t i = 0; i < m_vecBones.size(); ++i)
-		{
-			vecOffset.push_back(m_vecBones[i].matOffset);
-
-			for (size_t j = 0; j < m_vecBones[i].vecKeyFrame.size(); ++j)
-			{
-				vecFrameTrans[(UINT)m_vecBones.size() * j + i]
-					= tFrameTrans{ Vec4(m_vecBones[i].vecKeyFrame[j].vTranslate, 0.f)
-					, Vec4(m_vecBones[i].vecKeyFrame[j].vScale, 0.f)
-					, Vec4(m_vecBones[i].vecKeyFrame[j].qRot) };
-			}
-		}
-
-		m_pBoneOffset = new CStructuredBuffer;
-		m_pBoneOffset->Create(sizeof(Matrix), (UINT)vecOffset.size(), SB_TYPE::READ_ONLY, false, vecOffset.data());
-
-		m_pBoneFrameData = new CStructuredBuffer;
-		m_pBoneFrameData->Create(sizeof(tFrameTrans), (UINT)vecOffset.size() * (UINT)_iFrameCount
-			, SB_TYPE::READ_ONLY, false, vecFrameTrans.data());
+		CreateStructBuffer();
 	}
 
 	fclose(pFile);

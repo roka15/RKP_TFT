@@ -15,6 +15,7 @@ CFBXLoader::CFBXLoader()
 	: m_pManager(NULL)
 	, m_pScene(NULL)
 	, m_pImporter(NULL)
+	, m_bLoadAni(false)
 {
 }
 
@@ -59,6 +60,7 @@ void CFBXLoader::init()
 void CFBXLoader::LoadFbx(const wstring& _strPath)
 {
 	m_vecContainer.clear();
+	m_bLoadAni = false;
 
 	m_pImporter = FbxImporter::Create(m_pManager, "");
 
@@ -141,10 +143,12 @@ void CFBXLoader::LoadMeshDataFromNode(FbxNode* _pNode)
 
 void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 {
+	string strName = _pFbxMesh->GetName();
+	if (strName.compare("Icosphere") == 0)
+		return;
 	m_vecContainer.push_back(tContainer{});
 	tContainer& Container = m_vecContainer[m_vecContainer.size() - 1];
 
-	string strName = _pFbxMesh->GetName();
 	Container.strName = wstring(strName.begin(), strName.end());
 
 	int iVtxCnt = _pFbxMesh->GetControlPointsCount();
@@ -192,11 +196,17 @@ void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 			//_pFbxMesh->GetElementUV()->Scale
 			++iVtxOrder;
 		}
+		/*	if (iMtrlCnt == 0)
+				continue;*/
 		UINT iSubsetIdx = pMtrl->GetIndexArray().GetAt(i);
 		Container.vecIdx[iSubsetIdx].push_back(arrIdx[0]);
 		Container.vecIdx[iSubsetIdx].push_back(arrIdx[2]);
 		Container.vecIdx[iSubsetIdx].push_back(arrIdx[1]);
 	}
+
+	/*if (iMtrlCnt == 0)
+		return;*/
+
 
 	LoadAnimationData(_pFbxMesh, &Container);
 }
@@ -492,8 +502,8 @@ void CFBXLoader::CreateMesh()
 		CResMgr::GetInst()->AddRes(pMesh->GetKey(), pMesh);
 		pMesh->Save(strPath);
 	}
-	
-	
+
+
 }
 
 void CFBXLoader::CreateMaterial()
@@ -597,9 +607,10 @@ void CFBXLoader::LoadSkeleton_Re(FbxNode* _pNode, int _iDepth, int _iIdx, int _i
 
 void CFBXLoader::LoadAnimationClip()
 {
+	int iStartidx = 0;
 	int iAnimCount = m_arrAnimName.GetCount();
 
-	for (int i = 0; i < iAnimCount; ++i)
+	for (int i = iStartidx; i < iAnimCount; ++i)
 	{
 		FbxAnimStack* pAnimStack = m_pScene->FindMember<FbxAnimStack>(m_arrAnimName[i]->Buffer());
 
@@ -612,8 +623,9 @@ void CFBXLoader::LoadAnimationClip()
 		tAnimClip* pAnimClip = new tAnimClip;
 
 		string strClipName = pAnimStack->GetName();
-		pAnimClip->strName = wstring(strClipName.begin(), strClipName.end());
-
+		size_t iFindIdx = strClipName.rfind("|") + 1;
+		pAnimClip->strName = L"anim3D\\" + wstring(strClipName.begin() + iFindIdx, strClipName.end()) + L".anm";
+		pAnimClip->originName = wstring(strClipName.begin(), strClipName.end());
 		FbxTakeInfo* pTakeInfo = m_pScene->GetTakeInfo(pAnimStack->GetName());
 		pAnimClip->tStartTime = pTakeInfo->mLocalTimeSpan.GetStart();
 		pAnimClip->tEndTime = pTakeInfo->mLocalTimeSpan.GetStop();
@@ -668,7 +680,6 @@ void CFBXLoader::LoadAnimationData(FbxMesh* _pMesh, tContainer* _pContainer)
 				// Cluster 를 얻어온다
 				// Cluster == Joint == 관절
 				int iClusterCount = pSkin->GetClusterCount();
-
 				for (int j = 0; j < iClusterCount; ++j)
 				{
 					FbxCluster* pCluster = pSkin->GetCluster(j);
@@ -686,24 +697,25 @@ void CFBXLoader::LoadAnimationData(FbxMesh* _pMesh, tContainer* _pContainer)
 					// Weights And Indices 정보를 읽는다.
 					LoadWeightsAndIndices(pCluster, iBoneIdx, _pContainer);
 
-					if (iContainSize == 1)
+					if (m_bLoadAni == false)
 					{
 						// Bone 의 OffSet 행렬 구한다.
-						LoadOffsetMatrix(pCluster, matNodeTransform, iBoneIdx);
+						LoadOffsetMatrix(_pMesh, pCluster, matNodeTransform, iBoneIdx);
 
 						// Bone KeyFrame 별 행렬을 구한다.
 						LoadKeyframeTransform(_pMesh->GetNode(), pCluster, matNodeTransform, iBoneIdx);
 					}
 				}
-				//aniClip Struct Buffer
-				if (iContainSize == 1)
-				{
-					AniClipPostProcess();
-				}
 			}
 		}
 	}
 	CheckWeightAndIndices(_pMesh, _pContainer);
+	//aniClip Struct Buffer
+	if (m_bLoadAni == false)
+	{
+		AniClipPostProcess();
+		m_bLoadAni = true;
+	}
 }
 
 
@@ -782,7 +794,7 @@ void CFBXLoader::LoadKeyframeTransform(FbxNode* _pNode, FbxCluster* _pCluster
 	for (size_t i = 0; i < m_vecAnimClip.size(); ++i)
 	{
 		// AnimClip 이름으로 AnimStack 을 가져온다.
-		string strAnimName = string(m_vecAnimClip[i]->strName.begin(), m_vecAnimClip[i]->strName.end());
+		string strAnimName = string(m_vecAnimClip[i]->originName.begin(), m_vecAnimClip[i]->originName.end());
 		FbxAnimStack* pAnimStack = m_pScene->FindMember<FbxAnimStack>(strAnimName.c_str());
 
 		// 애니메이션 행렬 정보를 받아올 AnimStack 을 설정한다.      
@@ -818,22 +830,23 @@ void CFBXLoader::AniClipPostProcess()
 	int iClipSize = m_vecAnimClip.size();
 	for (int i = 0; i < iClipSize; ++i)
 	{
-		wstring strClipPath = L"anim3D\\" + m_vecAnimClip[i]->strName + L".anim";
+		wstring strClipPath = m_vecAnimClip[i]->strName;
 		Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(strClipPath);
 		pClip->CreateStructBuffer();
 		pClip->SetName(m_vecAnimClip[i]->strName);
 		pClip->SetKey(strClipPath);
 		pClip->SetRelativePath(strClipPath);
-		
+
 		pClip->Save(strClipPath);
 	}
 }
-void CFBXLoader::LoadOffsetMatrix(FbxCluster* _pCluster
+void CFBXLoader::LoadOffsetMatrix(FbxMesh* _pMesh, FbxCluster* _pCluster
 	, const FbxAMatrix& _matNodeTransform
 	, int _iBoneIdx)
 {
 	FbxAMatrix matClusterTrans;
 	FbxAMatrix matClusterLinkTrans;
+	bool flag = false;
 
 	_pCluster->GetTransformMatrix(matClusterTrans);
 	_pCluster->GetTransformLinkMatrix(matClusterLinkTrans);
@@ -851,9 +864,14 @@ void CFBXLoader::LoadOffsetMatrix(FbxCluster* _pCluster
 	matReflect[3] = V3;
 
 	FbxAMatrix matOffset;
-	matOffset = matClusterLinkTrans.Inverse() * matClusterTrans * _matNodeTransform;
-	matOffset = matReflect * matOffset * matReflect;
 
+	//matOffset = matClusterLinkTrans.Inverse() * matClusterTrans * _matNodeTransform;
+	//matOffset = matReflect * matOffset * matReflect;
+
+	FbxAMatrix globalMat = matClusterTrans * _matNodeTransform;
+	matClusterLinkTrans = globalMat.Inverse() * matClusterLinkTrans;
+	matOffset = matClusterLinkTrans.Inverse();
+	matOffset = matReflect * matOffset * matReflect;
 	m_vecBone[_iBoneIdx]->matOffset = matOffset;
 }
 
@@ -900,4 +918,67 @@ FbxAMatrix CFBXLoader::GetTransform(FbxNode* _pNode)
 	const FbxVector4 vS = _pNode->GetGeometricScaling(FbxNode::eSourcePivot);
 
 	return FbxAMatrix(vT, vR, vS);
+}
+
+FbxCluster* CFBXLoader::GetParrentCluster(FbxMesh* _pMesh, FbxCluster* _pCluster)
+{
+	if (!_pCluster)
+		return nullptr;
+
+	// Get the linked node of the current cluster
+	FbxNode* pLinkedNode = _pCluster->GetLink();
+	if (!pLinkedNode)
+		return nullptr; // If the cluster is not linked to any node, return nullptr
+
+	// Traverse upwards in the bone hierarchy
+	FbxNode* pParentNode = pLinkedNode->GetParent();
+
+	int iSkinCount = _pMesh->GetDeformerCount(FbxDeformer::eSkin);
+	if (iSkinCount <= 0 || m_vecAnimClip.empty())
+		return nullptr;
+
+	// Skin 개수만큼 반복을하며 읽는다.	
+	for (int i = 0; i < iSkinCount; ++i)
+	{
+		FbxSkin* pSkin = (FbxSkin*)_pMesh->GetDeformer(i, FbxDeformer::eSkin);
+
+		if (pSkin)
+		{
+			FbxSkin::EType eType = pSkin->GetSkinningType();
+			if (FbxSkin::eRigid == eType || FbxSkin::eLinear)
+			{
+				// Cluster 를 얻어온다
+				// Cluster == Joint == 관절
+				int iClusterCount = pSkin->GetClusterCount();
+				for (int j = 0; j < iClusterCount; ++j)
+				{
+					FbxCluster* pCluster = pSkin->GetCluster(j);
+
+					if (!pCluster->GetLink())
+						continue;
+
+					if (strcmp(pCluster->GetName(), pParentNode->GetName()) != 0)
+						continue;
+					else return pCluster;
+				}
+			}
+		}
+	}
+	return nullptr;
+}
+
+FbxCluster* CFBXLoader::FindParrentCluster(FbxNode* _pNode)
+{
+	if (!_pNode)
+		return nullptr;
+
+	// Check if the node has any cluster associated with it
+	for (int i = 0; i < _pNode->GetChildCount(); ++i) {
+		FbxNode* pChildNode = _pNode->GetChild(i);
+		FbxCluster* pCluster = FindParrentCluster(pChildNode);
+		if (pCluster)
+			return pCluster; // Return the first cluster found in the node hierarchy
+	}
+	// If no cluster is found, return nullptr
+	return nullptr;
 }
