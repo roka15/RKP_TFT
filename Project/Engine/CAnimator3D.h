@@ -15,6 +15,7 @@ class CAnimator3D :
 private:
     vector<CAnimation3D*>       m_AniList;
     int                         m_iCurIdx;
+    bool                        m_bBlending;
     CStructuredBuffer* m_pBoneFinalMatBuffer;  // 특정 프레임의 최종 행렬
  
 

@@ -8,6 +8,7 @@ CAnimation3D::CAnimation3D():
   m_dCurTime(0.)
 , m_iFrameCount(30)
 , m_bFinalMatUpdate(false)
+, m_bFinish(false)
 , m_iFrameIdx(0)
 , m_iNextFrameIdx(0)
 , m_fRatio(0.f)
@@ -16,13 +17,24 @@ CAnimation3D::CAnimation3D():
 CAnimation3D::CAnimation3D(Ptr<CAniClip> _clip):
 	  m_pClip(_clip)
 	, m_dCurTime(0.)
-	, m_iFrameCount(30)
+	, m_iFrameCount(0)
 	, m_bFinalMatUpdate(false)
+	, m_bFinish(false)
 	, m_iFrameIdx(0)
 	, m_iNextFrameIdx(0)
 	, m_fRatio(0.f)
 {
 	SetName(_clip->GetName());
+	switch (_clip->m_tInfo.eMode)
+	{
+	case fbxsdk::FbxTime::EMode::eFrames24:
+		m_iFrameCount = 21;
+		break;
+	case fbxsdk::FbxTime::EMode::eFrames30:
+		m_iFrameCount = 30;
+		break;
+
+	}
 }
 CAnimation3D::~CAnimation3D()
 {

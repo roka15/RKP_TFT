@@ -16,6 +16,7 @@ public:
 	void SetBoneCount(int _iBoneCount) { m_Const.arrInt[0] = _iBoneCount; }
 	void SetFrameIndex(int _iFrameIdx) { m_Const.arrInt[1] = _iFrameIdx; }
 	void SetNextFrameIdx(int _iFrameIdx) { m_Const.arrInt[2] = _iFrameIdx; }
+	void SetBlendingFlag(bool _flag) { m_Const.arrInt[3] = _flag; }
 	void SetFrameRatio(float _fFrameRatio) { m_Const.arrFloat[0] = _fFrameRatio; }
 	void SetFrameDataBuffer(CStructuredBuffer* _buffer) { m_pFrameDataBuffer = _buffer; }
 	void SetOffsetMatBuffer(CStructuredBuffer* _buffer) { m_pOffsetMatBuffer = _buffer; }

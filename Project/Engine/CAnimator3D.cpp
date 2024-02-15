@@ -16,6 +16,7 @@
 CAnimator3D::CAnimator3D()
 	:m_pBoneFinalMatBuffer(nullptr)
 	, m_iCurIdx(0)
+	, m_bBlending(false)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
 {
 	m_pBoneFinalMatBuffer = new CStructuredBuffer;
@@ -24,6 +25,7 @@ CAnimator3D::CAnimator3D()
 CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
 	: m_pBoneFinalMatBuffer(nullptr)
 	, m_iCurIdx(0)
+	, m_bBlending(false)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
 {
 	m_pBoneFinalMatBuffer = new CStructuredBuffer;
@@ -139,6 +141,7 @@ bool CAnimator3D::UpdateData()
 		pUpdateShader->SetBoneCount(iBoneCount);
 		pUpdateShader->SetFrameIndex(m_AniList[m_iCurIdx]->m_iFrameIdx);
 		pUpdateShader->SetNextFrameIdx(m_AniList[m_iCurIdx]->m_iNextFrameIdx);
+		pUpdateShader->SetBlendingFlag(m_bBlending);
 		pUpdateShader->SetFrameRatio(m_AniList[m_iCurIdx]->m_fRatio);
 
 		// 업데이트 쉐이더 실행

@@ -205,15 +205,19 @@ struct tFrameTrans
     float4 vScale;
     float4 qRot;
 };
-
-StructuredBuffer<tFrameTrans> g_arrFrameTrans : register(t16);
+//현재 또는 변경 전 애니
+StructuredBuffer<tFrameTrans> g_arrFrameTrans1 : register(t16);
 StructuredBuffer<matrix> g_arrOffset : register(t17);
+//변경 후 애니
+StructuredBuffer<tFrameTrans> g_arrFrameTrans2 : register(t18);
 RWStructuredBuffer<matrix> g_arrFinelMat : register(u0);
 
 // ===========================
 // Animation3D Compute Shader
 #define BoneCount   g_int_0
 #define CurFrame    g_int_1
+#define NextFrame   g_int_2
+#define bBlending   g_int_3
 #define Ratio       g_float_0
 // ===========================
 [numthreads(256, 1, 1)]
@@ -226,20 +230,26 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
     float4 vQZero = float4(0.f, 0.f, 0.f, 1.f);
     matrix matBone = (matrix) 0.f;
 
-    // Frame Data Index == Bone Count * Frame Count + _iThreadIdx.x
-    uint iFrameDataIndex = BoneCount * CurFrame + _iThreadIdx.x;
-    uint iNextFrameDataIdx = BoneCount * (CurFrame + 1) + _iThreadIdx.x;
+    if (bBlending)
+    {
 
-    float4 vScale = lerp(g_arrFrameTrans[iFrameDataIndex].vScale, g_arrFrameTrans[iNextFrameDataIdx].vScale, Ratio);
-    float4 vTrans = lerp(g_arrFrameTrans[iFrameDataIndex].vTranslate, g_arrFrameTrans[iNextFrameDataIdx].vTranslate, Ratio);
-    float4 qRot = QuternionLerp(g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans[iNextFrameDataIdx].qRot, Ratio);
+    }
+    else
+    {
+        // Frame Data Index == Bone Count * Frame Count + _iThreadIdx.x
+        uint iFrameDataIndex = BoneCount * CurFrame + _iThreadIdx.x;
+        uint iNextFrameDataIdx = BoneCount * (CurFrame + 1) + _iThreadIdx.x;
 
-    // 최종 본행렬 연산
-    MatrixAffineTransformation(vScale, vQZero, qRot, vTrans, matBone);
+        float4 vScale = lerp(g_arrFrameTrans1[iFrameDataIndex].vScale, g_arrFrameTrans1[iNextFrameDataIdx].vScale, Ratio);
+        float4 vTrans = lerp(g_arrFrameTrans1[iFrameDataIndex].vTranslate, g_arrFrameTrans1[iNextFrameDataIdx].vTranslate, Ratio);
+        float4 qRot = QuternionLerp(g_arrFrameTrans1[iFrameDataIndex].qRot, g_arrFrameTrans1[iNextFrameDataIdx].qRot, Ratio);
 
-    // 최종 본행렬 연산    
-    //MatrixAffineTransformation(g_arrFrameTrans[iFrameDataIndex].vScale, vQZero, g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans[iFrameDataIndex].vTranslate, matBone);
+        // 최종 본행렬 연산
+        MatrixAffineTransformation(vScale, vQZero, qRot, vTrans, matBone);
 
+        // 최종 본행렬 연산    
+        //MatrixAffineTransformation(g_arrFrameTrans[iFrameDataIndex].vScale, vQZero, g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans[iFrameDataIndex].vTranslate, matBone);
+    }
     matrix matOffset = transpose(g_arrOffset[_iThreadIdx.x]);
 
     // 구조화버퍼에 결과값 저장
