@@ -87,7 +87,7 @@ void CMeshRender::render(UINT _iSubset)
 	// Animator3D 업데이트
 	if (Animator3D())
 	{
-		Animator3D()->UpdateData();
+		bool bFlag = Animator3D()->UpdateData();
 		GetMaterial(_iSubset)->SetAnim3D(true); // Animation Mesh 알리기
 		GetMaterial(_iSubset)->SetBoneCount(Animator3D()->GetBoneCount());
 	}

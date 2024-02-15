@@ -27,9 +27,10 @@ CGameObject* CMeshData::Instantiate()
 	UINT MeshCnt = m_vecDataNode.size();
 	CGameObject* parrentObj = new CGameObject();
 	parrentObj->AddComponent(new CTransform);
-	//CAnimator3D* pAnimator = new CAnimator3D;
-	//parrentObj->AddComponent(pAnimator);
+	CAnimator3D* pAnimator = new CAnimator3D;
+	parrentObj->AddComponent(pAnimator);
 
+	wstring strTBoneClip = {};
 	for (int i = 0; i < MeshCnt; ++i)
 	{
 		Ptr<CMesh> pMesh = m_vecDataNode[i]->m_pMesh;
@@ -47,14 +48,17 @@ CGameObject* CMeshData::Instantiate()
 		{
 			pNewObj->MeshRender()->SetMaterial(vecMaterial[i], i);
 		}
-		// Animation 파트 추가
-		if (pMesh->GetAniClipList().size() == 0)
-			continue;
+		//// Animation 파트 추가
+		//if (pMesh->GetAniClipList().size() == 0)
+		//	continue;
 
-		CAnimator3D* pAnimator = new CAnimator3D;
-		pNewObj->AddComponent(pAnimator);
-		pAnimator->RegisterAniClip(pMesh->GetAniClipList());
+		//CAnimator3D* pAnimator = new CAnimator3D;
+		//pNewObj->AddComponent(pAnimator);
+		//pAnimator->RegisterAniClip(pMesh->GetAniClipList());
+		if (strTBoneClip.size() == 0)
+			strTBoneClip = pMesh->GetAniClipList()[0];
 	}
+	pAnimator->RegisterAniClip(strTBoneClip);
 	return parrentObj;
 }
 

@@ -486,7 +486,7 @@ void CCamera::render_deferred()
 			tInstData.matWorld = pair.second[i].pObj->Transform()->GetWorldMat();
 			tInstData.matWV = tInstData.matWorld * m_matView;
 			tInstData.matWVP = tInstData.matWV * m_matProj;
-
+			CAnimator3D* pAnimator = pair.second[i].pObj->Animator3D();
 			if (pair.second[i].pObj->Animator3D())
 			{
 				pair.second[i].pObj->Animator3D()->UpdateData();

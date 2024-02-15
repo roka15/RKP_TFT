@@ -15,7 +15,7 @@
 
 CAnimator3D::CAnimator3D()
 	:m_pBoneFinalMatBuffer(nullptr)
-	, m_iCurIdx(90)
+	, m_iCurIdx(0)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
 {
 	m_pBoneFinalMatBuffer = new CStructuredBuffer;
@@ -23,7 +23,7 @@ CAnimator3D::CAnimator3D()
 
 CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
 	: m_pBoneFinalMatBuffer(nullptr)
-	, m_iCurIdx(90)
+	, m_iCurIdx(0)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
 {
 	m_pBoneFinalMatBuffer = new CStructuredBuffer;
@@ -113,11 +113,16 @@ CAnimation3D* CAnimator3D::GetAnimation()
 }
 UINT CAnimator3D::GetBoneCount()
 {
+	if (m_AniList.size() == 0)
+		assert(nullptr);
+	
 	return m_AniList[m_iCurIdx]->m_pClip->GetBoneCount();
 }
 
-void CAnimator3D::UpdateData()
+bool CAnimator3D::UpdateData()
 {
+	if (m_AniList.size() == 0)
+		return false;
 	if (!m_AniList[m_iCurIdx]->m_bFinalMatUpdate)
 	{
 		// Animation3D Update Compute Shader
@@ -144,12 +149,15 @@ void CAnimator3D::UpdateData()
 
 	// t30 레지스터에 최종행렬 데이터(구조버퍼) 바인딩		
 	m_pBoneFinalMatBuffer->UpdateData(30, PIPELINE_STAGE::PS_VERTEX);
+	return true;
 }
 
 void CAnimator3D::ClearData()
 {
 	m_pBoneFinalMatBuffer->Clear();
 
+	if (GetOwner()->MeshRender() == nullptr)
+		return;
 	UINT iMtrlCount = MeshRender()->GetMtrlCount();
 	Ptr<CMaterial> pMtrl = nullptr;
 	for (UINT i = 0; i < iMtrlCount; ++i)

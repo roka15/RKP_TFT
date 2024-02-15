@@ -259,3 +259,16 @@ void CGameObject::AddParentList()
 	CLayer* pLayer = CLevelMgr::GetInst()->GetCurLevel()->GetLayer(m_iLayerIdx);
 	pLayer->AddParentList(this);
 }
+
+CAnimator3D* CGameObject::Animator3D()
+{
+	CAnimator3D* pAnimator = (CAnimator3D*)m_arrCom[(UINT)COMPONENT_TYPE::ANIMATOR3D];
+	if (pAnimator == nullptr)
+	{
+		if (m_Parent)
+		{
+			pAnimator = m_Parent->Animator3D();
+		}
+	}
+	return pAnimator;
+}

@@ -20,7 +20,7 @@ private:
 
 public:
     virtual void finaltick() override;
-    void UpdateData();
+    bool UpdateData();
 
 public:
     void RegisterAniClip(const vector<wstring>& _vecAnimClipList);

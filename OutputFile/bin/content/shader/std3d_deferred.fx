@@ -126,7 +126,7 @@ PS_OUT PS_Std3D_Deferred(VS_OUT _in)
     
     if (g_btex_0)
     {
-        output.vColor = g_tex_0.Sample(g_sam_1, _in.vUV * g_vUVMapScale.xy);
+        output.vColor = g_tex_0.Sample(g_sam_1, _in.vUV  * g_vUVMapScale.xy + g_vUVMapLocation.xy);
     }
     
     if (g_btex_1)
