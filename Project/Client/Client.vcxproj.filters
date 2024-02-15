@@ -110,6 +110,12 @@
     <Filter Include="Manager\LevelSaveLoad">
       <UniqueIdentifier>{bd45bcb0-5b2d-4b83-a548-af8817de8f6a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\InspectorUI\ComponentUI\10.Animator3DUI">
+      <UniqueIdentifier>{d96201b8-0434-4f82-83e4-42ae81a6d4d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\InspectorUI\ResUI\AniClipUI">
+      <UniqueIdentifier>{46b109e0-8a1d-4da4-ad6f-db0ecd14c119}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -232,6 +238,12 @@
     </ClInclude>
     <ClInclude Include="CLevelSaveLoad.h">
       <Filter>Manager\LevelSaveLoad</Filter>
+    </ClInclude>
+    <ClInclude Include="Animator3DUI.h">
+      <Filter>UI\InspectorUI\ComponentUI\10.Animator3DUI</Filter>
+    </ClInclude>
+    <ClInclude Include="AniClipUI.h">
+      <Filter>UI\InspectorUI\ResUI\AniClipUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -363,6 +375,12 @@
     </ClCompile>
     <ClCompile Include="CLevelSaveLoad.cpp">
       <Filter>Manager\LevelSaveLoad</Filter>
+    </ClCompile>
+    <ClCompile Include="Animator3DUI.cpp">
+      <Filter>UI\InspectorUI\ComponentUI\10.Animator3DUI</Filter>
+    </ClCompile>
+    <ClCompile Include="AniClipUI.cpp">
+      <Filter>UI\InspectorUI\ResUI\AniClipUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

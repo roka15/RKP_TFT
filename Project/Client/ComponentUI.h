@@ -28,6 +28,6 @@ public:
 
 public:
     ComponentUI(const string& _Name, COMPONENT_TYPE _Type);
-    ~ComponentUI();
+    virtual ~ComponentUI();
 };
 

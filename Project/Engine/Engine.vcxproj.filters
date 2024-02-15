@@ -200,7 +200,7 @@
       <Filter>Source\07. Resource\8.AniClip</Filter>
     </ClInclude>
     <ClInclude Include="CAnimation3D.h">
-      <Filter>Source\06. Component\7. Animator3D</Filter>
+      <Filter>Source\06. Component\7. Animator3D\Animation3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -394,7 +394,7 @@
       <Filter>Source\07. Resource\8.AniClip</Filter>
     </ClCompile>
     <ClCompile Include="CAnimation3D.cpp">
-      <Filter>Source\06. Component\7. Animator3D</Filter>
+      <Filter>Source\06. Component\7. Animator3D\Animation3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -598,6 +598,9 @@
     </Filter>
     <Filter Include="Source\07. Resource\8.AniClip">
       <UniqueIdentifier>{54f03193-0bbc-4aa5-a9ee-26a63cd4d9b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\7. Animator3D\Animation3D">
+      <UniqueIdentifier>{f1fb31c5-7d0c-4166-8283-12e51c5e1b4e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

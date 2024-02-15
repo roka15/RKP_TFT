@@ -13,6 +13,7 @@
 #include "Animator2DUI.h"
 #include "TileMapUI.h"
 #include "Light2DUI.h"
+#include "Animator3DUI.h"
 
 #include "MeshDataUI.h"
 #include "TextureUI.h"
@@ -23,6 +24,8 @@
 #include "ComputeShaderUI.h"
 #include "MaterialUI.h"
 #include "ScriptUI.h"
+#include "AniClipUI.h"
+
 
 
 
@@ -62,6 +65,10 @@ InspectorUI::InspectorUI()
 	m_arrComUI[(UINT)COMPONENT_TYPE::TILEMAP]->SetSize(0.f, 150.f);
 	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::TILEMAP]);
 
+	m_arrComUI[(UINT)COMPONENT_TYPE::ANIMATOR3D] = new Animator3DUI;
+	m_arrComUI[(UINT)COMPONENT_TYPE::ANIMATOR3D]->SetSize(0.f, 150.f);
+	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::ANIMATOR3D]);
+
 	// ResUI
 	m_arrResUI[(UINT)RES_TYPE::MESHDATA] = new MeshDataUI;
 	m_arrResUI[(UINT)RES_TYPE::MESHDATA]->SetSize(0.f, 0.f);
@@ -94,6 +101,10 @@ InspectorUI::InspectorUI()
 	m_arrResUI[(UINT)RES_TYPE::SOUND] = new SoundUI;
 	m_arrResUI[(UINT)RES_TYPE::SOUND]->SetSize(0.f, 0.f);
 	AddChildUI(m_arrResUI[(UINT)RES_TYPE::SOUND]);
+
+	m_arrResUI[(UINT)RES_TYPE::ANICLIP] = new AniClipUI;
+	m_arrResUI[(UINT)RES_TYPE::ANICLIP]->SetSize(0.f, 0.f);
+	AddChildUI(m_arrResUI[(UINT)RES_TYPE::ANICLIP]);
 }
 
 InspectorUI::~InspectorUI()

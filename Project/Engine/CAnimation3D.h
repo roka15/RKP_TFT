@@ -15,7 +15,7 @@ private:
     double          m_dUpdateTime;
     int             m_iFrameIdx;
     int             m_iNextFrameIdx;
-    int             m_fRatio;
+    float           m_fRatio;
     int             m_iFrameCount;
     bool            m_bFinalMatUpdate;
     
@@ -24,6 +24,7 @@ public:
     void finaltick();
     void Reset();
     void SetClip(const std::wstring& _strKey);
+    Ptr<CAniClip> GetClip() { return m_pClip; }
 
     CLONE(CAnimation3D);
 public:

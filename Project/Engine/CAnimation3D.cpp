@@ -22,6 +22,7 @@ CAnimation3D::CAnimation3D(Ptr<CAniClip> _clip):
 	, m_iNextFrameIdx(0)
 	, m_fRatio(0.f)
 {
+	SetName(_clip->GetName());
 }
 CAnimation3D::~CAnimation3D()
 {
@@ -67,5 +68,6 @@ void CAnimation3D::Reset()
 void CAnimation3D::SetClip(const std::wstring& _strKey)
 {
 	m_pClip = CResMgr::GetInst()->FindRes<CAniClip>(_strKey);
+	SetName(_strKey);
 }
 

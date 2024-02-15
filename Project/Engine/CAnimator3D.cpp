@@ -16,7 +16,7 @@
 CAnimator3D::CAnimator3D()
 	:m_pBoneFinalMatBuffer(nullptr)
 	, m_iCurIdx(90)
-	,CComponent(COMPONENT_TYPE::ANIMATOR3D)
+	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
 {
 	m_pBoneFinalMatBuffer = new CStructuredBuffer;
 }
@@ -44,19 +44,72 @@ CAnimator3D::~CAnimator3D()
 
 void CAnimator3D::finaltick()
 {
+	if (m_AniList.size() == 0)
+		return;
+
 	m_AniList[m_iCurIdx]->finaltick();
 }
 
-void CAnimator3D::SetAnimClip(const vector<wstring>& _vecAnimClipList)
+void CAnimator3D::RegisterAniClip(const vector<wstring>& _vecAnimClipList)
 {
 	int iClipCount = _vecAnimClipList.size();
 	for (int i = 0; i < iClipCount; ++i)
 	{
-		wstring strName = _vecAnimClipList[i];
-		Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(strName);
-		CAnimation3D* pAni = new CAnimation3D(pClip);
-		m_AniList.push_back(pAni);
+		RegisterAniClip(_vecAnimClipList[i]);
 	}
+}
+int CAnimator3D::RegisterAniClip(const wstring& _strAnimClip)
+{
+	wstring strName = _strAnimClip;
+	Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(strName);
+	CAnimation3D* pAni = new CAnimation3D(pClip);
+	m_AniList.push_back(pAni);
+	return m_AniList.size() - 1;
+}
+void CAnimator3D::RemoveAniClip(const vector<wstring>& _vecAnimClipList)
+{
+	for (int i = 0; i < _vecAnimClipList.size(); ++i)
+	{
+		RemoveAniClip(_vecAnimClipList[i]);
+	}
+}
+void CAnimator3D::RemoveAniClip(const wstring& _strAnimClip)
+{
+	for (auto itr = m_AniList.begin(); itr < m_AniList.end(); ++itr)
+	{
+		wstring str1 = (*itr)->GetName();
+		wstring str2 = _strAnimClip;
+		if (str1.compare(str2) == 0)
+		{
+			if ((*itr) != nullptr)
+				delete (*itr);
+			m_AniList.erase(itr);
+		}
+	}
+}
+void CAnimator3D::ChangeAniClip(const wstring& _strAnimClip)
+{
+	bool bFind = false;
+	for (int i = 0; i < m_AniList.size(); ++i)
+	{
+		if (m_AniList[i]->GetName().compare(_strAnimClip) == 0)
+		{
+			m_iCurIdx = i;
+			bFind = true;
+		}
+	}
+
+	if (bFind)
+		return;
+
+	m_iCurIdx = RegisterAniClip(_strAnimClip);
+}
+
+CAnimation3D* CAnimator3D::GetAnimation()
+{
+	if (m_AniList.size() == 0)
+		return nullptr;
+	return m_AniList[m_iCurIdx];
 }
 UINT CAnimator3D::GetBoneCount()
 {

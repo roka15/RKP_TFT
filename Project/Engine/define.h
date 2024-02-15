@@ -17,7 +17,7 @@
 #define MAX_MIP		8
 
 #define SINGLE(type) private: type(); ~type(); friend class CSingleton<type>;
-
+#define MAXLEN 255
 
 
 

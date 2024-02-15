@@ -27,6 +27,8 @@ CGameObject* CMeshData::Instantiate()
 	UINT MeshCnt = m_vecDataNode.size();
 	CGameObject* parrentObj = new CGameObject();
 	parrentObj->AddComponent(new CTransform);
+	//CAnimator3D* pAnimator = new CAnimator3D;
+	//parrentObj->AddComponent(pAnimator);
 
 	for (int i = 0; i < MeshCnt; ++i)
 	{
@@ -51,7 +53,7 @@ CGameObject* CMeshData::Instantiate()
 
 		CAnimator3D* pAnimator = new CAnimator3D;
 		pNewObj->AddComponent(pAnimator);
-		pAnimator->SetAnimClip(pMesh->GetAniClipList());
+		pAnimator->RegisterAniClip(pMesh->GetAniClipList());
 	}
 	return parrentObj;
 }

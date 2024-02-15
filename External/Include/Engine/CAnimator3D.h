@@ -15,7 +15,6 @@ class CAnimator3D :
 private:
     vector<CAnimation3D*>       m_AniList;
     int                         m_iCurIdx;
-
     CStructuredBuffer* m_pBoneFinalMatBuffer;  // 특정 프레임의 최종 행렬
  
 
@@ -24,7 +23,13 @@ public:
     void UpdateData();
 
 public:
-    void SetAnimClip(const vector<wstring>& _vecAnimClipList);
+    void RegisterAniClip(const vector<wstring>& _vecAnimClipList);
+    int RegisterAniClip(const wstring& _strAnimClip);
+    void RemoveAniClip(const vector<wstring>& _vecAnimClipList);
+    void RemoveAniClip(const wstring& _strAnimClip);
+    void ChangeAniClip(const wstring& _strAnimClip);
+
+    CAnimation3D* GetAnimation();
     //void SetClipTime(int _iClipIdx, float _fTime);
 
     UINT GetBoneCount();
