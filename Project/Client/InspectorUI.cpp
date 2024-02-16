@@ -25,6 +25,7 @@
 #include "MaterialUI.h"
 #include "ScriptUI.h"
 #include "AniClipUI.h"
+#include "AniControllerUI.h"
 
 
 
@@ -106,7 +107,7 @@ InspectorUI::InspectorUI()
 	m_arrResUI[(UINT)RES_TYPE::ANICLIP]->SetSize(0.f, 0.f);
 	AddChildUI(m_arrResUI[(UINT)RES_TYPE::ANICLIP]);
 
-	m_arrResUI[(UINT)RES_TYPE::ANICONTROLLER] = new AniClipUI;
+	m_arrResUI[(UINT)RES_TYPE::ANICONTROLLER] = new AniControllerUI;
 	m_arrResUI[(UINT)RES_TYPE::ANICONTROLLER]->SetSize(0.f, 0.f);
 	AddChildUI(m_arrResUI[(UINT)RES_TYPE::ANICONTROLLER]);
 }

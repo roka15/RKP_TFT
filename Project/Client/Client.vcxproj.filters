@@ -119,6 +119,9 @@
     <Filter Include="UI\InspectorUI\ResUI\AniControllerUI">
       <UniqueIdentifier>{9e54d264-82e1-4279-b2e8-78e9567df89b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\Module\AniControllerEditUI">
+      <UniqueIdentifier>{8e40db16-45d5-450e-b1f5-1366d5c6dc4a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -250,6 +253,9 @@
     </ClInclude>
     <ClInclude Include="AniControllerUI.h">
       <Filter>UI\InspectorUI\ResUI\AniControllerUI</Filter>
+    </ClInclude>
+    <ClInclude Include="AniControllerEditUI.h">
+      <Filter>UI\Module\AniControllerEditUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -390,6 +396,9 @@
     </ClCompile>
     <ClCompile Include="AniControllerUI.cpp">
       <Filter>UI\InspectorUI\ResUI\AniControllerUI</Filter>
+    </ClCompile>
+    <ClCompile Include="AniControllerEditUI.cpp">
+      <Filter>UI\Module\AniControllerEditUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
