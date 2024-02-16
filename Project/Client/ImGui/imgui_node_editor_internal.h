@@ -22,8 +22,8 @@
 
 
 //------------------------------------------------------------------------------
-# include <imgui.h>
-# include <imgui_internal.h>
+# include "imgui.h"
+# include "imgui_internal.h"
 # include "imgui_extra_math.h"
 # include "imgui_bezier_math.h"
 # include "imgui_canvas.h"
@@ -116,14 +116,14 @@ struct FringeScaleScope
 {
 
     FringeScaleScope(float scale)
-        : m_LastFringeScale(ImFringeScaleRef(ImGui::GetWindowDrawList()))
+        : m_LastFringeScale(ax::NodeEditor::Detail::ImFringeScaleRef(ImGui::GetWindowDrawList()))
     {
-        ImFringeScaleRef(ImGui::GetWindowDrawList()) = scale;
+        ax::NodeEditor::Detail::ImFringeScaleRef(ImGui::GetWindowDrawList()) = scale;
     }
 
     ~FringeScaleScope()
     {
-        ImFringeScaleRef(ImGui::GetWindowDrawList()) = m_LastFringeScale;
+        ax::NodeEditor::Detail::ImFringeScaleRef(ImGui::GetWindowDrawList()) = m_LastFringeScale;
     }
 
 private:

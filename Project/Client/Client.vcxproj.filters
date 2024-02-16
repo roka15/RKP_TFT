@@ -257,6 +257,33 @@
     <ClInclude Include="AniControllerEditUI.h">
       <Filter>UI\Module\AniControllerEditUI</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\imgui_bezier_math.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_canvas.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_extra_math.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_node_editor.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_node_editor_internal.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_rectpack.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_textedit.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_truetype.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\crude_json.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -400,5 +427,28 @@
     <ClCompile Include="AniControllerEditUI.cpp">
       <Filter>UI\Module\AniControllerEditUI</Filter>
     </ClCompile>
+    <ClCompile Include="ImGui\imgui_canvas.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_node_editor.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_node_editor_api.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\crude_json.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ImGui\imgui_bezier_math.inl">
+      <Filter>ImGui</Filter>
+    </None>
+    <None Include="ImGui\imgui_extra_math.inl">
+      <Filter>ImGui</Filter>
+    </None>
+    <None Include="ImGui\imgui_node_editor_internal.inl">
+      <Filter>ImGui</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -9,6 +9,7 @@
 // CREDITS
 //   Written by Michal Cichon
 //------------------------------------------------------------------------------
+#pragma once
 # include "imgui_node_editor_internal.h"
 # include <cstdio> // snprintf
 # include <string>
@@ -4143,7 +4144,6 @@ bool ed::SelectAction::Process(const Control& control)
     if (ImGui::IsMouseDragging(Editor->GetConfig().SelectButtonIndex, 0))
     {
         m_EndPoint = ImGui::GetMousePos();
-
         auto topLeft     = ImVec2(std::min(m_StartPoint.x, m_EndPoint.x), std::min(m_StartPoint.y, m_EndPoint.y));
         auto bottomRight = ImVec2(ImMax(m_StartPoint.x, m_EndPoint.x), ImMax(m_StartPoint.y, m_EndPoint.y));
         auto rect        = ImRect(topLeft, bottomRight);
