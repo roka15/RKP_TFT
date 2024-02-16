@@ -1,7 +1,6 @@
 #pragma once
-
-
 #include "ImGuiMgr.h"
+
 
 class UI
 {

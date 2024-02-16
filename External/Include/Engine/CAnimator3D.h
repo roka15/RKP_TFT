@@ -8,6 +8,7 @@
 
 class CStructuredBuffer;
 class CAnimation3D;
+class CAnimatorController;
 
 class CAnimator3D :
     public CComponent
@@ -17,11 +18,10 @@ private:
     int                         m_iCurIdx;
     bool                        m_bBlending;
     CStructuredBuffer* m_pBoneFinalMatBuffer;  // 특정 프레임의 최종 행렬
- 
-
+    CAnimatorController* m_pController;
 public:
     virtual void finaltick() override;
-    bool UpdateData();
+    void UpdateData();
 
 public:
     void RegisterAniClip(const vector<wstring>& _vecAnimClipList);

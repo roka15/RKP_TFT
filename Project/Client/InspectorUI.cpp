@@ -105,6 +105,10 @@ InspectorUI::InspectorUI()
 	m_arrResUI[(UINT)RES_TYPE::ANICLIP] = new AniClipUI;
 	m_arrResUI[(UINT)RES_TYPE::ANICLIP]->SetSize(0.f, 0.f);
 	AddChildUI(m_arrResUI[(UINT)RES_TYPE::ANICLIP]);
+
+	m_arrResUI[(UINT)RES_TYPE::ANICONTROLLER] = new AniClipUI;
+	m_arrResUI[(UINT)RES_TYPE::ANICONTROLLER]->SetSize(0.f, 0.f);
+	AddChildUI(m_arrResUI[(UINT)RES_TYPE::ANICONTROLLER]);
 }
 
 InspectorUI::~InspectorUI()

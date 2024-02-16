@@ -202,6 +202,15 @@
     <ClInclude Include="CAnimation3D.h">
       <Filter>Source\06. Component\7. Animator3D\Animation3D</Filter>
     </ClInclude>
+    <ClInclude Include="AnimatorController.h">
+      <Filter>Source\07. Resource\9.AnimatorController</Filter>
+    </ClInclude>
+    <ClInclude Include="AniNode.h">
+      <Filter>Source\07. Resource\9.AnimatorController\AniNode</Filter>
+    </ClInclude>
+    <ClInclude Include="Transition.h">
+      <Filter>Source\07. Resource\9.AnimatorController\AniTransition</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -395,6 +404,15 @@
     </ClCompile>
     <ClCompile Include="CAnimation3D.cpp">
       <Filter>Source\06. Component\7. Animator3D\Animation3D</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimatorController.cpp">
+      <Filter>Source\07. Resource\9.AnimatorController</Filter>
+    </ClCompile>
+    <ClCompile Include="AniNode.cpp">
+      <Filter>Source\07. Resource\9.AnimatorController\AniNode</Filter>
+    </ClCompile>
+    <ClCompile Include="Transition.cpp">
+      <Filter>Source\07. Resource\9.AnimatorController\AniTransition</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -601,6 +619,15 @@
     </Filter>
     <Filter Include="Source\06. Component\7. Animator3D\Animation3D">
       <UniqueIdentifier>{f1fb31c5-7d0c-4166-8283-12e51c5e1b4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\07. Resource\9.AnimatorController">
+      <UniqueIdentifier>{339bd83f-5d5a-4181-b8c4-a96bb6e0fa8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\07. Resource\9.AnimatorController\AniNode">
+      <UniqueIdentifier>{5eb4922d-1c3c-492f-9e70-d3b53ce63833}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\07. Resource\9.AnimatorController\AniTransition">
+      <UniqueIdentifier>{6e9d71a0-7097-40fa-ae60-1a459a6d6e2a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

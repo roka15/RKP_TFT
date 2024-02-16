@@ -27,22 +27,22 @@
 enum class COMPONENT_TYPE
 {
 	// update
-	TRANSFORM,		// 위치, 크기, 회전
-	COLLIDER2D,		// 2차원 충돌
-	COLLIDER3D,		// 3차원 충돌
-	ANIMATOR2D,		// Sprite Animation
-	ANIMATOR3D,		// Bone Sknning Animation
-	LIGHT2D,		// 2차원 광원
-	LIGHT3D,		// 3차원 광원
-	CAMERA,			// Camera
+	TRANSFORM,			// 위치, 크기, 회전
+	COLLIDER2D,			// 2차원 충돌
+	COLLIDER3D,			// 3차원 충돌
+	ANIMATOR2D,			// Sprite Animation
+	ANIMATOR3D,			// Bone Sknning Animation
+	LIGHT2D,			// 2차원 광원
+	LIGHT3D,			// 3차원 광원
+	CAMERA,				// Camera
 
 	// render
-	MESHRENDER,		// 기본적인 렌더링
-	PARTICLESYSTEM, // 입자 렌더링
-	TILEMAP,		// 2차원 타일
-	LANDSCAPE,		// 3차원 지형
-	SKYBOX,			// SkyBox
-	DECAL,			// 내부 렌더링
+	MESHRENDER,			// 기본적인 렌더링
+	PARTICLESYSTEM,		// 입자 렌더링
+	TILEMAP,			// 2차원 타일
+	LANDSCAPE,			// 3차원 지형
+	SKYBOX,				// SkyBox
+	DECAL,				// 내부 렌더링
 	
 
 	END,
@@ -65,6 +65,7 @@ enum class RES_TYPE
 	TEXTURE,		// 이미지
 	SOUND,
 	ANICLIP,
+	ANICONTROLLER,
 
 	GRAPHICS_SHADER,
 	COMPUTE_SHADER,
@@ -290,4 +291,13 @@ enum class MRT_TYPE
 	SHADOWMAP,
 
 	END,
+};
+
+enum class PARAM_TYPE
+{
+	INT,
+	FLOAT,
+	BOOL,
+	TRIGGER,
+	END
 };

@@ -90,6 +90,9 @@ void ContentUI::Reload()
 		case RES_TYPE::ANICLIP:
 			CResMgr::GetInst()->Load<CAniClip>(m_vecResPath[i], m_vecResPath[i]);
 			break;
+		case RES_TYPE::ANICONTROLLER:
+			CResMgr::GetInst()->Load<CAnimatorController>(m_vecResPath[i], m_vecResPath[i]);
+			break;
 		}
 	}
 

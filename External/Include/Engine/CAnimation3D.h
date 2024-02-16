@@ -33,5 +33,6 @@ public:
     ~CAnimation3D();
 
     friend class CAnimator3D;
+    friend class CAniNode;
 };
 

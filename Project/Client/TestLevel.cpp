@@ -18,7 +18,7 @@
 
 #include <Engine/CSetColorShader.h>
 
-
+#include <Engine\AnimatorController.h>
 void CreateTestLevel()
 {
 	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
@@ -102,6 +102,9 @@ void CreateTestLevel()
 
 
 	SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), 0);
+	CAnimatorController* pAniController = new CAnimatorController();
+	pAniController->SetName(L"TestNullController");
+	CResMgr::GetInst()->AddRes<CAnimatorController>(pAniController->GetName(), pAniController);
 
 	// ============
 	// FBX Loading

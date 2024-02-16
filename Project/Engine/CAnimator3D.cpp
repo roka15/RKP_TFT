@@ -121,10 +121,10 @@ UINT CAnimator3D::GetBoneCount()
 	return m_AniList[m_iCurIdx]->m_pClip->GetBoneCount();
 }
 
-bool CAnimator3D::UpdateData()
+void CAnimator3D::UpdateData()
 {
 	if (m_AniList.size() == 0)
-		return false;
+		return;
 	if (!m_AniList[m_iCurIdx]->m_bFinalMatUpdate)
 	{
 		// Animation3D Update Compute Shader
@@ -152,7 +152,7 @@ bool CAnimator3D::UpdateData()
 
 	// t30 레지스터에 최종행렬 데이터(구조버퍼) 바인딩		
 	m_pBoneFinalMatBuffer->UpdateData(30, PIPELINE_STAGE::PS_VERTEX);
-	return true;
+	return;
 }
 
 void CAnimator3D::ClearData()

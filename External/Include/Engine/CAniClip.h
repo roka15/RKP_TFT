@@ -3,6 +3,8 @@
 class CFBXLoader;
 class CStructuredBuffer;
 class CAnimation3D;
+struct tAnimClip;
+struct tKeyFrame;
 
 class CAniClip :
     public CRes
