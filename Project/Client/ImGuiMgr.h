@@ -12,7 +12,7 @@
 // Delegate
 // ========
 class UI;
-
+class AniControllerEditUI;
 typedef void (UI::* UI_DELEGATE)(void);
 typedef void (UI::* UI_DELEGATE_1)(DWORD_PTR);
 typedef void (UI::* UI_DELEGATE_2)(DWORD_PTR, DWORD_PTR);
@@ -22,12 +22,12 @@ class ImGuiMgr :
 {
     SINGLE(ImGuiMgr);
 private:
-    HWND                m_hMainHwnd;
-    map<string, UI*>    m_mapUI;
+    HWND                     m_hMainHwnd;
+    map<string, UI*>         m_mapUI;
 
-    HANDLE              m_hObserver;
-
-
+    HANDLE                   m_hObserver;
+    AniControllerEditUI*     m_pAniEditTool;
+    bool                     m_bAniEditTool;
 public:
     void init(HWND _hWnd);
     void progress();
@@ -35,7 +35,8 @@ public:
 public:
     UI* FindUI(const string& _UIName);
     HWND GetMainHwnd() { return m_hMainHwnd; }
-
+    void EnableAniEditTool() { m_bAniEditTool = true; }
+    void DisableAniEditTool() { m_bAniEditTool = false; }
 private:
     void CreateUI();
     void ObserveContent();

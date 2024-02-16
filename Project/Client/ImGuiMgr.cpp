@@ -10,11 +10,13 @@
 
 #include "UI.h"
 #include "ParamUI.h"
-
+#include "AniControllerEditUI.h"
 
 ImGuiMgr::ImGuiMgr()
     : m_hMainHwnd(nullptr)   
     , m_hObserver(nullptr)
+    , m_pAniEditTool(nullptr)
+    , m_bAniEditTool(false)
 {
 
 }
@@ -76,6 +78,9 @@ void ImGuiMgr::init(HWND _hWnd)
     m_hObserver = FindFirstChangeNotification(strContentPath.c_str(), true
         , FILE_NOTIFY_CHANGE_FILE_NAME | FILE_NOTIFY_CHANGE_DIR_NAME
         | FILE_ACTION_REMOVED | FILE_ACTION_ADDED);   
+
+    m_pAniEditTool = new AniControllerEditUI();
+    m_pAniEditTool->init();
 }
 
 void ImGuiMgr::progress()
@@ -84,7 +89,8 @@ void ImGuiMgr::progress()
     
     tick();
     finaltick();
-
+    if (m_bAniEditTool)
+        m_pAniEditTool->finaltick();
     render();
 
     // Content 폴더 변경 감시
