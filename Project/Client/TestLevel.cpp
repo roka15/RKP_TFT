@@ -104,6 +104,9 @@ void CreateTestLevel()
 	SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), 0);
 	CAnimatorController* pAniController = new CAnimatorController();
 	pAniController->SetName(L"TestNullController");
+	wstring strPath = L"controller\\" + pAniController->GetName() + L".controller";
+	pAniController->Save(strPath);
+
 	CResMgr::GetInst()->AddRes<CAnimatorController>(pAniController->GetName(), pAniController);
 
 	// ============

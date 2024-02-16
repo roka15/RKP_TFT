@@ -13,8 +13,8 @@ AniControllerUI::~AniControllerUI()
 int AniControllerUI::render_update()
 {
 	ResUI::render_update();
-	/*ImGui::Text("AniController");
-	ImGui::SameLine();*/
+	ImGui::Text("AniController");
+	ImGui::SameLine();
 
 	return 0;
 }

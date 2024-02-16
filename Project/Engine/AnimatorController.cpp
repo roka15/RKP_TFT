@@ -6,8 +6,6 @@
 #include "AniNode.h"
 CAnimatorController::CAnimatorController() :CRes(RES_TYPE::ANICONTROLLER, true)
 {
-	wstring strPath = L"controller\\" + GetName() + L".controller";
-	Save(strPath);
 }
 
 CAnimatorController::~CAnimatorController()

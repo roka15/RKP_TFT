@@ -213,6 +213,8 @@ RES_TYPE ContentUI::GetResTypeByExt(const wstring& _relativepath)
 		return RES_TYPE::SOUND;
 	else if (L".anm" == strExt)
 		return RES_TYPE::ANICLIP;
+	else if (L".controller" == strExt)
+		return RES_TYPE::ANICONTROLLER;
 	else
 		return RES_TYPE::END;
 }
