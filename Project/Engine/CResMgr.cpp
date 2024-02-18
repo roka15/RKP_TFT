@@ -20,6 +20,7 @@ void CResMgr::init()
 	CreateDefaultGraphicsShader();
 	CreateDefaultComputeShader();
 	CreateDefaultMaterial();	
+	CreateDefaultTexture();
 }
 
 

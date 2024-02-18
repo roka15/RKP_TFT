@@ -1,6 +1,6 @@
 #pragma once
 #include <Engine\CSingleton.h>
-
+#define IMGUI_DEFINE_MATH_OPERATORS
 #include "ImGui\imgui.h"
 #include "ImGui\imgui_impl_dx11.h"
 #include "ImGui\imgui_impl_win32.h"
@@ -26,8 +26,7 @@ private:
     map<string, UI*>         m_mapUI;
 
     HANDLE                   m_hObserver;
-    AniControllerEditUI*     m_pAniEditTool;
-    bool                     m_bAniEditTool;
+    ImGuiContext*            m_pContext;
 public:
     void init(HWND _hWnd);
     void progress();
@@ -35,8 +34,6 @@ public:
 public:
     UI* FindUI(const string& _UIName);
     HWND GetMainHwnd() { return m_hMainHwnd; }
-    void EnableAniEditTool() { m_bAniEditTool = true; }
-    void DisableAniEditTool() { m_bAniEditTool = false; }
 private:
     void CreateUI();
     void ObserveContent();
@@ -45,5 +42,9 @@ private:
     void tick();
     void finaltick();
     void render();
+    ImGuiContext* GetGuiContext() { return m_pContext; }
+
+private:
+    friend class AniControllerEditUI;
 };
 

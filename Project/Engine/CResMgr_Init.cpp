@@ -1075,3 +1075,8 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"LandScapeShader"));
 	AddRes(L"LandScapeMtrl", pMtrl);
 }
+
+void CResMgr::CreateDefaultTexture()
+{
+	
+}

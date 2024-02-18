@@ -122,6 +122,9 @@
     <Filter Include="UI\Module\AniControllerEditUI">
       <UniqueIdentifier>{8e40db16-45d5-450e-b1f5-1366d5c6dc4a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\Module\AniControllerEditUI\AniEditParamUI">
+      <UniqueIdentifier>{acaf3c13-65d5-41e1-83d3-59ae462a8110}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -284,6 +287,9 @@
     <ClInclude Include="ImGui\crude_json.h">
       <Filter>ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="AniControllerEditParamUI.h">
+      <Filter>UI\Module\AniControllerEditUI\AniEditParamUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -438,6 +444,9 @@
     </ClCompile>
     <ClCompile Include="ImGui\crude_json.cpp">
       <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="AniControllerEditParamUI.cpp">
+      <Filter>UI\Module\AniControllerEditUI\AniEditParamUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

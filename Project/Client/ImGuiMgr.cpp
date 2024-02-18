@@ -11,12 +11,12 @@
 #include "UI.h"
 #include "ParamUI.h"
 #include "AniControllerEditUI.h"
+#include "AniControllerEditParamUI.h"
 
 ImGuiMgr::ImGuiMgr()
     : m_hMainHwnd(nullptr)   
     , m_hObserver(nullptr)
-    , m_pAniEditTool(nullptr)
-    , m_bAniEditTool(false)
+    , m_pContext(nullptr)
 {
 
 }
@@ -40,7 +40,7 @@ void ImGuiMgr::init(HWND _hWnd)
     // ImGui 초기화
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
+    m_pContext = ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
@@ -78,9 +78,6 @@ void ImGuiMgr::init(HWND _hWnd)
     m_hObserver = FindFirstChangeNotification(strContentPath.c_str(), true
         , FILE_NOTIFY_CHANGE_FILE_NAME | FILE_NOTIFY_CHANGE_DIR_NAME
         | FILE_ACTION_REMOVED | FILE_ACTION_ADDED);   
-
-    m_pAniEditTool = new AniControllerEditUI();
-    m_pAniEditTool->init();
 }
 
 void ImGuiMgr::progress()
@@ -89,8 +86,6 @@ void ImGuiMgr::progress()
     
     tick();
     finaltick();
-    if (m_bAniEditTool)
-        m_pAniEditTool->finaltick();
     render();
 
     // Content 폴더 변경 감시
@@ -158,6 +153,7 @@ void ImGuiMgr::render()
 #include "OutlinerUI.h"
 #include "ListUI.h"
 #include "MenuUI.h"
+#include "AniControllerEditUI.h"
 
 void ImGuiMgr::CreateUI()
 {
@@ -178,6 +174,18 @@ void ImGuiMgr::CreateUI()
     pUI->SetActive(true);
     m_mapUI.insert(make_pair(pUI->GetID(), pUI));
 
+    //Animator Editor UI
+    pUI = new AniControllerEditUI();
+    pUI->SetModal(true);
+    pUI->SetActive(false);
+    m_mapUI.insert(make_pair(pUI->GetID(), pUI));
+
+    //Animator Editor Parameters UI
+    pUI = new AniControllerEditParamUI();
+    pUI->SetModal(true);
+    pUI->SetActive(false);
+    m_mapUI.insert(make_pair(pUI->GetID(), pUI));
+
     // Menu
     pUI = new MenuUI;
     pUI->SetActive(true);
@@ -189,6 +197,8 @@ void ImGuiMgr::CreateUI()
     pUI->SetModal(true);
     pUI->SetActive(false);
     m_mapUI.insert(make_pair(pUI->GetID(), pUI));
+
+  
 
 
     for (const auto& pair : m_mapUI)
