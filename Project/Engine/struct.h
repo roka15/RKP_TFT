@@ -230,6 +230,7 @@ struct tMTAnimClip
 	double			dEndTime;
 	double			dTimeLength;
 	float			fUpdateTime; // ¿Ã∞≈ æ»æ∏
+	bool			bLoop;
 
 	FbxTime::EMode	eMode;
 };

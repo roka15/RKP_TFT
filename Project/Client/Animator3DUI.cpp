@@ -19,8 +19,8 @@ Animator3DUI::~Animator3DUI()
 void Animator3DUI::SelectClip(DWORD_PTR _Key)
 {
 	string strKey = (char*)_Key;
-	Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(wstring(strKey.begin(), strKey.end()));
-	GetTarget()->Animator3D()->ChangeAniClip(pClip->GetName());
+	Ptr<CAnimatorController> pAniController = CResMgr::GetInst()->FindRes<CAnimatorController>(wstring(strKey.begin(), strKey.end()));
+	GetTarget()->Animator3D()->SetController(pAniController);
 }
 int Animator3DUI::render_update()
 {
@@ -29,20 +29,14 @@ int Animator3DUI::render_update()
 
 	char szBuff[MAXLEN] = {};
 
-	CAnimation3D* pAni = GetTarget()->Animator3D()->GetAnimation();
-	Ptr<CAniClip> pClip;
-	if (pAni == nullptr)
-	{
-		pClip = nullptr;
-	}
-	else
-	{
-		pClip = pAni->GetClip();
-		GetResKey(pClip.Get(), szBuff, MAXLEN);
-	}
-	ImGui::Text("Clip    ");
+	wstring wstrControllerName = GetTarget()->Animator3D()->GetCurControllerName();
+	string strControllerName = {};
+	strControllerName.assign(wstrControllerName.begin(), wstrControllerName.end());
+	strcpy_s(szBuff, strControllerName.size()+1, strControllerName.c_str());
+
+	ImGui::Text("Controller    ");
 	ImGui::SameLine();
-	ImGui::InputText("##ClipName", szBuff, MAXLEN, ImGuiInputTextFlags_ReadOnly);
+	ImGui::InputText("##Controller", szBuff, MAXLEN, ImGuiInputTextFlags_ReadOnly);
 
 	
 	if (ImGui::BeginDragDropTarget())
@@ -52,9 +46,9 @@ int Animator3DUI::render_update()
 		{
 			TreeNode* pNode = (TreeNode*)pPayLoad->Data;
 			CRes* pRes = (CRes*)pNode->GetData();
-			if (RES_TYPE::ANICLIP == pRes->GetType())
+			if (RES_TYPE::ANICONTROLLER == pRes->GetType())
 			{
-				GetTarget()->Animator3D()->ChangeAniClip(pRes->GetName());
+				GetTarget()->Animator3D()->SetController(pRes->GetName());
 			}
 		}
 
@@ -62,12 +56,12 @@ int Animator3DUI::render_update()
 	}
 	ImGui::SameLine();
 
-	if (ImGui::Button("##ClipSelectBtn", ImVec2(18, 18)))
+	if (ImGui::Button("##AniControllerSelectBtn", ImVec2(18, 18)))
 	{
-		const map<wstring, Ptr<CRes>>& mapClip = CResMgr::GetInst()->GetResources(RES_TYPE::ANICLIP);
+		const map<wstring, Ptr<CRes>>& mapClip = CResMgr::GetInst()->GetResources(RES_TYPE::ANICONTROLLER);
 
 		ListUI* pListUI = (ListUI*)ImGuiMgr::GetInst()->FindUI("##List");
-		pListUI->Reset("Clip List", ImVec2(300.f, 500.f));
+		pListUI->Reset("AniController List", ImVec2(300.f, 500.f));
 		for (const auto& pair : mapClip)
 		{
 			pListUI->AddItem(string(pair.first.begin(), pair.first.end()));

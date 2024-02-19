@@ -20,12 +20,15 @@ private:
     bool            m_bFinalMatUpdate;
     
     bool            m_bFinish;
+    bool            m_bLoop;
 public:
     void finaltick();
     void Reset();
     void SetClip(const std::wstring& _strKey);
     Ptr<CAniClip> GetClip() { return m_pClip; }
 
+    bool IsFinish() { return m_bFinish; }
+    bool IsLoop() { return m_bLoop; }
     CLONE(CAnimation3D);
 public:
     CAnimation3D();

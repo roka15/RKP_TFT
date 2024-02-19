@@ -48,6 +48,7 @@ void CAniClip::CreateBoneFrameData(CFBXLoader& _loader, tAnimClip*& _pClipData, 
  	tClip.iStartFrame = (int)_pClipData->tStartTime.GetFrameCount(_pClipData->eMode);
 	tClip.iEndFrame = (int)_pClipData->tEndTime.GetFrameCount(_pClipData->eMode);
 	tClip.iFrameLength = tClip.iEndFrame - tClip.iStartFrame;
+	tClip.bLoop = false;
 	tClip.eMode = _pClipData->eMode;
 
 	pClip->m_tInfo = std::move(tClip);
@@ -139,6 +140,7 @@ int CAniClip::Save(const wstring& _strRelativePath)
 	fwrite(&m_tInfo.dEndTime, sizeof(double), 1, pFile);
 	fwrite(&m_tInfo.dTimeLength, sizeof(double), 1, pFile);
 	fwrite(&m_tInfo.fUpdateTime, sizeof(float), 1, pFile);
+	fwrite(&m_tInfo.bLoop, sizeof(bool), 1, pFile);
 	fwrite(&m_tInfo.eMode, sizeof(FbxTime::EMode), 1, pFile);
 
 	//tMTBone
@@ -189,6 +191,7 @@ int CAniClip::Load(const wstring& _strFilePath)
 	fread(&m_tInfo.dEndTime, sizeof(double), 1, pFile);
 	fread(&m_tInfo.dTimeLength, sizeof(double), 1, pFile);
 	fread(&m_tInfo.fUpdateTime, sizeof(float), 1, pFile);
+	fread(&m_tInfo.bLoop, sizeof(bool), 1, pFile);
 	fread(&m_tInfo.eMode, sizeof(FbxTime::EMode), 1, pFile);
 
 	//tMTBone

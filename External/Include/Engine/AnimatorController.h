@@ -3,7 +3,7 @@
 
 class CStructuredBuffer;
 class CAniNode;
-
+class CTransition;
 class CAnimatorController :
     public CRes
 {
@@ -13,24 +13,32 @@ private:
     map<wstring, float> m_mapFloatParams;
     map<wstring, bool>  m_mapBoolParams;
     map<wstring, bool>  m_mapTriggerParams;
+    CAniNode*           m_pEntryNode;
+    CAniNode*           m_pExitNode;
+    CAniNode*           m_pAnyStateNode;
     CAniNode*           m_pCurNode;
-    vector<CAniNode*>   m_vecNode;
+    map<wstring, CAniNode*> m_mapNode;
 public:
     virtual int Load(const wstring& _strFilePath)override;
     virtual int Save(const wstring& _strFilePath)override;
 public:
+    void Init();
     void StartPlayBack() { m_bStart = true; }
     void StopPlayBack() { m_bStart = false; }
     void finaltick();
     void UpdateData(CStructuredBuffer*& _finalMat);
-    void CreateNode(wstring _strName, wstring _strClipName);
+    CAniNode* CreateNode(wstring _strName, wstring _strClipName);
     void DestroyNode(wstring _strName);
-    void CreateTransition(wstring _strName,CAniNode* _pConnectNode);
+    CTransition* CreateTransition(wstring _strName,CAniNode* _pInNode, CAniNode* _pOutNode);
     void DestroyTransition(wstring _strName);
     void RegisterParam(wstring _strName, int _iValue);
     void RegisterParam(wstring _strName, float _fValue);
     void RegisterParam(wstring _strName, bool _bValue , bool _bTrigger);
     void DeleteParam(PARAM_TYPE _eType, wstring _strName);
+
+    void SetCurNode(CAniNode* _pCurNode) { m_pCurNode = _pCurNode; }
+    CAniNode* GetNode(const wstring _strName) { return m_mapNode[_strName]; }
+    UINT GetBoneCount();
 public:
     CAnimatorController();
     virtual ~CAnimatorController();

@@ -13,11 +13,19 @@ private:
     map<wstring, bool>      m_mapBoolConditions;
     map<wstring, bool>      m_mapTriggerConditions;
     CAniNode*               m_pConnectNode;
+    CAniNode*               m_pOwner;
 public:
-    bool IsActive(CAnimatorController* _pController);
+    bool IsActive();
     void RegisterCondition(wstring _Key, int _iValue);
     void RegisterCondition(wstring _Key, float _fValue);
     void RegisterCondition(wstring _Key, bool _bValue,bool _bTrigger);
+    void SetOwner(CAniNode* _pOwnerNode) { m_pOwner = _pOwnerNode; }
+    CAniNode* GetOwner() { return m_pOwner; }
+    
+    void RegisterCurNode(CAnimatorController* _pController);
+    void SetConnectNode(CAniNode* _pConnectNode);
+  
+    CLONE(CTransition)
 public:
     CTransition();
     virtual ~CTransition();

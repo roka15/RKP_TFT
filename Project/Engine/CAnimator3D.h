@@ -14,31 +14,23 @@ class CAnimator3D :
     public CComponent
 {
 private:
-    vector<CAnimation3D*>       m_AniList;
     int                         m_iCurIdx;
     bool                        m_bBlending;
     CStructuredBuffer* m_pBoneFinalMatBuffer;  // 특정 프레임의 최종 행렬
-    CAnimatorController* m_pController;
+    Ptr<CAnimatorController> m_pController;
 public:
     virtual void finaltick() override;
     void UpdateData();
 
 public:
-    void RegisterAniClip(const vector<wstring>& _vecAnimClipList);
-    int RegisterAniClip(const wstring& _strAnimClip);
-    void RemoveAniClip(const vector<wstring>& _vecAnimClipList);
-    void RemoveAniClip(const wstring& _strAnimClip);
-    void ChangeAniClip(const wstring& _strAnimClip);
-
-    CAnimation3D* GetAnimation();
+    void SetController(Ptr<CAnimatorController> _pController) { m_pController = _pController; }
+    void SetController(wstring _strName);
+    const wstring& GetCurControllerName();
     //void SetClipTime(int _iClipIdx, float _fTime);
 
     UINT GetBoneCount();
     CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMatBuffer; }
     void ClearData();
-  
-private:
-    void check_bone();
 
 public:
     virtual void SaveToLevelFile(FILE* _pFile) override;

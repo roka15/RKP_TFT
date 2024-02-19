@@ -25,6 +25,8 @@ public:
     CStructuredBuffer* GetBoneOffsetBuffer() { return m_pBoneOffset; }
     UINT GetBoneCount() { return m_vecBones.size(); }
     virtual int Save(const wstring& _strRelativePath)override;
+
+    void ActiveLoop() { m_tInfo.bLoop = true; }
 public:
     CAniClip();
     ~CAniClip();

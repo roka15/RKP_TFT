@@ -102,16 +102,13 @@ void CreateTestLevel()
 
 
 	SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), 0);
-	CAnimatorController* pAniController = new CAnimatorController();
-	pAniController->SetName(L"TestNullController");
-	wstring strPath = L"controller\\" + pAniController->GetName() + L".controller";
-	pAniController->Save(strPath);
 
-	CResMgr::GetInst()->AddRes<CAnimatorController>(pAniController->GetName(), pAniController);
+
 
 	// ============
 	// FBX Loading
 	// ============	
+	CGameObject* pAttroxObj = nullptr;
 	{
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* pObj = nullptr;
@@ -136,7 +133,7 @@ void CreateTestLevel()
 		pObj = pMeshData->Instantiate();
 		pObj->SetName(L"Attrox");
 		SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), 0);
-
+		pAttroxObj = pObj;
 
 		CGameObject* pNewObj = new CGameObject;
 		pNewObj->SetName(L"Cube");
@@ -145,7 +142,7 @@ void CreateTestLevel()
 		pNewObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
 
 
-		pNewObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"),0);
+		pNewObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"), 0);
 
 		pNewObj->Transform()->SetRelativeScale(Vec3(500.f, 500.f, 500.f));
 		SpawnGameObject(pNewObj, Vec3(0.f, 0.f, 0.f), 0);
@@ -184,10 +181,44 @@ void CreateTestLevel()
 	//pLandScape->Transform()->SetRelativeScale(Vec3(500.f, 3000.f, 500.f));
 
 	//pLandScape->LandScape()->SetFace(64, 64);
-	//pLandScape->LandScape()->SetFrustumCheck(false);
+	//pLandScape->LandScape()->SetFrustumCheck(false); 
 	////pLandScape->LandScape()->SetHeightMap(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\HeightMap_01.jpg"));
 
 	//SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 0);
+
+	// ============
+	// Ani Controller Init
+	// ============	
+	Ptr<CAnimatorController> pAniController = nullptr;
+	wstring strPath = L"controller\\TestNullController.controller";
+
+	pAniController = CResMgr::GetInst()->FindRes<CAnimatorController>(strPath);
+	if (pAniController == nullptr)
+	{
+		Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Dance_Loop.anm");
+		pClip->ActiveLoop();
+		pAniController = new CAnimatorController();
+		CResMgr::GetInst()->AddRes<CAnimatorController>(strPath, pAniController);
+		pAniController->Save(strPath);
+	}
+	//이 부분 Save 위에 올라가야한 근데 아직 Save 구현을 안함.
+	pAniController->Init();
+	pAniController->SetName(strPath);
+	CAniNode* pOutNode = pAniController->GetNode(L"Entry");
+	CAniNode* pInNode = pAniController->CreateNode(L"Ani1", L"anim3D\\Dance_Windup.anm");
+	pAniController->CreateTransition(L"Entry_Ani1", pInNode, pOutNode);
+
+	pOutNode = pInNode;
+	pInNode = pAniController->CreateNode(L"Ani2", L"anim3D\\Dance_Loop.anm");
+	pAniController->CreateTransition(L"Ani1_Ani2", pInNode, pOutNode);
+
+	pOutNode = pInNode;
+	pInNode = pAniController->CreateNode(L"Ani3", L"anim3D\\Aatrox_Idle1.anm");
+	pAniController->CreateTransition(L"Ani1_Ani3", pInNode, pOutNode);
+	//여기까지
+
+	pAttroxObj->Animator3D()->SetController(pAniController);
+
 
 	// 충돌 시킬 레이어 짝 지정
 	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");
