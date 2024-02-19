@@ -9,7 +9,7 @@
 
 //OutConditions : node 에서 삭제하기
 //InConditions  : node 에서 참조 끊기.
-CAniNode::CAniNode(wstring _strClipName):
+CAniNode::CAniNode(wstring _strClipName) :
 	m_bBlending(false)
 {
 	CAnimation3D* pAni = nullptr;
@@ -103,22 +103,69 @@ void CAniNode::Destory()
 
 	RemoveAllOutTransition();
 }
-bool CAniNode::NextNode(int _iOutSize)
+bool CAniNode::NextNode(int _iOutSize, bool _bFinish, bool _bCurNullNode)
 {
+	//다음 transition이 없다면 loop를 수행할지 말지 정한다.
+	if (_bFinish == true && _iOutSize == 0)
+	{
+		bool bLoop = m_pMotionClip->IsLoop();
+		if (bLoop)
+			m_pMotionClip->Reset();
+		return false;
+	}
+
 	for (int i = 0; i < _iOutSize; ++i)
 	{
 		CTransition* pOutTransition = m_vecOutConditions[i];
-		bool bActive = pOutTransition->IsActive();
-		if (bActive)
+
+		//현재 노드가 Entry,AnyState,Exit 같은 노드인 경우.
+		if (_bCurNullNode)
 		{
 			pOutTransition->RegisterCurNode(m_pController);
 			return true;
+		}
+		//Condition 검사를 하지 않고 애니 재생을 완료 했는지 여부로 다음 재생을 결정한다.
+		bool bExitTime = pOutTransition->IsExitTime();
+		if (_bFinish)
+		{
+			if (bExitTime)
+			{
+				m_pMotionClip->Reset();
+				pOutTransition->RegisterCurNode(m_pController);
+				return true;
+			}
+			else
+			{
+				//loop 의 값과 무관하게 같은 애니를 반복한다.
+				m_pMotionClip->Reset();
+			}
+		}
+		else
+		{
+			if (bExitTime)
+			{
+				//condition active 되어도 finish가 아니기 때문에 넘어가지 않음.
+			}
+			else
+			{   
+				//재생을 완료하지 않았어도 Condition을 만족하면 다음 노드로 이동한다.
+				bool bActive = pOutTransition->IsActive(m_pController);
+				//condition active 되면 넘어감.
+				if (bActive)
+				{
+					m_pMotionClip->Reset();
+					pOutTransition->RegisterCurNode(m_pController);
+					return true;
+				}
+			}
 		}
 	}
 	return false;
 }
 UINT CAniNode::GetBoneCount()
 {
+	if (m_pMotionClip == nullptr)
+		return -1;
 	return m_pMotionClip->m_pClip->GetBoneCount();
 }
 void CAniNode::finaltick()
@@ -127,23 +174,12 @@ void CAniNode::finaltick()
 	bool bFinish = false;
 	if (bNullClip == false)
 		bFinish = m_pMotionClip->IsFinish();
+	size_t iOutSize = m_vecOutConditions.size();
+	bool bNextNode = NextNode(iOutSize, bFinish, bNullClip);
+	if (bNextNode)
+		return;
 
-	if (bFinish || bNullClip)
-	{
-		size_t iOutSize = m_vecOutConditions.size();
-		if (iOutSize == 0)
-		{
-			bool bLoop = m_pMotionClip->IsLoop();
-			if (bLoop)
-				m_pMotionClip->Reset();
-		}
-		else
-		{
-			bool bNextNode = NextNode(iOutSize);
-			if (bNextNode)
-				return;
-		}
-	}
+
 	if (m_pMotionClip != nullptr)
 		m_pMotionClip->finaltick();
 }

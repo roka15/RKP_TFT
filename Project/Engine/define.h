@@ -301,3 +301,11 @@ enum class PARAM_TYPE
 	TRIGGER,
 	END
 };
+
+enum class COMPARISON_TYPE
+{
+	GREATER,
+	LESS,
+	EQUAL,
+	END,
+};

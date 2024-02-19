@@ -29,12 +29,16 @@ public:
     void UpdateData(CStructuredBuffer*& _finalMat);
     CAniNode* CreateNode(wstring _strName, wstring _strClipName);
     void DestroyNode(wstring _strName);
-    CTransition* CreateTransition(wstring _strName,CAniNode* _pInNode, CAniNode* _pOutNode);
+    CTransition* CreateTransition(wstring _strName,CAniNode* _pInNode, CAniNode* _pOutNode,bool _bExitTime=false);
     void DestroyTransition(wstring _strName);
     void RegisterParam(wstring _strName, int _iValue);
     void RegisterParam(wstring _strName, float _fValue);
     void RegisterParam(wstring _strName, bool _bValue , bool _bTrigger);
     void DeleteParam(PARAM_TYPE _eType, wstring _strName);
+    int GetIntParam(wstring _strName, bool& _bfail);
+    float GetFloatParam(wstring _strName, bool& _bfail);
+    bool GetBoolParam(wstring _strName,bool& _bfail);
+    bool GetTriggerParam(wstring _strName, bool& _bfail);
 
     void SetCurNode(CAniNode* _pCurNode) { m_pCurNode = _pCurNode; }
     CAniNode* GetNode(const wstring _strName) { return m_mapNode[_strName]; }

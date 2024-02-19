@@ -191,12 +191,12 @@ void CreateTestLevel()
 	// ============	
 	Ptr<CAnimatorController> pAniController = nullptr;
 	wstring strPath = L"controller\\TestNullController.controller";
-
+	Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Dance_Loop.anm");
+	pClip->ActiveLoop();
 	pAniController = CResMgr::GetInst()->FindRes<CAnimatorController>(strPath);
 	if (pAniController == nullptr)
 	{
-		Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Dance_Loop.anm");
-		pClip->ActiveLoop();
+		
 		pAniController = new CAnimatorController();
 		CResMgr::GetInst()->AddRes<CAnimatorController>(strPath, pAniController);
 		pAniController->Save(strPath);
@@ -206,15 +206,15 @@ void CreateTestLevel()
 	pAniController->SetName(strPath);
 	CAniNode* pOutNode = pAniController->GetNode(L"Entry");
 	CAniNode* pInNode = pAniController->CreateNode(L"Ani1", L"anim3D\\Dance_Windup.anm");
-	pAniController->CreateTransition(L"Entry_Ani1", pInNode, pOutNode);
+	pAniController->CreateTransition(L"Entry_Ani1", pInNode, pOutNode,true);
 
 	pOutNode = pInNode;
 	pInNode = pAniController->CreateNode(L"Ani2", L"anim3D\\Dance_Loop.anm");
-	pAniController->CreateTransition(L"Ani1_Ani2", pInNode, pOutNode);
+	pAniController->CreateTransition(L"Ani1_Ani2", pInNode, pOutNode, true);
 
 	pOutNode = pInNode;
 	pInNode = pAniController->CreateNode(L"Ani3", L"anim3D\\Aatrox_Idle1.anm");
-	pAniController->CreateTransition(L"Ani1_Ani3", pInNode, pOutNode);
+	pAniController->CreateTransition(L"Ani1_Ani3", pInNode, pOutNode, true);
 	//여기까지
 
 	pAttroxObj->Animator3D()->SetController(pAniController);

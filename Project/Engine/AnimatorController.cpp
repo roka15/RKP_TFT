@@ -91,9 +91,10 @@ void CAnimatorController::DestroyNode(wstring _strName)
 	pNode->Destory();
 }
 
-CTransition* CAnimatorController::CreateTransition(wstring _strName, CAniNode* _pInNode, CAniNode* _pOutNode)
+CTransition* CAnimatorController::CreateTransition(wstring _strName, CAniNode* _pInNode, CAniNode* _pOutNode, bool _bExitTime)
 {
 	CTransition* pTransition = new CTransition();
+	pTransition->SetExitTime(_bExitTime);
 	_pOutNode->AddOutTransition(pTransition);
 	_pInNode->AddInTransition(pTransition);
 	pTransition->SetConnectNode(_pInNode);
@@ -120,6 +121,54 @@ void CAnimatorController::RegisterParam(wstring _strName, bool _bValue, bool _bT
 
 void CAnimatorController::DeleteParam(PARAM_TYPE _eType, wstring _strName)
 {
+}
+
+int CAnimatorController::GetIntParam(wstring _strName, bool& _bfail)
+{
+	auto itr = m_mapIntParams.find(_strName);
+	if (itr == m_mapIntParams.end())
+	{
+		_bfail = true;
+		return -1;
+	}
+	_bfail = false;
+	return itr->second;
+}
+
+float CAnimatorController::GetFloatParam(wstring _strName, bool& _bfail)
+{
+	auto itr = m_mapFloatParams.find(_strName);
+	if (itr == m_mapFloatParams.end())
+	{
+		_bfail = true;
+		return -1.0f;
+	}
+	_bfail = false;
+	return itr->second;
+}
+
+bool CAnimatorController::GetBoolParam(wstring _strName, bool& _bfail)
+{
+	auto itr = m_mapBoolParams.find(_strName);
+	if (itr == m_mapBoolParams.end())
+	{
+		_bfail = true;
+		return false;
+	}
+	_bfail = false;
+	return itr->second;
+}
+
+bool CAnimatorController::GetTriggerParam(wstring _strName, bool& _bfail)
+{
+	auto itr = m_mapTriggerParams.find(_strName);
+	if (itr == m_mapTriggerParams.end())
+	{
+		_bfail = true;
+		return false;
+	}
+	_bfail = false;
+	return itr->second;
 }
 
 UINT CAnimatorController::GetBoneCount()

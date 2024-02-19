@@ -9,7 +9,6 @@ CAnimation3D::CAnimation3D() :
 	, m_iFrameCount(30)
 	, m_bFinalMatUpdate(false)
 	, m_bFinish(false)
-	, m_bLoop(false)
 	, m_iFrameIdx(0)
 	, m_iNextFrameIdx(0)
 	, m_fRatio(0.f)
@@ -21,7 +20,6 @@ CAnimation3D::CAnimation3D(Ptr<CAniClip> _clip) :
 	, m_iFrameCount(0)
 	, m_bFinalMatUpdate(false)
 	, m_bFinish(false)
-	, m_bLoop(false)
 	, m_iFrameIdx(0)
 	, m_iNextFrameIdx(0)
 	, m_fRatio(0.f)
@@ -42,11 +40,8 @@ CAnimation3D::~CAnimation3D()
 }
 void CAnimation3D::finaltick()
 {
-	if (m_bFinish == true)
-	{
-		Reset();
+	if (m_bFinish)
 		return;
-	}
 	m_dCurTime = 0.f;
 	m_dUpdateTime += DT;
 

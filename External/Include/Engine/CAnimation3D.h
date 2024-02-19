@@ -20,7 +20,6 @@ private:
     bool            m_bFinalMatUpdate;
     
     bool            m_bFinish;
-    bool            m_bLoop;
 public:
     void finaltick();
     void Reset();
@@ -28,7 +27,7 @@ public:
     Ptr<CAniClip> GetClip() { return m_pClip; }
 
     bool IsFinish() { return m_bFinish; }
-    bool IsLoop() { return m_bLoop; }
+    bool IsLoop() { return m_pClip->m_tInfo.bLoop; }
     CLONE(CAnimation3D);
 public:
     CAnimation3D();

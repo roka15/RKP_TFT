@@ -27,7 +27,7 @@ public:
     void RemoveAllOutTransition();
     void Destory();
     void SetBlending(bool _flag) { m_bBlending = _flag; }
-    bool NextNode(int _iOutSize);
+    bool NextNode(int _iOutSize,bool _bFinish,bool _bCurNullNode);
     UINT GetBoneCount();
 public:
     void finaltick();
