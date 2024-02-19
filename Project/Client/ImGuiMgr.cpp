@@ -176,13 +176,11 @@ void ImGuiMgr::CreateUI()
 
     //Animator Editor UI
     pUI = new AniControllerEditUI();
-    pUI->SetModal(true);
     pUI->SetActive(false);
     m_mapUI.insert(make_pair(pUI->GetID(), pUI));
 
     //Animator Editor Parameters UI
     pUI = new AniControllerEditParamUI();
-    pUI->SetModal(true);
     pUI->SetActive(false);
     m_mapUI.insert(make_pair(pUI->GetID(), pUI));
 

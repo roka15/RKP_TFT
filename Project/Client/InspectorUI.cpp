@@ -36,7 +36,7 @@ InspectorUI::InspectorUI()
 	, m_arrComUI{}	
 	, m_arrResUI{}
 {
-	SetName("Inspector");
+	SetName("Inspector1");
 
 	m_arrComUI[(UINT)COMPONENT_TYPE::TRANSFORM] = new TransformUI;
 	m_arrComUI[(UINT)COMPONENT_TYPE::TRANSFORM]->SetSize(0.f, 150.f);	

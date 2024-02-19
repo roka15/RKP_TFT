@@ -23,7 +23,7 @@ int AniControllerUI::render_update()
 	
 	if (ImGui::Button("Edit##AniControllerEditBtn", ImVec2(40, 30)))
 	{
-		//ImGuiMgr::GetInst()->FindUI("##AniControllerEditUI")->SetActive(true);
+		ImGuiMgr::GetInst()->FindUI("##AniControllerEditUI")->SetActive(true);
 		ImGuiMgr::GetInst()->FindUI("##AniParameters")->SetActive(true);
 	}
   

@@ -272,7 +272,7 @@ void AniControllerEditUI::init()
 {
 	//SetSize(1000, 1000);
 	imguiNodeEdit::Config config;
-	config.SettingsFile = "Simple.json";
+	config.SettingsFile = "Controller.json";
 	m_Context = imguiNodeEdit::CreateEditor(&config);
 }
 
@@ -307,7 +307,7 @@ int AniControllerEditUI::render_update()
 	//ShowLeftPane(leftPaneWidth - 4.0f);
 	// Start drawing nodes.
 	imguiNodeEdit::BeginNode(uniqueId++);
-	ImGui::Text("Node A");
+	ImGui::Text("Entry");
 	imguiNodeEdit::BeginPin(uniqueId++, imguiNodeEdit::PinKind::Input);
 	ImGui::Text("-> In");
 	imguiNodeEdit::EndPin();
