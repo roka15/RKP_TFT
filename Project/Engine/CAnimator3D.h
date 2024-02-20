@@ -25,6 +25,7 @@ public:
 public:
     void SetController(Ptr<CAnimatorController> _pController) { m_pController = _pController; }
     void SetController(wstring _strName);
+    Ptr<CAnimatorController> GetController() { return m_pController; }
     const wstring& GetCurControllerName();
     //void SetClipTime(int _iClipIdx, float _fTime);
 

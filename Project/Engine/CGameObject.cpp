@@ -11,6 +11,7 @@
 #include "CLayer.h"
 
 #include "CRenderComponent.h"
+#include "CKeyMgr.h"
 
 CGameObject::CGameObject()
 	: m_arrCom{}
@@ -104,6 +105,17 @@ void CGameObject::tick()
 
 void CGameObject::finaltick()
 {
+	if (GetName().compare(L"Attrox") == 0)
+	{
+		if (CKeyMgr::GetInst()->GetKeyState(KEY::UP) == KEY_STATE::TAP)
+		{
+			Animator3D()->GetController()->SetIntParam(L"1to2", 1);
+		}
+		if (CKeyMgr::GetInst()->GetKeyState(KEY::DOWN) == KEY_STATE::TAP)
+		{
+			Animator3D()->GetController()->SetIntParam(L"2to3", 2);
+		}
+	}
 	if (m_bLifeSpan)
 	{
 		m_CurLifeTime += DT;

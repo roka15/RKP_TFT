@@ -17,8 +17,8 @@
 
 
 #include <Engine/CSetColorShader.h>
-
 #include <Engine\AnimatorController.h>
+#include <Engine\Transition.h>
 void CreateTestLevel()
 {
 	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
@@ -194,27 +194,31 @@ void CreateTestLevel()
 	Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Dance_Loop.anm");
 	pClip->ActiveLoop();
 	pAniController = CResMgr::GetInst()->FindRes<CAnimatorController>(strPath);
-	if (pAniController == nullptr)
-	{
-		
-		pAniController = new CAnimatorController();
-		CResMgr::GetInst()->AddRes<CAnimatorController>(strPath, pAniController);
-		pAniController->Save(strPath);
-	}
-	//이 부분 Save 위에 올라가야한 근데 아직 Save 구현을 안함.
-	pAniController->Init();
-	pAniController->SetName(strPath);
-	CAniNode* pOutNode = pAniController->GetNode(L"Entry");
-	CAniNode* pInNode = pAniController->CreateNode(L"Ani1", L"anim3D\\Dance_Windup.anm");
-	pAniController->CreateTransition(L"Entry_Ani1", pInNode, pOutNode,true);
+	
+	//pAniController = new CAnimatorController();
+	//CResMgr::GetInst()->AddRes<CAnimatorController>(strPath, pAniController);
 
-	pOutNode = pInNode;
-	pInNode = pAniController->CreateNode(L"Ani2", L"anim3D\\Dance_Loop.anm");
-	pAniController->CreateTransition(L"Ani1_Ani2", pInNode, pOutNode, true);
 
-	pOutNode = pInNode;
-	pInNode = pAniController->CreateNode(L"Ani3", L"anim3D\\Aatrox_Idle1.anm");
-	pAniController->CreateTransition(L"Ani1_Ani3", pInNode, pOutNode, true);
+	//pAniController->RegisterParam(L"1to2", 0);
+	//pAniController->RegisterParam(L"2to3", 0);
+	////이 부분 Save 위에 올라가야한 근데 아직 Save 구현을 안함.
+	//pAniController->Init();
+	//pAniController->SetName(strPath);
+	//CAniNode* pOutNode = pAniController->GetNode(L"Entry");
+	//CAniNode* pInNode = pAniController->CreateNode(L"Ani1", L"anim3D\\Dance_Windup.anm");
+	//pAniController->CreateTransition(L"Entry_Ani1", pInNode, pOutNode,false);
+	//
+	//pOutNode = pInNode;
+	//pInNode = pAniController->CreateNode(L"Ani2", L"anim3D\\Dance_Loop.anm");
+	//CTransition* t1 = pAniController->CreateTransition(L"Ani1_Ani2", pInNode, pOutNode, false);
+	//t1->RegisterCondition(L"1to2", 1, COMPARISON_TYPE::EQUAL);
+
+	//pOutNode = pInNode;
+	//pInNode = pAniController->CreateNode(L"Ani3", L"anim3D\\Aatrox_Idle1.anm");
+	//CTransition* t2 = pAniController->CreateTransition(L"Ani2_Ani3", pInNode, pOutNode, false);
+	//t2->RegisterCondition(L"2to3", 2, COMPARISON_TYPE::EQUAL);
+
+	//pAniController->Save(strPath);
 	//여기까지
 
 	pAttroxObj->Animator3D()->SetController(pAniController);

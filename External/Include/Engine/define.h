@@ -19,7 +19,7 @@
 #define SINGLE(type) private: type(); ~type(); friend class CSingleton<type>;
 #define MAXLEN 255
 
-
+#define UNICODELEN 2
 
 
 

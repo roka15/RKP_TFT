@@ -17,6 +17,9 @@ private:
 private:
     void check_bone(CStructuredBuffer*& _finalMat);
 public:
+    int Save(FILE* _pFile);
+    int Load(FILE* _pFile);
+    int LoadAfterProcess();
     void SetController(CAnimatorController* _pController) { m_pController = _pController; }
     
     void AddOutTransition(CTransition* _pTransition);
@@ -34,6 +37,7 @@ public:
     void UpdateData(CStructuredBuffer*& _finalMat);
     CLONE(CAniNode)
 public:
+    CAniNode();
     CAniNode(wstring _strClipName);
     virtual ~CAniNode();
 };

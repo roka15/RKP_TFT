@@ -7,6 +7,11 @@
 #include "Transition.h"
 #include "CStructuredBuffer.h"
 
+CAniNode::CAniNode() :
+	m_bBlending(false)
+{
+}
+
 //OutConditions : node 에서 삭제하기
 //InConditions  : node 에서 참조 끊기.
 CAniNode::CAniNode(wstring _strClipName) :
@@ -37,6 +42,65 @@ void CAniNode::check_bone(CStructuredBuffer*& _finalMat)
 	{
 		_finalMat->Create(sizeof(Matrix), iBoneCount, SB_TYPE::READ_WRITE, false, nullptr);
 	}
+}
+
+int CAniNode::Save(FILE* _pFile)
+{
+	int loopSize = m_vecOutConditions.size();
+	fwrite(&loopSize, sizeof(int), 1, _pFile);
+	for (int i = 0; i < loopSize; ++i)
+	{
+		m_vecOutConditions[i]->Save(_pFile);
+	}
+	wstring strClipKey = {};
+	if (m_pMotionClip == nullptr)
+		strClipKey = L"";
+	else
+		strClipKey = m_pMotionClip->GetClip()->GetName();
+	int strLen = strClipKey.size() * UNICODELEN;
+	fwrite(&strLen, sizeof(int), 1, _pFile);
+	fwrite(strClipKey.c_str(), strLen, 1, _pFile);
+	fwrite(&m_bBlending, sizeof(bool), 1, _pFile);
+	return S_OK;
+}
+
+int CAniNode::Load(FILE* _pFile)
+{
+	int loopSize = 0;
+	fread(&loopSize, sizeof(int), 1, _pFile);
+	for (int i = 0; i < loopSize; ++i)
+	{
+		CTransition* pTransition = new CTransition();
+		pTransition->Load(_pFile);
+		m_vecOutConditions.push_back(pTransition);
+	}
+	int strLen = 0;
+	wchar_t strBuff[MAXLEN] = {};
+	fread(&strLen, sizeof(int), 1, _pFile);
+	fread(strBuff, strLen, 1, _pFile);
+	if (strLen != 0)
+	{
+		strBuff[strLen + 1] = '\0';
+		Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(strBuff);
+		m_pMotionClip = new CAnimation3D(pClip);
+	}
+	fread(&m_bBlending, sizeof(bool), 1, _pFile);
+	return 0;
+}
+
+int CAniNode::LoadAfterProcess()
+{
+	for (int i = 0; i < m_vecOutConditions.size(); ++i)
+	{
+		wstring strKey = m_vecOutConditions[i]->GetConnectNodeName();
+		CAniNode* pNode = m_pController->GetNode(strKey);
+		CTransition* pTransition = m_vecOutConditions[i];
+
+		m_vecOutConditions[i]->SetConnectNode(pNode);
+		m_vecOutConditions[i]->SetOwner(this);
+		pNode->m_vecInConditions.push_back(pTransition);
+	}
+	return S_OK;
 }
 
 void CAniNode::AddOutTransition(CTransition* _pTransition)
@@ -147,7 +211,7 @@ bool CAniNode::NextNode(int _iOutSize, bool _bFinish, bool _bCurNullNode)
 				//condition active 되어도 finish가 아니기 때문에 넘어가지 않음.
 			}
 			else
-			{   
+			{
 				//재생을 완료하지 않았어도 Condition을 만족하면 다음 노드로 이동한다.
 				bool bActive = pOutTransition->IsActive(m_pController);
 				//condition active 되면 넘어감.

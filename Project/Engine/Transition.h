@@ -15,10 +15,15 @@ private:
     map<wstring, COMPARISON_TYPE>    m_mapComparisonConditions;
     CAniNode*                        m_pConnectNode;
     CAniNode*                        m_pOwner;
+    //Load때 사용되는 변수.
+    wstring                          m_strConnectNode;
+    wstring                          m_strOwnerNode;
 private:
     template <typename T>
     bool ComparisonCalculator(T& data1, const T& data2 ,COMPARISON_TYPE _tType);
 public:
+    int Save(FILE* _pFile);
+    int Load(FILE* _pFile);
     bool IsActive(Ptr<CAnimatorController> _pController);
     bool IsExitTime() { return m_bHasExitTime; }
     void SetExitTime(bool _flag) { m_bHasExitTime = _flag; }
@@ -30,7 +35,8 @@ public:
     
     void RegisterCurNode(Ptr<CAnimatorController> _pController);
     void SetConnectNode(CAniNode* _pConnectNode);
-  
+    wstring GetConnectNodeName() { return m_strConnectNode; }
+    wstring GetOwnerNodeName() { return m_strOwnerNode; }
     CLONE(CTransition)
 public:
     CTransition();
