@@ -30,7 +30,8 @@ CAniNode::CAniNode(wstring _strClipName) :
 
 CAniNode::~CAniNode()
 {
-
+	RemoveAllInTransition();
+	RemoveAllOutTransition();
 }
 
 void CAniNode::check_bone(CStructuredBuffer*& _finalMat)
