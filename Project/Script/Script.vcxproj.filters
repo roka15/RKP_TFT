@@ -10,6 +10,39 @@
     <Filter Include="ScriptMgr">
       <UniqueIdentifier>{78d2676d-e9d6-47ca-8d90-52e8d457d264}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\FSM">
+      <UniqueIdentifier>{80e8bac6-b0ea-47f6-b85f-67615c9ef340}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Character">
+      <UniqueIdentifier>{a4701cb8-12ee-435f-8abb-a0a70e1efdb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\FSM\Trigger">
+      <UniqueIdentifier>{b68f658c-1d32-4152-ab79-dca001d41b0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\FSM\State">
+      <UniqueIdentifier>{3c95a660-bd78-4c3d-bcb6-f37dfebb9003}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\FSM\State\Champ">
+      <UniqueIdentifier>{7e1b7d68-ad79-48b4-be72-d40cfe0d1887}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\FSM\State\Monster">
+      <UniqueIdentifier>{21b19678-79f6-4c07-9317-c162d05061a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\FSM\State\Champ\Attrox">
+      <UniqueIdentifier>{5a7e36f4-a8fa-42ff-b0ea-3915b7817d9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\FSM\Machine">
+      <UniqueIdentifier>{5bef7208-e904-42e1-8012-07b193abea9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\FSM\Machine\Champ">
+      <UniqueIdentifier>{5d9e1ae7-68f2-427b-a218-7b55ce243d08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\FSM\Machine\Monster">
+      <UniqueIdentifier>{e2897c22-9b6b-4960-b607-e4472dcf5501}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\FSM\Machine\Champ\Attrox">
+      <UniqueIdentifier>{530ec527-3355-45db-b0ed-68c8de113f83}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CCameraMoveScript.h">
@@ -39,6 +72,30 @@
     <ClInclude Include="CTestScript.h">
       <Filter>Script</Filter>
     </ClInclude>
+    <ClInclude Include="CCharacterTriggerScript.h">
+      <Filter>Script\FSM\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="CCharacterScript.h">
+      <Filter>Script\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="CCharacterStateScript.h">
+      <Filter>Script\FSM\State</Filter>
+    </ClInclude>
+    <ClInclude Include="CAttroxIdleScript.h">
+      <Filter>Script\FSM\State\Champ\Attrox</Filter>
+    </ClInclude>
+    <ClInclude Include="CStateScript.h">
+      <Filter>Script\FSM\State</Filter>
+    </ClInclude>
+    <ClInclude Include="CTriggerScript.h">
+      <Filter>Script\FSM\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="CStateMachineScript.h">
+      <Filter>Script\FSM\Machine</Filter>
+    </ClInclude>
+    <ClInclude Include="CAttroxMachineScript.h">
+      <Filter>Script\FSM\Machine\Champ\Attrox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CCameraMoveScript.cpp">
@@ -67,6 +124,30 @@
     </ClCompile>
     <ClCompile Include="CTestScript.cpp">
       <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="CCharacterTriggerScript.cpp">
+      <Filter>Script\FSM\Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="CCharacterScript.cpp">
+      <Filter>Script\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="CCharacterStateScript.cpp">
+      <Filter>Script\FSM\State</Filter>
+    </ClCompile>
+    <ClCompile Include="CAttroxIdleScript.cpp">
+      <Filter>Script\FSM\State\Champ\Attrox</Filter>
+    </ClCompile>
+    <ClCompile Include="CStateScript.cpp">
+      <Filter>Script\FSM\State</Filter>
+    </ClCompile>
+    <ClCompile Include="CTriggerScript.cpp">
+      <Filter>Script\FSM\Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="CStateMachineScript.cpp">
+      <Filter>Script\FSM\Machine</Filter>
+    </ClCompile>
+    <ClCompile Include="CAttroxMachineScript.cpp">
+      <Filter>Script\FSM\Machine\Champ\Attrox</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -143,6 +143,8 @@ void CAniNode::RemoveAllInTransition()
 {
 	for (int i = 0; i < m_vecInConditions.size(); ++i)
 	{
+		if (m_vecInConditions[i] == nullptr)
+			continue;
 		m_vecInConditions[i] = nullptr;
 	}
 	m_vecInConditions.clear();
@@ -151,8 +153,10 @@ void CAniNode::RemoveAllOutTransition()
 {
 	for (int i = 0; i < m_vecOutConditions.size(); ++i)
 	{
+		if (m_vecOutConditions[i] == nullptr)
+			continue;
 		delete m_vecOutConditions[i];
-		m_vecInConditions[i] = nullptr;
+		m_vecOutConditions[i] = nullptr;
 	}
 	m_vecOutConditions.clear();
 }

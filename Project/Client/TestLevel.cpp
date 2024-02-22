@@ -10,15 +10,14 @@
 #include <Engine\CResMgr.h>
 #include <Engine\CCollisionMgr.h>
 
-#include <Script\CPlayerScript.h>
-#include <Script\CMonsterScript.h>
-
 #include "CLevelSaveLoad.h"
 
 
 #include <Engine/CSetColorShader.h>
 #include <Engine\AnimatorController.h>
 #include <Engine\Transition.h>
+#include <Script\CScriptMgr.h>
+#include <Script\CAttroxMachineScript.h>
 void CreateTestLevel()
 {
 	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
@@ -190,18 +189,18 @@ void CreateTestLevel()
 	// Ani Controller Init
 	// ============	
 	Ptr<CAnimatorController> pAniController = nullptr;
-	wstring strPath = L"controller\\TestNullController.controller";
+	wstring strPath = L"controller\\Attrox.controller";
 	Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Dance_Loop.anm");
 	pClip->ActiveLoop();
 	pAniController = CResMgr::GetInst()->FindRes<CAnimatorController>(strPath);
 	
+	//test code 1
 	//pAniController = new CAnimatorController();
 	//CResMgr::GetInst()->AddRes<CAnimatorController>(strPath, pAniController);
 
 
 	//pAniController->RegisterParam(L"1to2", 0);
 	//pAniController->RegisterParam(L"2to3", 0);
-	////이 부분 Save 위에 올라가야한 근데 아직 Save 구현을 안함.
 	//pAniController->Init();
 	//pAniController->SetName(strPath);
 	//CAniNode* pOutNode = pAniController->GetNode(L"Entry");
@@ -219,9 +218,45 @@ void CreateTestLevel()
 	//t2->RegisterCondition(L"2to3", 2, COMPARISON_TYPE::EQUAL);
 
 	//pAniController->Save(strPath);
-	//여기까지
+	
+	//test code 2
+	/*if (pAniController == nullptr)
+	{
+		Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Aatrox_Idle1.anm");
+		pClip->ActiveLoop();
+		pClip->Save(L"anim3D\\Aatrox_Idle1.anm");
+		pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Aatrox_ULT_Idle.anm");
+		pClip->ActiveLoop();
+		pClip->Save(L"anim3D\\Aatrox_ULT_Idle.anm");
+		pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Idle1.anm");
+		pClip->ActiveLoop();
+		pClip->Save(L"anim3D\\Idle1.anm");
 
+		pAniController = new CAnimatorController();
+		CResMgr::GetInst()->AddRes<CAnimatorController>(strPath, pAniController);
+		pAniController->RegisterParam(L"Normal_Idle", 0);
+		pAniController->RegisterParam(L"ULT_Idle", 0);
+		pAniController->RegisterParam(L"Battle_Idle", 0);
+		pAniController->Init();
+		pAniController->SetName(strPath);
+		CAniNode* pOutNode = pAniController->GetNode(L"Entry");
+		CAniNode* pInNode = pAniController->CreateNode(L"Ani1", L"anim3D\\Aatrox_Idle1.anm");
+		CTransition* t1 = pAniController->CreateTransition(L"Entry_Normal_Idle", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"Normal_Idle", 0, COMPARISON_TYPE::EQUAL);
+
+		pInNode = pAniController->CreateNode(L"ULT_Idle", L"anim3D\\Aatrox_ULT_Idle.anm");
+		t1 = pAniController->CreateTransition(L"Entry_ULT_Idle", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"ULT_Idle", 1, COMPARISON_TYPE::EQUAL);
+
+		pInNode = pAniController->CreateNode(L"Battle_Idle", L"anim3D\\Idle1.anm");
+		t1 = pAniController->CreateTransition(L"Entry_Battle_Idle", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"Battle_Idle", 2, COMPARISON_TYPE::EQUAL);
+
+		pAniController->Save(strPath);
+	}*/
+	CAttroxMachineScript* script = (CAttroxMachineScript*)CScriptMgr::GetScript(SCRIPT_TYPE::ATTROXMACHINESCRIPT);
 	pAttroxObj->Animator3D()->SetController(pAniController);
+	pAttroxObj->AddComponent(script);
 
 
 	// 충돌 시킬 레이어 짝 지정

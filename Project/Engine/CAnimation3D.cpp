@@ -28,7 +28,7 @@ CAnimation3D::CAnimation3D(Ptr<CAniClip> _clip) :
 	switch (_clip->m_tInfo.eMode)
 	{
 	case fbxsdk::FbxTime::EMode::eFrames24:
-		m_iFrameCount = 21;
+		m_iFrameCount = 23;
 		break;
 	case fbxsdk::FbxTime::EMode::eFrames30:
 		m_iFrameCount = 30;
@@ -75,7 +75,7 @@ void CAnimation3D::Reset()
 	switch (m_pClip->m_tInfo.eMode)
 	{
 	case fbxsdk::FbxTime::EMode::eFrames24:
-		m_iFrameCount = 21;
+		m_iFrameCount = 23;
 		break;
 	case fbxsdk::FbxTime::EMode::eFrames30:
 		m_iFrameCount = 30;
