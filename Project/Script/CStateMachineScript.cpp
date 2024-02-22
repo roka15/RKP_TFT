@@ -1,15 +1,15 @@
 #include "pch.h"
 #include "CStateMachineScript.h"
-#include "CStateScript.h"
-#include "CTriggerScript.h"
+#include "CState.h"
+#include "CTrigger.h"
 void CStateMachineScript::tick()
 {
 }
 
-void CStateMachineScript::transition(CStateScript* _pState)
+void CStateMachineScript::transition(CState* _pState)
 {
-	CStateScript* previous = m_pState;
-	CStateScript* current = _pState;
+	CState* previous = m_pState;
+	CState* current = _pState;
 
 	if (previous)
 	{
@@ -22,13 +22,13 @@ void CStateMachineScript::transition(CStateScript* _pState)
 	}
 }
 
-void CStateMachineScript::notify(CTriggerScript* _pTrigger)
+void CStateMachineScript::notify(CTrigger* _pTrigger)
 {
 	if (_pTrigger)
 		_pTrigger->notify(this, m_pState);
 }
 
-CStateScript* CStateMachineScript::get_state(void) const
+CState* CStateMachineScript::get_state(void) const
 {
 	return m_pState;
 }

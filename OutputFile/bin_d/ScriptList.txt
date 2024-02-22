@@ -12,3 +12,4 @@ CStateMachineScript
 CStateScript
 CTestScript
 CTriggerScript
+global

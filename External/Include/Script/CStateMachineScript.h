@@ -1,11 +1,13 @@
 #pragma once
 #include <Engine\CScript.h>
-class CStateMachineScript;
-class CStateScript;
-class CTriggerScript :
+class CCharacterScript;
+class CState;
+class CTrigger;
+class CStateMachineScript :
     public CScript
 {
-private:
+protected:
+    CState* m_pState;
 public:
     virtual void tick()override;
     virtual void BeginOverlap(CCollider2D* _Other)override {}
@@ -15,12 +17,14 @@ public:
     virtual void SaveToLevelFile(FILE* _File) override {}
     virtual void LoadFromLevelFile(FILE* _FILE) override {}
 public:
-    virtual void notify(CStateMachineScript* _pSMachine, CStateScript* _pState);
+    virtual void transition(CState* _pState);
+    virtual void notify(CTrigger* _pTrigger);
+    virtual CState* get_state(void)const;
 
-    CLONE(CTriggerScript)
+    CLONE(CStateMachineScript)
 public:
-    CTriggerScript();
-    CTriggerScript(SCRIPT_TYPE _eType);
-    virtual ~CTriggerScript();
+    CStateMachineScript();
+    CStateMachineScript(SCRIPT_TYPE _eType);
+    virtual ~CStateMachineScript();
 };
 

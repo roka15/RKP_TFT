@@ -72,22 +72,22 @@
     <ClInclude Include="CTestScript.h">
       <Filter>Script</Filter>
     </ClInclude>
-    <ClInclude Include="CCharacterTriggerScript.h">
+    <ClInclude Include="CCharacterTrigger.h">
       <Filter>Script\FSM\Trigger</Filter>
     </ClInclude>
     <ClInclude Include="CCharacterScript.h">
       <Filter>Script\Character</Filter>
     </ClInclude>
-    <ClInclude Include="CCharacterStateScript.h">
+    <ClInclude Include="CCharacterState.h">
       <Filter>Script\FSM\State</Filter>
     </ClInclude>
-    <ClInclude Include="CAttroxIdleScript.h">
+    <ClInclude Include="CAttroxIdle.h">
       <Filter>Script\FSM\State\Champ\Attrox</Filter>
     </ClInclude>
-    <ClInclude Include="CStateScript.h">
+    <ClInclude Include="CState.h">
       <Filter>Script\FSM\State</Filter>
     </ClInclude>
-    <ClInclude Include="CTriggerScript.h">
+    <ClInclude Include="CTrigger.h">
       <Filter>Script\FSM\Trigger</Filter>
     </ClInclude>
     <ClInclude Include="CStateMachineScript.h">
@@ -125,22 +125,22 @@
     <ClCompile Include="CTestScript.cpp">
       <Filter>Script</Filter>
     </ClCompile>
-    <ClCompile Include="CCharacterTriggerScript.cpp">
+    <ClCompile Include="CCharacterTrigger.cpp">
       <Filter>Script\FSM\Trigger</Filter>
     </ClCompile>
     <ClCompile Include="CCharacterScript.cpp">
       <Filter>Script\Character</Filter>
     </ClCompile>
-    <ClCompile Include="CCharacterStateScript.cpp">
+    <ClCompile Include="CCharacterState.cpp">
       <Filter>Script\FSM\State</Filter>
     </ClCompile>
-    <ClCompile Include="CAttroxIdleScript.cpp">
+    <ClCompile Include="CAttroxIdle.cpp">
       <Filter>Script\FSM\State\Champ\Attrox</Filter>
     </ClCompile>
-    <ClCompile Include="CStateScript.cpp">
+    <ClCompile Include="CState.cpp">
       <Filter>Script\FSM\State</Filter>
     </ClCompile>
-    <ClCompile Include="CTriggerScript.cpp">
+    <ClCompile Include="CTrigger.cpp">
       <Filter>Script\FSM\Trigger</Filter>
     </ClCompile>
     <ClCompile Include="CStateMachineScript.cpp">

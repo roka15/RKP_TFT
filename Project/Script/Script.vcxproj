@@ -172,40 +172,40 @@ call CodeGen.exe</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CAttroxIdleScript.h" />
+    <ClInclude Include="CAttroxIdle.h" />
     <ClInclude Include="CAttroxMachineScript.h" />
     <ClInclude Include="CCameraMoveScript.h" />
     <ClInclude Include="CCharacterScript.h" />
-    <ClInclude Include="CCharacterStateScript.h" />
-    <ClInclude Include="CCharacterTriggerScript.h" />
+    <ClInclude Include="CCharacterState.h" />
+    <ClInclude Include="CCharacterTrigger.h" />
     <ClInclude Include="CGravityScript.h" />
     <ClInclude Include="CMissileScript.h" />
     <ClInclude Include="CMonsterScript.h" />
     <ClInclude Include="CPlayerScript.h" />
     <ClInclude Include="CScriptMgr.h" />
     <ClInclude Include="CStateMachineScript.h" />
-    <ClInclude Include="CStateScript.h" />
+    <ClInclude Include="CState.h" />
     <ClInclude Include="CTestScript.h" />
-    <ClInclude Include="CTriggerScript.h" />
+    <ClInclude Include="CTrigger.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CAttroxIdleScript.cpp" />
+    <ClCompile Include="CAttroxIdle.cpp" />
     <ClCompile Include="CAttroxMachineScript.cpp" />
     <ClCompile Include="CCameraMoveScript.cpp" />
     <ClCompile Include="CCharacterScript.cpp" />
-    <ClCompile Include="CCharacterStateScript.cpp" />
-    <ClCompile Include="CCharacterTriggerScript.cpp" />
+    <ClCompile Include="CCharacterState.cpp" />
+    <ClCompile Include="CCharacterTrigger.cpp" />
     <ClCompile Include="CGravityScript.cpp" />
     <ClCompile Include="CMissileScript.cpp" />
     <ClCompile Include="CMonsterScript.cpp" />
     <ClCompile Include="CPlayerScript.cpp" />
     <ClCompile Include="CScriptMgr.cpp" />
     <ClCompile Include="CStateMachineScript.cpp" />
-    <ClCompile Include="CStateScript.cpp" />
+    <ClCompile Include="CState.cpp" />
     <ClCompile Include="CTestScript.cpp" />
-    <ClCompile Include="CTriggerScript.cpp" />
+    <ClCompile Include="CTrigger.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

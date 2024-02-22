@@ -1,18 +1,18 @@
 #include "pch.h"
-#include "CAttroxIdleScript.h"
-#include "CCharacterTriggerScript.h"
+#include "CAttroxIdle.h"
+#include "CCharacterTrigger.h"
 #include "CAttroxMachineScript.h"
-void CAttroxIdleScript::OnEntry(CStateMachineScript* _pSMachine, CStateScript* _pState)
+void CAttroxIdle::OnEntry(CStateMachineScript* _pSMachine, CState* _pState)
 {
 }
 
-void CAttroxIdleScript::OnExit(CStateMachineScript* _pSMachine, CStateScript* _pState)
+void CAttroxIdle::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
 {
 }
 
-void CAttroxIdleScript::OnEvent(CStateMachineScript* _pSMachine, CTriggerScript* _pTrigger)
+void CAttroxIdle::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)
 {
-	CCharacterTriggerScript* pTrigger = dynamic_cast<CCharacterTriggerScript*>(_pTrigger);
+	CCharacterTrigger* pTrigger = dynamic_cast<CCharacterTrigger*>(_pTrigger);
 	if (pTrigger == nullptr)
 		return;
 
@@ -39,10 +39,10 @@ void CAttroxIdleScript::OnEvent(CStateMachineScript* _pSMachine, CTriggerScript*
 	}
 }
 
-CAttroxIdleScript::CAttroxIdleScript():CCharacterStateScript(SCRIPT_TYPE::ATTROXIDLESCRIPT)
+CAttroxIdle::CAttroxIdle():CCharacterState()
 {
 }
 
-CAttroxIdleScript::~CAttroxIdleScript()
+CAttroxIdle::~CAttroxIdle()
 {
 }
