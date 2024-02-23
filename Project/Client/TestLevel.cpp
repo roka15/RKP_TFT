@@ -220,7 +220,7 @@ void CreateTestLevel()
 	//pAniController->Save(strPath);
 	
 	//test code 2
-	/*if (pAniController == nullptr)
+	if (pAniController == nullptr)
 	{
 		Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Aatrox_Idle1.anm");
 		pClip->ActiveLoop();
@@ -234,26 +234,36 @@ void CreateTestLevel()
 
 		pAniController = new CAnimatorController();
 		CResMgr::GetInst()->AddRes<CAnimatorController>(strPath, pAniController);
+		pAniController->RegisterParam(L"BonePose", -1);
 		pAniController->RegisterParam(L"Normal_Idle", 0);
-		pAniController->RegisterParam(L"ULT_Idle", 0);
-		pAniController->RegisterParam(L"Battle_Idle", 0);
+		pAniController->RegisterParam(L"ULT_Idle", -1);
+		pAniController->RegisterParam(L"Battle_Idle", -1);
 		pAniController->Init();
 		pAniController->SetName(strPath);
+		CAniNode* pExitNode = pAniController->GetNode(L"Exit");
 		CAniNode* pOutNode = pAniController->GetNode(L"Entry");
 		CAniNode* pInNode = pAniController->CreateNode(L"Ani1", L"anim3D\\Aatrox_Idle1.anm");
 		CTransition* t1 = pAniController->CreateTransition(L"Entry_Normal_Idle", pInNode, pOutNode, false);
 		t1->RegisterCondition(L"Normal_Idle", 0, COMPARISON_TYPE::EQUAL);
+		pAniController->CreateTransition(L"Normal_Idle_Exit", pExitNode , pInNode, true);
 
 		pInNode = pAniController->CreateNode(L"ULT_Idle", L"anim3D\\Aatrox_ULT_Idle.anm");
 		t1 = pAniController->CreateTransition(L"Entry_ULT_Idle", pInNode, pOutNode, false);
 		t1->RegisterCondition(L"ULT_Idle", 1, COMPARISON_TYPE::EQUAL);
+		pAniController->CreateTransition(L"Normal_Idle_Exit", pExitNode, pInNode, true);
 
 		pInNode = pAniController->CreateNode(L"Battle_Idle", L"anim3D\\Idle1.anm");
 		t1 = pAniController->CreateTransition(L"Entry_Battle_Idle", pInNode, pOutNode, false);
 		t1->RegisterCondition(L"Battle_Idle", 2, COMPARISON_TYPE::EQUAL);
+		pAniController->CreateTransition(L"Normal_Idle_Exit", pExitNode, pInNode, true);
+
+		pInNode = pAniController->CreateNode(L"BonePose", L"anim3D\\Aatrox_Buffbones.anm");
+		t1 = pAniController->CreateTransition(L"Entry_BonePose", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"BonePose", -1, COMPARISON_TYPE::EQUAL);
+		pAniController->CreateTransition(L"BonePose_Exit", pExitNode, pInNode, true);
 
 		pAniController->Save(strPath);
-	}*/
+	}
 	CAttroxMachineScript* script = (CAttroxMachineScript*)CScriptMgr::GetScript(SCRIPT_TYPE::ATTROXMACHINESCRIPT);
 	pAttroxObj->Animator3D()->SetController(pAniController);
 	pAttroxObj->AddComponent(script);

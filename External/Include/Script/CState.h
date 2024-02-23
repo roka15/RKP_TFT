@@ -4,7 +4,8 @@ class CStateMachineScript;
 class CTrigger;
 class CState : public CEntity
 {
-private:
+protected:
+	UINT m_ePrevType;
 public:
 	virtual void OnEntry(CStateMachineScript* _pSMachine, CState* _pState) {};
 	virtual void OnExit(CStateMachineScript* _pSMachine, CState* _pState) {};

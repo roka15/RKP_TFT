@@ -1,15 +1,9 @@
-CAttroxIdleScript
 CAttroxMachineScript
 CCameraMoveScript
 CCharacterScript
-CCharacterStateScript
-CCharacterTriggerScript
 CGravityScript
 CMissileScript
 CMonsterScript
 CPlayerScript
 CStateMachineScript
-CStateScript
 CTestScript
-CTriggerScript
-global

@@ -174,12 +174,21 @@ void CAniNode::Destory()
 }
 bool CAniNode::NextNode(int _iOutSize, bool _bFinish, bool _bCurNullNode)
 {
+	wstring CurName = GetName();
+	if (CurName.compare(L"Exit") == 0)
+	{
+		CAniNode* Entry = m_pController->GetNode(L"Entry");
+		m_pController->SetCurNode(Entry);
+		return true;
+	}
+
 	//다음 transition이 없다면 loop를 수행할지 말지 정한다.
 	if (_bFinish == true && _iOutSize == 0)
 	{
 		bool bLoop = m_pMotionClip->IsLoop();
 		if (bLoop)
 			m_pMotionClip->Reset();
+
 		return false;
 	}
 
@@ -188,25 +197,27 @@ bool CAniNode::NextNode(int _iOutSize, bool _bFinish, bool _bCurNullNode)
 		CTransition* pOutTransition = m_vecOutConditions[i];
 
 		//현재 노드가 Entry,AnyState,Exit 같은 노드인 경우.
-		if (_bCurNullNode)
+		/*if (_bCurNullNode)
 		{
 			pOutTransition->RegisterCurNode(m_pController);
 			return true;
-		}
+		}*/
 		//Condition 검사를 하지 않고 애니 재생을 완료 했는지 여부로 다음 재생을 결정한다.
 		bool bExitTime = pOutTransition->IsExitTime();
 		if (_bFinish)
 		{
 			if (bExitTime)
 			{
-				m_pMotionClip->Reset();
+				if (m_pMotionClip)
+					m_pMotionClip->Reset();
 				pOutTransition->RegisterCurNode(m_pController);
 				return true;
 			}
 			else
 			{
 				//loop 의 값과 무관하게 같은 애니를 반복한다.
-				m_pMotionClip->Reset();
+				if (m_pMotionClip)
+					m_pMotionClip->Reset();
 			}
 		}
 		else
@@ -222,7 +233,8 @@ bool CAniNode::NextNode(int _iOutSize, bool _bFinish, bool _bCurNullNode)
 				//condition active 되면 넘어감.
 				if (bActive)
 				{
-					m_pMotionClip->Reset();
+					if (m_pMotionClip)
+						m_pMotionClip->Reset();
 					pOutTransition->RegisterCurNode(m_pController);
 					return true;
 				}

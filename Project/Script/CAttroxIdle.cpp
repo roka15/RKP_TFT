@@ -25,6 +25,19 @@ void CAttroxIdle::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)
 	if (pController == nullptr)
 		return;
 
+	switch ((TRIGGER_TYPE)m_ePrevType)
+	{
+	case TRIGGER_TYPE::NORMAL:
+		pController->SetIntParam(L"Normal_Idle", -1);
+		break;
+	case TRIGGER_TYPE::ULT:
+		pController->SetIntParam(L"ULT_Idle", -1);
+		break;
+	case TRIGGER_TYPE::BATTLE:
+		pController->SetIntParam(L"Battle_Idle", -1);
+		break;
+	}
+
 	switch (eType)
 	{
 	case TRIGGER_TYPE::NORMAL:
@@ -37,6 +50,8 @@ void CAttroxIdle::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)
 		pController->SetIntParam(L"Battle_Idle", 2);
 		break;
 	}
+
+	CCharacterState::OnEvent(_pSMachine, _pTrigger);
 }
 
 CAttroxIdle::CAttroxIdle():CCharacterState()
