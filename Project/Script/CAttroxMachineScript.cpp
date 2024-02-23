@@ -4,43 +4,33 @@
 #include <Engine\CTimeMgr.h>
 
 CAttroxIdle CAttroxMachineScript::sIdleState;
-CAttroxMachineScript::CAttroxMachineScript() :CStateMachineScript(SCRIPT_TYPE::ATTROXMACHINESCRIPT),
-m_dUltGauge(0.0),
-m_bUlt(false),
-m_dUltMaxCondition(20.0),
-m_dUltMinCondition(0.0)
+CAttroxNormal  CAttroxMachineScript::sNormalState;
+CAttroxBattle  CAttroxMachineScript::sBattleState;
+CAttroxUlt     CAttroxMachineScript::sUltState;
+CAttroxMachineScript::CAttroxMachineScript() :CStateMachineScript(SCRIPT_TYPE::ATTROXMACHINESCRIPT)
 {
-	m_pState = &sIdleState;
+	m_pState = &sBattleState;
+	CCharacterTrigger trigger;
+	trigger.SetEvtType(TRIGGER_TYPE::IDLE);
+	notify(&trigger);
 }
-void CAttroxMachineScript::tick()
+
+void CAttroxMachineScript::transition(STATE_TYPE _eState)
 {
-	if (m_bUlt)
+	switch (_eState)
 	{
-		m_dUltGauge -= DT;
-		if (m_dUltGauge <= m_dUltMinCondition)
-		{
-			m_bUlt = false;
-			m_dUltGauge = 0.0;	
-			//transition(&sIdleState);
-			CCharacterTrigger trigger;
-			trigger.SetEvtType(TRIGGER_TYPE::NORMAL);
-			notify(&trigger);
-		}
+	case STATE_TYPE::NORMAL:
+		CStateMachineScript::transition(&sNormalState);
+		break;
+	case STATE_TYPE::ULT:
+		CStateMachineScript::transition(&sUltState);
+		break;
+	case STATE_TYPE::BATTLE:
+		CStateMachineScript::transition(&sBattleState);
+		break;
 	}
-	else
-	{
-		m_dUltGauge += DT;
-		if (m_dUltGauge >= m_dUltMaxCondition)
-		{
-			m_bUlt = true;
-			CCharacterTrigger trigger;
-			trigger.SetEvtType(TRIGGER_TYPE::ULT);
-			notify(&trigger);
-		}
-	}
-	
-	
 }
+
 CAttroxMachineScript::~CAttroxMachineScript()
 {
 }

@@ -96,6 +96,13 @@
     <ClInclude Include="CAttroxMachineScript.h">
       <Filter>Script\FSM\Machine\Champ\Attrox</Filter>
     </ClInclude>
+    <ClInclude Include="CAttroxNormal.h">
+      <Filter>Script\FSM\State\Champ\Attrox</Filter>
+    </ClInclude>
+    <ClInclude Include="CAttroxBattle.h">
+      <Filter>Script\FSM\State\Champ\Attrox</Filter>
+    </ClInclude>
+    <ClInclude Include="CAttroxUlt.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CCameraMoveScript.cpp">
@@ -149,5 +156,12 @@
     <ClCompile Include="CAttroxMachineScript.cpp">
       <Filter>Script\FSM\Machine\Champ\Attrox</Filter>
     </ClCompile>
+    <ClCompile Include="CAttroxNormal.cpp">
+      <Filter>Script\FSM\State\Champ\Attrox</Filter>
+    </ClCompile>
+    <ClCompile Include="CAttroxBattle.cpp">
+      <Filter>Script\FSM\State\Champ\Attrox</Filter>
+    </ClCompile>
+    <ClCompile Include="CAttroxUlt.cpp" />
   </ItemGroup>
 </Project>

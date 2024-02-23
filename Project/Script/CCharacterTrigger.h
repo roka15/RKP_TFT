@@ -3,6 +3,10 @@
 
 enum class TRIGGER_TYPE
 {
+    IDLE,
+    WALK,
+    DANCE,
+
     NORMAL,
     ULT,
     BATTLE,

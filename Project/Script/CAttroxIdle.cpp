@@ -2,6 +2,7 @@
 #include "CAttroxIdle.h"
 #include "CCharacterTrigger.h"
 #include "CAttroxMachineScript.h"
+
 void CAttroxIdle::OnEntry(CStateMachineScript* _pSMachine, CState* _pState)
 {
 }
@@ -54,7 +55,8 @@ void CAttroxIdle::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)
 	CCharacterState::OnEvent(_pSMachine, _pTrigger);
 }
 
-CAttroxIdle::CAttroxIdle():CCharacterState()
+
+CAttroxIdle::CAttroxIdle() :CCharacterState()
 {
 }
 

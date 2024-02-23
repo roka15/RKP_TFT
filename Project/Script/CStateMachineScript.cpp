@@ -4,6 +4,7 @@
 #include "CTrigger.h"
 void CStateMachineScript::tick()
 {
+	m_pState->tick(this);
 }
 
 void CStateMachineScript::transition(CState* _pState)

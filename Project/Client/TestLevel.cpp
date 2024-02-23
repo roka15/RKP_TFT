@@ -234,17 +234,17 @@ void CreateTestLevel()
 
 		pAniController = new CAnimatorController();
 		CResMgr::GetInst()->AddRes<CAnimatorController>(strPath, pAniController);
-		pAniController->RegisterParam(L"BonePose", -1);
+		pAniController->RegisterParam(L"BonePose", 0);
 		pAniController->RegisterParam(L"Normal_Idle", 0);
-		pAniController->RegisterParam(L"ULT_Idle", -1);
-		pAniController->RegisterParam(L"Battle_Idle", -1);
+		pAniController->RegisterParam(L"ULT_Idle", 0);
+		pAniController->RegisterParam(L"Battle_Idle", 0);
 		pAniController->Init();
 		pAniController->SetName(strPath);
 		CAniNode* pExitNode = pAniController->GetNode(L"Exit");
 		CAniNode* pOutNode = pAniController->GetNode(L"Entry");
 		CAniNode* pInNode = pAniController->CreateNode(L"Ani1", L"anim3D\\Aatrox_Idle1.anm");
 		CTransition* t1 = pAniController->CreateTransition(L"Entry_Normal_Idle", pInNode, pOutNode, false);
-		t1->RegisterCondition(L"Normal_Idle", 0, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Normal_Idle", 1, COMPARISON_TYPE::EQUAL);
 		pAniController->CreateTransition(L"Normal_Idle_Exit", pExitNode , pInNode, true);
 
 		pInNode = pAniController->CreateNode(L"ULT_Idle", L"anim3D\\Aatrox_ULT_Idle.anm");
@@ -254,7 +254,7 @@ void CreateTestLevel()
 
 		pInNode = pAniController->CreateNode(L"Battle_Idle", L"anim3D\\Idle1.anm");
 		t1 = pAniController->CreateTransition(L"Entry_Battle_Idle", pInNode, pOutNode, false);
-		t1->RegisterCondition(L"Battle_Idle", 2, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Battle_Idle", 1, COMPARISON_TYPE::EQUAL);
 		pAniController->CreateTransition(L"Normal_Idle_Exit", pExitNode, pInNode, true);
 
 		pInNode = pAniController->CreateNode(L"BonePose", L"anim3D\\Aatrox_Buffbones.anm");

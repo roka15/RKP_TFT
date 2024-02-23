@@ -9,6 +9,7 @@ public:
 	virtual void OnExit(CStateMachineScript* _pSMachine, CState* _pState) {};
 	virtual void OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger);
 	virtual void Transition(CStateMachineScript* _pSMachine, CState* _pState);
+	virtual void tick(CStateMachineScript* _pSMachine) {}
 	CLONE(CState)
 public:
 	CState();

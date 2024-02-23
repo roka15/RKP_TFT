@@ -172,8 +172,11 @@ call CodeGen.exe</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CAttroxBattle.h" />
     <ClInclude Include="CAttroxIdle.h" />
     <ClInclude Include="CAttroxMachineScript.h" />
+    <ClInclude Include="CAttroxNormal.h" />
+    <ClInclude Include="CAttroxUlt.h" />
     <ClInclude Include="CCameraMoveScript.h" />
     <ClInclude Include="CCharacterScript.h" />
     <ClInclude Include="CCharacterState.h" />
@@ -191,8 +194,11 @@ call CodeGen.exe</Command>
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CAttroxBattle.cpp" />
     <ClCompile Include="CAttroxIdle.cpp" />
     <ClCompile Include="CAttroxMachineScript.cpp" />
+    <ClCompile Include="CAttroxNormal.cpp" />
+    <ClCompile Include="CAttroxUlt.cpp" />
     <ClCompile Include="CCameraMoveScript.cpp" />
     <ClCompile Include="CCharacterScript.cpp" />
     <ClCompile Include="CCharacterState.cpp" />
