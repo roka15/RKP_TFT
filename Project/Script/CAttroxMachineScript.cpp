@@ -10,9 +10,6 @@ CAttroxUlt     CAttroxMachineScript::sUltState;
 CAttroxMachineScript::CAttroxMachineScript() :CStateMachineScript(SCRIPT_TYPE::ATTROXMACHINESCRIPT)
 {
 	m_pState = &sBattleState;
-	CCharacterTrigger trigger;
-	trigger.SetEvtType(TRIGGER_TYPE::IDLE);
-	notify(&trigger);
 }
 
 void CAttroxMachineScript::transition(STATE_TYPE _eState)

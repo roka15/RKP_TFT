@@ -8,10 +8,23 @@
 
 void CAttroxBattle::OnEntry(CStateMachineScript* _pSMachine, CState* _pState)
 {
+	CCharacterState* pState = dynamic_cast<CCharacterState*>(_pState);
+	if (pState == nullptr)
+		return;
+	TRIGGER_TYPE eType = (TRIGGER_TYPE)(pState->GetType());
+	switch (eType)
+	{
+	case TRIGGER_TYPE::IDLE:
+		CCharacterTrigger trigger;
+		trigger.SetEvtType(TRIGGER_TYPE::IDLE);
+		_pSMachine->notify(&trigger);
+		break;
+	}
 }
 
 void CAttroxBattle::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
 {
+	m_dTime = 0.0;
 	CAnimator3D* pAni = _pSMachine->Animator3D();
 	if (pAni == nullptr)
 		return;

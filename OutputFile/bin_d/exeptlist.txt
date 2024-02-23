@@ -8,3 +8,6 @@ CCharacterTrigger.h
 CState.h
 CCharacterState.h
 CAttroxIdle.h
+CAttroxNormal.h
+CAttroxUlt.h
+CAttroxBattle.h

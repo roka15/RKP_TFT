@@ -18,6 +18,7 @@
 #include <Engine\Transition.h>
 #include <Script\CScriptMgr.h>
 #include <Script\CAttroxMachineScript.h>
+#include <Script\CCharacterTrigger.h>
 void CreateTestLevel()
 {
 	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
@@ -267,7 +268,9 @@ void CreateTestLevel()
 	CAttroxMachineScript* script = (CAttroxMachineScript*)CScriptMgr::GetScript(SCRIPT_TYPE::ATTROXMACHINESCRIPT);
 	pAttroxObj->Animator3D()->SetController(pAniController);
 	pAttroxObj->AddComponent(script);
-
+	CCharacterTrigger trigger;
+	trigger.SetEvtType(TRIGGER_TYPE::IDLE);
+	script->notify(&trigger);
 
 	// 충돌 시킬 레이어 짝 지정
 	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");

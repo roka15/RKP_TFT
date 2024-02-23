@@ -26,6 +26,16 @@ void CAttroxUlt::OnEntry(CStateMachineScript* _pSMachine, CState* _pState)
 
 void CAttroxUlt::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
 {
+	m_dTime = 0.0;
+	CAnimator3D* pAni = _pSMachine->Animator3D();
+	if (pAni == nullptr)
+		return;
+	Ptr<CAnimatorController> pController = pAni->GetController();
+	if (pController == nullptr)
+		return;
+
+	//모든 param들 condition 비활성화.
+	pController->SetIntParam(L"ULT_Idle", 0);
 }
 
 void CAttroxUlt::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)
