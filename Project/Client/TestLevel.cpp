@@ -192,7 +192,7 @@ void CreateTestLevel()
 	Ptr<CAnimatorController> pAniController = nullptr;
 	wstring strPath = L"controller\\Attrox.controller";
 	Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Dance_Loop.anm");
-	pClip->ActiveLoop();
+	pClip->SetLoop(true);
 	pAniController = CResMgr::GetInst()->FindRes<CAnimatorController>(strPath);
 	
 	//test code 1
@@ -224,53 +224,104 @@ void CreateTestLevel()
 	if (pAniController == nullptr)
 	{
 		Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Aatrox_Idle1.anm");
-		pClip->ActiveLoop();
+		pClip->SetLoop(true);
 		pClip->Save(L"anim3D\\Aatrox_Idle1.anm");
 		pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Aatrox_ULT_Idle.anm");
-		pClip->ActiveLoop();
+		pClip->SetLoop(true);
 		pClip->Save(L"anim3D\\Aatrox_ULT_Idle.anm");
 		pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Idle1.anm");
-		pClip->ActiveLoop();
+		pClip->SetLoop(true);
+
+		//pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Dance_Windup.anm");
+		//pClip->SetLoop(true);
 		pClip->Save(L"anim3D\\Idle1.anm");
 
 		pAniController = new CAnimatorController();
 		CResMgr::GetInst()->AddRes<CAnimatorController>(strPath, pAniController);
-		pAniController->RegisterParam(L"BonePose", 0);
-		pAniController->RegisterParam(L"Normal_Idle", 0);
-		pAniController->RegisterParam(L"ULT_Idle", 0);
-		pAniController->RegisterParam(L"Battle_Idle", 0);
+		pAniController->RegisterParam(L"Normal", 1);
+		pAniController->RegisterParam(L"Battle", 0);
+		pAniController->RegisterParam(L"ULT", 0);
+		pAniController->RegisterParam(L"Move", 0);
+		pAniController->RegisterParam(L"Attack", 0);
+		pAniController->RegisterParam(L"Dance", false,true);
+
 		pAniController->Init();
 		pAniController->SetName(strPath);
+		CAniNode* pAnyNode = pAniController->GetNode(L"AnyState");
 		CAniNode* pExitNode = pAniController->GetNode(L"Exit");
 		CAniNode* pOutNode = pAniController->GetNode(L"Entry");
 		CAniNode* pInNode = pAniController->CreateNode(L"Ani1", L"anim3D\\Aatrox_Idle1.anm");
 		CTransition* t1 = pAniController->CreateTransition(L"Entry_Normal_Idle", pInNode, pOutNode, false);
-		t1->RegisterCondition(L"Normal_Idle", 1, COMPARISON_TYPE::EQUAL);
-		pAniController->CreateTransition(L"Normal_Idle_Exit", pExitNode , pInNode, true);
-
-		pInNode = pAniController->CreateNode(L"ULT_Idle", L"anim3D\\Aatrox_ULT_Idle.anm");
-		t1 = pAniController->CreateTransition(L"Entry_ULT_Idle", pInNode, pOutNode, false);
-		t1->RegisterCondition(L"ULT_Idle", 1, COMPARISON_TYPE::EQUAL);
-		pAniController->CreateTransition(L"Normal_Idle_Exit", pExitNode, pInNode, true);
-
+		t1->RegisterCondition(L"Normal", 1, COMPARISON_TYPE::EQUAL);
+		
+		pOutNode = pInNode;
 		pInNode = pAniController->CreateNode(L"Battle_Idle", L"anim3D\\Idle1.anm");
-		t1 = pAniController->CreateTransition(L"Entry_Battle_Idle", pInNode, pOutNode, false);
-		t1->RegisterCondition(L"Battle_Idle", 1, COMPARISON_TYPE::EQUAL);
-		pAniController->CreateTransition(L"Normal_Idle_Exit", pExitNode, pInNode, true);
+		t1 = pAniController->CreateTransition(L"Normal_Battle_Idle", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"Battle", 1, COMPARISON_TYPE::EQUAL);
+		
+		CAniNode* BIdleNode = pInNode;
 
-		pInNode = pAniController->CreateNode(L"BonePose", L"anim3D\\Aatrox_Buffbones.anm");
-		t1 = pAniController->CreateTransition(L"Entry_BonePose", pInNode, pOutNode, false);
-		t1->RegisterCondition(L"BonePose", -1, COMPARISON_TYPE::EQUAL);
-		pAniController->CreateTransition(L"BonePose_Exit", pExitNode, pInNode, true);
+		pOutNode = BIdleNode;
+		pInNode = pAniController->CreateNode(L"Battle_Move", L"anim3D\\Unsheath_run01.anm");
+		t1 = pAniController->CreateTransition(L"Battle_Idle_Move", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"Move", 1, COMPARISON_TYPE::EQUAL);
+		t1 = pAniController->CreateTransition(L"Battle_Move_Idle", pOutNode, pInNode, false);
+		t1->RegisterCondition(L"Move", 0, COMPARISON_TYPE::EQUAL);
+
+		CAniNode* BMoveNode = pInNode;
+		pOutNode = pAnyNode;
+		pInNode = pAniController->CreateNode(L"Battle_Attack", L"anim3D\\Attack1.anm");
+		t1 = pAniController->CreateTransition(L"AnyState_Battle_Attack", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"Attack", 1, COMPARISON_TYPE::EQUAL);
+		t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", BIdleNode, pInNode, false);
+		t1->RegisterCondition(L"Attack", 0, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Battle", 1, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Move", 0, COMPARISON_TYPE::EQUAL);
+		t1 = pAniController->CreateTransition(L"Battle_Attack_Move", BMoveNode, pInNode, false);
+		t1->RegisterCondition(L"Attack", 0, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Battle", 1, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Move", 1, COMPARISON_TYPE::EQUAL);
+
+
+		pOutNode = BIdleNode;
+		pInNode = pAniController->CreateNode(L"ULT_Idle", L"anim3D\\Aatrox_ULT_Idle.anm");
+		t1 = pAniController->CreateTransition(L"Battle_ULT_Idle", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"ULT", 1, COMPARISON_TYPE::EQUAL);
+		t1 = pAniController->CreateTransition(L"ULT_Battle_Idle", pOutNode, pInNode, false);
+		t1->RegisterCondition(L"ULT", 0, COMPARISON_TYPE::EQUAL);
+
+
+		pOutNode = BMoveNode;
+		pInNode = pAniController->CreateNode(L"ULT_Move", L"anim3D\\Run_Ult.anm");
+		t1 = pAniController->CreateTransition(L"Battle_ULT_Move", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"ULT", 1, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Move", 1, COMPARISON_TYPE::EQUAL);
+		t1 = pAniController->CreateTransition(L"ULT_Battle_Move", pOutNode, pInNode, false);
+		t1->RegisterCondition(L"ULT", 0, COMPARISON_TYPE::EQUAL);
+
+
+		pOutNode = pAnyNode;
+		pInNode = pAniController->CreateNode(L"Dance_In", L"anim3D\\Dance_Windup.anm");
+		t1 = pAniController->CreateTransition(L"AnyState_Dance_In", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"Dance", true,true, COMPARISON_TYPE::EQUAL);
+		pOutNode = pInNode;
+		pInNode = pAniController->CreateNode(L"Dance_Loop", L"anim3D\\Dance_Loop.anm");
+		t1 = pAniController->CreateTransition(L"AnyState_Dance_Loop", pInNode, pOutNode, true);
+		pOutNode = pInNode;
+		t1 = pAniController->CreateTransition(L"AnyState_Dance_Loop", pExitNode, pOutNode, false);
+		t1->RegisterCondition(L"Normal", 1, COMPARISON_TYPE::EQUAL);
+
+		
+
 
 		pAniController->Save(strPath);
 	}
 	CAttroxMachineScript* script = (CAttroxMachineScript*)CScriptMgr::GetScript(SCRIPT_TYPE::ATTROXMACHINESCRIPT);
 	pAttroxObj->Animator3D()->SetController(pAniController);
 	pAttroxObj->AddComponent(script);
-	CCharacterTrigger trigger;
-	trigger.SetEvtType(TRIGGER_TYPE::IDLE);
-	script->notify(&trigger);
+	/*CCharacterTrigger trigger;
+	trigger.SetEvtType(TRIGGER_TYPE::);
+	script->notify(&trigger);*/
 
 	// 충돌 시킬 레이어 짝 지정
 	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");

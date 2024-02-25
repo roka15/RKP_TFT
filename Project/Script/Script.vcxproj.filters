@@ -43,6 +43,15 @@
     <Filter Include="Script\FSM\Machine\Champ\Attrox">
       <UniqueIdentifier>{530ec527-3355-45db-b0ed-68c8de113f83}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\FSM\State\Champ\Attrox\Battle">
+      <UniqueIdentifier>{2877a741-006a-47c3-be7e-8ea4ed53e092}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\FSM\State\Champ\Attrox\Normal">
+      <UniqueIdentifier>{16dd3046-04df-4a0d-b372-c9a0ce0024f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\FSM\State\Champ\Attrox\Ult">
+      <UniqueIdentifier>{6afa1a1a-605e-475f-aaad-50a69dc21498}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CCameraMoveScript.h">
@@ -81,9 +90,6 @@
     <ClInclude Include="CCharacterState.h">
       <Filter>Script\FSM\State</Filter>
     </ClInclude>
-    <ClInclude Include="CAttroxIdle.h">
-      <Filter>Script\FSM\State\Champ\Attrox</Filter>
-    </ClInclude>
     <ClInclude Include="CState.h">
       <Filter>Script\FSM\State</Filter>
     </ClInclude>
@@ -96,13 +102,30 @@
     <ClInclude Include="CAttroxMachineScript.h">
       <Filter>Script\FSM\Machine\Champ\Attrox</Filter>
     </ClInclude>
-    <ClInclude Include="CAttroxNormal.h">
-      <Filter>Script\FSM\State\Champ\Attrox</Filter>
+    <ClInclude Include="CAttroxBattleAttack.h">
+      <Filter>Script\FSM\State\Champ\Attrox\Battle</Filter>
     </ClInclude>
-    <ClInclude Include="CAttroxBattle.h">
-      <Filter>Script\FSM\State\Champ\Attrox</Filter>
+    <ClInclude Include="CAttroxBattleIdle.h">
+      <Filter>Script\FSM\State\Champ\Attrox\Battle</Filter>
     </ClInclude>
-    <ClInclude Include="CAttroxUlt.h" />
+    <ClInclude Include="CAttroxBattleMove.h">
+      <Filter>Script\FSM\State\Champ\Attrox\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="CAttroxNormalIdle.h">
+      <Filter>Script\FSM\State\Champ\Attrox\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="CAttroxUltIdle.h">
+      <Filter>Script\FSM\State\Champ\Attrox\Ult</Filter>
+    </ClInclude>
+    <ClInclude Include="CAttroxDance.h">
+      <Filter>Script\FSM\State\Champ\Attrox\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="CAttroxUltMove.h">
+      <Filter>Script\FSM\State\Champ\Attrox\Ult</Filter>
+    </ClInclude>
+    <ClInclude Include="CAttroxUltAttack.h">
+      <Filter>Script\FSM\State\Champ\Attrox\Ult</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CCameraMoveScript.cpp">
@@ -141,9 +164,6 @@
     <ClCompile Include="CCharacterState.cpp">
       <Filter>Script\FSM\State</Filter>
     </ClCompile>
-    <ClCompile Include="CAttroxIdle.cpp">
-      <Filter>Script\FSM\State\Champ\Attrox</Filter>
-    </ClCompile>
     <ClCompile Include="CState.cpp">
       <Filter>Script\FSM\State</Filter>
     </ClCompile>
@@ -156,12 +176,29 @@
     <ClCompile Include="CAttroxMachineScript.cpp">
       <Filter>Script\FSM\Machine\Champ\Attrox</Filter>
     </ClCompile>
-    <ClCompile Include="CAttroxNormal.cpp">
-      <Filter>Script\FSM\State\Champ\Attrox</Filter>
+    <ClCompile Include="CAttroxBattleAttack.cpp">
+      <Filter>Script\FSM\State\Champ\Attrox\Battle</Filter>
     </ClCompile>
-    <ClCompile Include="CAttroxBattle.cpp">
-      <Filter>Script\FSM\State\Champ\Attrox</Filter>
+    <ClCompile Include="CAttroxBattleIdle.cpp">
+      <Filter>Script\FSM\State\Champ\Attrox\Battle</Filter>
     </ClCompile>
-    <ClCompile Include="CAttroxUlt.cpp" />
+    <ClCompile Include="CAttroxBattleMove.cpp">
+      <Filter>Script\FSM\State\Champ\Attrox\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="CAttroxNormalIdle.cpp">
+      <Filter>Script\FSM\State\Champ\Attrox\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="CAttroxUltIdle.cpp">
+      <Filter>Script\FSM\State\Champ\Attrox\Ult</Filter>
+    </ClCompile>
+    <ClCompile Include="CAttroxDance.cpp">
+      <Filter>Script\FSM\State\Champ\Attrox\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="CAttroxUltMove.cpp">
+      <Filter>Script\FSM\State\Champ\Attrox\Ult</Filter>
+    </ClCompile>
+    <ClCompile Include="CAttroxUltAttack.cpp">
+      <Filter>Script\FSM\State\Champ\Attrox\Ult</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

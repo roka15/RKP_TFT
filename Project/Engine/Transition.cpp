@@ -193,6 +193,8 @@ bool CTransition::IsActive(Ptr<CAnimatorController> _pController)
 		COMPARISON_TYPE tComparisonType = m_mapComparisonConditions.find(strKey)->second;
 		
 		bActive = ComparisonCalculator(iCondition, iValue, tComparisonType);
+		if (bActive == false)
+			return false;
 	}
 
 	for (auto itr = m_mapFloatConditions.begin(); itr != m_mapFloatConditions.end(); ++itr)
@@ -208,6 +210,8 @@ bool CTransition::IsActive(Ptr<CAnimatorController> _pController)
 		COMPARISON_TYPE tComparisonType = m_mapComparisonConditions.find(strKey)->second;
 
 		bActive = ComparisonCalculator(fCondition, fValue, tComparisonType);
+		if (bActive == false)
+			return false;
 	}
 
 	for (auto itr = m_mapBoolConditions.begin(); itr != m_mapBoolConditions.end(); ++itr)
@@ -223,6 +227,8 @@ bool CTransition::IsActive(Ptr<CAnimatorController> _pController)
 		COMPARISON_TYPE tComparisonType = m_mapComparisonConditions.find(strKey)->second;
 
 		bActive = ComparisonCalculator(bCondition, bValue, tComparisonType);
+		if (bActive == false)
+			return false;
 	}
 
 	for (auto itr = m_mapTriggerConditions.begin(); itr != m_mapTriggerConditions.end(); ++itr)
@@ -238,7 +244,17 @@ bool CTransition::IsActive(Ptr<CAnimatorController> _pController)
 		COMPARISON_TYPE tComparisonType = m_mapComparisonConditions.find(strKey)->second;
 
 		bActive = ComparisonCalculator(bCondition, bValue, tComparisonType);
+		if (bActive == false)
+			return false;
 	}
+
+	for (auto itr = m_mapTriggerConditions.begin(); itr != m_mapTriggerConditions.end(); ++itr)
+	{
+		bFail = false;
+		strKey = itr->first;
+		bool bValue = _pController->SetTriggerParam(strKey, false);
+	}
+
 
 	return bActive;
 }

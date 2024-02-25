@@ -1,20 +1,18 @@
 #pragma once
 #include "CCharacterState.h"
-class CAttroxBattle :
+class CAttroxBattleIdle:
     public CCharacterState
 {
 protected:
-    double m_dTime;
-    double m_dNextTime;
 public:
-    DECLARE_NAME(L"Normal")
+    DECLARE_NAME(L"CAttroxBattleIdle")
     virtual void OnEntry(CStateMachineScript* _pSMachine, CState* _pState)override;
     virtual void OnExit(CStateMachineScript* _pSMachine, CState* _pState)override;
     virtual void OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)override;
     virtual void tick(CStateMachineScript* _pSMachine)override;
-    CLONE(CAttroxBattle)
+    CLONE(CAttroxBattleIdle)
 public:
-    CAttroxBattle();
-    virtual ~CAttroxBattle();
+    CAttroxBattleIdle();
+    virtual ~CAttroxBattleIdle();
 };
 

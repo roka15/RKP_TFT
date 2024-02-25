@@ -228,6 +228,8 @@ bool CAniNode::NextNode(int _iOutSize, bool _bFinish, bool _bCurNullNode)
 			}
 			else
 			{
+				if (CurName.compare(L"AnyState") == 0)
+					int a = 0;
 				//재생을 완료하지 않았어도 Condition을 만족하면 다음 노드로 이동한다.
 				bool bActive = pOutTransition->IsActive(m_pController);
 				//condition active 되면 넘어감.

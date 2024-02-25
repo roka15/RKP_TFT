@@ -3,15 +3,14 @@
 
 enum class TRIGGER_TYPE
 {
-    IDLE,
-    WALK,
+    NIDLE,
+    BIDLE,
+    UIDLE,
+    BMOVE,
+    UMOVE,
+    BATTACK,
+    UATTACK,
     DANCE,
-
-    NORMAL,
-    ULT,
-    BATTLE,
-    DEBUFF,
-    BUFF,
     END,
 };
 class CState;

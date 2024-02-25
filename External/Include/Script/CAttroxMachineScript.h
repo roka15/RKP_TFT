@@ -1,17 +1,23 @@
 #pragma once
 #include "CStateMachineScript.h"
-#include "CAttroxIdle.h"
-#include "CAttroxBattle.h"
-#include "CAttroxNormal.h"
-#include "CAttroxUlt.h"
+#include "CAttroxBattleIdle.h"
+#include "CAttroxNormalIdle.h"
+#include "CAttroxUltIdle.h"
+#include "CAttroxUltMove.h"
+#include "CAttroxBattleMove.h"
+#include "CAttroxBattleAttack.h"
+#include "CAttroxDance.h"
 class CAttroxMachineScript :
     public CStateMachineScript
 {
 private:
-    static CAttroxIdle sIdleState;
-    static CAttroxNormal sNormalState;
-    static CAttroxBattle sBattleState;
-    static CAttroxUlt    sUltState;
+    static CAttroxNormalIdle    sNIdleState;
+    static CAttroxBattleIdle    sBIdleState;
+    static CAttroxUltIdle       sUIdleState;
+    static CAttroxUltMove       sUMoveState;
+    static CAttroxBattleMove    sBMoveState;
+    static CAttroxBattleAttack  sBAttackState;
+    static CAttroxDance         sDanceState;
 public:
     virtual void transition(STATE_TYPE _eState);
     CLONE(CAttroxMachineScript)

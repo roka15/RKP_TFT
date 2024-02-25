@@ -7,7 +7,11 @@ CTrigger.h
 CCharacterTrigger.h
 CState.h
 CCharacterState.h
-CAttroxIdle.h
-CAttroxNormal.h
-CAttroxUlt.h
-CAttroxBattle.h
+CAttroxNormalIdle.h
+CAttroxUltIdle.h
+CAttroxUltMove.h
+CAttroxUltAttack.h
+CAttroxBattleIdle.h
+CAttroxBattleMove.h
+CAttroxBattleAttack.h
+CAttroxDance.h

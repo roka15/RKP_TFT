@@ -26,6 +26,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 
 CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 {
+	
 	if (L"CAttroxMachineScript" == _strScriptName)
 		return new CAttroxMachineScript;
 	if (L"CCameraMoveScript" == _strScriptName)
@@ -86,6 +87,7 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 {
 	switch ((SCRIPT_TYPE)_pScript->GetScriptType())
 	{
+
 	case SCRIPT_TYPE::ATTROXMACHINESCRIPT:
 		return L"CAttroxMachineScript";
 		break;

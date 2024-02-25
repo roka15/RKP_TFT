@@ -41,6 +41,7 @@ public:
     bool SetTriggerParam(wstring _strName,bool _bValue);
     bool SetBoolParam(wstring _strName, bool _bValue);
 
+    CAniNode* GetCurNode() { return m_pCurNode; }
     void SetCurNode(CAniNode* _pCurNode) { m_pCurNode = _pCurNode; }
     CAniNode* GetNode(const wstring _strName) { return m_mapNode[_strName]; }
     UINT GetBoneCount();

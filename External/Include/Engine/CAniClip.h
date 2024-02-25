@@ -26,7 +26,7 @@ public:
     UINT GetBoneCount() { return m_vecBones.size(); }
     virtual int Save(const wstring& _strRelativePath)override;
 
-    void ActiveLoop() { m_tInfo.bLoop = true; }
+    void SetLoop(bool _flag) { m_tInfo.bLoop = _flag; }
 public:
     CAniClip();
     ~CAniClip();
