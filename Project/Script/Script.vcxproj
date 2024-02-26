@@ -172,6 +172,7 @@ call CodeGen.exe</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CBaseCharacterScript.h" />
     <ClInclude Include="CAttroxBattleAttack.h" />
     <ClInclude Include="CAttroxBattleIdle.h" />
     <ClInclude Include="CAttroxBattleMove.h" />
@@ -182,7 +183,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="CAttroxUltIdle.h" />
     <ClInclude Include="CAttroxUltMove.h" />
     <ClInclude Include="CCameraMoveScript.h" />
-    <ClInclude Include="CCharacterScript.h" />
+    <ClInclude Include="CharacterInfo.h" />
     <ClInclude Include="CCharacterState.h" />
     <ClInclude Include="CCharacterTrigger.h" />
     <ClInclude Include="CGravityScript.h" />
@@ -198,6 +199,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CBaseCharacterScript.cpp" />
     <ClCompile Include="CAttroxBattleAttack.cpp" />
     <ClCompile Include="CAttroxBattleIdle.cpp" />
     <ClCompile Include="CAttroxBattleMove.cpp" />
@@ -208,7 +210,6 @@ call CodeGen.exe</Command>
     <ClCompile Include="CAttroxUltIdle.cpp" />
     <ClCompile Include="CAttroxUltMove.cpp" />
     <ClCompile Include="CCameraMoveScript.cpp" />
-    <ClCompile Include="CCharacterScript.cpp" />
     <ClCompile Include="CCharacterState.cpp" />
     <ClCompile Include="CCharacterTrigger.cpp" />
     <ClCompile Include="CGravityScript.cpp" />

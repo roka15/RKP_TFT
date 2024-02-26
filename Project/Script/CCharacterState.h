@@ -20,10 +20,9 @@ public:
     virtual void OnEntry(CStateMachineScript* _pSMachine, CState* _pState)override;
     virtual void OnExit(CStateMachineScript* _pSMachine, CState* _pState)override;
     virtual void OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)override;
-    virtual void tick(CStateMachineScript* _pSMachine)override {}
+    virtual void tick(CStateMachineScript* _pSMachine)override;
 public:
     CCharacterState();
-    CCharacterState(SCRIPT_TYPE _eType);
     virtual ~CCharacterState();
 };
 

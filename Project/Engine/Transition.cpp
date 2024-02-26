@@ -49,10 +49,10 @@ int CTransition::Save(FILE* _pFile)
 	{
 		wstring strKey = itr->first;
 		int strLen = strKey.size() * UNICODELEN;
-		bool fValue = itr->second;
+		bool bValue = itr->second;
 		fwrite(&strLen, sizeof(int), 1, _pFile);
 		fwrite(strKey.c_str(), strLen, 1, _pFile);
-		fwrite(&fValue, sizeof(bool), 1, _pFile);
+		fwrite(&bValue, sizeof(bool), 1, _pFile);
 	}
 	loopSize = m_mapTriggerConditions.size();
 	fwrite(&loopSize, sizeof(int), 1, _pFile);
@@ -60,10 +60,10 @@ int CTransition::Save(FILE* _pFile)
 	{
 		wstring strKey = itr->first;
 		int strLen = strKey.size() * UNICODELEN;
-		bool fValue = itr->second;
+		bool bValue = itr->second;
 		fwrite(&strLen, sizeof(int), 1, _pFile);
 		fwrite(strKey.c_str(), strLen, 1, _pFile);
-		fwrite(&fValue, sizeof(bool), 1, _pFile);
+		fwrite(&bValue, sizeof(bool), 1, _pFile);
 	}
 	loopSize = m_mapComparisonConditions.size();
 	fwrite(&loopSize, sizeof(int), 1, _pFile);
@@ -133,7 +133,7 @@ int CTransition::Load(FILE* _pFile)
 		strBuff[strLen + 1] = '\0';
 		wstring strKey = strBuff;
 		bool bValue = 0;
-		fread(&bValue, sizeof(int), 1, _pFile);
+		fread(&bValue, sizeof(bool), 1, _pFile);
 		m_mapBoolConditions.insert(std::make_pair(strKey, bValue));
 	}
 	fread(&loopSize, sizeof(int), 1, _pFile);
@@ -145,7 +145,7 @@ int CTransition::Load(FILE* _pFile)
 		strBuff[strLen + 1] = '\0';
 		wstring strKey = strBuff;
 		bool bValue = 0;
-		fread(&bValue, sizeof(int), 1, _pFile);
+		fread(&bValue, sizeof(bool), 1, _pFile);
 		m_mapTriggerConditions.insert(std::make_pair(strKey, bValue));
 	}
 	fread(&loopSize, sizeof(int), 1, _pFile);

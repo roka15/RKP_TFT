@@ -18,6 +18,7 @@
 #include <Engine\Transition.h>
 #include <Script\CScriptMgr.h>
 #include <Script\CAttroxMachineScript.h>
+#include <Script\CBaseCharacterScript.h>
 #include <Script\CCharacterTrigger.h>
 void CreateTestLevel()
 {
@@ -282,15 +283,16 @@ void CreateTestLevel()
 		t1->RegisterCondition(L"Battle", 1, COMPARISON_TYPE::EQUAL);
 		t1->RegisterCondition(L"Move", 1, COMPARISON_TYPE::EQUAL);
 
-
+		CAniNode* UIdleNode;
 		pOutNode = BIdleNode;
 		pInNode = pAniController->CreateNode(L"ULT_Idle", L"anim3D\\Aatrox_ULT_Idle.anm");
 		t1 = pAniController->CreateTransition(L"Battle_ULT_Idle", pInNode, pOutNode, false);
 		t1->RegisterCondition(L"ULT", 1, COMPARISON_TYPE::EQUAL);
 		t1 = pAniController->CreateTransition(L"ULT_Battle_Idle", pOutNode, pInNode, false);
 		t1->RegisterCondition(L"ULT", 0, COMPARISON_TYPE::EQUAL);
+		UIdleNode = pInNode;
 
-
+		CAniNode* UMoveNode;
 		pOutNode = BMoveNode;
 		pInNode = pAniController->CreateNode(L"ULT_Move", L"anim3D\\Run_Ult.anm");
 		t1 = pAniController->CreateTransition(L"Battle_ULT_Move", pInNode, pOutNode, false);
@@ -298,6 +300,16 @@ void CreateTestLevel()
 		t1->RegisterCondition(L"Move", 1, COMPARISON_TYPE::EQUAL);
 		t1 = pAniController->CreateTransition(L"ULT_Battle_Move", pOutNode, pInNode, false);
 		t1->RegisterCondition(L"ULT", 0, COMPARISON_TYPE::EQUAL);
+
+		t1 = pAniController->CreateTransition(L"ULT_Idle_Move", pInNode, UIdleNode, false);
+		t1->RegisterCondition(L"ULT", 1, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Move", 1, COMPARISON_TYPE::EQUAL);
+		t1 = pAniController->CreateTransition(L"ULT_Move_Idle", UIdleNode, pInNode, false);
+		t1->RegisterCondition(L"ULT", 1, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Move", 0, COMPARISON_TYPE::EQUAL);
+
+		UMoveNode = pInNode;
+
 
 
 		pOutNode = pAnyNode;
@@ -316,9 +328,11 @@ void CreateTestLevel()
 
 		pAniController->Save(strPath);
 	}
-	CAttroxMachineScript* script = (CAttroxMachineScript*)CScriptMgr::GetScript(SCRIPT_TYPE::ATTROXMACHINESCRIPT);
+	CAttroxMachineScript* fsmScript = (CAttroxMachineScript*)CScriptMgr::GetScript(SCRIPT_TYPE::ATTROXMACHINESCRIPT);
+	CBaseCharacterScript* chScript = (CBaseCharacterScript*)CScriptMgr::GetScript(SCRIPT_TYPE::BASECHARACTERSCRIPT);
 	pAttroxObj->Animator3D()->SetController(pAniController);
-	pAttroxObj->AddComponent(script);
+	pAttroxObj->AddComponent(fsmScript);
+	pAttroxObj->AddComponent(chScript);
 	/*CCharacterTrigger trigger;
 	trigger.SetEvtType(TRIGGER_TYPE::);
 	script->notify(&trigger);*/

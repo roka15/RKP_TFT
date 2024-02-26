@@ -66,12 +66,12 @@ int CAnimatorController::Load(const wstring& _strFilePath)
 		ZeroMemory(strBuff, MAXLEN);
 		wstring strKey;
 		int strLen = 0;
-		float bValue = 0;
+		bool bValue = 0;
 		fread(&strLen, sizeof(int), 1, pFile);
 		fread(strBuff, strLen, 1, pFile);
 		strBuff[strLen + 1] = '\0';
 		strKey = strBuff;
-		fread(&bValue, sizeof(int), 1, pFile);
+		fread(&bValue, sizeof(bool), 1, pFile);
 		m_mapBoolParams.insert(std::make_pair(strKey, bValue));
 	}
 	fread(&eType, sizeof(UINT), 1, pFile);
@@ -81,12 +81,12 @@ int CAnimatorController::Load(const wstring& _strFilePath)
 		ZeroMemory(strBuff, MAXLEN);
 		wstring strKey;
 		int strLen = 0;
-		float bValue = 0;
+		bool bValue = 0;
 		fread(&strLen, sizeof(int), 1, pFile);
 		fread(strBuff, strLen, 1, pFile);
 		strBuff[strLen + 1] = '\0';
 		strKey = strBuff;
-		fread(&bValue, sizeof(int), 1, pFile);
+		fread(&bValue, sizeof(bool), 1, pFile);
 		m_mapTriggerParams.insert(std::make_pair(strKey, bValue));
 	}
 	fread(&loopSize, sizeof(int), 1, pFile);

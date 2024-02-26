@@ -84,9 +84,6 @@
     <ClInclude Include="CCharacterTrigger.h">
       <Filter>Script\FSM\Trigger</Filter>
     </ClInclude>
-    <ClInclude Include="CCharacterScript.h">
-      <Filter>Script\Character</Filter>
-    </ClInclude>
     <ClInclude Include="CCharacterState.h">
       <Filter>Script\FSM\State</Filter>
     </ClInclude>
@@ -126,6 +123,12 @@
     <ClInclude Include="CAttroxUltAttack.h">
       <Filter>Script\FSM\State\Champ\Attrox\Ult</Filter>
     </ClInclude>
+    <ClInclude Include="CharacterInfo.h">
+      <Filter>Script\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="CBaseCharacterScript.h">
+      <Filter>Script\Character</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CCameraMoveScript.cpp">
@@ -157,9 +160,6 @@
     </ClCompile>
     <ClCompile Include="CCharacterTrigger.cpp">
       <Filter>Script\FSM\Trigger</Filter>
-    </ClCompile>
-    <ClCompile Include="CCharacterScript.cpp">
-      <Filter>Script\Character</Filter>
     </ClCompile>
     <ClCompile Include="CCharacterState.cpp">
       <Filter>Script\FSM\State</Filter>
@@ -199,6 +199,9 @@
     </ClCompile>
     <ClCompile Include="CAttroxUltAttack.cpp">
       <Filter>Script\FSM\State\Champ\Attrox\Ult</Filter>
+    </ClCompile>
+    <ClCompile Include="CBaseCharacterScript.cpp">
+      <Filter>Script\Character</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

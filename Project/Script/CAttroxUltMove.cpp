@@ -38,7 +38,9 @@ void CAttroxUltMove::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
 		return;
 
 	//모든 param들 condition 비활성화.
+	pController->SetIntParam(L"ULT", 0);
 	pController->SetIntParam(L"Move", 0);
+	//pController->SetTriggerParam(L"UltOut", true);
 }
 
 void CAttroxUltMove::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)
@@ -59,37 +61,30 @@ void CAttroxUltMove::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigge
 		return;
 	switch (eType)
 	{
-	case TRIGGER_TYPE::UIDLE:
-		pMachine->transition(STATE_TYPE::UIDLE);
-		break;
 	case TRIGGER_TYPE::BIDLE:
 		pMachine->transition(STATE_TYPE::BIDLE);
 		break;
 	case TRIGGER_TYPE::BMOVE:
 		pMachine->transition(STATE_TYPE::BMOVE);
 		break;
+	case TRIGGER_TYPE::BATTACK:
+		pMachine->transition(STATE_TYPE::BATTACK);
+		break;
+	case TRIGGER_TYPE::UIDLE:
+		pMachine->transition(STATE_TYPE::UIDLE);
+		break;
 	case TRIGGER_TYPE::UMOVE:
 		pController->SetIntParam(L"ULT", 1);
 		pController->SetIntParam(L"Move", 1);
 		break;
+	case TRIGGER_TYPE::UATTACK:
+		break;
 	case TRIGGER_TYPE::DANCE:
+		pMachine->transition(STATE_TYPE::DANCE);
 		break;
 	}
 }
 
-void CAttroxUltMove::tick(CStateMachineScript* _pSMachine)
-{
-	CAttroxMachineScript* pMachine = dynamic_cast<CAttroxMachineScript*>(_pSMachine);
-	if (pMachine == nullptr)
-		return;
-
-	if (CKeyMgr::GetInst()->GetKeyState(KEY::F) == KEY_STATE::TAP)
-	{
-		CCharacterTrigger trigger;
-		trigger.SetEvtType(TRIGGER_TYPE::BMOVE);
-		pMachine->notify(&trigger);
-	}
-}
 CAttroxUltMove::CAttroxUltMove()
 	:CCharacterState()
 {

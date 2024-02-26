@@ -2,8 +2,8 @@
 #include "CScriptMgr.h"
 
 #include "CAttroxMachineScript.h"
+#include "CBaseCharacterScript.h"
 #include "CCameraMoveScript.h"
-#include "CCharacterScript.h"
 #include "CGravityScript.h"
 #include "CMissileScript.h"
 #include "CMonsterScript.h"
@@ -13,9 +13,10 @@
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
+	_vec.push_back(L"BaseCharacterScript");
 	_vec.push_back(L"CAttroxMachineScript");
+	_vec.push_back(L"CBaseCharacterScript");
 	_vec.push_back(L"CCameraMoveScript");
-	_vec.push_back(L"CCharacterScript");
 	_vec.push_back(L"CGravityScript");
 	_vec.push_back(L"CMissileScript");
 	_vec.push_back(L"CMonsterScript");
@@ -26,13 +27,12 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 
 CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 {
-	
 	if (L"CAttroxMachineScript" == _strScriptName)
 		return new CAttroxMachineScript;
+	if (L"CBaseCharacterScript" == _strScriptName)
+		return new CBaseCharacterScript;
 	if (L"CCameraMoveScript" == _strScriptName)
 		return new CCameraMoveScript;
-	if (L"CCharacterScript" == _strScriptName)
-		return new CCharacterScript;
 	if (L"CGravityScript" == _strScriptName)
 		return new CGravityScript;
 	if (L"CMissileScript" == _strScriptName)
@@ -55,11 +55,11 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::ATTROXMACHINESCRIPT:
 		return new CAttroxMachineScript;
 		break;
+	case (UINT)SCRIPT_TYPE::BASECHARACTERSCRIPT:
+		return new CBaseCharacterScript;
+		break;
 	case (UINT)SCRIPT_TYPE::CAMERAMOVESCRIPT:
 		return new CCameraMoveScript;
-		break;
-	case (UINT)SCRIPT_TYPE::CHARACTERSCRIPT:
-		return new CCharacterScript;
 		break;
 	case (UINT)SCRIPT_TYPE::GRAVITYSCRIPT:
 		return new CGravityScript;
@@ -87,17 +87,16 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 {
 	switch ((SCRIPT_TYPE)_pScript->GetScriptType())
 	{
-
 	case SCRIPT_TYPE::ATTROXMACHINESCRIPT:
 		return L"CAttroxMachineScript";
 		break;
 
-	case SCRIPT_TYPE::CAMERAMOVESCRIPT:
-		return L"CCameraMoveScript";
+	case SCRIPT_TYPE::BASECHARACTERSCRIPT:
+		return L"CBaseCharacterScript";
 		break;
 
-	case SCRIPT_TYPE::CHARACTERSCRIPT:
-		return L"CCharacterScript";
+	case SCRIPT_TYPE::CAMERAMOVESCRIPT:
+		return L"CCameraMoveScript";
 		break;
 
 	case SCRIPT_TYPE::GRAVITYSCRIPT:

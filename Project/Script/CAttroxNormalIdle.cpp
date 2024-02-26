@@ -14,6 +14,13 @@ void CAttroxNormalIdle::OnEntry(CStateMachineScript* _pSMachine, CState* _pState
 	if (pState == nullptr)
 		return;
 
+	CAnimator3D* pAni = _pSMachine->Animator3D();
+	if (pAni == nullptr)
+		return;
+	Ptr<CAnimatorController> pController = pAni->GetController();
+	if (pController == nullptr)
+		return;
+
 	CCharacterTrigger trigger;
 	trigger.SetEvtType(TRIGGER_TYPE::NIDLE);
 	_pSMachine->notify(&trigger);
@@ -27,9 +34,6 @@ void CAttroxNormalIdle::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
 	Ptr<CAnimatorController> pController = pAni->GetController();
 	if (pController == nullptr)
 		return;
-
-	//모든 param들 condition 비활성화.
-	pController->SetIntParam(L"Normal", 0);
 }
 
 void CAttroxNormalIdle::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)
@@ -51,27 +55,11 @@ void CAttroxNormalIdle::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTri
 	switch (eType)
 	{
 	case TRIGGER_TYPE::NIDLE:
-		pController->SetIntParam(L"Normal", 1);
+		pController->SetTriggerParam(L"Normal", true);
 		break;
 	case TRIGGER_TYPE::BIDLE:
 		pMachine->transition(STATE_TYPE::BIDLE);
 		break;
-	case TRIGGER_TYPE::DANCE:
-		break;
-	}
-}
-
-void CAttroxNormalIdle::tick(CStateMachineScript* _pSMachine)
-{
-	if (CKeyMgr::GetInst()->GetKeyState(KEY::_1) == KEY_STATE::TAP)
-	{
-		CAttroxMachineScript* pMachine = dynamic_cast<CAttroxMachineScript*>(_pSMachine);
-		if (pMachine == nullptr)
-			return;
-
-		CCharacterTrigger trigger;
-		trigger.SetEvtType(TRIGGER_TYPE::BIDLE);
-		pMachine->notify(&trigger);
 	}
 }
 CAttroxNormalIdle::CAttroxNormalIdle()

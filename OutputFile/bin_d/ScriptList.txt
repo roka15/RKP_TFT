@@ -1,10 +1,7 @@
-CAttroxBattle
-CAttroxIdle
+BaseCharacterScript
 CAttroxMachineScript
-CAttroxNormal
-CAttroxUlt
+CBaseCharacterScript
 CCameraMoveScript
-CCharacterScript
 CGravityScript
 CMissileScript
 CMonsterScript

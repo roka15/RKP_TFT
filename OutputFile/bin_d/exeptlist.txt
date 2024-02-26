@@ -15,3 +15,5 @@ CAttroxBattleIdle.h
 CAttroxBattleMove.h
 CAttroxBattleAttack.h
 CAttroxDance.h
+CharacterInfo.h
+

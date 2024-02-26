@@ -21,9 +21,7 @@ void CAttroxUltIdle::OnEntry(CStateMachineScript* _pSMachine, CState* _pState)
 	Ptr<CAnimatorController> pController = pAni->GetController();
 	if (pController == nullptr)
 		return;
-	pController->SetIntParam(L"Normal", 0);
-	pController->SetIntParam(L"Battle", 0);
-
+	
 	CCharacterTrigger trigger;
 	trigger.SetEvtType(TRIGGER_TYPE::UIDLE);
 	_pSMachine->notify(&trigger);
@@ -39,7 +37,8 @@ void CAttroxUltIdle::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
 		return;
 
 	//모든 param들 condition 비활성화.
-	//pController->SetIntParam(L"ULT", 0);
+	pController->SetIntParam(L"ULT", 0);
+	//pController->SetTriggerParam(L"UltOut", true);
 }
 
 void CAttroxUltIdle::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)
@@ -60,31 +59,26 @@ void CAttroxUltIdle::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigge
 		return;
 	switch (eType)
 	{
-	case TRIGGER_TYPE::UIDLE:
-		pController->SetIntParam(L"ULT", 1);
-		break;
 	case TRIGGER_TYPE::BIDLE:
 		pMachine->transition(STATE_TYPE::BIDLE);
+		break;
+	case TRIGGER_TYPE::BMOVE:
+		pMachine->transition(STATE_TYPE::BMOVE);
+		break;
+	case TRIGGER_TYPE::BATTACK:
+		pMachine->transition(STATE_TYPE::BATTACK);
+		break;
+	case TRIGGER_TYPE::UIDLE:
+		pController->SetIntParam(L"ULT", 1);
 		break;
 	case TRIGGER_TYPE::UMOVE:
 		pMachine->transition(STATE_TYPE::UMOVE);
 		break;
-	case TRIGGER_TYPE::DANCE:
+	case TRIGGER_TYPE::UATTACK:
 		break;
-	}
-}
-
-void CAttroxUltIdle::tick(CStateMachineScript* _pSMachine)
-{
-	CAttroxMachineScript* pMachine = dynamic_cast<CAttroxMachineScript*>(_pSMachine);
-	if (pMachine == nullptr)
-		return;
-
-	if (CKeyMgr::GetInst()->GetKeyState(KEY::F) == KEY_STATE::TAP)
-	{
-		CCharacterTrigger trigger;
-		trigger.SetEvtType(TRIGGER_TYPE::BIDLE);
-		pMachine->notify(&trigger);
+	case TRIGGER_TYPE::DANCE:
+		pMachine->transition(STATE_TYPE::DANCE);
+		break;
 	}
 }
 CAttroxUltIdle::CAttroxUltIdle()
