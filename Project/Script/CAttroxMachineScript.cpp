@@ -3,48 +3,24 @@
 #include "CCharacterTrigger.h"
 #include <Engine\CTimeMgr.h>
 
-CAttroxNormalIdle  CAttroxMachineScript::sNIdleState;
-CAttroxBattleIdle  CAttroxMachineScript::sBIdleState;
-CAttroxUltIdle    CAttroxMachineScript::sUIdleState;
-CAttroxBattleMove CAttroxMachineScript::sBMoveState;
-CAttroxBattleAttack CAttroxMachineScript::sBAttackState;
-CAttroxDance         CAttroxMachineScript::sDanceState;
-CAttroxUltMove       CAttroxMachineScript::sUMoveState;
-CAttroxUltAttack	 CAttroxMachineScript::sUAttackState;
 CAttroxMachineScript::CAttroxMachineScript() :CStateMachineScript(SCRIPT_TYPE::ATTROXMACHINESCRIPT)
 {
-	m_pState = &sNIdleState;
+	//STATE_TYPE 순서 지킬 것.
+	add_state(new CAttroxNormalIdle());
+	add_state(new CAttroxBattleIdle());
+	add_state(new CAttroxUltIdle());
+	add_state(new CAttroxBattleMove());
+	add_state(new CAttroxUltMove());
+	add_state(new CAttroxBattleAttack());
+	add_state(new CAttroxUltAttack());
+	add_state(new CAttroxDance());
+
+	m_pState = m_pStateList[(UINT)STATE_TYPE::NIDLE];
 }
 
-void CAttroxMachineScript::transition(STATE_TYPE _eState)
+void CAttroxMachineScript::transition(UINT _iType)
 {
-	switch (_eState)
-	{
-	case STATE_TYPE::NIDLE:
-		CStateMachineScript::transition(&sNIdleState);
-		break;
-	case STATE_TYPE::UIDLE:
-		CStateMachineScript::transition(&sUIdleState);
-		break;
-	case STATE_TYPE::UMOVE:
-		CStateMachineScript::transition(&sUMoveState);
-		break;
-	case STATE_TYPE::UATTACK:
-		CStateMachineScript::transition(&sUAttackState);
-		break;
-	case STATE_TYPE::BIDLE:
-		CStateMachineScript::transition(&sBIdleState);
-		break;
-	case STATE_TYPE::BMOVE:
-		CStateMachineScript::transition(&sBMoveState);
-		break;
-	case STATE_TYPE::BATTACK:
-		CStateMachineScript::transition(&sBAttackState);
-		break;
-	case STATE_TYPE::DANCE:
-		CStateMachineScript::transition(&sDanceState);
-		break;
-	}
+	CStateMachineScript::transition(m_pStateList[_iType]);
 }
 
 CAttroxMachineScript::~CAttroxMachineScript()

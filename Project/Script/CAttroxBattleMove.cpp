@@ -60,25 +60,25 @@ void CAttroxBattleMove::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTri
 	switch (eType)
 	{
 	case TRIGGER_TYPE::BIDLE:
-		pMachine->transition(STATE_TYPE::BIDLE);
+		pMachine->transition((UINT)STATE_TYPE::BIDLE);
 		break;
 	case TRIGGER_TYPE::BMOVE:
 		pController->SetIntParam(L"Battle", 1);
 		pController->SetIntParam(L"Move", 1);
 		break;
 	case TRIGGER_TYPE::UIDLE:
-		pMachine->transition(STATE_TYPE::UIDLE);
+		pMachine->transition((UINT)STATE_TYPE::UIDLE);
 		break;
 	case TRIGGER_TYPE::UMOVE:
-		pMachine->transition(STATE_TYPE::UMOVE);
+		pMachine->transition((UINT)STATE_TYPE::UMOVE);
 		break;
 	case TRIGGER_TYPE::UATTACK:
 		break;
 	case TRIGGER_TYPE::BATTACK:
-		pMachine->transition(STATE_TYPE::BATTACK);
+		pMachine->transition((UINT)STATE_TYPE::BATTACK);
 		break;
 	case TRIGGER_TYPE::DANCE:
-		pMachine->transition(STATE_TYPE::DANCE);
+		pMachine->transition((UINT)STATE_TYPE::DANCE);
 		break;
 	}
 }

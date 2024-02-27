@@ -56,26 +56,26 @@ void CAttroxBattleAttack::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pT
 	switch (eType)
 	{
 	case TRIGGER_TYPE::BIDLE:
-		pMachine->transition(STATE_TYPE::BIDLE);
+		pMachine->transition((UINT)STATE_TYPE::BIDLE);
 		break;
 	case TRIGGER_TYPE::BMOVE:
-		pMachine->transition(STATE_TYPE::BMOVE);
+		pMachine->transition((UINT)STATE_TYPE::BMOVE);
 		break;
 	case TRIGGER_TYPE::BATTACK:
 		pController->SetIntParam(L"Battle", 1);
 		pController->SetIntParam(L"Attack", 1);
 		break;
 	case TRIGGER_TYPE::UIDLE:
-		pMachine->transition(STATE_TYPE::UIDLE);
+		pMachine->transition((UINT)STATE_TYPE::UIDLE);
 		break;
 	case TRIGGER_TYPE::UMOVE:
-		pMachine->transition(STATE_TYPE::UMOVE);
+		pMachine->transition((UINT)STATE_TYPE::UMOVE);
 		break;
 	case TRIGGER_TYPE::UATTACK:
-		pMachine->transition(STATE_TYPE::UATTACK);
+		pMachine->transition((UINT)STATE_TYPE::UATTACK);
 		break;
 	case TRIGGER_TYPE::DANCE:
-		pMachine->transition(STATE_TYPE::DANCE);
+		pMachine->transition((UINT)STATE_TYPE::DANCE);
 		break;
 	}
 }

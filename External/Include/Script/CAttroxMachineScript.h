@@ -12,16 +12,8 @@ class CAttroxMachineScript :
     public CStateMachineScript
 {
 private:
-    static CAttroxNormalIdle    sNIdleState;
-    static CAttroxBattleIdle    sBIdleState;
-    static CAttroxUltIdle       sUIdleState;
-    static CAttroxUltMove       sUMoveState;
-    static CAttroxUltAttack     sUAttackState;
-    static CAttroxBattleMove    sBMoveState;
-    static CAttroxBattleAttack  sBAttackState;
-    static CAttroxDance         sDanceState;
 public:
-    virtual void transition(STATE_TYPE _eState);
+    virtual void transition(UINT _iType)override;
     CLONE(CAttroxMachineScript)
 public:
     CAttroxMachineScript();

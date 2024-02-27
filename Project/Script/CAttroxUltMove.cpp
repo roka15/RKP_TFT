@@ -62,26 +62,26 @@ void CAttroxUltMove::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigge
 	switch (eType)
 	{
 	case TRIGGER_TYPE::BIDLE:
-		pMachine->transition(STATE_TYPE::BIDLE);
+		pMachine->transition((UINT)STATE_TYPE::BIDLE);
 		break;
 	case TRIGGER_TYPE::BMOVE:
-		pMachine->transition(STATE_TYPE::BMOVE);
+		pMachine->transition((UINT)STATE_TYPE::BMOVE);
 		break;
 	case TRIGGER_TYPE::BATTACK:
-		pMachine->transition(STATE_TYPE::BATTACK);
+		pMachine->transition((UINT)STATE_TYPE::BATTACK);
 		break;
 	case TRIGGER_TYPE::UIDLE:
-		pMachine->transition(STATE_TYPE::UIDLE);
+		pMachine->transition((UINT)STATE_TYPE::UIDLE);
 		break;
 	case TRIGGER_TYPE::UMOVE:
 		pController->SetIntParam(L"ULT", 1);
 		pController->SetIntParam(L"Move", 1);
 		break;
 	case TRIGGER_TYPE::UATTACK:
-		pMachine->transition(STATE_TYPE::UATTACK);
+		pMachine->transition((UINT)STATE_TYPE::UATTACK);
 		break;
 	case TRIGGER_TYPE::DANCE:
-		pMachine->transition(STATE_TYPE::DANCE);
+		pMachine->transition((UINT)STATE_TYPE::DANCE);
 		break;
 	}
 }

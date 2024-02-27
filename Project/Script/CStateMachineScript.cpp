@@ -44,4 +44,14 @@ CStateMachineScript::CStateMachineScript(SCRIPT_TYPE _eType):CScript(_eType)
 
 CStateMachineScript::~CStateMachineScript()
 {
+	for (int i = 0; i < m_pStateList.size(); ++i)
+	{
+		if (m_pStateList[i] == nullptr)
+			continue;
+
+		delete m_pStateList[i];
+		m_pStateList[i] = nullptr;
+	}
+	m_pStateList.clear();
+	m_pState = nullptr;
 }

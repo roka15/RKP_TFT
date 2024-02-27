@@ -54,19 +54,19 @@ void CAttroxDance::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)
 	switch (eType)
 	{
 	case TRIGGER_TYPE::BIDLE:
-		pMachine->transition(STATE_TYPE::BIDLE);
+		pMachine->transition((UINT)STATE_TYPE::BIDLE);
 		break;
 	case TRIGGER_TYPE::BMOVE:
-		pMachine->transition(STATE_TYPE::BMOVE);
+		pMachine->transition((UINT)STATE_TYPE::BMOVE);
 		break;
 	case TRIGGER_TYPE::BATTACK:
-		pMachine->transition(STATE_TYPE::BATTACK);
+		pMachine->transition((UINT)STATE_TYPE::BATTACK);
 		break;
 	case TRIGGER_TYPE::UIDLE:
-		pMachine->transition(STATE_TYPE::UIDLE);
+		pMachine->transition((UINT)STATE_TYPE::UIDLE);
 		break;
 	case TRIGGER_TYPE::UMOVE:
-		pMachine->transition(STATE_TYPE::UMOVE);
+		pMachine->transition((UINT)STATE_TYPE::UMOVE);
 		break;
 	case TRIGGER_TYPE::UATTACK:
 		break;
@@ -74,7 +74,7 @@ void CAttroxDance::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)
 		pController->SetTriggerParam(L"Dance", true);
 		break;
 	case TRIGGER_TYPE::END:
-		pMachine->transition(STATE_TYPE::NIDLE);
+		pMachine->transition((UINT)STATE_TYPE::NIDLE);
 		break;
 	}
 }

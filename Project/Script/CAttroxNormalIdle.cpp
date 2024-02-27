@@ -58,7 +58,7 @@ void CAttroxNormalIdle::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTri
 		pController->SetTriggerParam(L"Normal", true);
 		break;
 	case TRIGGER_TYPE::BIDLE:
-		pMachine->transition(STATE_TYPE::BIDLE);
+		pMachine->transition((UINT)STATE_TYPE::BIDLE);
 		break;
 	}
 }
