@@ -17,7 +17,7 @@ void CCharacterState::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigg
 }
 void CCharacterState::tick(CStateMachineScript* _pSMachine)
 {
-	CBaseCharacterScript* pChScript = _pSMachine->GetOwner()->GetScript<CBaseCharacterScript>();
+	/*CBaseCharacterScript* pChScript = _pSMachine->GetOwner()->GetScript<CBaseCharacterScript>();
 	if (pChScript == nullptr)
 		return;
 
@@ -91,7 +91,7 @@ void CCharacterState::tick(CStateMachineScript* _pSMachine)
 			trigger.SetEvtType(TRIGGER_TYPE::BIDLE);
 			_pSMachine->notify(&trigger);
 		}
-	}
+	}*/
 }
 CCharacterState::CCharacterState():CState()
 {

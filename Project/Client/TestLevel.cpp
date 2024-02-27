@@ -239,7 +239,6 @@ void CreateTestLevel()
 
 		pAniController = new CAnimatorController();
 		CResMgr::GetInst()->AddRes<CAnimatorController>(strPath, pAniController);
-		pAniController->RegisterParam(L"Normal", 1);
 		pAniController->RegisterParam(L"Battle", 0);
 		pAniController->RegisterParam(L"ULT", 0);
 		pAniController->RegisterParam(L"Move", 0);
@@ -251,14 +250,22 @@ void CreateTestLevel()
 		CAniNode* pAnyNode = pAniController->GetNode(L"AnyState");
 		CAniNode* pExitNode = pAniController->GetNode(L"Exit");
 		CAniNode* pOutNode = pAniController->GetNode(L"Entry");
-		CAniNode* pInNode = pAniController->CreateNode(L"Ani1", L"anim3D\\Aatrox_Idle1.anm");
+		CAniNode* pInNode = pAniController->CreateNode(L"Normal_Idle", L"anim3D\\Aatrox_Idle1.anm");
 		CTransition* t1 = pAniController->CreateTransition(L"Entry_Normal_Idle", pInNode, pOutNode, false);
-		t1->RegisterCondition(L"Normal", 1, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Battle", 0, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"ULT", 0, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Move", 0, COMPARISON_TYPE::EQUAL);
+		CAniNode* NIdleNode = pInNode;
 
 		pOutNode = pInNode;
 		pInNode = pAniController->CreateNode(L"Battle_Idle", L"anim3D\\Idle1.anm");
 		t1 = pAniController->CreateTransition(L"Normal_Battle_Idle", pInNode, pOutNode, false);
 		t1->RegisterCondition(L"Battle", 1, COMPARISON_TYPE::EQUAL);
+
+		t1 = pAniController->CreateTransition(L"Battle_Normal_Idle", pOutNode , pInNode, false);
+		t1->RegisterCondition(L"Battle", 0, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"ULT", 0, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Move", 0, COMPARISON_TYPE::EQUAL);
 
 		CAniNode* BIdleNode = pInNode;
 

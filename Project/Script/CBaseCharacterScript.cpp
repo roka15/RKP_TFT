@@ -117,6 +117,11 @@ void CBaseCharacterScript::Search()
 
 void CBaseCharacterScript::Wait()
 {
+	if (m_ChState.bMove || m_ChState.bAttack || m_ChState.bDance || m_ChState.bUlt)
+	{
+		int a;
+		return;
+	}
 	m_ChState.bUlt = false;
 	m_ChState.bMove = false;
 	m_ChState.bAttack = false;
@@ -125,11 +130,9 @@ void CBaseCharacterScript::Wait()
 
 	if (m_ChState.bWaiting)
 	{
-		
 	}
 	else
 	{
-
 	}
 }
 

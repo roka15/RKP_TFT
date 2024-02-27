@@ -3,6 +3,7 @@
 #include "CCharacterTrigger.h"
 #include "CAttroxMachineScript.h"
 #include "CCharacterTrigger.h"
+#include "CBaseCharacterScript.h"
 #include <Engine\CTimeMgr.h>
 #include <Engine\AnimatorController.h>
 
@@ -53,23 +54,6 @@ void CAttroxDance::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)
 		return;
 	switch (eType)
 	{
-	case TRIGGER_TYPE::BIDLE:
-		pMachine->transition((UINT)STATE_TYPE::BIDLE);
-		break;
-	case TRIGGER_TYPE::BMOVE:
-		pMachine->transition((UINT)STATE_TYPE::BMOVE);
-		break;
-	case TRIGGER_TYPE::BATTACK:
-		pMachine->transition((UINT)STATE_TYPE::BATTACK);
-		break;
-	case TRIGGER_TYPE::UIDLE:
-		pMachine->transition((UINT)STATE_TYPE::UIDLE);
-		break;
-	case TRIGGER_TYPE::UMOVE:
-		pMachine->transition((UINT)STATE_TYPE::UMOVE);
-		break;
-	case TRIGGER_TYPE::UATTACK:
-		break;
 	case TRIGGER_TYPE::DANCE:
 		pController->SetTriggerParam(L"Dance", true);
 		break;
@@ -77,6 +61,29 @@ void CAttroxDance::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)
 		pMachine->transition((UINT)STATE_TYPE::NIDLE);
 		break;
 	}
+}
+
+void CAttroxDance::tick(CStateMachineScript* _pSMachine)
+{
+	CAttroxMachineScript* pMachine = dynamic_cast<CAttroxMachineScript*>(_pSMachine);
+	if (pMachine == nullptr)
+		return;
+	CBaseCharacterScript* pChScript = _pSMachine->GetOwner()->GetScript<CBaseCharacterScript>();
+	if (pChScript == nullptr)
+		return;
+	bool bEnd = pChScript->IsEnd();
+
+	CCharacterTrigger trigger;
+	bool bChange = false;
+
+	if (bEnd)
+	{
+		trigger.SetEvtType(TRIGGER_TYPE::END);
+		bChange = true;
+	}
+
+	if (bChange)
+		pMachine->notify(&trigger);
 }
 
 
