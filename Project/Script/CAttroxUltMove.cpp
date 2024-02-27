@@ -78,6 +78,7 @@ void CAttroxUltMove::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigge
 		pController->SetIntParam(L"Move", 1);
 		break;
 	case TRIGGER_TYPE::UATTACK:
+		pMachine->transition(STATE_TYPE::UATTACK);
 		break;
 	case TRIGGER_TYPE::DANCE:
 		pMachine->transition(STATE_TYPE::DANCE);

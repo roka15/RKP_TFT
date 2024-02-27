@@ -72,6 +72,7 @@ void CAttroxBattleAttack::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pT
 		pMachine->transition(STATE_TYPE::UMOVE);
 		break;
 	case TRIGGER_TYPE::UATTACK:
+		pMachine->transition(STATE_TYPE::UATTACK);
 		break;
 	case TRIGGER_TYPE::DANCE:
 		pMachine->transition(STATE_TYPE::DANCE);

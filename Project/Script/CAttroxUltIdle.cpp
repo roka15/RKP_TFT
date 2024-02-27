@@ -75,6 +75,7 @@ void CAttroxUltIdle::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigge
 		pMachine->transition(STATE_TYPE::UMOVE);
 		break;
 	case TRIGGER_TYPE::UATTACK:
+		pMachine->transition(STATE_TYPE::UATTACK);
 		break;
 	case TRIGGER_TYPE::DANCE:
 		pMachine->transition(STATE_TYPE::DANCE);

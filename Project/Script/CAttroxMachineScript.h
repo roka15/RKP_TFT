@@ -4,6 +4,7 @@
 #include "CAttroxNormalIdle.h"
 #include "CAttroxUltIdle.h"
 #include "CAttroxUltMove.h"
+#include "CAttroxUltAttack.h"
 #include "CAttroxBattleMove.h"
 #include "CAttroxBattleAttack.h"
 #include "CAttroxDance.h"
@@ -15,6 +16,7 @@ private:
     static CAttroxBattleIdle    sBIdleState;
     static CAttroxUltIdle       sUIdleState;
     static CAttroxUltMove       sUMoveState;
+    static CAttroxUltAttack     sUAttackState;
     static CAttroxBattleMove    sBMoveState;
     static CAttroxBattleAttack  sBAttackState;
     static CAttroxDance         sDanceState;

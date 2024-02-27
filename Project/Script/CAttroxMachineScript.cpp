@@ -10,6 +10,7 @@ CAttroxBattleMove CAttroxMachineScript::sBMoveState;
 CAttroxBattleAttack CAttroxMachineScript::sBAttackState;
 CAttroxDance         CAttroxMachineScript::sDanceState;
 CAttroxUltMove       CAttroxMachineScript::sUMoveState;
+CAttroxUltAttack	 CAttroxMachineScript::sUAttackState;
 CAttroxMachineScript::CAttroxMachineScript() :CStateMachineScript(SCRIPT_TYPE::ATTROXMACHINESCRIPT)
 {
 	m_pState = &sNIdleState;
@@ -27,6 +28,9 @@ void CAttroxMachineScript::transition(STATE_TYPE _eState)
 		break;
 	case STATE_TYPE::UMOVE:
 		CStateMachineScript::transition(&sUMoveState);
+		break;
+	case STATE_TYPE::UATTACK:
+		CStateMachineScript::transition(&sUAttackState);
 		break;
 	case STATE_TYPE::BIDLE:
 		CStateMachineScript::transition(&sBIdleState);

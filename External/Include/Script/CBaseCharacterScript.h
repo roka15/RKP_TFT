@@ -41,13 +41,3 @@ public:
     virtual ~CBaseCharacterScript();
     CLONE(CBaseCharacterScript)
 };
-
-
-//virtual bool IsWaitingSeat() = 0;
-//virtual bool IsFindEnemy() = 0;
-//virtual bool IsWithinAttackRange() = 0;
-//virtual bool IsMaxUlt() = 0;
-//virtual void UltGaugeUp() = 0;
-//virtual void UltGaugeDown() = 0;
-//virtual void SetWaitingSeat(bool _flag) = 0;
-

@@ -2,17 +2,14 @@
 #include <Engine\CEntity.h>
 class CStateMachineScript;
 class CTrigger;
-class CState : public CEntity
+class  CState : public CEntity
 {
 public:
-	virtual void OnEntry(CStateMachineScript* _pSMachine, CState* _pState) {};
-	virtual void OnExit(CStateMachineScript* _pSMachine, CState* _pState) {};
-	virtual void OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger);
+	virtual void OnEntry(CStateMachineScript* _pSMachine, CState* _pState) = 0;
+	virtual void OnExit(CStateMachineScript* _pSMachine, CState* _pState) = 0;
+	virtual void OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger) = 0;
 	virtual void Transition(CStateMachineScript* _pSMachine, CState* _pState);
 	virtual void tick(CStateMachineScript* _pSMachine) {}
-	CLONE(CState)
 public:
-	CState();
-	virtual ~CState();
 };
 
