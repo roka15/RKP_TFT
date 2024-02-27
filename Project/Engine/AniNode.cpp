@@ -192,7 +192,7 @@ bool CAniNode::NextNode(int _iOutSize, bool _bFinish, bool _bCurNullNode)
 		return false;
 	}
 
-	for (int i = 0; i < _iOutSize; ++i)
+ 	for (int i = 0; i < _iOutSize; ++i)
 	{
 		CTransition* pOutTransition = m_vecOutConditions[i];
 
@@ -235,6 +235,8 @@ bool CAniNode::NextNode(int _iOutSize, bool _bFinish, bool _bCurNullNode)
 				//condition active 되면 넘어감.
 				if (bActive)
 				{
+					if (CurName.compare(L"AnyState"))
+						int a = 0;
 					if (m_pMotionClip)
 						m_pMotionClip->Reset();
 					pOutTransition->RegisterCurNode(m_pController);

@@ -71,7 +71,8 @@ void CAnimation3D::finaltick()
 }
 void CAnimation3D::Reset()
 {
-	m_dCurTime = 0.f;
+	m_dCurTime = 0.0;
+	m_dUpdateTime = 0.0;
 	switch (m_pClip->m_tInfo.eMode)
 	{
 	case fbxsdk::FbxTime::EMode::eFrames24:
