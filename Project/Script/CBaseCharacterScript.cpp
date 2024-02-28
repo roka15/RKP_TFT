@@ -4,7 +4,7 @@
 #include "CCharacterTrigger.h"
 CBaseCharacterScript::CBaseCharacterScript() :
 	CScript((UINT)SCRIPT_TYPE::BASECHARACTERSCRIPT),
-	m_ChState{true,false,false,false,false,false}
+	m_ChState{ true,false,false,false,false,false }
 {
 }
 
@@ -25,7 +25,7 @@ void CBaseCharacterScript::tick()
 	//3번키 : attack  on/off
 	//4번키 : ult     on/off
 	//5번키 : dance   on/off
-	KEY eInput = KEY::END; 
+	KEY eInput = KEY::END;
 
 	if (CKeyMgr::GetInst()->GetKeyState(KEY::_1) == KEY_STATE::TAP)
 	{
@@ -44,7 +44,10 @@ void CBaseCharacterScript::tick()
 	}
 	if (CKeyMgr::GetInst()->GetKeyState(KEY::_4) == KEY_STATE::TAP)
 	{
-		m_ChState.bUlt = !m_ChState.bUlt;
+		if (m_ChState.bMove == false)
+		{
+			m_ChState.bUlt = !m_ChState.bUlt;
+		}
 		eInput = KEY::_4;
 	}
 	if (CKeyMgr::GetInst()->GetKeyState(KEY::_5) == KEY_STATE::TAP)
@@ -159,7 +162,7 @@ void CBaseCharacterScript::Attack()
 
 void CBaseCharacterScript::NormalAttack()
 {
-	
+
 }
 
 void CBaseCharacterScript::UltAttack()

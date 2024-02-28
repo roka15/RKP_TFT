@@ -27,6 +27,7 @@ public:
     void SetWaitingSeat(bool _flag) { m_ChState.bWaiting = _flag; }
     virtual void UltGaugeUp();
     virtual void UltGaugeDown();
+    virtual void AttackOFF() { m_ChState.bAttack = false; }
     virtual void Search();
     virtual void Wait();
     virtual void Move();

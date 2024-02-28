@@ -12,9 +12,6 @@ void CAttroxDance::OnEntry(CStateMachineScript* _pSMachine, CState* _pState)
 	CCharacterState* pState = dynamic_cast<CCharacterState*>(_pState);
 	if (pState == nullptr)
 		return;
-	CCharacterTrigger trigger;
-	trigger.SetEvtType(TRIGGER_TYPE::DANCE);
-	_pSMachine->notify(&trigger);
 
 	CAnimator3D* pAni = _pSMachine->Animator3D();
 	if (pAni == nullptr)
@@ -22,6 +19,8 @@ void CAttroxDance::OnEntry(CStateMachineScript* _pSMachine, CState* _pState)
 	Ptr<CAnimatorController> pController = pAni->GetController();
 	if (pController == nullptr)
 		return;
+
+	pController->SetTriggerParam(L"Dance", true);
 }
 
 void CAttroxDance::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
@@ -54,9 +53,6 @@ void CAttroxDance::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)
 		return;
 	switch (eType)
 	{
-	case TRIGGER_TYPE::DANCE:
-		pController->SetTriggerParam(L"Dance", true);
-		break;
 	case TRIGGER_TYPE::END:
 		pMachine->transition((UINT)STATE_TYPE::NIDLE);
 		break;

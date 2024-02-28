@@ -22,10 +22,9 @@ void CAttroxUltIdle::OnEntry(CStateMachineScript* _pSMachine, CState* _pState)
 	Ptr<CAnimatorController> pController = pAni->GetController();
 	if (pController == nullptr)
 		return;
-	
-	CCharacterTrigger trigger;
-	trigger.SetEvtType(TRIGGER_TYPE::UIDLE);
-	_pSMachine->notify(&trigger);
+
+	pController->SetIntParam(L"Battle", 1);
+	pController->SetIntParam(L"ULT", 1);
 }
 
 void CAttroxUltIdle::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
@@ -38,6 +37,7 @@ void CAttroxUltIdle::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
 		return;
 
 	//모든 param들 condition 비활성화.
+	pController->SetIntParam(L"Battle", 0);
 	pController->SetIntParam(L"ULT", 0);
 	//pController->SetTriggerParam(L"UltOut", true);
 }
@@ -68,9 +68,6 @@ void CAttroxUltIdle::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigge
 		break;
 	case TRIGGER_TYPE::BATTACK:
 		pMachine->transition((UINT)STATE_TYPE::BATTACK);
-		break;
-	case TRIGGER_TYPE::UIDLE:
-		pController->SetIntParam(L"ULT", 1);
 		break;
 	case TRIGGER_TYPE::UMOVE:
 		pMachine->transition((UINT)STATE_TYPE::UMOVE);
@@ -121,17 +118,12 @@ void CAttroxUltIdle::tick(CStateMachineScript* _pSMachine)
 	}
 	else
 	{
-		if (bMove)
-		{
-			trigger.SetEvtType(TRIGGER_TYPE::BMOVE);
-			bChange = true;
-		}
-		else if (bAttack)
+		if (bAttack)
 		{
 			trigger.SetEvtType(TRIGGER_TYPE::BATTACK);
 			bChange = true;
 		}
-		else if (bWait == false)
+		else 
 		{
 			trigger.SetEvtType(TRIGGER_TYPE::BIDLE);
 			bChange = true;

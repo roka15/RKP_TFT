@@ -204,6 +204,13 @@ bool CAniNode::NextNode(int _iOutSize, bool _bFinish, bool _bCurNullNode)
 		}*/
 		//Condition 검사를 하지 않고 애니 재생을 완료 했는지 여부로 다음 재생을 결정한다.
 		bool bExitTime = pOutTransition->IsExitTime();
+		if (_bCurNullNode)
+		{
+			if (bExitTime)
+			{
+				_bFinish = true;
+			}
+		}
 		if (_bFinish)
 		{
 			if (bExitTime)
@@ -259,6 +266,7 @@ void CAniNode::finaltick()
 	bool bFinish = false;
 	if (bNullClip == false)
 		bFinish = m_pMotionClip->IsFinish();
+
 	size_t iOutSize = m_vecOutConditions.size();
 	bool bNextNode = NextNode(iOutSize, bFinish, bNullClip);
 	if (bNextNode)

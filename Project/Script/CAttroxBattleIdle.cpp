@@ -19,9 +19,7 @@ void CAttroxBattleIdle::OnEntry(CStateMachineScript* _pSMachine, CState* _pState
 	if (pController == nullptr)
 		return;
 
-	CCharacterTrigger trigger;
-	trigger.SetEvtType(TRIGGER_TYPE::BIDLE);
-	_pSMachine->notify(&trigger);
+	pController->SetIntParam(L"Battle", 1);
 }
 
 void CAttroxBattleIdle::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
@@ -57,15 +55,15 @@ void CAttroxBattleIdle::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTri
 	case TRIGGER_TYPE::NIDLE:
 		pMachine->transition((UINT)STATE_TYPE::NIDLE);
 		break;
-	case TRIGGER_TYPE::BIDLE:
-		pController->SetIntParam(L"Battle", 1);
-		break;
 	case TRIGGER_TYPE::BMOVE:
 		pMachine->transition((UINT)STATE_TYPE::BMOVE);
 		break;
 
 	case TRIGGER_TYPE::BATTACK:
 		pMachine->transition((UINT)STATE_TYPE::BATTACK);
+		break;
+	case TRIGGER_TYPE::UIDLE:
+		pMachine->transition((UINT)STATE_TYPE::UIDLE);
 		break;
 	case TRIGGER_TYPE::UATTACK:
 		pMachine->transition((UINT)STATE_TYPE::UATTACK);
@@ -104,6 +102,11 @@ void CAttroxBattleIdle::tick(CStateMachineScript* _pSMachine)
 		if (bAttack)
 		{
 			trigger.SetEvtType(TRIGGER_TYPE::UATTACK);
+			bChange = true;
+		}
+		else
+		{
+			trigger.SetEvtType(TRIGGER_TYPE::UIDLE);
 			bChange = true;
 		}
 	}

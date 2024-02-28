@@ -20,9 +20,8 @@ void CAttroxBattleMove::OnEntry(CStateMachineScript* _pSMachine, CState* _pState
 	if (pController == nullptr)
 		return;
 
-	//모든 param들 condition 비활성화.
-	pController->SetIntParam(L"ULT", 0);
-	pController->SetIntParam(L"Normal", 0);
+	pController->SetIntParam(L"Battle", 1);
+	pController->SetIntParam(L"Move", 1);
 
 	CCharacterTrigger trigger;
 	trigger.SetEvtType(TRIGGER_TYPE::BMOVE);
@@ -63,11 +62,6 @@ void CAttroxBattleMove::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTri
 	case TRIGGER_TYPE::BIDLE:
 		pMachine->transition((UINT)STATE_TYPE::BIDLE);
 		break;
-	case TRIGGER_TYPE::BMOVE:
-		pController->SetIntParam(L"Battle", 1);
-		pController->SetIntParam(L"Move", 1);
-		break;
-
 	case TRIGGER_TYPE::UATTACK:
 		pMachine->transition((UINT)STATE_TYPE::UATTACK);
 		break;

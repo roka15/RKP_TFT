@@ -21,12 +21,9 @@ void CAttroxUltMove::OnEntry(CStateMachineScript* _pSMachine, CState* _pState)
 	Ptr<CAnimatorController> pController = pAni->GetController();
 	if (pController == nullptr)
 		return;
-	pController->SetIntParam(L"Normal", 0);
-	pController->SetIntParam(L"Battle", 0);
-
-	CCharacterTrigger trigger;
-	trigger.SetEvtType(TRIGGER_TYPE::UMOVE);
-	_pSMachine->notify(&trigger);
+	pController->SetIntParam(L"Battle", 1);
+	pController->SetIntParam(L"ULT", 1);
+	pController->SetIntParam(L"Move", 1);
 }
 
 void CAttroxUltMove::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
@@ -39,6 +36,7 @@ void CAttroxUltMove::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
 		return;
 
 	//모든 param들 condition 비활성화.
+	pController->SetIntParam(L"Battle", 0);
 	pController->SetIntParam(L"ULT", 0);
 	pController->SetIntParam(L"Move", 0);
 	//pController->SetTriggerParam(L"UltOut", true);
@@ -73,10 +71,6 @@ void CAttroxUltMove::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigge
 		break;
 	case TRIGGER_TYPE::UIDLE:
 		pMachine->transition((UINT)STATE_TYPE::UIDLE);
-		break;
-	case TRIGGER_TYPE::UMOVE:
-		pController->SetIntParam(L"ULT", 1);
-		pController->SetIntParam(L"Move", 1);
 		break;
 	case TRIGGER_TYPE::UATTACK:
 		pMachine->transition((UINT)STATE_TYPE::UATTACK);

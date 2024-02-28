@@ -225,10 +225,10 @@ void CAnimatorController::Init()
 
 void CAnimatorController::finaltick()
 {
-	if (m_pAnyStateNode)
-		m_pAnyStateNode->finaltick();
 	if (m_pCurNode)
 		m_pCurNode->finaltick();
+	if (m_pAnyStateNode)
+		m_pAnyStateNode->finaltick();
 }
 
 void CAnimatorController::UpdateData(CStructuredBuffer*& _finalMat)

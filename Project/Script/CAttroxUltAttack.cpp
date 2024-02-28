@@ -22,10 +22,13 @@ void CAttroxUltAttack::OnEntry(CStateMachineScript* _pSMachine, CState* _pState)
 	Ptr<CAnimatorController> pController = pAni->GetController();
 	if (pController == nullptr)
 		return;
+	pController->SetIntParam(L"ULT", 1);
+	pController->SetTriggerParam(L"Attack", true);
 
-	CCharacterTrigger trigger;
-	trigger.SetEvtType(TRIGGER_TYPE::UATTACK);
-	_pSMachine->notify(&trigger);
+	CBaseCharacterScript* pChScript = _pSMachine->GetOwner()->GetScript<CBaseCharacterScript>();
+	if (pChScript == nullptr)
+		return;
+	pChScript->AttackOFF();
 }
 
 void CAttroxUltAttack::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
@@ -39,7 +42,6 @@ void CAttroxUltAttack::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
 
 	//모든 param들 condition 비활성화.
 	pController->SetIntParam(L"ULT", 0);
-	pController->SetIntParam(L"Attack", 0);
 	//pController->SetTriggerParam(L"UltOut", true);
 }
 
@@ -76,10 +78,6 @@ void CAttroxUltAttack::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrig
 	case TRIGGER_TYPE::UMOVE:
 		pMachine->transition((UINT)STATE_TYPE::UMOVE);
 		break;
-	case TRIGGER_TYPE::UATTACK:
-		pController->SetIntParam(L"ULT", 1);
-		pController->SetIntParam(L"Attack", 1);
-		break;
 	case TRIGGER_TYPE::DANCE:
 		pMachine->transition((UINT)STATE_TYPE::DANCE);
 		break;
@@ -115,22 +113,17 @@ void CAttroxUltAttack::tick(CStateMachineScript* _pSMachine)
 			trigger.SetEvtType(TRIGGER_TYPE::UMOVE);
 			bChange = true;
 		}
-		else if(bAttack == false)
+		else 
 		{
 			trigger.SetEvtType(TRIGGER_TYPE::UIDLE);
 			bChange = true;
 		}
-	}
+ 	}
 	else
 	{
 		if (bMove)
 		{
 			trigger.SetEvtType(TRIGGER_TYPE::BMOVE);
-			bChange = true;
-		}
-		else if (bAttack)
-		{
-			trigger.SetEvtType(TRIGGER_TYPE::BATTACK);
 			bChange = true;
 		}
 		else if (bWait == false)

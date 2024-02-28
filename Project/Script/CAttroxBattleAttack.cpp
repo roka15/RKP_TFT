@@ -20,9 +20,13 @@ void CAttroxBattleAttack::OnEntry(CStateMachineScript* _pSMachine, CState* _pSta
 	if (pController == nullptr)
 		return;
 
-	CCharacterTrigger trigger;
-	trigger.SetEvtType(TRIGGER_TYPE::BATTACK);
-	_pSMachine->notify(&trigger);
+	pController->SetIntParam(L"Battle", 1);
+	pController->SetTriggerParam(L"Attack", true);
+
+	CBaseCharacterScript* pChScript = _pSMachine->GetOwner()->GetScript<CBaseCharacterScript>();
+	if (pChScript == nullptr)
+		return;
+	pChScript->AttackOFF();
 }
 
 void CAttroxBattleAttack::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
@@ -36,7 +40,6 @@ void CAttroxBattleAttack::OnExit(CStateMachineScript* _pSMachine, CState* _pStat
 
 	//모든 param들 condition 비활성화.
 	pController->SetIntParam(L"Battle", 0);
-	pController->SetIntParam(L"Attack", 0);
 }
 
 void CAttroxBattleAttack::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)
@@ -61,10 +64,6 @@ void CAttroxBattleAttack::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pT
 		break;
 	case TRIGGER_TYPE::BMOVE:
 		pMachine->transition((UINT)STATE_TYPE::BMOVE);
-		break;
-	case TRIGGER_TYPE::BATTACK:
-		pController->SetIntParam(L"Battle", 1);
-		pController->SetIntParam(L"Attack", 1);
 		break;
 	case TRIGGER_TYPE::UIDLE:
 		pMachine->transition((UINT)STATE_TYPE::UIDLE);
@@ -109,11 +108,6 @@ void CAttroxBattleAttack::tick(CStateMachineScript* _pSMachine)
 		if (bMove)
 		{
 			trigger.SetEvtType(TRIGGER_TYPE::UMOVE);
-			bChange = true;
-		}
-		else if (bAttack)
-		{
-			trigger.SetEvtType(TRIGGER_TYPE::UATTACK);
 			bChange = true;
 		}
 		else
