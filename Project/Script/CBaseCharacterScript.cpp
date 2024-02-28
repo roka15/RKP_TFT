@@ -29,12 +29,18 @@ void CBaseCharacterScript::tick()
 
 	if (CKeyMgr::GetInst()->GetKeyState(KEY::_1) == KEY_STATE::TAP)
 	{
-		m_ChState.bWaiting = !m_ChState.bWaiting;
+		if (m_ChState.bAttack == false && m_ChState.bDance == false && m_ChState.bMove == false && m_ChState.bUlt == false)
+		{
+			m_ChState.bWaiting = !m_ChState.bWaiting;
+		}
 		eInput = KEY::_1;
 	}
 	if (CKeyMgr::GetInst()->GetKeyState(KEY::_2) == KEY_STATE::TAP)
 	{
-		m_ChState.bMove = !m_ChState.bMove;
+		if (m_ChState.bWaiting == false)
+		{
+			m_ChState.bMove = !m_ChState.bMove;
+		}
 		eInput = KEY::_2;
 	}
 	if (CKeyMgr::GetInst()->GetKeyState(KEY::_3) == KEY_STATE::TAP)

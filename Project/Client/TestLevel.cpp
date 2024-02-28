@@ -252,19 +252,26 @@ void CreateTestLevel()
 		CAniNode* pExitNode = pAniController->GetNode(L"Exit");
 		CAniNode* pOutNode = pAniController->GetNode(L"Entry");
 		//Idle_in_sheath
-		CAniNode* pInNode = pAniController->CreateNode(L"Intro_NIdle", L"anim3D\\Idle_in_sheath.anm");
-		CTransition* t1 = pAniController->CreateTransition(L"Entry_Intro_Idle", pInNode, pOutNode, true);
+		CAniNode* pInNode = pAniController->CreateNode(L"Intro1", L"anim3D\\Aatrox_ReSheath_fullbody.anm"); 
+		CTransition* t1 = pAniController->CreateTransition(L"Entry_Intro1", pInNode, pOutNode, true);
+		pOutNode = pInNode;
+		pInNode = pAniController->CreateNode(L"Intro2", L"anim3D\\Idle_in_sheath.anm");
+		t1 = pAniController->CreateTransition(L"Intro1_Intro2", pInNode, pOutNode, true);
 		//t1->RegisterCondition(L"Battle", 0, COMPARISON_TYPE::EQUAL);
 
 		CAniNode* NIdleNode = pInNode;
 		pOutNode = NIdleNode;
 		pInNode = pAniController->CreateNode(L"Normal_Idle", L"anim3D\\Aatrox_Idle1.anm");
-		t1= pAniController->CreateTransition(L"Intro_Normal_Idle", pInNode, pOutNode, true);
+		t1= pAniController->CreateTransition(L"Intro2_Normal_Idle", pInNode, pOutNode, true);
 		
+		//Battle Idle
+		CAniNode* BIdleIntroNode = pAniController->CreateNode(L"Battle_Idle_Intro", L"anim3D\\Aatrox_unsheath.anm");
 		pOutNode = pInNode;
-		pInNode = pAniController->CreateNode(L"Battle_Idle", L"anim3D\\Idle1.anm");
-		t1 = pAniController->CreateTransition(L"Normal_Battle_Idle", pInNode, pOutNode, false);
+		t1 = pAniController->CreateTransition(L"Normal_Battle_Intro", BIdleIntroNode, pOutNode, false);
 		t1->RegisterCondition(L"Battle", 1, COMPARISON_TYPE::EQUAL);
+
+		pInNode = pAniController->CreateNode(L"Battle_Idle", L"anim3D\\Idle1.anm");
+		t1 = pAniController->CreateTransition(L"Normal_Battle_Idle", pInNode, BIdleIntroNode, true);
 
 		t1 = pAniController->CreateTransition(L"Battle_Idle_Exit", pExitNode, pInNode, false);
 		t1->RegisterCondition(L"Battle", 0, COMPARISON_TYPE::EQUAL);
@@ -283,19 +290,38 @@ void CreateTestLevel()
 		CAniNode* UIdleNode;
 		pOutNode = BIdleNode;
 		pInNode = pAniController->CreateNode(L"ULT_Idle", L"anim3D\\Aatrox_ULT_Idle.anm");
-		t1 = pAniController->CreateTransition(L"Battle_ULT_Idle", pInNode, pOutNode, false);
-		t1->RegisterCondition(L"ULT", 1, COMPARISON_TYPE::EQUAL);
-		t1 = pAniController->CreateTransition(L"ULT_Idle_Battle_Idle", pOutNode, pInNode, false);
-		t1->RegisterCondition(L"ULT", 0, COMPARISON_TYPE::EQUAL);
 		UIdleNode = pInNode;
 
+		CAniNode* UInMoveNode;
+		pInNode = pAniController->CreateNode(L"ULT_InMove", L"anim3D\\Aatrox_ULT_Spell_Dash.anm");
+
+		CAniNode* UInNode;
+		pOutNode = UIdleNode;
+		UInMoveNode = pInNode;
+		pInNode = pAniController->CreateNode(L"ULT_In", L"anim3D\\ULT_Idlein.anm");
+		UInNode = pInNode;
+
+		t1 = pAniController->CreateTransition(L"ULT_In_Idle", pOutNode, pInNode, true);
+		t1 = pAniController->CreateTransition(L"Battle_Ult_In", pInNode, BIdleNode, false);
+		t1->RegisterCondition(L"ULT", 1, COMPARISON_TYPE::EQUAL);
+		t1 = pAniController->CreateTransition(L"Ult_Idle_In_Move", UInMoveNode, pOutNode, false);
+		t1->RegisterCondition(L"Move", 1, COMPARISON_TYPE::EQUAL);
+		UInNode = pInNode;
+
+		CAniNode* UOutNode;
+		pOutNode = UIdleNode;
+		pInNode = pAniController->CreateNode(L"ULT_Out", L"anim3D\\ULT_out.anm");
+		t1 = pAniController->CreateTransition(L"ULT_Idle_Out", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"ULT", 0, COMPARISON_TYPE::EQUAL);
+		t1 = pAniController->CreateTransition(L"ULT_Out_Battle_Idle", BIdleNode, pInNode, true);
+		UOutNode = pInNode;
+	
 		CAniNode* UMoveNode;
 		pOutNode = UIdleNode;
 		pInNode = pAniController->CreateNode(L"ULT_Move", L"anim3D\\Run_Ult.anm");
 		
-		t1 = pAniController->CreateTransition(L"ULT_Idle_Move", pInNode, pOutNode, false);
-		t1->RegisterCondition(L"Move", 1, COMPARISON_TYPE::EQUAL);
-		t1 = pAniController->CreateTransition(L"ULT_Move_Idle", pOutNode, pInNode, false);
+		t1 = pAniController->CreateTransition(L"ULT_In_Move", pInNode, UInMoveNode, true);
+		t1 = pAniController->CreateTransition(L"ULT_Move_Idle_In", UInNode, pInNode, false);
 		t1->RegisterCondition(L"Move", 0, COMPARISON_TYPE::EQUAL);
 
 		UMoveNode = pInNode;

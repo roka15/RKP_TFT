@@ -211,6 +211,7 @@ bool CAniNode::NextNode(int _iOutSize, bool _bFinish, bool _bCurNullNode)
 				_bFinish = true;
 			}
 		}
+
 		if (_bFinish)
 		{
 			if (bExitTime)
