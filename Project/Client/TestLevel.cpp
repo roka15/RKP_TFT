@@ -12,7 +12,7 @@
 
 #include "CLevelSaveLoad.h"
 
-
+#include <Engine\CTileMap.h>
 #include <Engine/CSetColorShader.h>
 #include <Engine\AnimatorController.h>
 #include <Engine\Transition.h>
@@ -20,6 +20,7 @@
 #include <Script\CAttroxMachineScript.h>
 #include <Script\CBaseCharacterScript.h>
 #include <Script\CCharacterTrigger.h>
+#include <Script\CTileMgr.h>
 void CreateTestLevel()
 {
 	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
@@ -71,8 +72,8 @@ void CreateTestLevel()
 	pSkyBox->AddComponent(new CSkyBox);
 
 	pSkyBox->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100));
-	pSkyBox->SkyBox()->SetSkyBoxType(SKYBOX_TYPE::SPHERE);
-	pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\skybox\\Sky01.png"));
+	pSkyBox->SkyBox()->SetSkyBoxType(SKYBOX_TYPE::CUBE);
+	pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\skybox\\riots_sru_skybox_cubemap.dds"));
 
 	SpawnGameObject(pSkyBox, Vec3(0.f, 0.f, 0.f), 0);
 
@@ -104,7 +105,8 @@ void CreateTestLevel()
 
 	SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), 0);
 
-
+	CTileMgr::GetInst()->SetInfo(Vec2{ 50,50 }, Vec2{ 100,100 }, Vec2{ 10,10 }, Vec3{ 0,0,0 });
+	CTileMgr::GetInst()->CreateTile();
 
 	// ============
 	// FBX Loading
@@ -140,10 +142,10 @@ void CreateTestLevel()
 		pNewObj->SetName(L"Cube");
 		pNewObj->AddComponent(new CTransform);
 		pNewObj->AddComponent(new CMeshRender);
-		pNewObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-
-
-		pNewObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"), 0);
+		pNewObj->AddComponent(new CCollider2D);
+		pNewObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		pNewObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+		//pNewObj->MeshRender()->GetMaterial(0)->SetTexParam()
 
 		pNewObj->Transform()->SetRelativeScale(Vec3(500.f, 500.f, 500.f));
 		SpawnGameObject(pNewObj, Vec3(0.f, 0.f, 0.f), 0);

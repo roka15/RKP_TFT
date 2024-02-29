@@ -112,9 +112,6 @@
     <ClInclude Include="CPrefab.h">
       <Filter>Source\07. Resource\5. Prefab</Filter>
     </ClInclude>
-    <ClInclude Include="CCollider2D.h">
-      <Filter>Source\06. Component\2. Collider2D</Filter>
-    </ClInclude>
     <ClInclude Include="CCollisionMgr.h">
       <Filter>Source\03. Manager\07. CollisionMgr</Filter>
     </ClInclude>
@@ -211,6 +208,9 @@
     <ClInclude Include="Transition.h">
       <Filter>Source\07. Resource\9.AnimatorController\AniTransition</Filter>
     </ClInclude>
+    <ClInclude Include="CCollider2D.h">
+      <Filter>Source\06. Component\2. Collider\Collider2D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -302,9 +302,6 @@
     </ClCompile>
     <ClCompile Include="CPrefab.cpp">
       <Filter>Source\07. Resource\5. Prefab</Filter>
-    </ClCompile>
-    <ClCompile Include="CCollider2D.cpp">
-      <Filter>Source\06. Component\2. Collider2D</Filter>
     </ClCompile>
     <ClCompile Include="CCollisionMgr.cpp">
       <Filter>Source\03. Manager\07. CollisionMgr</Filter>
@@ -413,6 +410,9 @@
     </ClCompile>
     <ClCompile Include="Transition.cpp">
       <Filter>Source\07. Resource\9.AnimatorController\AniTransition</Filter>
+    </ClCompile>
+    <ClCompile Include="CCollider2D.cpp">
+      <Filter>Source\06. Component\2. Collider\Collider2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -527,9 +527,6 @@
     <Filter Include="Source\07. Resource\5. Prefab">
       <UniqueIdentifier>{bb3a4eec-2ba4-4576-8eac-788c0ab1f9c9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\06. Component\2. Collider2D">
-      <UniqueIdentifier>{95818b5c-89c4-4cb1-a32b-1d06f120f939}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\03. Manager\07. CollisionMgr">
       <UniqueIdentifier>{233a4c00-46c3-4613-8f0a-479f30314f25}</UniqueIdentifier>
     </Filter>
@@ -628,6 +625,15 @@
     </Filter>
     <Filter Include="Source\07. Resource\9.AnimatorController\AniTransition">
       <UniqueIdentifier>{6e9d71a0-7097-40fa-ae60-1a459a6d6e2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\2. Collider">
+      <UniqueIdentifier>{95818b5c-89c4-4cb1-a32b-1d06f120f939}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\2. Collider\Collider3D">
+      <UniqueIdentifier>{10659643-7819-40e6-aa6b-00b1f59f8481}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\2. Collider\Collider2D">
+      <UniqueIdentifier>{2d4ab7b7-db1c-453e-b610-a25cfa0fd922}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

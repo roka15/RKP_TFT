@@ -194,6 +194,8 @@ call CodeGen.exe</Command>
     <ClInclude Include="CStateMachineScript.h" />
     <ClInclude Include="CState.h" />
     <ClInclude Include="CTestScript.h" />
+    <ClInclude Include="CTileMgr.h" />
+    <ClInclude Include="CTileScript.h" />
     <ClInclude Include="CTrigger.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
@@ -220,6 +222,8 @@ call CodeGen.exe</Command>
     <ClCompile Include="CStateMachineScript.cpp" />
     <ClCompile Include="CState.cpp" />
     <ClCompile Include="CTestScript.cpp" />
+    <ClCompile Include="CTileMgr.cpp" />
+    <ClCompile Include="CTileScript.cpp" />
     <ClCompile Include="CTrigger.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

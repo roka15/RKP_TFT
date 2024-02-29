@@ -46,9 +46,9 @@ void CCollider2D::finaltick()
 		vColor = Vec4(1.f, 0.f, 0.f, 1.f);
 
 	if (COLLIDER2D_TYPE::CIRCLE == m_Shape)
-		DrawDebugCircle(m_matCollider2D, vColor, 0.f);	
-	else	
-		DrawDebugRect(m_matCollider2D, vColor, 0.f);	
+		DrawDebugCircle(m_matCollider2D, vColor, 0.f);
+	else if (COLLIDER2D_TYPE::RECT == m_Shape)
+		DrawDebugRect(m_matCollider2D, vColor, 0.f);
 }
 
 

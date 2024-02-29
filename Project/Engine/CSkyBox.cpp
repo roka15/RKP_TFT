@@ -10,7 +10,7 @@
 
 CSkyBox::CSkyBox()
 	: CRenderComponent(COMPONENT_TYPE::SKYBOX)
-	, m_Type(SKYBOX_TYPE::SPHERE)
+	, m_Type(SKYBOX_TYPE::CUBE)
 {
 	SetSkyBoxType(m_Type);
 	SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"SkyBoxMtrl"), 0);

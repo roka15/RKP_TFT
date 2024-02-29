@@ -120,7 +120,7 @@ PS_OUT PS_Std3D_Deferred(VS_OUT _in)
 {
     PS_OUT output = (PS_OUT) 0.f;
    
-    output.vColor = float4(1.f, 0.f, 1.f, 1.f);
+    output.vColor = g_vec4_0;
     
     float3 vViewNormal = _in.vViewNormal;
     

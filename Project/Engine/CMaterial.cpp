@@ -26,7 +26,6 @@ void CMaterial::UpdateData()
 {
 	if (nullptr == m_pShader)
 		return;
-
 	m_pShader->UpdateData();
 
 
@@ -66,6 +65,7 @@ void CMaterial::UpdateData_Inst()
 		return;
 
 	m_pShader->UpdateData_Inst();
+
 
 	// Texture Update
 	for (UINT i = 0; i < TEX_END; ++i)

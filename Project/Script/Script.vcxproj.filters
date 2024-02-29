@@ -52,6 +52,15 @@
     <Filter Include="Script\FSM\State\Champ\Attrox\Ult">
       <UniqueIdentifier>{6afa1a1a-605e-475f-aaad-50a69dc21498}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\Tile">
+      <UniqueIdentifier>{c5f86bfa-85b4-4299-869b-d906a44be9cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{bf2c7adc-fc52-4568-a3a5-0bd3cf0d2a58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\Tile">
+      <UniqueIdentifier>{ff3a5944-8f87-4851-96ba-4ad0278b7e2b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CCameraMoveScript.h">
@@ -129,6 +138,12 @@
     <ClInclude Include="CBaseCharacterScript.h">
       <Filter>Script\Character</Filter>
     </ClInclude>
+    <ClInclude Include="CTileScript.h">
+      <Filter>Script\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="CTileMgr.h">
+      <Filter>Manager\Tile</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CCameraMoveScript.cpp">
@@ -202,6 +217,12 @@
     </ClCompile>
     <ClCompile Include="CBaseCharacterScript.cpp">
       <Filter>Script\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="CTileScript.cpp">
+      <Filter>Script\Tile</Filter>
+    </ClCompile>
+    <ClCompile Include="CTileMgr.cpp">
+      <Filter>Manager\Tile</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

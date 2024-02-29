@@ -10,10 +10,10 @@
 #include "CPlayerScript.h"
 #include "CStateMachineScript.h"
 #include "CTestScript.h"
+#include "CTileScript.h"
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
-	_vec.push_back(L"BaseCharacterScript");
 	_vec.push_back(L"CAttroxMachineScript");
 	_vec.push_back(L"CBaseCharacterScript");
 	_vec.push_back(L"CCameraMoveScript");
@@ -23,6 +23,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CPlayerScript");
 	_vec.push_back(L"CStateMachineScript");
 	_vec.push_back(L"CTestScript");
+	_vec.push_back(L"CTileScript");
 }
 
 CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
@@ -45,6 +46,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CStateMachineScript;
 	if (L"CTestScript" == _strScriptName)
 		return new CTestScript;
+	if (L"CTileScript" == _strScriptName)
+		return new CTileScript;
 	return nullptr;
 }
 
@@ -78,6 +81,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::TESTSCRIPT:
 		return new CTestScript;
+		break;
+	case (UINT)SCRIPT_TYPE::TILESCRIPT:
+		return new CTileScript;
 		break;
 	}
 	return nullptr;
@@ -121,6 +127,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::TESTSCRIPT:
 		return L"CTestScript";
+		break;
+
+	case SCRIPT_TYPE::TILESCRIPT:
+		return L"CTileScript";
 		break;
 
 	}

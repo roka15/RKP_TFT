@@ -16,4 +16,5 @@ CAttroxBattleMove.h
 CAttroxBattleAttack.h
 CAttroxDance.h
 CharacterInfo.h
+CTileMgr.h
 

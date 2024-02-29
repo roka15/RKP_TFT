@@ -10,10 +10,11 @@ CTileMap::CTileMap()
 	: CRenderComponent(COMPONENT_TYPE::TILEMAP)
 	, m_iTileCountX(1)
 	, m_iTileCountY(1)
+	, m_vSliceSize{1,1}
 {	
 	SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TileMapMtrl"), 0);
-
+	CResMgr::GetInst()->FindRes<CMaterial>(L"TileMapMtrl")->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\TILE.bmp"));
 	m_Buffer = new CStructuredBuffer;
 	m_Buffer->Create(sizeof(tTile), m_iTileCountX * m_iTileCountY, SB_TYPE::READ_ONLY, true);
 }
