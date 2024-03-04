@@ -47,7 +47,7 @@ inline void Rectangle::Inflate(long horizAmount, long vertAmount)
 // Static functions
 //------------------------------------------------------------------------------
 
-inline Rectangle Rectangle::Intersect(const Rectangle& ra, const Rectangle& rb)
+inline DirectX::SimpleMath::Rectangle Rectangle::Intersect(const Rectangle& ra, const Rectangle& rb)
 {
     long righta = ra.x + ra.width;
     long rightb = rb.x + rb.width;
@@ -109,7 +109,7 @@ inline RECT Rectangle::Intersect(const RECT& rcta, const RECT& rctb)
     return result;
 }
 
-inline Rectangle Rectangle::Union(const Rectangle& ra, const Rectangle& rb)
+inline DirectX::SimpleMath::Rectangle Rectangle::Union(const Rectangle& ra, const Rectangle& rb)
 {
     long righta = ra.x + ra.width;
     long rightb = rb.x + rb.width;
