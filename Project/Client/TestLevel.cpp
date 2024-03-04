@@ -105,7 +105,7 @@ void CreateTestLevel()
 
 	SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), 0);
 
-	CTileMgr::GetInst()->SetInfo(Vec2{ 50,50 }, Vec2{ 100,100 }, Vec2{ 10,10 }, Vec3{ 0,0,0 });
+	CTileMgr::GetInst()->SetInfo(Vec2{ 250,220 }, Vec2{ 1,1 }, Vec2{ 10,10 }, Vec3{ 0,0,0 });
 	CTileMgr::GetInst()->CreateTile();
 
 	// ============
@@ -115,6 +115,12 @@ void CreateTestLevel()
 	{
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* pObj = nullptr;
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\indicator_hexa.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"HexaTile");
+		SpawnGameObject(pObj, Vec3(1 * 300.f, 200.f, 500.f), 0);
+		
 		/*pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Leona.fbx");
 		pObj = nullptr;
 		pObj = pMeshData->Instantiate();

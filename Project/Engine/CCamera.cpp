@@ -489,10 +489,13 @@ void CCamera::render_deferred()
 			CAnimator3D* pAnimator = pair.second[i].pObj->Animator3D();
 			if (pair.second[i].pObj->Animator3D())
 			{
-				pair.second[i].pObj->Animator3D()->UpdateData();
-				tInstData.iRowIdx = iRowIdx++;
-				CInstancingBuffer::GetInst()->AddInstancingBoneMat(pair.second[i].pObj->Animator3D()->GetFinalBoneMat());
-				bHasAnim3D = true;
+				if (pair.second[i].pObj->Animator3D()->IsActiveAni())
+				{
+					pair.second[i].pObj->Animator3D()->UpdateData();
+					tInstData.iRowIdx = iRowIdx++;
+					CInstancingBuffer::GetInst()->AddInstancingBoneMat(pair.second[i].pObj->Animator3D()->GetFinalBoneMat());
+					bHasAnim3D = true;
+				}
 			}
 			else
 				tInstData.iRowIdx = -1;

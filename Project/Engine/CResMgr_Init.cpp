@@ -689,7 +689,7 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->CreateVertexShader(L"shader\\std3d.fx", "VS_Std3D");
 	pShader->CreatePixelShader(L"shader\\std3d.fx", "PS_Std3D");
 
-	pShader->SetRSType(RS_TYPE::CULL_FRONT);
+	pShader->SetRSType(RS_TYPE::CULL_BACK);
 	pShader->SetDSType(DS_TYPE::LESS);
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_MASK);
 
@@ -770,7 +770,7 @@ void CResMgr::CreateDefaultGraphicsShader()
 
 	// ============================
 	// Std3D_Deferred
-	// RS_TYPE : CULL_FRONT
+	// RS_TYPE : CULL_BACK
 	// DS_TYPE : LESS
 	// BS_TYPE : DEFAULT
 	// Domain : Deferred

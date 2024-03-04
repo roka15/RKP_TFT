@@ -32,7 +32,7 @@ public:
     UINT GetBoneCount();
     CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMatBuffer; }
     void ClearData();
-
+    bool IsActiveAni() { return m_pController != nullptr; }
 public:
     virtual void SaveToLevelFile(FILE* _pFile) override;
     virtual void LoadFromLevelFile(FILE* _pFile) override;

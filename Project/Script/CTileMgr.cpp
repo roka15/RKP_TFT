@@ -33,6 +33,11 @@ void CTileMgr::CreateTile()
 		v2Pos.y = (z * (m_Size.y + m_Offset.y));
 		for (int x = 0; x < m_Count.x; ++x)
 		{
+			if (z % 2 == 1)
+			{
+				v2Pos.x = (x * (m_Size.x + m_Offset.x)) - (m_Offset.x/2.f);
+			}
+			else
 			v2Pos.x = (x * (m_Size.x +m_Offset.x));
 			CGameObject* pNewObj = new CGameObject;
 			wstring Name = L"Tile" + to_wstring(iIndex);
@@ -51,13 +56,14 @@ void CTileMgr::CreateTile()
 			else
 				eType = TILE_TYPE::BATTLE;
 			tile->SetTileInfo(eType, iIndex);
-			pNewObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-			pNewObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
+			pNewObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"mesh\\indicator hexagon.mesh"));
+			pNewObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"material\\hp.mtrl"), 0);
 			Vec4 color = { 0.f,1.f,0.f,1.f };
 			pNewObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::VEC4_0, &color);
 			
 			pNewObj->Transform()->SetRelativeScale(Vec3(m_Size.x, 1.0f, m_Size.y));
 			pNewObj->Transform()->SetRelativePos(Vec3(v2Pos.x, 0.0f, v2Pos.y));
+			pNewObj->Transform()->SetRelativeRot(Vec3(-90 * XM_PI / 180, 0.0f, 0.0f));
 			pEmpty->AddChild(pNewObj);
 			m_vecTile.push_back(pNewObj);
 			++iIndex;
