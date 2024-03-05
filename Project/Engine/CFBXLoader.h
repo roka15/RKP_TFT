@@ -37,7 +37,8 @@ struct tContainer
 
 	// Animation 관련 정보
 	bool								bAnimation;
-
+	
+	int									iControlPointCnt;
 	vector<vector<tWeightsAndIndices>>	vecWI;
 
 	void Resize(UINT _iSize)
@@ -118,6 +119,7 @@ private:
 	void GetBinormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iVtxOrder);
 	void GetNormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iVtxOrder);
 	void GetUV(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iVtxOrder);
+	void SetMultiUV(tContainer* _pContainer,int _iIdx, int cnt, FbxVector2 _uv);
 
 	Vec4 GetMtrlData(FbxSurfaceMaterial* _pSurface, const char* _pMtrlName, const char* _pMtrlFactorName);
 	wstring GetMtrlTextureName(FbxSurfaceMaterial* _pSurface, const char* _pMtrlProperty);

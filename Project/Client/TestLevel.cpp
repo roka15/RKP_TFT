@@ -115,10 +115,11 @@ void CreateTestLevel()
 	{
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* pObj = nullptr;
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\indicator square.fbx");
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\terrain.fbx");
 		pObj = nullptr;
 		pObj = pMeshData->Instantiate();
-		pObj->SetName(L"RectTile");
+		pObj->SetName(L"Ground");
+		pObj->Transform()->SetRelativeRot(Vec3(-90 * XM_PI / 180, 0.f, 0.f));
 		SpawnGameObject(pObj, Vec3(1 * 300.f, 200.f, 500.f), 0);
 		
 		/*pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Leona.fbx");

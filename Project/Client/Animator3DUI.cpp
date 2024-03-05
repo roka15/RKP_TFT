@@ -28,6 +28,8 @@ int Animator3DUI::render_update()
 		return FALSE;
 
 	char szBuff[MAXLEN] = {};
+	if (GetTarget()->Animator3D()->IsActiveAni() == false)
+		return FALSE;
 
 	wstring wstrControllerName = GetTarget()->Animator3D()->GetCurControllerName();
 	string strControllerName = {};
