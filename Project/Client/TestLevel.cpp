@@ -105,7 +105,7 @@ void CreateTestLevel()
 
 	SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), 0);
 
-	CTileMgr::GetInst()->SetInfo(Vec2{ 250,220 }, Vec2{ 1,1 }, Vec2{ 10,10 }, Vec3{ 0,0,0 });
+	CTileMgr::GetInst()->SetInfo(Vec2{ 270,230 }, Vec2{ 1,1 }, Vec2{ 8,8 }, Vec3{ 0,0,0 });
 	CTileMgr::GetInst()->CreateTile();
 
 	// ============
@@ -115,10 +115,10 @@ void CreateTestLevel()
 	{
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* pObj = nullptr;
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\indicator_hexa.fbx");
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\indicator square.fbx");
 		pObj = nullptr;
 		pObj = pMeshData->Instantiate();
-		pObj->SetName(L"HexaTile");
+		pObj->SetName(L"RectTile");
 		SpawnGameObject(pObj, Vec3(1 * 300.f, 200.f, 500.f), 0);
 		
 		/*pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Leona.fbx");
@@ -372,6 +372,7 @@ void CreateTestLevel()
 	pAttroxObj->Animator3D()->SetController(pAniController);
 	pAttroxObj->AddComponent(fsmScript);
 	pAttroxObj->AddComponent(chScript);
+	
 	/*CCharacterTrigger trigger;
 	trigger.SetEvtType(TRIGGER_TYPE::);
 	script->notify(&trigger);*/

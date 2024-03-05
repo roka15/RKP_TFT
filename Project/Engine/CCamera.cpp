@@ -509,7 +509,7 @@ void CCamera::render_deferred()
 		if (bHasAnim3D)
 		{
 			pMtrl->SetAnim3D(true); // Animation Mesh 알리기
-			pMtrl->SetBoneCount(Animator3D()->GetBoneCount());
+			pMtrl->SetBoneCount(pObj->Animator3D()->GetBoneCount());
 		}
 
 		pMtrl->UpdateData_Inst();
@@ -601,10 +601,13 @@ void CCamera::render_forward()
 
 			if (pair.second[i].pObj->Animator3D())
 			{
-				pair.second[i].pObj->Animator3D()->UpdateData();
-				tInstData.iRowIdx = iRowIdx++;
-				CInstancingBuffer::GetInst()->AddInstancingBoneMat(pair.second[i].pObj->Animator3D()->GetFinalBoneMat());
-				bHasAnim3D = true;
+				if (pair.second[i].pObj->Animator3D()->IsActiveAni())
+				{
+					pair.second[i].pObj->Animator3D()->UpdateData();
+					tInstData.iRowIdx = iRowIdx++;
+					CInstancingBuffer::GetInst()->AddInstancingBoneMat(pair.second[i].pObj->Animator3D()->GetFinalBoneMat());
+					bHasAnim3D = true;
+				}
 			}
 			else
 				tInstData.iRowIdx = -1;
@@ -618,7 +621,7 @@ void CCamera::render_forward()
 		if (bHasAnim3D)
 		{
 			pMtrl->SetAnim3D(true); // Animation Mesh 알리기
-			pMtrl->SetBoneCount(Animator3D()->GetBoneCount());
+			pMtrl->SetBoneCount(pObj->Animator3D()->GetBoneCount());
 		}
 
 		pMtrl->UpdateData_Inst();

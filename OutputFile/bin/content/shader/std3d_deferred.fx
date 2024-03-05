@@ -151,7 +151,7 @@ PS_OUT PS_Std3D_Deferred(VS_OUT _in)
     output.vData = float4(0.f, 0.f, 0.f, 1.f);
         
     output.vColor.a = saturate(SpecCoeff);
-    
+ 
     return output;
 }
 #endif

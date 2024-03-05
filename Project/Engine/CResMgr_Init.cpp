@@ -478,9 +478,9 @@ void CResMgr::CreateDefaultGraphicsShader()
 
 	// Param
 	pShader->AddTexParam(TEX_0, "Output Texture");
+	pShader->AddScalarParam(VEC4_0, "Color");
 
 	AddRes(pShader->GetKey(), pShader);
-
 
 
 	// ======================================
@@ -975,6 +975,7 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std2DShader"));
 	AddRes(L"Std2DAnimMtrl", pMtrl);
+
 
 	// Std2DLight Material
 	pMtrl = new CMaterial(true);

@@ -28,12 +28,19 @@ void CTileMgr::CreateTile()
 	pEmpty->SetName(L"TileMgr");
 	pEmpty->AddComponent(new CTransform);
 
+	float WaitOffset = 50.f;
 	for (int z = 0; z < m_Count.y; ++z)
 	{
 		v2Pos.y = (z * (m_Size.y + m_Offset.y));
+		if (z == 0)
+		{
+			v2Pos.y -= WaitOffset;
+		}
+		else if(z == m_Count.y - 1)
+			v2Pos.y += WaitOffset;
 		for (int x = 0; x < m_Count.x; ++x)
 		{
-			if (z % 2 == 1)
+			if (z % 2 == 0 && z != 0 && z != m_Count.x - 1)
 			{
 				v2Pos.x = (x * (m_Size.x + m_Offset.x)) - (m_Offset.x/2.f);
 			}
@@ -51,16 +58,24 @@ void CTileMgr::CreateTile()
 			pNewObj->AddComponent(tile);
 
 			TILE_TYPE eType = TILE_TYPE::END;
-			if (x == 0 || x == m_Count.x - 1)
+			CMeshRender* meshRender = pNewObj->MeshRender();
+			if (z == 0 || z == m_Count.x - 1)
+			{
 				eType = TILE_TYPE::WAIT;
+				meshRender->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"mesh\\square indicator.mesh"));
+			}
 			else
+			{
 				eType = TILE_TYPE::BATTLE;
+				meshRender->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"mesh\\indicator hexagon.mesh"));
+			}
+			Vec4 color = { 6/255.f,132/255.f,200/255.f,1.f };
 			tile->SetTileInfo(eType, iIndex);
-			pNewObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"mesh\\indicator hexagon.mesh"));
-			pNewObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"material\\hp.mtrl"), 0);
-			Vec4 color = { 0.f,1.f,0.f,1.f };
-			pNewObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::VEC4_0, &color);
-			
+			tile->SetColor(color);
+
+			//meshRender->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAlphaMtrl"), 0);
+			meshRender->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"material\\hp.mtrl"), 0);
+			meshRender->GetMaterial(0)->SetShader(CResMgr::GetInst()->FindRes<CGraphicsShader>(L"Std2DShader"));
 			pNewObj->Transform()->SetRelativeScale(Vec3(m_Size.x, 1.0f, m_Size.y));
 			pNewObj->Transform()->SetRelativePos(Vec3(v2Pos.x, 0.0f, v2Pos.y));
 			pNewObj->Transform()->SetRelativeRot(Vec3(-90 * XM_PI / 180, 0.0f, 0.0f));
