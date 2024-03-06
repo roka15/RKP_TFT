@@ -12,7 +12,8 @@ CTileMgr::~CTileMgr()
 {
 
 }
-void CTileMgr::SetInfo(const Vec2& _offset, const Vec2& _size, const Vec2& _count, const Vec3& _start)
+
+void CTileMgr::BattleSetInfo(const Vec2& _offset, const Vec2& _size, const Vec2& _count, const Vec3& _start)
 {
 	m_Offset = _offset;
 	m_Size = _size;
@@ -20,32 +21,60 @@ void CTileMgr::SetInfo(const Vec2& _offset, const Vec2& _size, const Vec2& _coun
 	m_StartPos = _start;
 }
 
+void CTileMgr::WaitSetInfo(const Vec2& _offset, const Vec2& _size, const Vec2& _count, const Vec3& _start)
+{
+	m_WaitOffset = _offset;
+	m_WaitSize = _size;
+	m_WaitCount = _count;
+	m_WaitStartPos = _start;
+}
+
+
 void CTileMgr::CreateTile()
 {
+
 	int iIndex = 0;
-	Vec2 v2Pos = {};
+	Vec3 v2Pos = {};
 	CGameObject* pEmpty = new CGameObject;
 	pEmpty->SetName(L"TileMgr");
 	pEmpty->AddComponent(new CTransform);
 
-	float WaitOffset = 50.f;
-	for (int z = 0; z < m_Count.y; ++z)
+	float WaitOffset = m_WaitOffset.y;
+
+	int zMax = m_Count.y + m_WaitCount.y;
+	
+	for (int z = 0; z < zMax; ++z)
 	{
-		v2Pos.y = (z * (m_Size.y + m_Offset.y));
+		v2Pos.z = (z * (m_Size.y + m_Offset.y));
+		int iXLoop = m_Count.x;
 		if (z == 0)
 		{
-			v2Pos.y -= WaitOffset;
+			iXLoop = m_WaitCount.x;
+			v2Pos.z -= WaitOffset;
 		}
-		else if(z == m_Count.y - 1)
-			v2Pos.y += WaitOffset;
-		for (int x = 0; x < m_Count.x; ++x)
+		else if (z == zMax - 1)
 		{
-			if (z % 2 == 0 && z != 0 && z != m_Count.x - 1)
+			iXLoop = m_WaitCount.x;
+			v2Pos.z += WaitOffset;
+		}
+
+		for (int x = 0; x < iXLoop; ++x)
+		{
+			if (z % 2 == 0 && z != 0 && z != zMax - 1)
 			{
-				v2Pos.x = (x * (m_Size.x + m_Offset.x)) - (m_Offset.x/2.f);
+				v2Pos.x = (x * (m_Size.x + m_Offset.x)) - (m_Offset.x / 2.f);
+				v2Pos.y = 0.0f;
+			}
+			else if (z == 0 || z == zMax - 1)
+			{
+				v2Pos.x = (x * (m_Size.x + m_WaitOffset.x)) + m_WaitStartPos.x;
+				v2Pos.y = m_WaitStartPos.y;
 			}
 			else
-			v2Pos.x = (x * (m_Size.x +m_Offset.x));
+			{
+				v2Pos.x = (x * (m_Size.x + m_Offset.x));
+				v2Pos.y = 0.0f;
+			}
 			CGameObject* pNewObj = new CGameObject;
 			wstring Name = L"Tile" + to_wstring(iIndex);
 			pNewObj->SetName(Name);
@@ -53,13 +82,13 @@ void CTileMgr::CreateTile()
 			pNewObj->AddComponent(new CMeshRender);
 			pNewObj->AddComponent(new CCollider2D);
 			CCollider2D* collider = (CCollider2D*)pNewObj->GetComponent(COMPONENT_TYPE::COLLIDER2D);
-		
+
 			CTileScript* tile = (CTileScript*)CScriptMgr::GetScript(SCRIPT_TYPE::TILESCRIPT);
 			pNewObj->AddComponent(tile);
 
 			TILE_TYPE eType = TILE_TYPE::END;
 			CMeshRender* meshRender = pNewObj->MeshRender();
-			if (z == 0 || z == m_Count.x - 1)
+			if (z == 0 || z == zMax - 1)
 			{
 				eType = TILE_TYPE::WAIT;
 				meshRender->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"mesh\\square indicator.mesh"));
@@ -69,7 +98,7 @@ void CTileMgr::CreateTile()
 				eType = TILE_TYPE::BATTLE;
 				meshRender->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"mesh\\indicator hexagon.mesh"));
 			}
-			Vec4 color = { 6/255.f,132/255.f,200/255.f,1.f };
+			Vec4 color = { 6 / 255.f,132 / 255.f,200 / 255.f,1.f };
 			tile->SetTileInfo(eType, iIndex);
 			tile->SetColor(color);
 
@@ -77,7 +106,7 @@ void CTileMgr::CreateTile()
 			meshRender->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"material\\hp.mtrl"), 0);
 			meshRender->GetMaterial(0)->SetShader(CResMgr::GetInst()->FindRes<CGraphicsShader>(L"Std2DShader"));
 			pNewObj->Transform()->SetRelativeScale(Vec3(m_Size.x, 1.0f, m_Size.y));
-			pNewObj->Transform()->SetRelativePos(Vec3(v2Pos.x, 0.0f, v2Pos.y));
+			pNewObj->Transform()->SetRelativePos(Vec3(v2Pos.x, v2Pos.y, v2Pos.z));
 			pNewObj->Transform()->SetRelativeRot(Vec3(-90 * XM_PI / 180, 0.0f, 0.0f));
 			pEmpty->AddChild(pNewObj);
 			m_vecTile.push_back(pNewObj);

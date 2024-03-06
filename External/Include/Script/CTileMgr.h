@@ -9,9 +9,17 @@ private:
     Vec2                    m_Size;
     Vec2                    m_Count;
     Vec3                    m_StartPos;
+    
+    Vec2                    m_WaitOffset;
+    Vec2                    m_WaitSize;
+    Vec2                    m_WaitCount;
+    Vec3                    m_WaitStartPos;
+
+    static int              s_number;
     vector<CGameObject*>    m_vecTile;
 public:
-    void SetInfo(const Vec2& _offset, const Vec2& _size, const Vec2& _count, const Vec3& _start);
+    void BattleSetInfo(const Vec2& _offset, const Vec2& _size, const Vec2& _count, const Vec3& _start);
+    void WaitSetInfo(const Vec2& _offset, const Vec2& _size, const Vec2& _count, const Vec3& _start);
     void CreateTile();
     vector<int> Find(int _istart, int _iend);
     Vec2 GetTilePos(int _itile);

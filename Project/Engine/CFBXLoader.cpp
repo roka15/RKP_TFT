@@ -67,6 +67,11 @@ void CFBXLoader::LoadFbx(const wstring& _strPath)
 	//wstring str = wstring_convert<codecvt_utf8<wchar_t>>().from_bytes(strName.c_str());
 	string strPath(_strPath.begin(), _strPath.end());
 
+	if (strPath.rfind("MU_") != string::npos)
+	{
+		m_bMultiUVFlag = true;
+	}
+
 	if (!m_pImporter->Initialize(strPath.c_str(), -1, m_pManager->GetIOSettings()))
 		assert(nullptr);
 
@@ -160,23 +165,24 @@ void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 
 	FbxVector4* pFbxPos = _pFbxMesh->GetControlPoints();
 
-	fbxsdk::FbxLayerElement::EMappingMode mode = _pFbxMesh->GetElementUV()->GetMappingMode();
-	switch (mode)
+	if (m_bMultiUVFlag)
 	{
-	case fbxsdk::FbxLayerElement::EMappingMode::eByPolygonVertex:
 		iVtxCnt = iPolyCnt * iPolySize;
-		break;
-	case fbxsdk::FbxLayerElement::EMappingMode::eByControlPoint:
-		iVtxCnt = iControlPointCnt;
-		break;
 	}
+	else
+	{
+		iVtxCnt = iControlPointCnt;
+	}
+
 	Container.Resize(iVtxCnt);
 
-	for (int i = 0; i < iVtxCnt; ++i)
+	std::vector<Vec3> tempVecPos;
+	tempVecPos.resize(iControlPointCnt);
+	for (int i = 0; i < iControlPointCnt; ++i)
 	{
-		Container.vecPos[i].x = (float)pFbxPos[i % iVtxCnt].mData[0];
-		Container.vecPos[i].y = (float)pFbxPos[i % iVtxCnt].mData[2];
-		Container.vecPos[i].z = (float)pFbxPos[i % iVtxCnt].mData[1];
+		tempVecPos[i].x = (float)pFbxPos[i].mData[0];
+		tempVecPos[i].y = (float)pFbxPos[i].mData[2];
+		tempVecPos[i].z = (float)pFbxPos[i].mData[1];
 	}
 	// 재질의 개수 ( ==> SubSet 개수 ==> Index Buffer Count)
 	int iMtrlCnt = _pFbxMesh->GetNode()->GetMaterialCount();
@@ -204,16 +210,34 @@ void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 			GetTangent(_pFbxMesh, &Container, iIdx, iVtxOrder);
 			GetBinormal(_pFbxMesh, &Container, iIdx, iVtxOrder);
 			GetNormal(_pFbxMesh, &Container, iIdx, iVtxOrder);
-			GetUV(_pFbxMesh, &Container, iIdx, _pFbxMesh->GetTextureUVIndex(i, j));
-			//_pFbxMesh->GetElementUV()->Scale
+			GetUV(_pFbxMesh, &Container, iIdx, _pFbxMesh->GetTextureUVIndex(i, j), iVtxOrder);
+			if (m_bMultiUVFlag)
+			{
+				Container.vecPos[iVtxOrder] = tempVecPos[iIdx];
+			}
+			else
+			{
+				Container.vecPos[iIdx] = tempVecPos[iIdx];
+			}
+			
 			++iVtxOrder;
 		}
 		/*	if (iMtrlCnt == 0)
 				continue;*/
 		UINT iSubsetIdx = pMtrl->GetIndexArray().GetAt(i);
-		Container.vecIdx[iSubsetIdx].push_back(arrIdx[0]);
-		Container.vecIdx[iSubsetIdx].push_back(arrIdx[2]);
-		Container.vecIdx[iSubsetIdx].push_back(arrIdx[1]);
+		if (m_bMultiUVFlag)
+		{
+			int iIdxNum = iVtxOrder - 1;
+			Container.vecIdx[iSubsetIdx].push_back(iIdxNum - 2);
+			Container.vecIdx[iSubsetIdx].push_back(iIdxNum);
+			Container.vecIdx[iSubsetIdx].push_back(iIdxNum - 1);
+		}
+		else
+		{
+			Container.vecIdx[iSubsetIdx].push_back(arrIdx[0]);
+			Container.vecIdx[iSubsetIdx].push_back(arrIdx[2]);
+			Container.vecIdx[iSubsetIdx].push_back(arrIdx[1]);
+		}
 	}
 
 	/*if (iMtrlCnt == 0)
@@ -283,21 +307,27 @@ void CFBXLoader::GetTangent(FbxMesh* _pMesh
 				iTangentIdx = _iVtxOrder;
 			else
 				iTangentIdx = pTangent->GetIndexArray().GetAt(_iVtxOrder);
-		     vTangent = pTangent->GetDirectArray().GetAt(iTangentIdx);
-			_pContainer->vecTangent[_iVtxOrder].x = (float)vTangent.mData[0];
-			_pContainer->vecTangent[_iVtxOrder].y = (float)vTangent.mData[2];
-			_pContainer->vecTangent[_iVtxOrder].z = (float)vTangent.mData[1];
 			break;
 		case FbxGeometryElement::eByControlPoint:
 			if (pTangent->GetReferenceMode() == FbxGeometryElement::eDirect)
 				iTangentIdx = _iIdx;
 			else
 				iTangentIdx = pTangent->GetIndexArray().GetAt(_iIdx);
-			 vTangent = pTangent->GetDirectArray().GetAt(iTangentIdx);
+			break;
+		}
+		vTangent = pTangent->GetDirectArray().GetAt(iTangentIdx);
+
+		if (m_bMultiUVFlag)
+		{
+			_pContainer->vecTangent[_iVtxOrder].x = (float)vTangent.mData[0];
+			_pContainer->vecTangent[_iVtxOrder].y = (float)vTangent.mData[2];
+			_pContainer->vecTangent[_iVtxOrder].z = (float)vTangent.mData[1];
+		}
+		else
+		{
 			_pContainer->vecTangent[_iIdx].x = (float)vTangent.mData[0];
 			_pContainer->vecTangent[_iIdx].y = (float)vTangent.mData[2];
 			_pContainer->vecTangent[_iIdx].z = (float)vTangent.mData[1];
-			break;
 		}
 	}
 	else
@@ -329,10 +359,6 @@ void CFBXLoader::GetBinormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx
 				iBinormalIdx = _iVtxOrder;
 			else
 				iBinormalIdx = pBinormal->GetIndexArray().GetAt(_iVtxOrder);
-			vBinormal = pBinormal->GetDirectArray().GetAt(iBinormalIdx);
-			_pContainer->vecTangent[_iVtxOrder].x = (float)vBinormal.mData[0];
-			_pContainer->vecTangent[_iVtxOrder].y = (float)vBinormal.mData[2];
-			_pContainer->vecTangent[_iVtxOrder].z = (float)vBinormal.mData[1];
 			break;
 		case FbxGeometryElement::eByControlPoint:
 			if (pBinormal->GetReferenceMode() == FbxGeometryElement::eDirect)
@@ -340,10 +366,20 @@ void CFBXLoader::GetBinormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx
 			else
 				iBinormalIdx = pBinormal->GetIndexArray().GetAt(_iIdx);
 			vBinormal = pBinormal->GetDirectArray().GetAt(iBinormalIdx);
-			_pContainer->vecTangent[_iIdx].x = (float)vBinormal.mData[0];
-			_pContainer->vecTangent[_iIdx].y = (float)vBinormal.mData[2];
-			_pContainer->vecTangent[_iIdx].z = (float)vBinormal.mData[1];
 			break;
+		}
+		vBinormal = pBinormal->GetDirectArray().GetAt(iBinormalIdx);
+		if (m_bMultiUVFlag)
+		{
+			_pContainer->vecBinormal[_iVtxOrder].x = (float)vBinormal.mData[0];
+			_pContainer->vecBinormal[_iVtxOrder].y = (float)vBinormal.mData[2];
+			_pContainer->vecBinormal[_iVtxOrder].z = (float)vBinormal.mData[1];
+		}
+		else
+		{
+			_pContainer->vecBinormal[_iIdx].x = (float)vBinormal.mData[0];
+			_pContainer->vecBinormal[_iIdx].y = (float)vBinormal.mData[2];
+			_pContainer->vecBinormal[_iIdx].z = (float)vBinormal.mData[1];
 		}
 	}
 	else
@@ -374,10 +410,8 @@ void CFBXLoader::GetNormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, 
 			iNormalIdx = _iVtxOrder;
 		else
 			iNormalIdx = pNormal->GetIndexArray().GetAt(_iVtxOrder);
+
 		vNormal = pNormal->GetDirectArray().GetAt(iNormalIdx);
-		_pContainer->vecTangent[_iVtxOrder].x = (float)vNormal.mData[0];
-		_pContainer->vecTangent[_iVtxOrder].y = (float)vNormal.mData[2];
-		_pContainer->vecTangent[_iVtxOrder].z = (float)vNormal.mData[1];
 		break;
 	case FbxGeometryElement::eByControlPoint:
 		if (pNormal->GetReferenceMode() == FbxGeometryElement::eDirect)
@@ -385,14 +419,24 @@ void CFBXLoader::GetNormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, 
 		else
 			iNormalIdx = pNormal->GetIndexArray().GetAt(_iIdx);
 		vNormal = pNormal->GetDirectArray().GetAt(iNormalIdx);
-		_pContainer->vecTangent[_iIdx].x = (float)vNormal.mData[0];
-		_pContainer->vecTangent[_iIdx].y = (float)vNormal.mData[2];
-		_pContainer->vecTangent[_iIdx].z = (float)vNormal.mData[1];
 		break;
+	}
+	vNormal = pNormal->GetDirectArray().GetAt(iNormalIdx);
+	if (m_bMultiUVFlag)
+	{
+		_pContainer->vecNormal[_iVtxOrder].x = (float)vNormal.mData[0];
+		_pContainer->vecNormal[_iVtxOrder].y = (float)vNormal.mData[2];
+		_pContainer->vecNormal[_iVtxOrder].z = (float)vNormal.mData[1];
+	}
+	else
+	{
+		_pContainer->vecNormal[_iIdx].x = (float)vNormal.mData[0];
+		_pContainer->vecNormal[_iIdx].y = (float)vNormal.mData[2];
+		_pContainer->vecNormal[_iIdx].z = (float)vNormal.mData[1];
 	}
 }
 
-void CFBXLoader::GetUV(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iUVIndex)
+void CFBXLoader::GetUV(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iUVIndex, int _iVtxOrder)
 {
 	if (_iUVIndex > 300)
 		int a = 0;
@@ -400,57 +444,27 @@ void CFBXLoader::GetUV(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int 
 
 	UINT iUVIdx = 0;
 
-	if (pUV->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
-	{
-		if (pUV->GetReferenceMode() == FbxGeometryElement::eDirect)
-			iUVIdx = _iUVIndex;
-		else
-			iUVIdx = pUV->GetIndexArray().GetAt(_iUVIndex);
-	}
-	else if (pUV->GetMappingMode() == FbxGeometryElement::eByControlPoint)
-	{
-		if (pUV->GetReferenceMode() == FbxGeometryElement::eDirect)
+	/*
+	    if (pUV->GetReferenceMode() == FbxGeometryElement::eDirect)
 			iUVIdx = _iIdx;
 		else
 			iUVIdx = pUV->GetIndexArray().GetAt(_iIdx);
-	}
+	*/
+
+	iUVIdx = _iUVIndex;
 	int size = pUV->GetDirectArray().GetCount();
 	FbxVector2 vUV = pUV->GetDirectArray().GetAt(iUVIdx);
-	if (pUV->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+
+	if (m_bMultiUVFlag)
 	{
-		SetMultiUV(_pContainer, _iIdx,0,vUV);
+		_pContainer->vecUV[_iVtxOrder].x = (float)vUV.mData[0];
+		_pContainer->vecUV[_iVtxOrder].y = 1.f - (float)vUV.mData[1];
 	}
-	else if (pUV->GetMappingMode() == FbxGeometryElement::eByControlPoint)
+	else
 	{
 		_pContainer->vecUV[_iIdx].x = (float)vUV.mData[0];
 		_pContainer->vecUV[_iIdx].y = 1.f - (float)vUV.mData[1]; // fbx uv 좌표계는 좌하단이 0,0
 	}
-}
-
-void CFBXLoader::SetMultiUV(tContainer* _pContainer, int _iIdx, int cnt, FbxVector2 _uv)
-{
-	int a = 0;
-	int iOffset = _pContainer->iControlPointCnt * cnt;
-	/*if (_pContainer->vecUV[_iIdx + iOffset].x != 0.f && _pContainer->vecUV[_iIdx + iOffset].y != 0.f)
-	{
-		if (_pContainer->vecUV[_iIdx + iOffset].x == (float)_uv.mData[0] && _pContainer->vecUV[_iIdx + iOffset].y == (float)_uv.mData[1])
-		{
-			_pContainer->vecUV[_iIdx + iOffset].x = (float)_uv.mData[0];
-			_pContainer->vecUV[_iIdx + iOffset].y = (float)_uv.mData[1];
-			return;
-		}
-		SetMultiUV(_pContainer, _iIdx, cnt + 1, _uv);
-	}
-	else if (_iIdx + iOffset >= _pContainer->vecPos.size())
-	{
-		return;
-	}
-	else
-	{
-		_pContainer->vecUV[_iIdx + iOffset].x = (float)_uv.mData[0];
-		_pContainer->vecUV[_iIdx + iOffset].y = (float)_uv.mData[1];
-		return;
-	}*/
 }
 
 Vec4 CFBXLoader::GetMtrlData(FbxSurfaceMaterial* _pSurface

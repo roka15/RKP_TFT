@@ -14,6 +14,7 @@ class CMeshData :
 	public:
 		Ptr<CMesh> m_pMesh;
 		vector<Ptr<CMaterial>>	m_vecMtrl;
+		bool					m_bAni;
 	};
 	vector<CMeshDataNode*> m_vecDataNode;
 public:

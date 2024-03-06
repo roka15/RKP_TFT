@@ -105,7 +105,8 @@ void CreateTestLevel()
 
 	SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), 0);
 
-	CTileMgr::GetInst()->SetInfo(Vec2{ 270,230 }, Vec2{ 1,1 }, Vec2{ 8,8 }, Vec3{ 0,0,0 });
+	CTileMgr::GetInst()->BattleSetInfo(Vec2{ 300,250 }, Vec2{ 1.1f,1.1f }, Vec2{ 7,8 }, Vec3{ 30,-220,-70 });
+	CTileMgr::GetInst()->WaitSetInfo(Vec2{ 252.0f,82.5f }, Vec2{ 1.5f,1.5f }, Vec2{ 9,2 }, Vec3{ -255.f,200.0f,0.0f });
 	CTileMgr::GetInst()->CreateTile();
 
 	// ============
@@ -115,13 +116,14 @@ void CreateTestLevel()
 	{
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* pObj = nullptr;
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\terrain.fbx");
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_terrain.fbx");
 		pObj = nullptr;
 		pObj = pMeshData->Instantiate();
 		pObj->SetName(L"Ground");
 		pObj->Transform()->SetRelativeRot(Vec3(-90 * XM_PI / 180, 0.f, 0.f));
-		SpawnGameObject(pObj, Vec3(1 * 300.f, 200.f, 500.f), 0);
-		
+		pObj->Transform()->SetRelativeScale(Vec3(1.25f,1.25f,1.25f));
+		SpawnGameObject(pObj, Vec3(800, -200.f, 900.f), 0);
+
 		/*pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Leona.fbx");
 		pObj = nullptr;
 		pObj = pMeshData->Instantiate();
@@ -137,6 +139,20 @@ void CreateTestLevel()
 		pObj = pMeshData->Instantiate();
 		pObj->SetName(L"Ahri");
 		SpawnGameObject(pObj, Vec3(3 * 300.f, 200.f, 500.f), 0);*/
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Structures.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Structures1");
+		pObj->Transform()->SetRelativeRot(Vec3(-90 * XM_PI / 180, 0.f, 0.f));
+		SpawnGameObject(pObj, Vec3(-500.f, 0.f, -450.f), 0);
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Structures.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Structures2");
+		pObj->Transform()->SetRelativeRot(Vec3(-90 * XM_PI / 180, -180 * XM_PI / 180, 0.f));
+		SpawnGameObject(pObj, Vec3(2225.f, 0.f, 1910.f), 0);
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Attrox.fbx");
 		pObj = nullptr;
@@ -251,7 +267,7 @@ void CreateTestLevel()
 		pAniController->RegisterParam(L"Battle", 0);
 		pAniController->RegisterParam(L"ULT", 0);
 		pAniController->RegisterParam(L"Move", 0);
-		pAniController->RegisterParam(L"Attack",false,true);
+		pAniController->RegisterParam(L"Attack", false, true);
 		pAniController->RegisterParam(L"Dance", false, true);
 		pAniController->RegisterParam(L"End", false, true);
 
@@ -261,7 +277,7 @@ void CreateTestLevel()
 		CAniNode* pExitNode = pAniController->GetNode(L"Exit");
 		CAniNode* pOutNode = pAniController->GetNode(L"Entry");
 		//Idle_in_sheath
-		CAniNode* pInNode = pAniController->CreateNode(L"Intro1", L"anim3D\\Aatrox_ReSheath_fullbody.anm"); 
+		CAniNode* pInNode = pAniController->CreateNode(L"Intro1", L"anim3D\\Aatrox_ReSheath_fullbody.anm");
 		CTransition* t1 = pAniController->CreateTransition(L"Entry_Intro1", pInNode, pOutNode, true);
 		pOutNode = pInNode;
 		pInNode = pAniController->CreateNode(L"Intro2", L"anim3D\\Idle_in_sheath.anm");
@@ -271,8 +287,8 @@ void CreateTestLevel()
 		CAniNode* NIdleNode = pInNode;
 		pOutNode = NIdleNode;
 		pInNode = pAniController->CreateNode(L"Normal_Idle", L"anim3D\\Aatrox_Idle1.anm");
-		t1= pAniController->CreateTransition(L"Intro2_Normal_Idle", pInNode, pOutNode, true);
-		
+		t1 = pAniController->CreateTransition(L"Intro2_Normal_Idle", pInNode, pOutNode, true);
+
 		//Battle Idle
 		CAniNode* BIdleIntroNode = pAniController->CreateNode(L"Battle_Idle_Intro", L"anim3D\\Aatrox_unsheath.anm");
 		pOutNode = pInNode;
@@ -324,11 +340,11 @@ void CreateTestLevel()
 		t1->RegisterCondition(L"ULT", 0, COMPARISON_TYPE::EQUAL);
 		t1 = pAniController->CreateTransition(L"ULT_Out_Battle_Idle", BIdleNode, pInNode, true);
 		UOutNode = pInNode;
-	
+
 		CAniNode* UMoveNode;
 		pOutNode = UIdleNode;
 		pInNode = pAniController->CreateNode(L"ULT_Move", L"anim3D\\Run_Ult.anm");
-		
+
 		t1 = pAniController->CreateTransition(L"ULT_In_Move", pInNode, UInMoveNode, true);
 		t1 = pAniController->CreateTransition(L"ULT_Move_Idle_In", UInNode, pInNode, false);
 		t1->RegisterCondition(L"Move", 0, COMPARISON_TYPE::EQUAL);
@@ -344,13 +360,13 @@ void CreateTestLevel()
 		t1 = pAniController->CreateTransition(L"AnyState_Dance_Loop", pInNode, pOutNode, true);
 		pOutNode = pInNode;
 		t1 = pAniController->CreateTransition(L"AnyState_Dance_Exit", pExitNode, pOutNode, false);
-		t1->RegisterCondition(L"End", true,true, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"End", true, true, COMPARISON_TYPE::EQUAL);
 
 
 		pOutNode = pAnyNode;
 		pInNode = pAniController->CreateNode(L"Battle_Attack", L"anim3D\\Attack1.anm");
 		t1 = pAniController->CreateTransition(L"AnyState_Battle_Attack", pInNode, pOutNode, false);
-		t1->RegisterCondition(L"Attack", true,true, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Attack", true, true, COMPARISON_TYPE::EQUAL);
 		t1->RegisterCondition(L"Battle", 1, COMPARISON_TYPE::EQUAL);
 		t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", BIdleNode, pInNode, true);
 		//t1->RegisterCondition(L"End", true, COMPARISON_TYPE::EQUAL);
@@ -373,7 +389,7 @@ void CreateTestLevel()
 	pAttroxObj->Animator3D()->SetController(pAniController);
 	pAttroxObj->AddComponent(fsmScript);
 	pAttroxObj->AddComponent(chScript);
-	
+
 	/*CCharacterTrigger trigger;
 	trigger.SetEvtType(TRIGGER_TYPE::);
 	script->notify(&trigger);*/

@@ -27,15 +27,18 @@ CGameObject* CMeshData::Instantiate()
 	UINT MeshCnt = m_vecDataNode.size();
 	CGameObject* parrentObj = new CGameObject();
 	parrentObj->AddComponent(new CTransform);
-	CAnimator3D* pAnimator = new CAnimator3D;
-	parrentObj->AddComponent(pAnimator);
+	
 
 	wstring strTBoneClip = {};
+	bool bAni = false;
 	for (int i = 0; i < MeshCnt; ++i)
 	{
 		Ptr<CMesh> pMesh = m_vecDataNode[i]->m_pMesh;
 		vector<Ptr<CMaterial>> vecMaterial = m_vecDataNode[i]->m_vecMtrl;
-
+		if (bAni == false)
+		{
+			bAni = m_vecDataNode[i]->m_bAni;
+		}
 		CGameObject* pNewObj = new CGameObject;
 		parrentObj->AddChild(pNewObj);
 
@@ -49,6 +52,13 @@ CGameObject* CMeshData::Instantiate()
 			pNewObj->MeshRender()->SetMaterial(vecMaterial[i], i);
 		}
 	}
+
+	if (bAni)
+	{
+		CAnimator3D* pAnimator = new CAnimator3D;
+		parrentObj->AddComponent(pAnimator);
+	}
+
 	return parrentObj;
 }
 
@@ -66,6 +76,7 @@ CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath)
 	UINT ContainSize = loader.GetContainerCount();
 	for (int i = 0; i < ContainSize; ++i)
 	{
+		bool bAni = loader.GetContainer(i).bAnimation;
 		std::wstring MeshName = loader.GetContainer(i).strName;
 		Ptr<CMesh> pMesh = CResMgr::GetInst()->FindRes<CMesh>(MeshName);
 		assert(pMesh.Get());
@@ -84,6 +95,7 @@ CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath)
 		CMeshDataNode* mdatNode = new CMeshDataNode();
 		mdatNode->m_pMesh = pMesh;
 		mdatNode->m_vecMtrl = vecMtrl;
+		mdatNode->m_bAni = bAni;
 		vecMdatNode.push_back(mdatNode);
 	}
 
@@ -106,6 +118,7 @@ int CMeshData::Save(const wstring& _strRelativePath)
 	FILE* pFile = nullptr;
 	errno_t err = _wfopen_s(&pFile, strFilePath.c_str(), L"wb");
 	assert(pFile);
+	
 	UINT iMeshCnt = m_vecDataNode.size();
 
 	fwrite(&iMeshCnt, sizeof(UINT), 1, pFile);
@@ -130,6 +143,7 @@ int CMeshData::Save(const wstring& _strRelativePath)
 			SaveResRef(m_vecDataNode[i]->m_vecMtrl[j].Get(), pFile);
 		}
 	
+		fwrite(&m_vecDataNode[i]->m_bAni,sizeof(bool), 1, pFile);
 	}
 
 	int iEnd = -1; // ¸¶°¨ °ª
@@ -182,6 +196,8 @@ int CMeshData::Load(const wstring& _strFilePath)
 
 			vecMatrial[j] = pMtrl;
 		}
+
+		fread(&m_vecDataNode[i]->m_bAni, sizeof(bool), 1, pFile);
 	}
 	fclose(pFile);
 	return S_OK;

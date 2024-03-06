@@ -93,6 +93,7 @@ private:
 	FbxScene* m_pScene;
 	FbxImporter* m_pImporter;
 
+	bool							m_bMultiUVFlag;
 	vector<tContainer>				m_vecContainer;
 
 	// Animation
@@ -100,6 +101,7 @@ private:
 	FbxArray<FbxString*>			m_arrAnimName;
 	vector<tAnimClip*>				m_vecAnimClip;
 	bool							m_bLoadAni;
+	
 public:
 	void init();
 	void LoadFbx(const wstring& _strPath);
@@ -118,8 +120,7 @@ private:
 	void GetTangent(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iVtxOrder);
 	void GetBinormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iVtxOrder);
 	void GetNormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iVtxOrder);
-	void GetUV(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iVtxOrder);
-	void SetMultiUV(tContainer* _pContainer,int _iIdx, int cnt, FbxVector2 _uv);
+	void GetUV(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iUVIdx,int _iVtxOrder);
 
 	Vec4 GetMtrlData(FbxSurfaceMaterial* _pSurface, const char* _pMtrlName, const char* _pMtrlFactorName);
 	wstring GetMtrlTextureName(FbxSurfaceMaterial* _pSurface, const char* _pMtrlProperty);

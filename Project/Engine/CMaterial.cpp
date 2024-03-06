@@ -11,11 +11,13 @@ CMaterial::CMaterial(bool _bEngine)
 	: CRes(RES_TYPE::MATERIAL, _bEngine)
 	, m_Const{}
 	, m_arrTex{}
+	, m_UVMappingData{}
 {
 	//m_Const.mtrl.itype = 0;
 	//m_Const.mtrl.vMappingLocation = Vec3{};
 	//m_Const.mtrl.vMappingRotation = Vec3{};
 	//m_Const.mtrl.vMappingScale = Vec3{ 1.0f,1.0f,1.0f };
+	m_UVMappingData.vScale = Vec3{ 1.0f,1.0f,1.0f };
 }
 
 CMaterial::~CMaterial()
