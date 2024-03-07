@@ -105,9 +105,7 @@ void CreateTestLevel()
 
 	SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), 0);
 
-	CTileMgr::GetInst()->BattleSetInfo(Vec2{ 300,250 }, Vec2{ 1.1f,1.1f }, Vec2{ 7,8 }, Vec3{ 30,-220,-70 });
-	CTileMgr::GetInst()->WaitSetInfo(Vec2{ 252.0f,82.5f }, Vec2{ 1.5f,1.5f }, Vec2{ 9,2 }, Vec3{ -255.f,200.0f,0.0f });
-	CTileMgr::GetInst()->CreateTile();
+	
 
 	// ============
 	// FBX Loading
@@ -120,7 +118,7 @@ void CreateTestLevel()
 		pObj = nullptr;
 		pObj = pMeshData->Instantiate();
 		pObj->SetName(L"Ground");
-		pObj->Transform()->SetRelativeRot(Vec3(-90 * XM_PI / 180, 0.f, 0.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), 0.f, 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(1.25f,1.25f,1.25f));
 		SpawnGameObject(pObj, Vec3(800, -200.f, 900.f), 0);
 
@@ -144,15 +142,24 @@ void CreateTestLevel()
 		pObj = nullptr;
 		pObj = pMeshData->Instantiate();
 		pObj->SetName(L"Structures1");
-		pObj->Transform()->SetRelativeRot(Vec3(-90 * XM_PI / 180, 0.f, 0.f));
-		SpawnGameObject(pObj, Vec3(-500.f, 0.f, -450.f), 0);
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), 0.f, 0.f));
+		SpawnGameObject(pObj, Vec3(-500.f, -100.f, -450.f), 0);
+		CTileMgr::GetInst()->BattleSetInfo(Vec2{ 304,245 }, Vec2{ 1.15f,1.15f }, Vec2{ 7,4 }, Vec3{ 525,-70,-106 });
+		CTileMgr::GetInst()->WaitSetInfo(Vec2{ 252.0f,82.5f }, Vec2{ 1.5f,1.5f }, Vec2{ 9,1 }, Vec3{ -240.f,100.0f,0.0f });
+		CGameObject* TileSet = CTileMgr::GetInst()->CreateTile(TILE_OWNER_TYPE::PLAYER);
+		TileSet->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(90), 0.f, 0.f));
+		pObj->AddChild(TileSet);
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Structures.fbx");
 		pObj = nullptr;
 		pObj = pMeshData->Instantiate();
 		pObj->SetName(L"Structures2");
-		pObj->Transform()->SetRelativeRot(Vec3(-90 * XM_PI / 180, -180 * XM_PI / 180, 0.f));
-		SpawnGameObject(pObj, Vec3(2225.f, 0.f, 1910.f), 0);
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(-180), 0.f));
+		SpawnGameObject(pObj, Vec3(2225.f, -100.f, 1910.f), 0);
+		TileSet = CTileMgr::GetInst()->CreateTile(TILE_OWNER_TYPE::ENEMY);
+		TileSet->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(90), 0.f, 0.f));
+		pObj->AddChild(TileSet);
+
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Attrox.fbx");
 		pObj = nullptr;

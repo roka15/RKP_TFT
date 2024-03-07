@@ -1,5 +1,19 @@
 #pragma once
 #include <Engine\CSingleton.h>
+
+enum class TILE_TYPE
+{
+    WAIT,
+    BATTLE,
+    END,
+};
+enum class TILE_OWNER_TYPE
+{
+    PLAYER,
+    ENEMY,
+    END
+};
+
 class CTileMgr :
     public CSingleton<CTileMgr>
 {
@@ -20,7 +34,7 @@ private:
 public:
     void BattleSetInfo(const Vec2& _offset, const Vec2& _size, const Vec2& _count, const Vec3& _start);
     void WaitSetInfo(const Vec2& _offset, const Vec2& _size, const Vec2& _count, const Vec3& _start);
-    void CreateTile();
+    CGameObject* CreateTile(TILE_OWNER_TYPE _type);
     vector<int> Find(int _istart, int _iend);
     Vec2 GetTilePos(int _itile);
     void SetStartPos(const Vec3& _start) { m_StartPos = _start; }

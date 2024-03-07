@@ -18,9 +18,10 @@
 
 #define SINGLE(type) private: type(); ~type(); friend class CSingleton<type>;
 #define MAXLEN 255
-
 #define UNICODELEN 2
 
+#define DEGREE2RADIAN(num) num * XM_PI / 180
+#define RADIAN2DEGREE(num) num * 180 / XM_PI
 
 
 

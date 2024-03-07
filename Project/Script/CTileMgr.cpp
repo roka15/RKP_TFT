@@ -4,6 +4,8 @@
 #include <Engine\CResMgr.h>
 #include "CTileScript.h"
 
+
+int  CTileMgr::s_number = 0;
 CTileMgr::CTileMgr()
 {
 
@@ -30,10 +32,8 @@ void CTileMgr::WaitSetInfo(const Vec2& _offset, const Vec2& _size, const Vec2& _
 }
 
 
-void CTileMgr::CreateTile()
+CGameObject* CTileMgr::CreateTile(TILE_OWNER_TYPE _type)
 {
-
-	int iIndex = 0;
 	Vec3 v2Pos = {};
 	CGameObject* pEmpty = new CGameObject;
 	pEmpty->SetName(L"TileMgr");
@@ -42,7 +42,7 @@ void CTileMgr::CreateTile()
 	float WaitOffset = m_WaitOffset.y;
 
 	int zMax = m_Count.y + m_WaitCount.y;
-	
+
 	for (int z = 0; z < zMax; ++z)
 	{
 		v2Pos.z = (z * (m_Size.y + m_Offset.y));
@@ -52,20 +52,15 @@ void CTileMgr::CreateTile()
 			iXLoop = m_WaitCount.x;
 			v2Pos.z -= WaitOffset;
 		}
-		else if (z == zMax - 1)
-		{
-			iXLoop = m_WaitCount.x;
-			v2Pos.z += WaitOffset;
-		}
 
 		for (int x = 0; x < iXLoop; ++x)
 		{
-			if (z % 2 == 0 && z != 0 && z != zMax - 1)
+			if (z % 2 == 0 && z != 0)
 			{
 				v2Pos.x = (x * (m_Size.x + m_Offset.x)) - (m_Offset.x / 2.f);
 				v2Pos.y = 0.0f;
 			}
-			else if (z == 0 || z == zMax - 1)
+			else if (z == 0)
 			{
 				v2Pos.x = (x * (m_Size.x + m_WaitOffset.x)) + m_WaitStartPos.x;
 				v2Pos.y = m_WaitStartPos.y;
@@ -76,7 +71,7 @@ void CTileMgr::CreateTile()
 				v2Pos.y = 0.0f;
 			}
 			CGameObject* pNewObj = new CGameObject;
-			wstring Name = L"Tile" + to_wstring(iIndex);
+			wstring Name = L"Tile" + to_wstring(s_number);
 			pNewObj->SetName(Name);
 			pNewObj->AddComponent(new CTransform);
 			pNewObj->AddComponent(new CMeshRender);
@@ -88,7 +83,7 @@ void CTileMgr::CreateTile()
 
 			TILE_TYPE eType = TILE_TYPE::END;
 			CMeshRender* meshRender = pNewObj->MeshRender();
-			if (z == 0 || z == zMax - 1)
+			if (z == 0)
 			{
 				eType = TILE_TYPE::WAIT;
 				meshRender->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"mesh\\square indicator.mesh"));
@@ -99,7 +94,7 @@ void CTileMgr::CreateTile()
 				meshRender->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"mesh\\indicator hexagon.mesh"));
 			}
 			Vec4 color = { 6 / 255.f,132 / 255.f,200 / 255.f,1.f };
-			tile->SetTileInfo(eType, iIndex);
+			tile->SetTileInfo(eType,_type, s_number);
 			tile->SetColor(color);
 
 			//meshRender->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAlphaMtrl"), 0);
@@ -110,10 +105,11 @@ void CTileMgr::CreateTile()
 			pNewObj->Transform()->SetRelativeRot(Vec3(-90 * XM_PI / 180, 0.0f, 0.0f));
 			pEmpty->AddChild(pNewObj);
 			m_vecTile.push_back(pNewObj);
-			++iIndex;
+			++s_number;
 		}
 	}
-	SpawnGameObject(pEmpty, m_StartPos, 1);
+	pEmpty->Transform()->SetRelativePos(m_StartPos);
+	return pEmpty;
 }
 
 vector<int> CTileMgr::Find(int _istart, int _iend)
