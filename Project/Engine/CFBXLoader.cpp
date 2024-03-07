@@ -66,12 +66,7 @@ void CFBXLoader::LoadFbx(const wstring& _strPath)
 
 	//wstring str = wstring_convert<codecvt_utf8<wchar_t>>().from_bytes(strName.c_str());
 	string strPath(_strPath.begin(), _strPath.end());
-
-	if (strPath.rfind("MU_") != string::npos)
-	{
-		m_bMultiUVFlag = true;
-	}
-
+	m_Path = strPath;
 	if (!m_pImporter->Initialize(strPath.c_str(), -1, m_pManager->GetIOSettings()))
 		assert(nullptr);
 
@@ -123,6 +118,25 @@ void CFBXLoader::LoadMeshDataFromNode(FbxNode* _pNode)
 
 		FbxMesh* pMesh = _pNode->GetMesh();
 		pMesh->SetName(_pNode->GetName());
+		string MeshName = pMesh->GetName();
+		//파일 명이 MU가 안붙고 Mesh에만 붙었을 경우 = Mesh마다 Texture mapping 방식이 다름.
+		if (m_Path.rfind("MU_") == string::npos)
+		{
+			if (MeshName.rfind("MU_") != string::npos)
+			{
+				m_bMultiUVFlag = true;
+			}
+			else
+			{
+				m_bMultiUVFlag = false;
+			}
+		}
+		//파일 명에 MU_가 붙었을 경우 = 파일 내의 모든 Mesh가 한 정점에 대한 UV의 개수가 2개 이상일 수 있다.
+		else
+		{
+			m_bMultiUVFlag = true;
+		}
+		
 		if (NULL != pMesh)
 			LoadMesh(pMesh);
 	}
@@ -332,9 +346,18 @@ void CFBXLoader::GetTangent(FbxMesh* _pMesh
 	}
 	else
 	{
-		_pContainer->vecTangent[_iIdx].x = 0.f;
-		_pContainer->vecTangent[_iIdx].y = 0.f;
-		_pContainer->vecTangent[_iIdx].z = 0.f;
+		if (m_bMultiUVFlag)
+		{
+			_pContainer->vecTangent[_iVtxOrder].x = 0.f;
+			_pContainer->vecTangent[_iVtxOrder].y = 0.f;
+			_pContainer->vecTangent[_iVtxOrder].z = 0.f;
+		}
+		else
+		{
+			_pContainer->vecTangent[_iIdx].x = 0.f;
+			_pContainer->vecTangent[_iIdx].y = 0.f;
+			_pContainer->vecTangent[_iIdx].z = 0.f;
+		}
 	}
 }
 

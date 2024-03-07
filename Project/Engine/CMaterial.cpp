@@ -17,7 +17,6 @@ CMaterial::CMaterial(bool _bEngine)
 	//m_Const.mtrl.vMappingLocation = Vec3{};
 	//m_Const.mtrl.vMappingRotation = Vec3{};
 	//m_Const.mtrl.vMappingScale = Vec3{ 1.0f,1.0f,1.0f };
-	m_UVMappingData.vScale = Vec3{ 1.0f,1.0f,1.0f };
 }
 
 CMaterial::~CMaterial()
@@ -30,7 +29,7 @@ void CMaterial::UpdateData()
 		return;
 	m_pShader->UpdateData();
 
-
+	//m_Const.mapping.vMappingScale = Vec3{ 1.f,1.f,1.f };
 	// Texture Update
 	for (UINT i = 0; i < TEX_END; ++i)
 	{
@@ -85,7 +84,14 @@ void CMaterial::UpdateData_Inst()
 			m_arrTex[i]->UpdateData(i, PIPELINE_STAGE::PS_ALL);
 		}
 	}
-	
+
+	if (m_bMapping)
+	{
+		m_Const.mapping.itype = m_UVMappingData.bType;
+		m_Const.mapping.vMappingLocation = m_UVMappingData.vLocation;
+		m_Const.mapping.vMappingRotation = m_UVMappingData.vRotation;
+		m_Const.mapping.vMappingScale = m_UVMappingData.vScale;
+	}
 	// Constant Update
 	CConstBuffer* pMtrlBuffer = CDevice::GetInst()->GetConstBuffer(CB_TYPE::MATERIAL);
 	pMtrlBuffer->SetData(&m_Const);

@@ -93,6 +93,7 @@ private:
 	FbxScene* m_pScene;
 	FbxImporter* m_pImporter;
 
+	string							m_Path;
 	bool							m_bMultiUVFlag;
 	vector<tContainer>				m_vecContainer;
 

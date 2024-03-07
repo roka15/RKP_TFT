@@ -110,77 +110,348 @@ void CreateTestLevel()
 	// ============
 	// FBX Loading
 	// ============	
+
+
 	CGameObject* pAttroxObj = nullptr;
+	Ptr<CMeshData> pMeshData = nullptr;
+	CGameObject* pMap = new CGameObject();
+	pMap->AddComponent(new CTransform());
+	pMap->Transform()->SetRelativePos(Vec3(1.0f, 1.0f, -33.000));
+	pMap->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-2), 0.f, 0.f));
+	
+#pragma region Map Object 
 	{
-		Ptr<CMeshData> pMeshData = nullptr;
-		CGameObject* pObj = nullptr;
+		pMap->SetName(L"MapObjects");
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_terrain.fbx");
 		pObj = nullptr;
 		pObj = pMeshData->Instantiate();
 		pObj->SetName(L"Ground");
+		pObj->Transform()->SetRelativePos(Vec3(800, -200.f, 900.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), 0.f, 0.f));
-		pObj->Transform()->SetRelativeScale(Vec3(1.25f,1.25f,1.25f));
-		SpawnGameObject(pObj, Vec3(800, -200.f, 900.f), 0);
-
-		/*pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Leona.fbx");
+		pObj->Transform()->SetRelativeScale(Vec3(1.1f, 1.1f, 1.1f));
+		pMap->AddChild(pObj);
+        #pragma region Rock
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_terrain_rocks.fbx");
 		pObj = nullptr;
 		pObj = pMeshData->Instantiate();
-		pObj->SetName(L"Leona");
-		SpawnGameObject(pObj, Vec3(1 * 300.f, 200.f, 500.f), 0);
-
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Ezreal.fbx");
+		pObj->SetName(L"Ground_Rock");
+		pObj->Transform()->SetRelativePos(Vec3(800, -200.f, 755.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), 0.f, 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(1.0f, 1.0f, 1.0f));
+		pMap->AddChild(pObj);
+		
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock.fbx");
+		pObj = nullptr;
 		pObj = pMeshData->Instantiate();
-		pObj->SetName(L"Ezreal");
-		SpawnGameObject(pObj, Vec3(2 * 300.f, 200.f, 500.f), 0);
+		pObj->SetName(L"Rock1");
+		pObj->Transform()->SetRelativePos(Vec3(-8.f, -200.f, 2649.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(-32), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(1.2f, 1.2f, 1.2f));
+		pMap->AddChild(pObj);
 
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Ahri2.fbx");
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
+		pObj = nullptr;
 		pObj = pMeshData->Instantiate();
-		pObj->SetName(L"Ahri");
-		SpawnGameObject(pObj, Vec3(3 * 300.f, 200.f, 500.f), 0);*/
+		pObj->SetName(L"Rock2");
+		pObj->Transform()->SetRelativePos(Vec3(-1045.f, -200.f, 2.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(-79), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(0.6f, 0.6f, 1.f));
+		pMap->AddChild(pObj);
 
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock3.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Rock3");
+		pObj->Transform()->SetRelativePos(Vec3(2752.f, -200.f, -111.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(106), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(0.9f, 0.8f, 1.0f));
+		pMap->AddChild(pObj);
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Rock4");
+		pObj->Transform()->SetRelativePos(Vec3(-605.f, -200.f, -1076.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(342), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(0.9f, 0.8f, 1.0f));
+		pMap->AddChild(pObj);
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Rock5");
+		pObj->Transform()->SetRelativePos(Vec3(-1137.f, -200.f, -822.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(91), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(0.4f, 0.3f, 1.0f));
+		pMap->AddChild(pObj);
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock3.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Rock6");
+		pObj->Transform()->SetRelativePos(Vec3(-1017.f, -190.f, -945.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(121), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(0.155f, 0.2f, 0.2));
+		pMap->AddChild(pObj);
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Rock7");
+		pObj->Transform()->SetRelativePos(Vec3(-809.f, -190.f, -457.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(106), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(0.4f, 0.3f, 0.5f));
+		pMap->AddChild(pObj);
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Rock8");
+		pObj->Transform()->SetRelativePos(Vec3(-843.f, -200.f, 1456.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(20), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(0.4f, 0.4f, 0.5f));
+		pMap->AddChild(pObj);
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock3.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Rock9");
+		pObj->Transform()->SetRelativePos(Vec3(-678.f, -190.f, -141.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(-59), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(0.4f, 0.4f, 0.5f));
+		pMap->AddChild(pObj);
+
+	    pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Rock10");
+		pObj->Transform()->SetRelativePos(Vec3(-704.f, -190.f,1357.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(53), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(0.2f, 0.2f, 0.5f));
+		pMap->AddChild(pObj);
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Rock11");
+		pObj->Transform()->SetRelativePos(Vec3(-605.f, -204.f, 1590.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(169), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(0.1f, 0.1f, 0.5f));
+		pMap->AddChild(pObj);
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock3.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Rock12");
+		pObj->Transform()->SetRelativePos(Vec3(-911.f, -200.f, -2638.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(40), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(0.8f, 0.7f, 0.7f));
+		pMap->AddChild(pObj);
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Rock13");
+		pObj->Transform()->SetRelativePos(Vec3(-740.f, -190.f, 2170.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(-69), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(0.3f, 0.3f, 0.5f));
+		pMap->AddChild(pObj);
+
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Rock14");
+		pObj->Transform()->SetRelativePos(Vec3(2702.f, -203.f, 1990.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(126), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(0.8f, 0.65f, 0.5f));
+		pMap->AddChild(pObj);
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Rock15");
+		pObj->Transform()->SetRelativePos(Vec3(2696.f, -205.f, 1322.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(79), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(0.65f, 0.7f, 0.5f));
+		pMap->AddChild(pObj);
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock3.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Rock16");
+		pObj->Transform()->SetRelativePos(Vec3(2436.f, -198.f, 527.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(-33), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(0.5f, 0.5f, 0.5f));
+		pMap->AddChild(pObj);
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Rock17");
+		pObj->Transform()->SetRelativePos(Vec3(2457.f, -200.f, 363.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(180), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(0.15f, 0.15f, 0.5f));
+		pMap->AddChild(pObj);
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Rock18");
+		pObj->Transform()->SetRelativePos(Vec3(2749.f, -195.f, 563.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(229), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(0.25f, 0.25f, 0.5f));
+		pMap->AddChild(pObj);
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Rock19");
+		pObj->Transform()->SetRelativePos(Vec3(2327.f, -196.f, -876.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(123), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(0.3f, 0.25f, 0.5f));
+		pMap->AddChild(pObj);
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock3.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Rock20");
+		pObj->Transform()->SetRelativePos(Vec3(2068.f, -202.f, -919.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(145), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(0.125f, 0.125f, 0.5f));
+		pMap->AddChild(pObj);
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Rock21");
+		pObj->Transform()->SetRelativePos(Vec3(1666.f, -208.f, -846.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(-63), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(0.09f, 0.08f, 0.5f));
+		pMap->AddChild(pObj);
+
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Rock22");
+		pObj->Transform()->SetRelativePos(Vec3(1419.f, -199.f, -684.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(-63), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(0.2f, 0.2f, 0.5f));
+		pMap->AddChild(pObj);
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Rock23");
+		pObj->Transform()->SetRelativePos(Vec3(284.f, -202.f, -715.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(200), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(0.125f, 0.1f, 0.5f));
+		pMap->AddChild(pObj);
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Rock24");
+		pObj->Transform()->SetRelativePos(Vec3(33.f, -208.f, -897.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(127), 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(0.4f, 0.4f, 0.5f));
+		pMap->AddChild(pObj);
+
+        #pragma endregion
+
+        #pragma region Tree
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Tree.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Tree1");
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), 0.f, 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(1.0f, 1.0f, 1.0f));
+		const vector<CGameObject*> treeChilds = pObj->GetChild();
+		treeChilds[1]->Transform()->SetRelativePos(Vec3{128,-70,540});
+		treeChilds[1]->Transform()->SetRelativeScale(Vec3{ 3,3,3 });
+		treeChilds[1]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(24),0,0 });
+		
+		pObj->Transform()->SetRelativePos(Vec3(2595, -167, -836));
+		pObj->Transform()->SetRelativeScale(Vec3{ 1,1,1 });
+		pObj->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-90),DEGREE2RADIAN(-88),0 });
+		pMap->AddChild(pObj);
+
+		CGameObject* Tree = pObj->Clone();
+		Tree->SetName(L"Tree2");
+		Tree->Transform()->SetRelativePos(Vec3{ 2619,-184,854 });
+		Tree->Transform()->SetRelativeScale(Vec3{ 1.5f,1.5f,1.2f });
+		Tree->Transform()->SetRelativeRot(Vec3{DEGREE2RADIAN(-90),DEGREE2RADIAN(39),0 });
+		pMap->AddChild(Tree);
+
+		Tree = pObj->Clone();
+		Tree->SetName(L"Tree3");
+		Tree->Transform()->SetRelativePos(Vec3{ -937,-184,252 });
+		Tree->Transform()->SetRelativeScale(Vec3{ 0.7,0.7,0.7 });
+		Tree->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-90),DEGREE2RADIAN(98),0 });
+		pMap->AddChild(Tree);
+
+		Tree = pObj->Clone();
+		Tree->SetName(L"Tree4");
+		Tree->Transform()->SetRelativePos(Vec3{ -856,-184,1832 });
+		Tree->Transform()->SetRelativeScale(Vec3{ 0.7,0.7,0.7 });
+		Tree->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-90),DEGREE2RADIAN(293),0 });
+		pMap->AddChild(Tree);
+
+		Tree = pObj->Clone();
+		Tree->SetName(L"Tree5");
+		Tree->Transform()->SetRelativePos(Vec3{ -1068,-184,2379 });
+		Tree->Transform()->SetRelativeScale(Vec3{ 0.9,0.9,0.9 });
+		Tree->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-90),DEGREE2RADIAN(154 /*514*/),0 });
+		pMap->AddChild(Tree);
+
+        #pragma endregion
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Structures.fbx");
 		pObj = nullptr;
 		pObj = pMeshData->Instantiate();
 		pObj->SetName(L"Structures1");
+		pObj->Transform()->SetRelativePos(Vec3(-500.f, -100.f, -450.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), 0.f, 0.f));
-		SpawnGameObject(pObj, Vec3(-500.f, -100.f, -450.f), 0);
 		CTileMgr::GetInst()->BattleSetInfo(Vec2{ 304,245 }, Vec2{ 1.15f,1.15f }, Vec2{ 7,4 }, Vec3{ 525,-70,-106 });
 		CTileMgr::GetInst()->WaitSetInfo(Vec2{ 252.0f,82.5f }, Vec2{ 1.5f,1.5f }, Vec2{ 9,1 }, Vec3{ -240.f,100.0f,0.0f });
 		CGameObject* TileSet = CTileMgr::GetInst()->CreateTile(TILE_OWNER_TYPE::PLAYER);
 		TileSet->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(90), 0.f, 0.f));
 		pObj->AddChild(TileSet);
+		pMap->AddChild(pObj);
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Structures.fbx");
 		pObj = nullptr;
 		pObj = pMeshData->Instantiate();
 		pObj->SetName(L"Structures2");
+		pObj->Transform()->SetRelativePos(Vec3(2225.f, -100.f, 1910.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(-180), 0.f));
-		SpawnGameObject(pObj, Vec3(2225.f, -100.f, 1910.f), 0);
 		TileSet = CTileMgr::GetInst()->CreateTile(TILE_OWNER_TYPE::ENEMY);
 		TileSet->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(90), 0.f, 0.f));
 		pObj->AddChild(TileSet);
-
-
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Attrox.fbx");
-		pObj = nullptr;
-		pObj = pMeshData->Instantiate();
-		pObj->SetName(L"Attrox");
-		SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), 0);
-		pAttroxObj = pObj;
-
-		CGameObject* pNewObj = new CGameObject;
-		pNewObj->SetName(L"Cube");
-		pNewObj->AddComponent(new CTransform);
-		pNewObj->AddComponent(new CMeshRender);
-		pNewObj->AddComponent(new CCollider2D);
-		pNewObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-		pNewObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
-		//pNewObj->MeshRender()->GetMaterial(0)->SetTexParam()
-
-		pNewObj->Transform()->SetRelativeScale(Vec3(500.f, 500.f, 500.f));
-		SpawnGameObject(pNewObj, Vec3(0.f, 0.f, 0.f), 0);
+		pMap->AddChild(pObj);
 	}
+	SpawnGameObject(pMap, Vec3{ 0.f,0.f,0.f }, 0);
+#pragma endregion
 
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Attrox.fbx");
+	pObj = nullptr;
+	pObj = pMeshData->Instantiate();
+	pObj->SetName(L"Attrox");
+	pObj->Transform()->SetRelativeScale(Vec3{ 1.5f,1.5f,1.5f });
+	SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), 0);
+	pAttroxObj = pObj;
+
+	CGameObject* pNewObj = new CGameObject;
+	pNewObj->SetName(L"Cube");
+	pNewObj->AddComponent(new CTransform);
+	pNewObj->AddComponent(new CMeshRender);
+	pNewObj->AddComponent(new CCollider2D);
+	pNewObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pNewObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	//pNewObj->MeshRender()->GetMaterial(0)->SetTexParam()
+
+	pNewObj->Transform()->SetRelativeScale(Vec3(500.f, 500.f, 500.f));
+	SpawnGameObject(pNewObj, Vec3(0.f, 0.f, 0.f), 0);
 	//{
 	//	// 인스턴싱 테스트
 	//	Ptr<CMeshData> pMeshData = nullptr;
