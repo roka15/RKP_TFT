@@ -77,8 +77,17 @@ VS_OUT VS_Std3D_Deferred(VS_IN _in)
 	output.vViewPos = mul(float4(_in.vPos, 1.f), g_matWV);
 
 	output.vViewNormal = normalize(mul(float4(_in.vNormal, 0.f), g_matWV)).xyz;
-	output.vViewTangent = normalize(mul(float4(_in.vTangent, 0.f), g_matWV)).xyz;
-	output.vViewBinormal = normalize(mul(float4(_in.vBinormal, 0.f), g_matWV)).xyz;
+
+	if (g_iUVMapType == 1)
+	{
+		output.vViewTangent = normalize(mul(float4(_in.vTangent, 0.f), g_matWV));
+		output.vViewBinormal = normalize(mul(float4(_in.vBinormal, 0.f), g_matWV));
+	}
+	else
+	{
+		output.vViewTangent = _in.vTangent;
+		output.vViewBinormal = _in.vBinormal;
+	}
 
 	output.vPosition = mul(float4(_in.vPos, 1.f), g_matWVP);
 	output.vUV = _in.vUV;
@@ -95,14 +104,23 @@ VS_OUT VS_Std3D_Deferred_Inst(VTX_IN_INST _in)
 		Skinning(_in.vPos, _in.vTangent, _in.vBinormal, _in.vNormal, _in.vWeights, _in.vIndices, _in.iRowIndex);
 	}
 
+	output.vViewPos = mul(float4(_in.vPos, 1.f), _in.matWV);
+
+	output.vViewNormal = normalize(mul(float4(_in.vNormal, 0.f), _in.matWV));
+	
+	if (g_iUVMapType == 1)
+	{
+		output.vViewTangent = normalize(mul(float4(_in.vTangent, 0.f), _in.matWV));
+		output.vViewBinormal = normalize(mul(float4(_in.vBinormal, 0.f), _in.matWV));
+	}
+	else
+	{
+		output.vViewTangent = _in.vTangent;
+		output.vViewBinormal = _in.vBinormal;
+	}
+	
 	output.vPosition = mul(float4(_in.vPos, 1.f), _in.matWVP);
 	output.vUV = _in.vUV;
-
-	output.vViewPos = mul(float4(_in.vPos, 1.f), _in.matWV);
-	output.vViewTangent = normalize(mul(float4(_in.vTangent, 0.f), _in.matWV));
-	output.vViewNormal = normalize(mul(float4(_in.vNormal, 0.f), _in.matWV));
-	output.vViewBinormal = normalize(mul(float4(_in.vBinormal, 0.f), _in.matWV));
-
 	return output;
 }
 
@@ -135,14 +153,14 @@ PS_OUT PS_Std3D_Deferred(VS_OUT _in)
 
 		// 0 ~ 1 범위의 값을 -1 ~ 1 로 확장        
 		vNormal = vNormal * 2.f - 1.f;
+
 		float3x3 vRotateMat =
 		{
-			float3(0.f,0.f,0.f),//_in.vViewTangent,
-			float3(0.f,0.f,0.f),//-_in.vViewBinormal,
+			_in.vViewTangent,
+			-_in.vViewBinormal,
 			_in.vViewNormal
 		};
-	
-		//vViewNormal = normalize(mul(vNormal, vRotateMat));
+		vViewNormal = normalize(mul(vNormal, vRotateMat));
 	}
 
 	output.vNormal = float4(vViewNormal, 1.f);

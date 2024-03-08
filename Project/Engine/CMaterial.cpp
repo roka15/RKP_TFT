@@ -17,6 +17,7 @@ CMaterial::CMaterial(bool _bEngine)
 	//m_Const.mtrl.vMappingLocation = Vec3{};
 	//m_Const.mtrl.vMappingRotation = Vec3{};
 	//m_Const.mtrl.vMappingScale = Vec3{ 1.0f,1.0f,1.0f };
+	m_UVMappingData.vScale = Vec3{ 1.f,1.f,1.f };
 }
 
 CMaterial::~CMaterial()

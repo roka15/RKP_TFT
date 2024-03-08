@@ -99,8 +99,7 @@ int MaterialUI::render_update()
         ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "MappingData");
         ImGui::Separator();
 
-        ImGui::Text("Type    ");
-        ImGui::SameLine();
+        ImGui::Text("Space Type (0:Object 1:Tangent)");
         ImGui::DragInt("##UVMapping Type", (int*)&mappingData.bType);
 
         ImGui::Text("Location");

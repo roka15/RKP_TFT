@@ -307,10 +307,10 @@ void CFBXLoader::GetTangent(FbxMesh* _pMesh
 	if (1 < iTangentCnt)
 		assert(NULL); // 정점 1개가 포함하는 탄젠트 정보가 2개 이상이다.
 
-	if (1 == iTangentCnt)
+	if (1 ==iTangentCnt)
 	{
 		// 탄젠트 data 의 시작 주소
-		FbxGeometryElementTangent* pTangent = _pMesh->GetElementTangent();
+		FbxGeometryElementTangent* pTangent =_pMesh->GetElementTangent();
 		UINT iTangentIdx = 0;
 		fbxsdk::FbxLayerElement::EMappingMode mode = pTangent->GetMappingMode();
 		FbxVector4 vTangent = {};
@@ -365,7 +365,7 @@ void CFBXLoader::GetBinormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx
 {
 	int iBinormalCnt = _pMesh->GetElementBinormalCount();
 	if (1 < iBinormalCnt)
-		assert(NULL); // 정점 1개가 포함하는 종법선 정보가 2개 이상이다.
+		assert(NULL);// 정점 1개가 포함하는 종법선 정보가 2개 이상이다.
 
 	if (1 == iBinormalCnt)
 	{
@@ -407,9 +407,18 @@ void CFBXLoader::GetBinormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx
 	}
 	else
 	{
-		_pContainer->vecBinormal[_iIdx].x = 0.f;
-		_pContainer->vecBinormal[_iIdx].y = 0.f;
-		_pContainer->vecBinormal[_iIdx].z = 0.f;
+		if (m_bMultiUVFlag)
+		{
+			_pContainer->vecBinormal[_iVtxOrder].x = 0.f;
+			_pContainer->vecBinormal[_iVtxOrder].y = 0.f;
+			_pContainer->vecBinormal[_iVtxOrder].z = 0.f;
+		}
+		else
+		{
+			_pContainer->vecBinormal[_iIdx].x = 0.f;
+			_pContainer->vecBinormal[_iIdx].y = 0.f;
+			_pContainer->vecBinormal[_iIdx].z = 0.f;
+		}
 	}
 
 }

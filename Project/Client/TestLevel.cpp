@@ -84,13 +84,13 @@ void CreateTestLevel()
 	pLightObj->AddComponent(new CTransform);
 	pLightObj->AddComponent(new CLight3D);
 
-	pLightObj->Transform()->SetRelativeRot(Vec3(XM_PI / 4.f, XM_PI / 4.f, 0.f));
+	pLightObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(103), DEGREE2RADIAN(-176), 0.f));
 	pLightObj->Light3D()->SetLightType(LIGHT_TYPE::DIRECTIONAL);
-	pLightObj->Light3D()->SetRadius(500.f);
+	pLightObj->Light3D()->SetRadius(100.f);
 	pLightObj->Light3D()->SetLightColor(Vec3(1.f, 1.f, 1.f));
 	pLightObj->Light3D()->SetLightAmbient(Vec3(0.f, 0.f, 0.f));
 
-	SpawnGameObject(pLightObj, Vec3(-2000, 2000.f, -2000.f), 0);
+	SpawnGameObject(pLightObj, Vec3(0, 10000.f, -2000.f), 0);
 
 	CGameObject* pObj = new CGameObject;
 	pObj->SetName(L"Directional Light");
@@ -131,6 +131,11 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativeScale(Vec3(1.1f, 1.1f, 1.1f));
 		pMap->AddChild(pObj);
         #pragma region Rock
+		CGameObject* Rock_List = new CGameObject();
+		Rock_List->SetName(L"RockParent");
+		Rock_List->AddComponent(new CTransform());
+		pMap->AddChild(Rock_List);
+
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_terrain_rocks.fbx");
 		pObj = nullptr;
 		pObj = pMeshData->Instantiate();
@@ -138,7 +143,7 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(800, -200.f, 755.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), 0.f, 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(1.0f, 1.0f, 1.0f));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 		
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock.fbx");
 		pObj = nullptr;
@@ -147,7 +152,7 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(-8.f, -200.f, 2649.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(-32), 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(1.2f, 1.2f, 1.2f));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
 		pObj = nullptr;
@@ -156,7 +161,7 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(-1045.f, -200.f, 2.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(-79), 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(0.6f, 0.6f, 1.f));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock3.fbx");
 		pObj = nullptr;
@@ -165,7 +170,7 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(2752.f, -200.f, -111.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(106), 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(0.9f, 0.8f, 1.0f));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock.fbx");
 		pObj = nullptr;
@@ -174,7 +179,7 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(-605.f, -200.f, -1076.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(342), 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(0.9f, 0.8f, 1.0f));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
 		pObj = nullptr;
@@ -183,7 +188,7 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(-1137.f, -200.f, -822.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(91), 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(0.4f, 0.3f, 1.0f));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock3.fbx");
 		pObj = nullptr;
@@ -192,7 +197,7 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(-1017.f, -190.f, -945.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(121), 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(0.155f, 0.2f, 0.2));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock.fbx");
 		pObj = nullptr;
@@ -201,7 +206,7 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(-809.f, -190.f, -457.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(106), 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(0.4f, 0.3f, 0.5f));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
 		pObj = nullptr;
@@ -210,16 +215,16 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(-843.f, -200.f, 1456.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(20), 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(0.4f, 0.4f, 0.5f));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock3.fbx");
 		pObj = nullptr;
 		pObj = pMeshData->Instantiate();
 		pObj->SetName(L"Rock9");
-		pObj->Transform()->SetRelativePos(Vec3(-678.f, -190.f, -141.f));
+		pObj->Transform()->SetRelativePos(Vec3(-678.f, -190.f, 142.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(-59), 0.f));
-		pObj->Transform()->SetRelativeScale(Vec3(0.4f, 0.4f, 0.5f));
-		pMap->AddChild(pObj);
+		pObj->Transform()->SetRelativeScale(Vec3(0.3f, 0.3f, 0.5f));
+		Rock_List->AddChild(pObj);
 
 	    pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock.fbx");
 		pObj = nullptr;
@@ -228,7 +233,7 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(-704.f, -190.f,1357.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(53), 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(0.2f, 0.2f, 0.5f));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
 		pObj = nullptr;
@@ -237,7 +242,7 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(-605.f, -204.f, 1590.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(169), 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(0.1f, 0.1f, 0.5f));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock3.fbx");
 		pObj = nullptr;
@@ -246,7 +251,7 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(-911.f, -200.f, -2638.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(40), 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(0.8f, 0.7f, 0.7f));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
 		pObj = nullptr;
@@ -255,7 +260,7 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(-740.f, -190.f, 2170.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(-69), 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(0.3f, 0.3f, 0.5f));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
@@ -265,7 +270,7 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(2702.f, -203.f, 1990.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(126), 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(0.8f, 0.65f, 0.5f));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock.fbx");
 		pObj = nullptr;
@@ -274,7 +279,7 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(2696.f, -205.f, 1322.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(79), 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(0.65f, 0.7f, 0.5f));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock3.fbx");
 		pObj = nullptr;
@@ -283,7 +288,7 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(2436.f, -198.f, 527.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(-33), 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(0.5f, 0.5f, 0.5f));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
 		pObj = nullptr;
@@ -292,7 +297,7 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(2457.f, -200.f, 363.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(180), 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(0.15f, 0.15f, 0.5f));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
 		pObj = nullptr;
@@ -301,7 +306,7 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(2749.f, -195.f, 563.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(229), 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(0.25f, 0.25f, 0.5f));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
 		pObj = nullptr;
@@ -310,7 +315,7 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(2327.f, -196.f, -876.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(123), 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(0.3f, 0.25f, 0.5f));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock3.fbx");
 		pObj = nullptr;
@@ -319,7 +324,7 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(2068.f, -202.f, -919.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(145), 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(0.125f, 0.125f, 0.5f));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
 		pObj = nullptr;
@@ -328,7 +333,7 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(1666.f, -208.f, -846.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(-63), 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(0.09f, 0.08f, 0.5f));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock.fbx");
@@ -338,7 +343,7 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(1419.f, -199.f, -684.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(-63), 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(0.2f, 0.2f, 0.5f));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
 		pObj = nullptr;
@@ -347,7 +352,7 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(284.f, -202.f, -715.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(200), 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(0.125f, 0.1f, 0.5f));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Rock2.fbx");
 		pObj = nullptr;
@@ -356,11 +361,17 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(33.f, -208.f, -897.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), DEGREE2RADIAN(127), 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(0.4f, 0.4f, 0.5f));
-		pMap->AddChild(pObj);
+		Rock_List->AddChild(pObj);
 
         #pragma endregion
 
         #pragma region Tree
+
+		CGameObject* TreeList = new CGameObject();
+		TreeList->SetName(L"TreeParent");
+		TreeList->AddComponent(new CTransform());
+		pMap->AddChild(TreeList);
+
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Tree.fbx");
 		pObj = nullptr;
 		pObj = pMeshData->Instantiate();
@@ -375,37 +386,331 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(2595, -167, -836));
 		pObj->Transform()->SetRelativeScale(Vec3{ 1,1,1 });
 		pObj->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-90),DEGREE2RADIAN(-88),0 });
-		pMap->AddChild(pObj);
+		TreeList->AddChild(pObj);
 
 		CGameObject* Tree = pObj->Clone();
 		Tree->SetName(L"Tree2");
 		Tree->Transform()->SetRelativePos(Vec3{ 2619,-184,854 });
 		Tree->Transform()->SetRelativeScale(Vec3{ 1.5f,1.5f,1.2f });
 		Tree->Transform()->SetRelativeRot(Vec3{DEGREE2RADIAN(-90),DEGREE2RADIAN(39),0 });
-		pMap->AddChild(Tree);
+		TreeList->AddChild(Tree);
 
 		Tree = pObj->Clone();
 		Tree->SetName(L"Tree3");
 		Tree->Transform()->SetRelativePos(Vec3{ -937,-184,252 });
 		Tree->Transform()->SetRelativeScale(Vec3{ 0.7,0.7,0.7 });
 		Tree->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-90),DEGREE2RADIAN(98),0 });
-		pMap->AddChild(Tree);
+		TreeList->AddChild(Tree);
 
 		Tree = pObj->Clone();
 		Tree->SetName(L"Tree4");
 		Tree->Transform()->SetRelativePos(Vec3{ -856,-184,1832 });
 		Tree->Transform()->SetRelativeScale(Vec3{ 0.7,0.7,0.7 });
 		Tree->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-90),DEGREE2RADIAN(293),0 });
-		pMap->AddChild(Tree);
+		TreeList->AddChild(Tree);
 
 		Tree = pObj->Clone();
 		Tree->SetName(L"Tree5");
 		Tree->Transform()->SetRelativePos(Vec3{ -1068,-184,2379 });
 		Tree->Transform()->SetRelativeScale(Vec3{ 0.9,0.9,0.9 });
 		Tree->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-90),DEGREE2RADIAN(154 /*514*/),0 });
-		pMap->AddChild(Tree);
+		TreeList->AddChild(Tree);
 
         #pragma endregion
+
+		#pragma region Grass
+		CGameObject* GrassList = new CGameObject();
+		GrassList->SetName(L"GrassParent");
+		GrassList->AddComponent(new CTransform());
+		pMap->AddChild(GrassList);
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Grass.fbx");
+		pObj = nullptr;
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Grass1");
+		pObj->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
+		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), 0.f, 0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(1.0f, 1.0f, 1.0f));
+		
+		CGameObject* CopyGrass = pObj->Clone();
+
+		vector<CGameObject*>pChilds = pObj->GetChild();
+		pChilds[0]->Transform()->SetRelativePos(Vec3{ -607.f,-185.f,-112.f });
+		pChilds[0]->Transform()->SetRelativeRot(Vec3{ 0.f,DEGREE2RADIAN(35.f),0.f });
+
+		pChilds[1]->Transform()->SetRelativePos(Vec3{ -711.000f,-538.f,-123.f });
+		pChilds[1]->Transform()->SetRelativeScale(Vec3{ 0.7f,0.7f,0.7f });
+		pChilds[1]->Transform()->SetRelativeRot(Vec3{ 0.f,DEGREE2RADIAN(13.f),0.f });
+
+		pChilds[2]->Transform()->SetRelativePos(Vec3{ -1085.0f,182.f,-200.f });
+		pChilds[2]->Transform()->SetRelativeRot(Vec3{ 0.f,DEGREE2RADIAN(-19.f),0.f });
+
+		pChilds[3]->Transform()->SetRelativePos(Vec3{ 1148.f,837.f,-200.f });
+		pChilds[3]->Transform()->SetRelativeRot(Vec3{ 0.f,DEGREE2RADIAN(-19.f),0.f });
+		
+		pChilds[4]->Transform()->SetRelativePos(Vec3{ 662.f,776.f,-200.f });
+		pChilds[4]->Transform()->SetRelativeRot(Vec3{ 0.f,DEGREE2RADIAN(-6.f),DEGREE2RADIAN(-91.f) });
+
+		pChilds[5]->Transform()->SetRelativePos(Vec3{ -468.f,-1482.f,-200.f });
+		pChilds[5]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(11.f),DEGREE2RADIAN(2.f),DEGREE2RADIAN(-109.f) });
+
+		GrassList->AddChild(pObj);
+		pChilds.clear();
+
+		pObj = CopyGrass;
+		Ptr<CMaterial> GrassType1Mtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"material\\tree leaf.mtrl");
+		pObj->SetName(L"Grass2");
+		pChilds = pObj->GetChild();
+		for (int i = 0; i < pChilds.size(); ++i)
+		{
+			pChilds[i]->MeshRender()->SetMaterial(GrassType1Mtrl, 0);
+		}
+		
+		pChilds[0]->Transform()->SetRelativePos(Vec3{ -1216.f,638.f,-200.f });
+		pChilds[0]->Transform()->SetRelativeScale(Vec3{ 2.f,2.f,2.f });
+		pChilds[0]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(6.f),DEGREE2RADIAN(30.f),DEGREE2RADIAN(9.f) });
+
+		pChilds[1]->Transform()->SetRelativePos(Vec3{ -665.000f,-876.f,-241.f });
+		pChilds[1]->Transform()->SetRelativeScale(Vec3{ 4.0f,4.0f,4.0f });
+		pChilds[1]->Transform()->SetRelativeRot(Vec3{ 0.f,DEGREE2RADIAN(13.f),0.f });
+
+		pChilds[2]->Transform()->SetRelativePos(Vec3{ -628.0f,-488.f,-200.f });
+		pChilds[2]->Transform()->SetRelativeScale(Vec3{ 2.5f,2.5f,2.5f });
+		pChilds[2]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-6.f),DEGREE2RADIAN(11.f),DEGREE2RADIAN(-4.f) });
+
+		pChilds[3]->Transform()->SetRelativePos(Vec3{ -707.f,308.f,-172.f });
+		pChilds[3]->Transform()->SetRelativeScale(Vec3{5.f, 5.f ,5.f });
+		pChilds[3]->Transform()->SetRelativeRot(Vec3{ 0.f,DEGREE2RADIAN(-8.f),0.f });
+
+		pChilds[4]->Transform()->SetRelativePos(Vec3{ -902.f,-1684.f,-200.f });
+		pChilds[4]->Transform()->SetRelativeScale(Vec3{ 1.5f, 1.5f ,1.5f });
+		pChilds[4]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(22.f),DEGREE2RADIAN(-71.f),DEGREE2RADIAN(0.f) });
+
+		pChilds[5]->Transform()->SetRelativePos(Vec3{ -759.f,-1838.f,-200.f });
+		pChilds[5]->Transform()->SetRelativeScale(Vec3{ 1.5f, 1.5f ,1.5f });
+		pChilds[5]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-3.f),DEGREE2RADIAN(1.f),DEGREE2RADIAN(28.f) });
+
+		GrassList->AddChild(pObj);
+		pChilds.clear();
+
+		pObj = CopyGrass->Clone();
+		pObj->SetName(L"Grass3");
+		GrassList->AddChild(pObj);
+
+		pChilds = pObj->GetChild();
+
+		pChilds[0]->Transform()->SetRelativePos(Vec3{ -739.f,-1697.f,-200.f });
+		pChilds[0]->Transform()->SetRelativeScale(Vec3{ 2.f,2.f,2.f });
+		pChilds[0]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-8.f),DEGREE2RADIAN(22.f),DEGREE2RADIAN(0.f) });
+
+		pChilds[1]->Transform()->SetRelativePos(Vec3{ -327.000f,-1483.f,-204.f });
+		pChilds[1]->Transform()->SetRelativeScale(Vec3{ 2.5f,2.5f,2.5f });
+		pChilds[1]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-18.f),DEGREE2RADIAN(34.f),DEGREE2RADIAN(30.f) });
+
+		pChilds[2]->Transform()->SetRelativePos(Vec3{ -946.0f,-629.f,-200.f });
+		pChilds[2]->Transform()->SetRelativeScale(Vec3{ 1.5f,1.5f,1.5f });
+		pChilds[2]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(3.f),DEGREE2RADIAN(18.f),DEGREE2RADIAN(4.f) });
+
+		pChilds[3]->Transform()->SetRelativePos(Vec3{ -915.f,-443.f,-179.f });
+		pChilds[3]->Transform()->SetRelativeScale(Vec3{ 2.f, 2.f ,2.f });
+		pChilds[3]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-13.f),DEGREE2RADIAN(28.f),DEGREE2RADIAN(-2.f) });
+
+		pChilds[4]->Transform()->SetRelativePos(Vec3{ -771.f,-1358.f,-200.f });
+		pChilds[4]->Transform()->SetRelativeScale(Vec3{ 3.f, 3.f ,3.f });
+		pChilds[4]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(2.f),DEGREE2RADIAN(-8.f),DEGREE2RADIAN(-80.f) });
+
+		pChilds[5]->Transform()->SetRelativePos(Vec3{ -252.f,-2176.f,-200.f });
+		pChilds[5]->Transform()->SetRelativeScale(Vec3{ 3.f, 3.f ,3.f });
+		pChilds[5]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-3.f),DEGREE2RADIAN(1.f),DEGREE2RADIAN(28.f) });
+
+		pObj = CopyGrass->Clone();
+		pObj->SetName(L"Grass4");
+		GrassList->AddChild(pObj);
+		pChilds.clear();
+
+		pChilds = pObj->GetChild();
+
+		pChilds[0]->Transform()->SetRelativePos(Vec3{ -42.f,684.f,-125.f });
+		pChilds[0]->Transform()->SetRelativeScale(Vec3{ 2.f,2.f,2.f });
+		pChilds[0]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(8.f),DEGREE2RADIAN(7.f),DEGREE2RADIAN(6.f) });
+
+		pChilds[1]->Transform()->SetRelativePos(Vec3{ -216.0f,862.f,-229.f });
+		pChilds[1]->Transform()->SetRelativeScale(Vec3{ 2.5f,2.5f,2.5f });
+		pChilds[1]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(22.f),DEGREE2RADIAN(16.f),DEGREE2RADIAN(18.f) });
+
+		pChilds[2]->Transform()->SetRelativePos(Vec3{ -321.0f,907.f,-200.f });
+		pChilds[2]->Transform()->SetRelativeScale(Vec3{ 1.5f,1.5f,1.5f });
+		pChilds[2]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(18.f),DEGREE2RADIAN(39.f),DEGREE2RADIAN(4.f) });
+
+		pChilds[3]->Transform()->SetRelativePos(Vec3{ -902.f,974.f,-236.f });
+		pChilds[3]->Transform()->SetRelativeScale(Vec3{ 3.f, 3.f ,3.f });
+		pChilds[3]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(9.f),DEGREE2RADIAN(30.f),DEGREE2RADIAN(-2.f) });
+
+		pChilds[4]->Transform()->SetRelativePos(Vec3{ -979.f,895.f,-199.f });
+		pChilds[4]->Transform()->SetRelativeScale(Vec3{ 3.f, 3.f ,3.f });
+		pChilds[4]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(7.f),DEGREE2RADIAN(24.f),DEGREE2RADIAN(-71.f) });
+
+		pChilds[5]->Transform()->SetRelativePos(Vec3{ -1058.f,885.f,-214.f });
+		pChilds[5]->Transform()->SetRelativeScale(Vec3{ 3.f, 3.f ,3.f });
+		pChilds[5]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(32.f),DEGREE2RADIAN(24.f),DEGREE2RADIAN(26.f) });
+
+		pObj = CopyGrass->Clone();
+		pObj->SetName(L"Grass5");
+		GrassList->AddChild(pObj);
+		pChilds.clear();
+
+		pChilds = pObj->GetChild();
+
+		pChilds[0]->Transform()->SetRelativePos(Vec3{ 415.f,868.f,-125.f });
+		pChilds[0]->Transform()->SetRelativeScale(Vec3{ 2.f,2.f,2.f });
+		pChilds[0]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(8.f),DEGREE2RADIAN(7.f),DEGREE2RADIAN(62.f) });
+
+		pChilds[1]->Transform()->SetRelativePos(Vec3{ 660.0f,688.f,-229.f });
+		pChilds[1]->Transform()->SetRelativeScale(Vec3{ 2.5f,2.5f,2.5f });
+		pChilds[1]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(13.f),DEGREE2RADIAN(-23.f),DEGREE2RADIAN(18.f) });
+
+		pChilds[2]->Transform()->SetRelativePos(Vec3{ 331.0f,733.f,-216.f });
+		pChilds[2]->Transform()->SetRelativeScale(Vec3{ 2.f,2.f,2.f });
+		pChilds[2]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(18.f),DEGREE2RADIAN(14.f),DEGREE2RADIAN(44.f) });
+
+		pChilds[3]->Transform()->SetRelativePos(Vec3{ 812.f,860.f,-236.f });
+		pChilds[3]->Transform()->SetRelativeScale(Vec3{ 3.f, 3.f ,3.f });
+		pChilds[3]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(15.f),DEGREE2RADIAN(2.f),DEGREE2RADIAN(-2.f) });
+
+		pChilds[4]->Transform()->SetRelativePos(Vec3{ 1131.f,653.f,-123.f });
+		pChilds[4]->Transform()->SetRelativeScale(Vec3{ 2.f, 2.f ,2.f });
+		pChilds[4]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(2.f),DEGREE2RADIAN(-15.f),DEGREE2RADIAN(-40.f) });
+
+		pChilds[5]->Transform()->SetRelativePos(Vec3{ 1144.f,649.f,-149.f });
+		pChilds[5]->Transform()->SetRelativeScale(Vec3{ 2.f, 2.f ,2.f });
+		pChilds[5]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(7.f),DEGREE2RADIAN(-9.f),DEGREE2RADIAN(48.f) });
+
+		pObj = CopyGrass->Clone();
+		pObj->SetName(L"Grass6");
+		GrassList->AddChild(pObj);
+		pChilds.clear();
+
+		pChilds = pObj->GetChild();
+
+		pChilds[0]->Transform()->SetRelativePos(Vec3{ 1458.f,667.f,-165.f });
+		pChilds[0]->Transform()->SetRelativeScale(Vec3{ 4.f,4.f,4.f });
+		pChilds[0]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(6.f),DEGREE2RADIAN(15.f),DEGREE2RADIAN(9.f) });
+
+		pChilds[1]->Transform()->SetRelativePos(Vec3{ 1927.0f,667.f,-155.f });
+		pChilds[1]->Transform()->SetRelativeScale(Vec3{ 4.f,4.f,4.f });
+		pChilds[1]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-14.f),DEGREE2RADIAN(-18.f),DEGREE2RADIAN(47.f) });
+
+		pChilds[2]->Transform()->SetRelativePos(Vec3{ 2302.0f,800.f,-200.f });
+		pChilds[2]->Transform()->SetRelativeScale(Vec3{ 1.5f,1.5f,1.5f });
+		pChilds[2]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-6.f),DEGREE2RADIAN(-25.f),DEGREE2RADIAN(-4.f) });
+
+		pChilds[3]->Transform()->SetRelativePos(Vec3{ 2436.f,980.f,-259.f });
+		pChilds[3]->Transform()->SetRelativeScale(Vec3{ 3.f, 3.f ,3.f });
+		pChilds[3]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(0.f),DEGREE2RADIAN(-8.f),DEGREE2RADIAN(0.f) });
+
+		pChilds[4]->Transform()->SetRelativePos(Vec3{ 2261.f,-145.f,-136.f });
+		pChilds[4]->Transform()->SetRelativeScale(Vec3{ 3.f, 3.f ,3.f });
+		pChilds[4]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(22.f),DEGREE2RADIAN(-14.f),DEGREE2RADIAN(-36.f) });
+
+		pChilds[5]->Transform()->SetRelativePos(Vec3{ 2404.f,453.f,-190.f });
+		pChilds[5]->Transform()->SetRelativeScale(Vec3{ 4.f, 4.f ,4.f });
+		pChilds[5]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(12.f),DEGREE2RADIAN(-3.f),DEGREE2RADIAN(20.f) });
+
+		pObj = CopyGrass->Clone();
+		pObj->SetName(L"Grass7");
+		GrassList->AddChild(pObj);
+		pChilds.clear();
+
+		pChilds = pObj->GetChild();
+
+		pChilds[0]->Transform()->SetRelativePos(Vec3{ 2694.f,365.f,-180.f });
+		pChilds[0]->Transform()->SetRelativeScale(Vec3{ 4.f,4.f,4.f });
+		pChilds[0]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(6.f),DEGREE2RADIAN(15.f),DEGREE2RADIAN(-17.f) });
+
+		pChilds[1]->Transform()->SetRelativePos(Vec3{ 2646.0f,-68.f,-241.f });
+		pChilds[1]->Transform()->SetRelativeScale(Vec3{ 3.f,3.f,3.f });
+		pChilds[1]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-15.f),DEGREE2RADIAN(-9.f),DEGREE2RADIAN(47.f) });
+
+		pChilds[2]->Transform()->SetRelativePos(Vec3{ 2685.0f,-366.f,-211.f });
+		pChilds[2]->Transform()->SetRelativeScale(Vec3{ 1.5f,1.5f,1.5f });
+		pChilds[2]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(13.f),DEGREE2RADIAN(-40.f),DEGREE2RADIAN(17.f) });
+
+		pChilds[3]->Transform()->SetRelativePos(Vec3{ 2537.f,-711.f,-227.f });
+		pChilds[3]->Transform()->SetRelativeScale(Vec3{ 2.f, 2.f ,2.f });
+		pChilds[3]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-22.f),DEGREE2RADIAN(-13.f),DEGREE2RADIAN(65.f) });
+
+		pChilds[4]->Transform()->SetRelativePos(Vec3{ 2743.f,-650.f,-168.f });
+		pChilds[4]->Transform()->SetRelativeScale(Vec3{ 3.f, 3.f ,3.f });
+		pChilds[4]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-14.f),DEGREE2RADIAN(-94.f),DEGREE2RADIAN(151.f) });
+
+		pChilds[5]->Transform()->SetRelativePos(Vec3{ 2263.f,-1219.f,-149.f });
+		pChilds[5]->Transform()->SetRelativeScale(Vec3{ 3.f, 3.f ,3.f });
+		pChilds[5]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(12.f),DEGREE2RADIAN(-3.f),DEGREE2RADIAN(87.f) });
+
+
+		pObj = CopyGrass->Clone();
+		pObj->SetName(L"Grass8");
+		GrassList->AddChild(pObj);
+		pChilds.clear();
+
+		pChilds = pObj->GetChild();
+
+		pChilds[0]->Transform()->SetRelativePos(Vec3{ 2320.f,-1002.f,-202.f });
+		pChilds[0]->Transform()->SetRelativeScale(Vec3{ 2.f,2.f,2.f });
+		pChilds[0]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-14.f),DEGREE2RADIAN(0.f),DEGREE2RADIAN(-65.f) });
+
+		pChilds[1]->Transform()->SetRelativePos(Vec3{ 2683.0f,-2211.f,-241.f });
+		pChilds[1]->Transform()->SetRelativeScale(Vec3{ 3.f,3.f,3.f });
+		pChilds[1]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-15.f),DEGREE2RADIAN(-9.f),DEGREE2RADIAN(47.f) });
+
+		pChilds[2]->Transform()->SetRelativePos(Vec3{ 2943.0f,-2598.f,-211.f });
+		pChilds[2]->Transform()->SetRelativeScale(Vec3{ 2.f,2.f,2.f });
+		pChilds[2]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(9.f),DEGREE2RADIAN(-7.f),DEGREE2RADIAN(-73.f) });
+
+		pChilds[3]->Transform()->SetRelativePos(Vec3{ 1882.f,-2799.f,-227.f });
+		pChilds[3]->Transform()->SetRelativeScale(Vec3{ 4.f, 4.f ,4.f });
+		pChilds[3]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(7.f),DEGREE2RADIAN(28.f),DEGREE2RADIAN(65.f) });
+
+		pChilds[4]->Transform()->SetRelativePos(Vec3{ 795.f,-2161.f,-168.f });
+		pChilds[4]->Transform()->SetRelativeScale(Vec3{ 3.f, 3.f ,3.f });
+		pChilds[4]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(0.f),DEGREE2RADIAN(-31.f),DEGREE2RADIAN(-78.f) });
+
+		pChilds[5]->Transform()->SetRelativePos(Vec3{ 1839.f,-2113.f,-149.f });
+		pChilds[5]->Transform()->SetRelativeScale(Vec3{ 3.f, 3.f ,3.f });
+		pChilds[5]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(12.f),DEGREE2RADIAN(-3.f),DEGREE2RADIAN(87.f) });
+
+		pObj = CopyGrass->Clone();
+		pObj->SetName(L"Grass9");
+		GrassList->AddChild(pObj);
+		pChilds.clear();
+
+		pChilds = pObj->GetChild();
+
+		pChilds[0]->Transform()->SetRelativePos(Vec3{ 244.f,-2754.f,-202.f });
+		pChilds[0]->Transform()->SetRelativeScale(Vec3{ 3.f,3.f,3.f });
+		pChilds[0]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-24.f),DEGREE2RADIAN(-6.f),DEGREE2RADIAN(-65.f) });
+
+		pChilds[1]->Transform()->SetRelativePos(Vec3{ 1728.0f,-2697.f,-241.f });
+		pChilds[1]->Transform()->SetRelativeScale(Vec3{ 3.f,3.f,3.f });
+		pChilds[1]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-15.f),DEGREE2RADIAN(-9.f),DEGREE2RADIAN(47.f) });
+
+		pChilds[2]->Transform()->SetRelativePos(Vec3{ 1852.0f,-2580.f,-211.f });
+		pChilds[2]->Transform()->SetRelativeScale(Vec3{ 3.f,3.f,3.f });
+		pChilds[2]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(9.f),DEGREE2RADIAN(-35.f),DEGREE2RADIAN(-73.f) });
+
+		pChilds[3]->Transform()->SetRelativePos(Vec3{ 934.f,-2633.f,-244.f });
+		pChilds[3]->Transform()->SetRelativeScale(Vec3{ 5.f, 5.f ,5.f });
+		pChilds[3]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-16.f),DEGREE2RADIAN(-4.f),DEGREE2RADIAN(65.f) });
+
+		pChilds[4]->Transform()->SetRelativePos(Vec3{ 142.f,-2428.f,-168.f });
+		pChilds[4]->Transform()->SetRelativeScale(Vec3{ 3.f, 3.f ,3.f });
+		pChilds[4]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(0.f),DEGREE2RADIAN(-39.f),DEGREE2RADIAN(-45.f) });
+
+		pChilds[5]->Transform()->SetRelativePos(Vec3{ 116.f,-2413.f,-149.f });
+		pChilds[5]->Transform()->SetRelativeScale(Vec3{ 3.f, 3.f ,3.f });
+		pChilds[5]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(28.f),DEGREE2RADIAN(-87.f),DEGREE2RADIAN(-36.f) });
+
+		#pragma endregion
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\MU_Structures.fbx");
 		pObj = nullptr;
 		pObj = pMeshData->Instantiate();
