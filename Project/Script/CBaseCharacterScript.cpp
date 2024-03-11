@@ -85,18 +85,18 @@ void CBaseCharacterScript::tick()
 
 }
 
-void CBaseCharacterScript::BeginOverlap(CCollider2D* _Other)
+void CBaseCharacterScript::BeginOverlap(CCollider* _Other)
 {
 	SetTarget(_Other);
 
 }
 
-void CBaseCharacterScript::OnOverlap(CCollider2D* _Other)
+void CBaseCharacterScript::OnOverlap(CCollider* _Other)
 {
 	SetTarget(_Other);
 }
 
-void CBaseCharacterScript::EndOverlap(CCollider2D* _Other)
+void CBaseCharacterScript::EndOverlap(CCollider* _Other)
 {
 	m_pTarget = nullptr;
 }
@@ -185,7 +185,7 @@ void CBaseCharacterScript::Dance()
 	m_ChState.bWaiting = false;
 }
 
-void CBaseCharacterScript::SetTarget(CCollider2D* _Other)
+void CBaseCharacterScript::SetTarget(CCollider* _Other)
 {
 	CTransform* otherTF = _Other->Transform();
 	if (m_pTarget == nullptr)

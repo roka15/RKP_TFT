@@ -46,9 +46,9 @@ public:
 
 public:   
     virtual void finaltick() final {};
-    virtual void BeginOverlap(CCollider2D* _Other) {}
-    virtual void OnOverlap(CCollider2D* _Other) {}
-    virtual void EndOverlap(CCollider2D* _Other) {}
+    virtual void BeginOverlap(CCollider* _Other) {}
+    virtual void OnOverlap(CCollider* _Other) {}
+    virtual void EndOverlap(CCollider* _Other) {}
 
 public:
     virtual void SaveToLevelFile(FILE* _File) override {}

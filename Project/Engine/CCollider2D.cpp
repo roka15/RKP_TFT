@@ -6,10 +6,11 @@
 
 
 CCollider2D::CCollider2D()
-	: CComponent(COMPONENT_TYPE::COLLIDER2D)
+	: CCollider(COMPONENT_TYPE::COLLIDER2D)
 	, m_Shape(COLLIDER2D_TYPE::RECT)
 	, m_bAbsolute(false)
-	, m_iCollisionCount(0)
+	, m_vOffsetPos{}
+	, m_vOffsetScale{ 1.f,1.f,1.f }
 {
 	SetName(L"Collider2D");
 }
@@ -49,42 +50,6 @@ void CCollider2D::finaltick()
 		DrawDebugCircle(m_matCollider2D, vColor, 0.f);
 	else if (COLLIDER2D_TYPE::RECT == m_Shape)
 		DrawDebugRect(m_matCollider2D, vColor, 0.f);
-}
-
-
-
-void CCollider2D::BeginOverlap(CCollider2D* _Other)
-{
-	m_iCollisionCount += 1;
-
-	// Script 호출
-	const vector<CScript*>& vecScript = GetOwner()->GetScripts();
-	for (size_t i = 0; i < vecScript.size(); ++i)
-	{
-		vecScript[i]->BeginOverlap(_Other);
-	}
-}
-
-void CCollider2D::OnOverlap(CCollider2D* _Other)
-{
-	// Script 호출
-	const vector<CScript*>& vecScript = GetOwner()->GetScripts();
-	for (size_t i = 0; i < vecScript.size(); ++i)
-	{
-		vecScript[i]->OnOverlap(_Other);
-	}
-}
-
-void CCollider2D::EndOverlap(CCollider2D* _Other)
-{
-	m_iCollisionCount -= 1;
-
-	// Script 호출
-	const vector<CScript*>& vecScript = GetOwner()->GetScripts();
-	for (size_t i = 0; i < vecScript.size(); ++i)
-	{
-		vecScript[i]->EndOverlap(_Other);
-	}
 }
 
 void CCollider2D::SaveToLevelFile(FILE* _File)

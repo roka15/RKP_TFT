@@ -211,6 +211,18 @@
     <ClInclude Include="CCollider2D.h">
       <Filter>Source\06. Component\2. Collider\Collider2D</Filter>
     </ClInclude>
+    <ClInclude Include="CCollider3D.h">
+      <Filter>Source\06. Component\2. Collider\Collider3D</Filter>
+    </ClInclude>
+    <ClInclude Include="CBoxCollider.h">
+      <Filter>Source\06. Component\2. Collider\Collider3D</Filter>
+    </ClInclude>
+    <ClInclude Include="CCollider.h">
+      <Filter>Source\06. Component\2. Collider\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="CSphereCollider.h">
+      <Filter>Source\06. Component\2. Collider\Collider3D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -413,6 +425,18 @@
     </ClCompile>
     <ClCompile Include="CCollider2D.cpp">
       <Filter>Source\06. Component\2. Collider\Collider2D</Filter>
+    </ClCompile>
+    <ClCompile Include="CCollider3D.cpp">
+      <Filter>Source\06. Component\2. Collider\Collider3D</Filter>
+    </ClCompile>
+    <ClCompile Include="CBoxCollider.cpp">
+      <Filter>Source\06. Component\2. Collider\Collider3D</Filter>
+    </ClCompile>
+    <ClCompile Include="CCollider.cpp">
+      <Filter>Source\06. Component\2. Collider\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="CSphereCollider.cpp">
+      <Filter>Source\06. Component\2. Collider\Collider3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -634,6 +658,9 @@
     </Filter>
     <Filter Include="Source\06. Component\2. Collider\Collider2D">
       <UniqueIdentifier>{2d4ab7b7-db1c-453e-b610-a25cfa0fd922}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\2. Collider\Base">
+      <UniqueIdentifier>{a43276dd-89ed-458e-973f-d6580f554385}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

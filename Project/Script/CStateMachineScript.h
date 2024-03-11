@@ -12,9 +12,9 @@ protected:
     CState* m_pState;
 public:
     virtual void tick()override;
-    virtual void BeginOverlap(CCollider2D* _Other)override {}
-    virtual void OnOverlap(CCollider2D* _Other)override {}
-    virtual void EndOverlap(CCollider2D* _Other)override {}
+    virtual void BeginOverlap(CCollider* _Other)override {}
+    virtual void OnOverlap(CCollider* _Other)override {}
+    virtual void EndOverlap(CCollider* _Other)override {}
 public:
     virtual void SaveToLevelFile(FILE* _File) override {}
     virtual void LoadFromLevelFile(FILE* _FILE) override {}

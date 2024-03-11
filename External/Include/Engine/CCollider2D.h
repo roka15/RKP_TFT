@@ -1,8 +1,8 @@
 #pragma once
-#include "CComponent.h"
+#include "CCollider.h"
 
 class CCollider2D :
-    public CComponent
+    public CCollider
 {
 private:
     Vec3            m_vOffsetPos;
@@ -10,10 +10,6 @@ private:
     bool            m_bAbsolute;
     COLLIDER2D_TYPE m_Shape;
     Matrix          m_matCollider2D;    // Collider 의 월드행렬
-
-    int             m_iCollisionCount;  // 충돌 횟수
-
-
 public:
     virtual void finaltick() override;
 
@@ -25,12 +21,7 @@ public:
 
     const Matrix& GetColliderWorldMat() { return m_matCollider2D; }
 
-
 public:
-    void BeginOverlap(CCollider2D* _Other);
-    void OnOverlap(CCollider2D* _Other);
-    void EndOverlap(CCollider2D* _Other);
-
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;
 

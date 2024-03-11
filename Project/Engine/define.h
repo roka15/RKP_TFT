@@ -243,6 +243,12 @@ enum class COLLIDER2D_TYPE
 	CIRCLE,
 };
 
+enum class COLLIDER3D_TYPE
+{
+	BOX,
+	SPHERE,
+};
+
 
 enum class LIGHT_TYPE
 {

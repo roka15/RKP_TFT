@@ -3,6 +3,7 @@
 
 class CLayer;
 class CCollider2D;
+class CCollider3D;
 
 
 union CollisionID
@@ -38,8 +39,11 @@ public:
 	void tick();
 
 private:
+	void Collision2D(CGameObject* _LeftObject, CGameObject* _RightObject);
+	void Collision3D(CGameObject* _LeftObject, CGameObject* _RightObject);
 	void CollisionBtwLayer(CLayer* _LeftLayer, CLayer* _RightLayer);
 	void CollisionBtwObject(CGameObject* _LeftObject, CGameObject* _RightObject);
 	bool CollisionBtwCollider(CCollider2D* _pLeft, CCollider2D* _pRight);
+	bool CollisionBtwCollider(CCollider3D* _pLeft, CCollider3D* _pRight);
 };
 

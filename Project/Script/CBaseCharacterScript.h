@@ -12,9 +12,9 @@ private:
     CTransform*         m_pTarget;
 public:
     virtual void tick()override;
-    virtual void BeginOverlap(CCollider2D* _Other)override;
-    virtual void OnOverlap(CCollider2D* _Other)override;
-    virtual void EndOverlap(CCollider2D* _Other)override;
+    virtual void BeginOverlap(CCollider* _Other)override;
+    virtual void OnOverlap(CCollider* _Other)override;
+    virtual void EndOverlap(CCollider* _Other)override;
 public:
     bool IsWait() { return m_ChState.bWaiting; }
     bool IsUlt() { return m_ChState.bUlt; }
@@ -35,7 +35,7 @@ public:
     virtual void NormalAttack();
     virtual void UltAttack();
     virtual void Dance();
-    virtual void SetTarget(CCollider2D* _Other);
+    virtual void SetTarget(CCollider* _Other);
 public:
     CBaseCharacterScript();
     CBaseCharacterScript(SCRIPT_TYPE _eType);
