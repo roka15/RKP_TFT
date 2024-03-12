@@ -27,7 +27,7 @@ CEditorObjMgr::~CEditorObjMgr()
 
 void CEditorObjMgr::init()
 {
-	// 디버그 쉐이프 생성
+	// 디버그 쉐이프 생성 
 	m_DebugShape[(UINT)SHAPE_TYPE::RECT] = new CGameObjectEx;
 	m_DebugShape[(UINT)SHAPE_TYPE::RECT]->AddComponent(new CTransform);
 	m_DebugShape[(UINT)SHAPE_TYPE::RECT]->AddComponent(new CMeshRender);
@@ -74,6 +74,9 @@ void CEditorObjMgr::init()
 
 void CEditorObjMgr::progress()
 {
+	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
+	if (pCurLevel->GetState() == LEVEL_STATE::PLAY)
+		return;
 	// DebugShape 정보 가져오기
 	vector<tDebugShapeInfo>& vecInfo = CRenderMgr::GetInst()->GetDebugShapeInfo();
 	m_DebugShapeInfo.insert(m_DebugShapeInfo.end(), vecInfo.begin(), vecInfo.end());

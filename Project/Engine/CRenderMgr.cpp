@@ -62,6 +62,9 @@ void CRenderMgr::render()
 
 void CRenderMgr::render_play()
 {
+    //imgui가 기존에 쓰던 렌더 타겟 깊이 버퍼를 빼버리기 때문에 다시 설정해준다.
+    //그래야 다른 mrt 들이 기존 깊이 버퍼를 이어서 사용 가능.
+    m_MRT[(UINT)MRT_TYPE::SWAPCHAIN]->OMSet();
     // 카메라 기준 렌더링
     for (size_t i = 0; i < m_vecCam.size(); ++i)
     {
@@ -79,8 +82,6 @@ void CRenderMgr::render_play()
 
 void CRenderMgr::render_editor()
 {
-   
-
     // 물체 분류
     m_pEditorCam->SortObject();
 

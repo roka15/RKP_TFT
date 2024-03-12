@@ -43,12 +43,15 @@ void CreateTestLevel()
 	pMainCam->AddComponent(new CTransform);
 	pMainCam->AddComponent(new CCamera);
 
-	pMainCam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
+	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 	pMainCam->Camera()->SetCameraIndex(0);		// MainCamera 로 설정
 	pMainCam->Camera()->SetLayerMaskAll(true);	// 모든 레이어 체크
 	pMainCam->Camera()->SetLayerMask(31, false);// UI Layer 는 렌더링하지 않는다.
+	pMainCam->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(60.f),0.f,0.f });
+	pMainCam->Camera()->SetFar(100000.f);
+	
 
-	SpawnGameObject(pMainCam, Vec3(0.f, 0.f, 0.f), 0);
+	SpawnGameObject(pMainCam, Vec3{ 800.f,1450.f,-900.f }, 0);
 
 	// UI cameara
 	CGameObject* pUICam = new CGameObject;

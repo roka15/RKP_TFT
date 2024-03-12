@@ -57,11 +57,11 @@ CCamera::CCamera(const CCamera& _Other)
 	, m_ProjType(_Other.m_ProjType)
 	, m_iLayerMask(_Other.m_iLayerMask)
 	, m_iCamIdx(-1)
-{	
+{
 }
 
 CCamera::~CCamera()
-{	
+{
 }
 
 void CCamera::begin()
@@ -76,7 +76,7 @@ void CCamera::finaltick()
 {
 	CalcViewMat();
 
-	CalcProjMat();	
+	CalcProjMat();
 
 	m_Frustum.finaltick();
 
@@ -143,15 +143,15 @@ void CCamera::CalcProjMat()
 	// 투영 행렬 계산
 	// =============
 	m_matProj = XMMatrixIdentity();
-	
+
 	if (PROJ_TYPE::ORTHOGRAPHIC == m_ProjType)
 	{
 		// 직교 투영
 		Vec2 vResolution = CDevice::GetInst()->GetRenderResolution();
-		m_matProj =  XMMatrixOrthographicLH(m_OrthoWidth * (1.f / m_fScale), m_OrthoHeight * (1.f / m_fScale), 1.f, 10000.f);
+		m_matProj = XMMatrixOrthographicLH(m_OrthoWidth * (1.f / m_fScale), m_OrthoHeight * (1.f / m_fScale), 1.f, 10000.f);
 	}
 	else
-	{	
+	{
 		// 원근 투영
 		m_matProj = XMMatrixPerspectiveFovLH(m_FOV, m_fAspectRatio, 1.f, m_Far);
 	}
@@ -219,7 +219,7 @@ void CCamera::SortObject()
 				CRenderComponent* pRenderCom = vecObject[j]->GetRenderComponent();
 
 				// 렌더링 기능이 없는 오브젝트는 제외
-				if (nullptr == pRenderCom)					
+				if (nullptr == pRenderCom)
 					continue;
 
 				// FrustumCheck
@@ -246,7 +246,7 @@ void CCamera::SortObject()
 					SHADER_DOMAIN eDomain = pRenderCom->GetMaterial(iMtrl)->GetShader()->GetDomain();
 					Ptr<CGraphicsShader> pShader = pRenderCom->GetMaterial(iMtrl)->GetShader();
 
-					switch (eDomain) 
+					switch (eDomain)
 					{
 					case SHADER_DOMAIN::DOMAIN_DEFERRED:
 					case SHADER_DOMAIN::DOMAIN_DEFERRED_DECAL:
@@ -303,7 +303,7 @@ void CCamera::SortObject()
 						m_vecUI.push_back(vecObject[j]);
 						break;
 					}
-				}				
+				}
 			}
 		}
 	}
@@ -345,46 +345,57 @@ void CCamera::SortObject_Shadow()
 
 void CCamera::render()
 {
-	// 쉐이더 도메인에 따라서 순차적으로 그리기
+	bool bUICam = false;
+	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
+	if (pCurLevel->GetState() == LEVEL_STATE::PLAY)
+	{
+		if ((m_iLayerMask & (1 << 31)))
+		{
+			bUICam = true;
+		}
+	}
+	//Play 상태일 때, Camera가 Main , UI 2가지가 Render 하게 된다.
+	//문제는 UI Camera를 수행할때 Main 때  deffered로 그린 texture를 또 그려버리기 때문에 forward가 덮여진다.
+	//따라서 UI 카메라인 경우는 UI만 Swap Chain에 출력하도록 한다.
+	if (bUICam == false)
+	{
+		// 쉐이더 도메인에 따라서 순차적으로 그리기
 	// Deferred MRT 로 변경
 	// Deferred 물체들을 Deferred MRT 에 그리기
-	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFERRED)->OMSet(true);
-	render_deferred();
-	
-	// Light MRT 로 변경
-	// 물체들에 적용될 광원을 그리기
-	// Deferred 물체에 광원 적용시키기
-	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::LIGHT)->OMSet(false);
+		CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFERRED)->OMSet(true);
+		render_deferred();
 
-	const vector<CLight3D*>& vecLight3D = CRenderMgr::GetInst()->GetLight3D();
-	for (size_t i = 0; i < vecLight3D.size(); ++i)
-	{
-		vecLight3D[i]->render();
+		// Light MRT 로 변경
+		// 물체들에 적용될 광원을 그리기
+		// Deferred 물체에 광원 적용시키기
+		CRenderMgr::GetInst()->GetMRT(MRT_TYPE::LIGHT)->OMSet(false);
+		const vector<CLight3D*>& vecLight3D = CRenderMgr::GetInst()->GetLight3D();
+		for (size_t i = 0; i < vecLight3D.size(); ++i)
+		{
+			vecLight3D[i]->render();
+		}
+		// Deferred MRT 에 그린 물체에 Light MRT 출력한 광원과 합쳐서
+		// 다시 SwapChain 타겟으로 으로 그리기
+		// SwapChain MRT 로 변경
+		CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
+		static Ptr<CMesh> pRectMesh = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
+		static Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"MergeMtrl");
+
+		static bool bSet = false;
+		if (!bSet)
+		{
+			bSet = true;
+			pMtrl->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ColorTargetTex"));
+			pMtrl->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"DiffuseTargetTex"));
+			pMtrl->SetTexParam(TEX_2, CResMgr::GetInst()->FindRes<CTexture>(L"SpecularTargetTex"));
+			pMtrl->SetTexParam(TEX_3, CResMgr::GetInst()->FindRes<CTexture>(L"EmissiveTargetTex"));
+			pMtrl->SetTexParam(TEX_4, CResMgr::GetInst()->FindRes<CTexture>(L"ShadowTargetTex"));
+		}
+
+		pMtrl->UpdateData();
+		pRectMesh->render(0);
 	}
 	
-	// Deferred MRT 에 그린 물체에 Light MRT 출력한 광원과 합쳐서
-	// 다시 SwapChain 타겟으로 으로 그리기
-	// SwapChain MRT 로 변경
-	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
-	static Ptr<CMesh> pRectMesh = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
-	static Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"MergeMtrl");
-
-	static bool bSet = false;
-	if (!bSet)
-	{
-		bSet = true;
-		pMtrl->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ColorTargetTex"));
-		pMtrl->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"DiffuseTargetTex"));
-		pMtrl->SetTexParam(TEX_2, CResMgr::GetInst()->FindRes<CTexture>(L"SpecularTargetTex"));
-		pMtrl->SetTexParam(TEX_3, CResMgr::GetInst()->FindRes<CTexture>(L"EmissiveTargetTex"));
-		pMtrl->SetTexParam(TEX_4, CResMgr::GetInst()->FindRes<CTexture>(L"ShadowTargetTex"));
-	}
-
-	pMtrl->UpdateData();
-	pRectMesh->render(0);
-	
-
-
 
 	// Forward Rendering
 	render_forward();
