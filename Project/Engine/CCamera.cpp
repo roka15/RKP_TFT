@@ -80,8 +80,11 @@ void CCamera::finaltick()
 
 	m_Frustum.finaltick();
 
-	// 마우스방향 직선 계산
-	CalRay();
+	if (CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::TAP)
+	{
+		// 마우스방향 직선 계산
+		CalRay();
+	}
 }
 
 
@@ -106,6 +109,25 @@ void CCamera::CalRay()
 	// world space 에서의 방향
 	m_ray.vDir = XMVector3TransformNormal(m_ray.vDir, m_matViewInv);
 	m_ray.vDir.Normalize();
+
+	//xz 축에 평행한 평면.
+	Vec3 NormalVec = { 0.f,-1.f,0.f };
+	Vec3 PlaneVec = { 0.f, -200.f,0.f };
+
+	// t = vplen.dot(n) - vstart.dot(n)/vdir.dot(n) 
+
+	float t = PlaneVec.Dot(NormalVec) - m_ray.vStart.Dot(NormalVec) / m_ray.vDir.Dot(NormalVec);
+	Vec3 spawnPos;
+	spawnPos.x = m_ray.vStart.x + m_ray.vDir.x * t;
+	spawnPos.y = m_ray.vStart.y + m_ray.vDir.y * t;
+	spawnPos.z = m_ray.vStart.z + m_ray.vDir.z * t;
+
+	Matrix scale = XMMatrixScaling(100.f, 100.f, 100.f);
+	Matrix trans = XMMatrixTranslation(spawnPos.x, spawnPos.y, spawnPos.z);
+
+	Matrix result = scale * trans;
+
+	DrawDebugSphere(result, Vec4{ 0.f,0.f,1.0f,1.0f }, 10.f);
 }
 
 void CCamera::CalcViewMat()
@@ -356,12 +378,12 @@ void CCamera::render()
 	}
 	//Play 상태일 때, Camera가 Main , UI 2가지가 Render 하게 된다.
 	//문제는 UI Camera를 수행할때 Main 때  deffered로 그린 texture를 또 그려버리기 때문에 forward가 덮여진다.
-	//따라서 UI 카메라인 경우는 UI만 Swap Chain에 출력하도록 한다.
+	//따라서 UI 카메라인 경우는 아래의 if문 작업을 수행하지 않는다.
 	if (bUICam == false)
 	{
 		// 쉐이더 도메인에 따라서 순차적으로 그리기
-	// Deferred MRT 로 변경
-	// Deferred 물체들을 Deferred MRT 에 그리기
+		// Deferred MRT 로 변경
+		// Deferred 물체들을 Deferred MRT 에 그리기
 		CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFERRED)->OMSet(true);
 		render_deferred();
 
@@ -395,7 +417,7 @@ void CCamera::render()
 		pMtrl->UpdateData();
 		pRectMesh->render(0);
 	}
-	
+
 
 	// Forward Rendering
 	render_forward();
