@@ -13,11 +13,13 @@ private:
     Vec4                 m_Color;
 public:
     virtual void tick()override;
+    virtual void BeginOverlap(CCollider* _Other)override;
+    virtual void OnOverlap(CCollider* _Other)override;
+    virtual void EndOverlap(CCollider* _Other) override;
+
     void SetTileInfo(TILE_TYPE _type, TILE_OWNER_TYPE _ownerType, int _num) { m_Type = _type; m_OwnerType = _ownerType;  m_Number = _num; }
     TILE_TYPE GetType() { return m_Type; }
     int GetNumber() { return m_Number; }
-    Vec4 GetColor() { return m_Color; }
-    void SetColor(const Vec4& _color) { m_Color = _color; }
 public:
     CLONE(CTileScript)
     CTileScript();

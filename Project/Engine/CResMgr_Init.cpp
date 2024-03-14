@@ -971,6 +971,16 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std2DShader"));
 	AddRes(L"Std2DMtrl", pMtrl);
 
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std2DShader"));
+	pMtrl->SetScalarParam(SCALAR_PARAM::VEC4_0, Vec4{ 255.f / 255.f, 127.f / 255.f,0.f,1.f });
+	AddRes(L"ActiveTileMtrl", pMtrl);
+
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std2DShader"));
+	pMtrl->SetScalarParam(SCALAR_PARAM::VEC4_0, Vec4{ 6 / 255.f,132 / 255.f,200 / 255.f,1.f });
+	AddRes(L"InActiveTileMtrl", pMtrl);
+
 	// Std2DAnim Material
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std2DShader"));

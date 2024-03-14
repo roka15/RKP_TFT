@@ -75,8 +75,10 @@ CGameObject* CTileMgr::CreateTile(TILE_OWNER_TYPE _type)
 			pNewObj->SetName(Name);
 			pNewObj->AddComponent(new CTransform);
 			pNewObj->AddComponent(new CMeshRender);
-			pNewObj->AddComponent(new CCollider2D);
-			CCollider2D* collider = (CCollider2D*)pNewObj->GetComponent(COMPONENT_TYPE::COLLIDER2D);
+			pNewObj->AddComponent(new CBoxCollider);
+			CBoxCollider* collider = (CBoxCollider*)pNewObj->GetComponent(COMPONENT_TYPE::COLLIDER3D);
+			collider->SetTrigger(true);
+			collider->SetOffsetScale(Vec3{ 100.f,100.f,100.f });
 
 			CTileScript* tile = (CTileScript*)CScriptMgr::GetScript(SCRIPT_TYPE::TILESCRIPT);
 			pNewObj->AddComponent(tile);
@@ -93,13 +95,11 @@ CGameObject* CTileMgr::CreateTile(TILE_OWNER_TYPE _type)
 				eType = TILE_TYPE::BATTLE;
 				meshRender->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"mesh\\indicator hexagon.mesh"));
 			}
-			Vec4 color = { 6 / 255.f,132 / 255.f,200 / 255.f,1.f };
+			
 			tile->SetTileInfo(eType,_type, s_number);
-			tile->SetColor(color);
 
-			//meshRender->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAlphaMtrl"), 0);
-			meshRender->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"material\\hp.mtrl"), 0);
-			meshRender->GetMaterial(0)->SetShader(CResMgr::GetInst()->FindRes<CGraphicsShader>(L"Std2DShader"));
+			meshRender->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"InActiveTileMtrl"), 0);
+			
 			pNewObj->Transform()->SetRelativeScale(Vec3(m_Size.x, 1.0f, m_Size.y));
 			pNewObj->Transform()->SetRelativePos(Vec3(v2Pos.x, v2Pos.y, v2Pos.z));
 			pNewObj->Transform()->SetRelativeRot(Vec3(-90 * XM_PI / 180, 0.0f, 0.0f));
