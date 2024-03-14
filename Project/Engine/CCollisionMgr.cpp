@@ -2,6 +2,7 @@
 #include "CCollisionMgr.h"
 
 #include "CLevelMgr.h"
+#include "CMouseMgr.h"
 #include "CLevel.h"
 #include "CLayer.h"
 #include "CGameObject.h"
@@ -34,6 +35,11 @@ void CCollisionMgr::tick()
 			// iRow 레이어와 iCol 레이어는 서로 충돌검사를 진행한다.
 			CollisionBtwLayer(pLevel->GetLayer(iRow), pLevel->GetLayer(iCol));
 		}
+	}
+	for (UINT iRow = 0; iRow < MAX_LAYER; ++iRow)
+	{
+		// iRow 레이어와 iCol 레이어는 서로 충돌검사를 진행한다.
+		CollisionBtwLayerCursor(pLevel->GetLayer(iRow), CMouseMgr::GetInst()->GetCursor());
 	}
 }
 
@@ -146,7 +152,6 @@ void CCollisionMgr::Collision3D(CGameObject* _LeftObject, CGameObject* _RightObj
 			}
 		}
 	}
-
 	else
 	{
 		// 충돌 해제
@@ -155,6 +160,18 @@ void CCollisionMgr::Collision3D(CGameObject* _LeftObject, CGameObject* _RightObj
 			_LeftObject->Collider3D()->EndOverlap(_RightObject->Collider3D());
 			_RightObject->Collider3D()->EndOverlap(_LeftObject->Collider3D());
 			iter->second = false;
+		}
+	}
+}
+
+void CCollisionMgr::CollisionBtwLayerCursor(CLayer* _Layer, CGameObject* _Cursor)
+{
+    const vector<CGameObject*> objs = _Layer->GetObjects();
+	for (int i = 0; i < objs.size(); ++i)
+	{
+		if (objs[i]->Collider3D() && objs[i]->Collider3D()->GetTrigger())
+		{
+			CollisionBtwObject(objs[i], _Cursor);
 		}
 	}
 }

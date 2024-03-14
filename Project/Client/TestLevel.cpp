@@ -108,8 +108,6 @@ void CreateTestLevel()
 
 	SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), 0);
 
-	
-
 	// ============
 	// FBX Loading
 	// ============	
@@ -754,6 +752,8 @@ void CreateTestLevel()
 	pNewObj->AddComponent(new CTransform);
 	pNewObj->AddComponent(new CMeshRender);
 	pNewObj->AddComponent(new CBoxCollider);
+	CCollider3D* cubeCollider = (CCollider3D*)pNewObj->GetComponent(COMPONENT_TYPE::COLLIDER3D);
+	cubeCollider->SetTrigger(true);
 	pNewObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	pNewObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	//pNewObj->MeshRender()->GetMaterial(0)->SetTexParam()

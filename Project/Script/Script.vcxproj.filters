@@ -61,6 +61,9 @@
     <Filter Include="Manager\Tile">
       <UniqueIdentifier>{ff3a5944-8f87-4851-96ba-4ad0278b7e2b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\Cursor">
+      <UniqueIdentifier>{b772d50e-a21b-4858-8199-d9aede909f55}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CCameraMoveScript.h">
@@ -144,6 +147,9 @@
     <ClInclude Include="CTileMgr.h">
       <Filter>Manager\Tile</Filter>
     </ClInclude>
+    <ClInclude Include="CCursor.h">
+      <Filter>Script\Cursor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CCameraMoveScript.cpp">
@@ -223,6 +229,9 @@
     </ClCompile>
     <ClCompile Include="CTileMgr.cpp">
       <Filter>Manager\Tile</Filter>
+    </ClCompile>
+    <ClCompile Include="CCursor.cpp">
+      <Filter>Script\Cursor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

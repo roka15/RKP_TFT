@@ -24,7 +24,6 @@
 #define RADIAN2DEGREE(num) num * 180 / XM_PI
 
 
-
 enum class COMPONENT_TYPE
 {
 	// update

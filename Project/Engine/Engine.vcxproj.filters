@@ -223,6 +223,9 @@
     <ClInclude Include="CSphereCollider.h">
       <Filter>Source\06. Component\2. Collider\Collider3D</Filter>
     </ClInclude>
+    <ClInclude Include="CMouseMgr.h">
+      <Filter>Source\03. Manager\12.MouseMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -437,6 +440,9 @@
     </ClCompile>
     <ClCompile Include="CSphereCollider.cpp">
       <Filter>Source\06. Component\2. Collider\Collider3D</Filter>
+    </ClCompile>
+    <ClCompile Include="CMouseMgr.cpp">
+      <Filter>Source\03. Manager\12.MouseMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -661,6 +667,9 @@
     </Filter>
     <Filter Include="Source\06. Component\2. Collider\Base">
       <UniqueIdentifier>{a43276dd-89ed-458e-973f-d6580f554385}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\03. Manager\12.MouseMgr">
+      <UniqueIdentifier>{abb7666c-d32a-4fb4-a186-f921c512054d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

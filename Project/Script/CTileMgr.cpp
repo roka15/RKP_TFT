@@ -105,6 +105,7 @@ CGameObject* CTileMgr::CreateTile(TILE_OWNER_TYPE _type)
 			pNewObj->Transform()->SetRelativeRot(Vec3(-90 * XM_PI / 180, 0.0f, 0.0f));
 			pEmpty->AddChild(pNewObj);
 			m_vecTile.push_back(pNewObj);
+
 			++s_number;
 		}
 	}
@@ -116,6 +117,7 @@ vector<int> CTileMgr::Find(int _istart, int _iend)
 {
 	return vector<int>();
 }
+
 
 Vec2 CTileMgr::GetTilePos(int _itile)
 {

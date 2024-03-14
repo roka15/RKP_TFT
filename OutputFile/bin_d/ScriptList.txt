@@ -1,6 +1,7 @@
 CAttroxMachineScript
 CBaseCharacterScript
 CCameraMoveScript
+CCursor
 CGravityScript
 CMissileScript
 CMonsterScript

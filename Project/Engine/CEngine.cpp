@@ -4,6 +4,7 @@
 #include "CDevice.h"
 #include "CPathMgr.h"
 #include "CKeyMgr.h"
+#include "CMouseMgr.h"
 #include "CTimeMgr.h"
 #include "CResMgr.h"
 #include "CLevelMgr.h"
@@ -11,8 +12,12 @@
 #include "CRenderMgr.h"
 #include "CEventMgr.h"
 #include "CFontMgr.h"
+#include <Script\CScriptMgr.h>
 #include "CInstancingBuffer.h"
 
+#include "CGameObject.h"
+#include "components.h"
+//#include <Script\CCursor.h>
 CEngine::CEngine()
 	: m_hWnd(nullptr)
 {
@@ -20,7 +25,6 @@ CEngine::CEngine()
 
 CEngine::~CEngine()
 {
-
 }
 
 int CEngine::init(HWND _hWnd, UINT _iWidth, UINT _iHeight)
@@ -42,12 +46,19 @@ int CEngine::init(HWND _hWnd, UINT _iWidth, UINT _iHeight)
 		MessageBox(nullptr, L"Device 초기화 실패", L"에러", MB_OK);
 		return E_FAIL;
 	}
-
-
+	
 	// Manager 초기화
 	CPathMgr::GetInst()->init();
 
 	CKeyMgr::GetInst()->init();
+
+	CGameObject* Cursor = new CGameObject();
+	Cursor->AddComponent(new CTransform);
+	Cursor->AddComponent(new CBoxCollider);
+	Cursor->AddComponent(new CMeshRender);
+	Cursor->AddComponent((CComponent*)CScriptMgr::GetScript((UINT)SCRIPT_TYPE::CURSOR));
+	CMouseMgr::GetInst()->RegisterCursor(Cursor);
+	CMouseMgr::GetInst()->init();
 
 	CTimeMgr::GetInst()->init();
 
@@ -83,6 +94,7 @@ void CEngine::tick()
 	CResMgr::GetInst()->tick();
 	CTimeMgr::GetInst()->tick(); // DT(DeltaTime), FPS 구하기
 	CKeyMgr::GetInst()->tick();	
+	CMouseMgr::GetInst()->tick();
 
 	// FMOD Update
 	CSound::g_pFMOD->update();
@@ -101,4 +113,6 @@ void CEngine::render()
 
 	// FPS, DT 출력
 	CTimeMgr::GetInst()->render();
+
+	CMouseMgr::GetInst()->render();
 }

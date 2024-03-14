@@ -79,12 +79,8 @@ void CCamera::finaltick()
 	CalcProjMat();
 
 	m_Frustum.finaltick();
-
-	if (CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::TAP)
-	{
-		// 마우스방향 직선 계산
-		CalRay();
-	}
+	// 마우스방향 직선 계산
+	CalRay();
 }
 
 
@@ -109,25 +105,6 @@ void CCamera::CalRay()
 	// world space 에서의 방향
 	m_ray.vDir = XMVector3TransformNormal(m_ray.vDir, m_matViewInv);
 	m_ray.vDir.Normalize();
-
-	//xz 축에 평행한 평면.
-	Vec3 NormalVec = { 0.f,-1.f,0.f };
-	Vec3 PlaneVec = { 0.f, -200.f,0.f };
-
-	// t = vplen.dot(n) - vstart.dot(n)/vdir.dot(n) 
-
-	float t = PlaneVec.Dot(NormalVec) - m_ray.vStart.Dot(NormalVec) / m_ray.vDir.Dot(NormalVec);
-	Vec3 spawnPos;
-	spawnPos.x = m_ray.vStart.x + m_ray.vDir.x * t;
-	spawnPos.y = m_ray.vStart.y + m_ray.vDir.y * t;
-	spawnPos.z = m_ray.vStart.z + m_ray.vDir.z * t;
-
-	Matrix scale = XMMatrixScaling(100.f, 100.f, 100.f);
-	Matrix trans = XMMatrixTranslation(spawnPos.x, spawnPos.y, spawnPos.z);
-
-	Matrix result = scale * trans;
-
-	DrawDebugSphere(result, Vec4{ 0.f,0.f,1.0f,1.0f }, 10.f);
 }
 
 void CCamera::CalcViewMat()

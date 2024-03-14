@@ -41,6 +41,7 @@ public:
 private:
 	void Collision2D(CGameObject* _LeftObject, CGameObject* _RightObject);
 	void Collision3D(CGameObject* _LeftObject, CGameObject* _RightObject);
+	void CollisionBtwLayerCursor(CLayer* _Layer, CGameObject* _Cursor);
 	void CollisionBtwLayer(CLayer* _LeftLayer, CLayer* _RightLayer);
 	void CollisionBtwObject(CGameObject* _LeftObject, CGameObject* _RightObject);
 	bool CollisionBtwCollider(CCollider2D* _pLeft, CCollider2D* _pRight);
