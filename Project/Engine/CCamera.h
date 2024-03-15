@@ -83,6 +83,7 @@ public:
 
 public:
     void SortObject();
+    
     void SortObject_Shadow();
     void render();
     void render_shadowmap();
@@ -93,7 +94,8 @@ public:
 
 protected:
     void CalRay();  // 마우스 방향으로 광선 연산
-
+    void SortObjectDetail(CGameObject* _obj);
+    void CursorSortObject(CGameObject* _obj);
 private:
     void clear();
     void clear_shadow();

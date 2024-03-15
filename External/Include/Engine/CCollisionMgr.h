@@ -35,16 +35,18 @@ public:
 		memset(m_matrix, 0, sizeof(UINT) * MAX_LAYER);
 	}
 
+	vector<CGameObject*> CursorCollisionTick();
 public:
 	void tick();
 
 private:
 	void Collision2D(CGameObject* _LeftObject, CGameObject* _RightObject);
-	void Collision3D(CGameObject* _LeftObject, CGameObject* _RightObject);
-	void CollisionBtwLayerCursor(CLayer* _Layer, CGameObject* _Cursor);
+	bool Collision3D(CGameObject* _LeftObject, CGameObject* _RightObject);
 	void CollisionBtwLayer(CLayer* _LeftLayer, CLayer* _RightLayer);
 	void CollisionBtwObject(CGameObject* _LeftObject, CGameObject* _RightObject);
 	bool CollisionBtwCollider(CCollider2D* _pLeft, CCollider2D* _pRight);
 	bool CollisionBtwCollider(CCollider3D* _pLeft, CCollider3D* _pRight);
+
+	vector<CGameObject*> CollisionBtwLayerCursor(CLayer* _Layer, CGameObject* _Cursor);
 };
 

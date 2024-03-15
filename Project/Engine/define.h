@@ -23,7 +23,8 @@
 #define DEGREE2RADIAN(num) num * XM_PI / 180
 #define RADIAN2DEGREE(num) num * 180 / XM_PI
 
-
+#define DEBUG_VisualStudioMSG(str) OutputDebugStringA((LPCSTR)(__FILE__"("ValueToStr(__LINE__)"): -------"#str"-------\r\n"))
+#define DEBUG_VisualStudioMSG2(str) OutputDebugStringA((LPCSTR)(str))
 enum class COMPONENT_TYPE
 {
 	// update

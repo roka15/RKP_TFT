@@ -21,6 +21,7 @@
 #include "CMaterial.h"
 
 #include "CKeyMgr.h"
+#include "CMouseMgr.h"
 #include "CInstancingBuffer.h"
 
 
@@ -215,96 +216,127 @@ void CCamera::SortObject()
 
 			for (size_t j = 0; j < vecObject.size(); ++j)
 			{
-				CRenderComponent* pRenderCom = vecObject[j]->GetRenderComponent();
-
-				// 렌더링 기능이 없는 오브젝트는 제외
-				if (nullptr == pRenderCom)
-					continue;
-
-				// FrustumCheck
-				/*if (pRenderCom->IsUseFrustumCheck())
-				{
-					Vec3 vWorldPos = vecObject[j]->Transform()->GetWorldPos();
-					if (false == m_Frustum.FrustumCheckBound(vWorldPos, pRenderCom->GetBounding()))
-						continue;
-				}*/
-
-				// 메테리얼 개수만큼 반복
-				UINT iMtrlCount = pRenderCom->GetMtrlCount();
-
-				for (UINT iMtrl = 0; iMtrl < iMtrlCount; ++iMtrl)
-				{
-					// 재질이 없거나, 재질의 쉐이더가 설정이 안된 경우
-					if (nullptr == pRenderCom->GetMaterial(iMtrl)
-						|| nullptr == pRenderCom->GetMaterial(iMtrl)->GetShader())
-					{
-						continue;
-					}
-
-					// 쉐이더 도메인에 따른 분류
-					SHADER_DOMAIN eDomain = pRenderCom->GetMaterial(iMtrl)->GetShader()->GetDomain();
-					Ptr<CGraphicsShader> pShader = pRenderCom->GetMaterial(iMtrl)->GetShader();
-
-					switch (eDomain)
-					{
-					case SHADER_DOMAIN::DOMAIN_DEFERRED:
-					case SHADER_DOMAIN::DOMAIN_DEFERRED_DECAL:
-					case SHADER_DOMAIN::DOMAIN_OPAQUE:
-					case SHADER_DOMAIN::DOMAIN_MASK:
-					{
-						// Shader 의 POV 에 따라서 인스턴싱 그룹을 분류한다.
-						map<ULONG64, vector<tInstObj>>* pMap = NULL;
-						Ptr<CMaterial> pMtrl = pRenderCom->GetMaterial(iMtrl);
-
-						if (pShader->GetDomain() == SHADER_DOMAIN::DOMAIN_DEFERRED)
-						{
-							pMap = &m_mapInstGroup_D;
-						}
-						else if (pShader->GetDomain() == SHADER_DOMAIN::DOMAIN_OPAQUE
-							|| pShader->GetDomain() == SHADER_DOMAIN::DOMAIN_MASK)
-						{
-							pMap = &m_mapInstGroup_F;
-						}
-						else
-						{
-							assert(nullptr);
-							continue;
-						}
-
-						uInstID uID = {};
-						uID.llID = pRenderCom->GetInstID(iMtrl);
-
-						// ID 가 0 다 ==> Mesh 나 Material 이 셋팅되지 않았다.
-						if (0 == uID.llID)
-							continue;
-
-						map<ULONG64, vector<tInstObj>>::iterator iter = pMap->find(uID.llID);
-						if (iter == pMap->end())
-						{
-							pMap->insert(make_pair(uID.llID, vector<tInstObj>{tInstObj{ vecObject[j], iMtrl }}));
-						}
-						else
-						{
-							iter->second.push_back(tInstObj{ vecObject[j], iMtrl });
-						}
-					}
-					break;
-					case SHADER_DOMAIN::DOMAIN_DECAL:
-						m_vecDecal.push_back(vecObject[j]);
-						break;
-					case SHADER_DOMAIN::DOMAIN_TRANSPARENT:
-						m_vecTransparent.push_back(vecObject[j]);
-						break;
-					case SHADER_DOMAIN::DOMAIN_POSTPROCESS:
-						m_vecPost.push_back(vecObject[j]);
-						break;
-					case SHADER_DOMAIN::DOMAIN_UI:
-						m_vecUI.push_back(vecObject[j]);
-						break;
-					}
-				}
+				SortObjectDetail(vecObject[j]);
 			}
 		}
+	}
+
+	if (m_iCamIdx <= 0)
+	{
+		//Cursor Object
+		CGameObject* cursor = CMouseMgr::GetInst()->GetCursor();
+		if (cursor == nullptr)
+			return;
+
+		CursorSortObject(cursor);
+		
+	}
+
+}
+
+void CCamera::SortObjectDetail(CGameObject* _obj)
+{
+	CRenderComponent* pRenderCom = _obj->GetRenderComponent();
+
+	// 렌더링 기능이 없는 오브젝트는 제외
+	if (nullptr == pRenderCom)
+		return;
+
+	// FrustumCheck
+	/*if (pRenderCom->IsUseFrustumCheck())
+	{
+		Vec3 vWorldPos = vecObject[j]->Transform()->GetWorldPos();
+		if (false == m_Frustum.FrustumCheckBound(vWorldPos, pRenderCom->GetBounding()))
+			continue;
+	}*/
+
+	// 메테리얼 개수만큼 반복
+	UINT iMtrlCount = pRenderCom->GetMtrlCount();
+
+	for (UINT iMtrl = 0; iMtrl < iMtrlCount; ++iMtrl)
+	{
+		// 재질이 없거나, 재질의 쉐이더가 설정이 안된 경우
+		if (nullptr == pRenderCom->GetMaterial(iMtrl)
+			|| nullptr == pRenderCom->GetMaterial(iMtrl)->GetShader())
+		{
+			continue;
+		}
+
+		// 쉐이더 도메인에 따른 분류
+		SHADER_DOMAIN eDomain = pRenderCom->GetMaterial(iMtrl)->GetShader()->GetDomain();
+		Ptr<CGraphicsShader> pShader = pRenderCom->GetMaterial(iMtrl)->GetShader();
+
+		switch (eDomain)
+		{
+		case SHADER_DOMAIN::DOMAIN_DEFERRED:
+		case SHADER_DOMAIN::DOMAIN_DEFERRED_DECAL:
+		case SHADER_DOMAIN::DOMAIN_OPAQUE:
+		case SHADER_DOMAIN::DOMAIN_MASK:
+		{
+			// Shader 의 POV 에 따라서 인스턴싱 그룹을 분류한다.
+			map<ULONG64, vector<tInstObj>>* pMap = NULL;
+			Ptr<CMaterial> pMtrl = pRenderCom->GetMaterial(iMtrl);
+
+			if (pShader->GetDomain() == SHADER_DOMAIN::DOMAIN_DEFERRED)
+			{
+				pMap = &m_mapInstGroup_D;
+			}
+			else if (pShader->GetDomain() == SHADER_DOMAIN::DOMAIN_OPAQUE
+				|| pShader->GetDomain() == SHADER_DOMAIN::DOMAIN_MASK)
+			{
+				pMap = &m_mapInstGroup_F;
+			}
+			else
+			{
+				assert(nullptr);
+				continue;
+			}
+
+			uInstID uID = {};
+			uID.llID = pRenderCom->GetInstID(iMtrl);
+
+			// ID 가 0 다 ==> Mesh 나 Material 이 셋팅되지 않았다.
+			if (0 == uID.llID)
+				continue;
+
+			map<ULONG64, vector<tInstObj>>::iterator iter = pMap->find(uID.llID);
+			if (iter == pMap->end())
+			{
+				pMap->insert(make_pair(uID.llID, vector<tInstObj>{tInstObj{ _obj, iMtrl }}));
+			}
+			else
+			{
+				iter->second.push_back(tInstObj{ _obj, iMtrl });
+			}
+		}
+		break;
+		case SHADER_DOMAIN::DOMAIN_DECAL:
+			m_vecDecal.push_back(_obj);
+			break;
+		case SHADER_DOMAIN::DOMAIN_TRANSPARENT:
+			m_vecTransparent.push_back(_obj);
+			break;
+		case SHADER_DOMAIN::DOMAIN_POSTPROCESS:
+			m_vecPost.push_back(_obj);
+			break;
+		case SHADER_DOMAIN::DOMAIN_UI:
+			m_vecUI.push_back(_obj);
+			break;
+		}
+	}
+
+}
+
+void CCamera::CursorSortObject(CGameObject* _obj)
+{
+	const vector<CGameObject*> childs = _obj->GetChild();
+	for (int i = 0; i < childs.size(); ++i)
+	{
+		CRenderComponent* pRender = childs[i]->GetRenderComponent();
+		if (pRender != nullptr)
+			SortObjectDetail(childs[i]);
+
+		CursorSortObject(childs[i]);
 	}
 }
 

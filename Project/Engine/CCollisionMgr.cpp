@@ -21,6 +21,22 @@ CCollisionMgr::~CCollisionMgr()
 
 }
 
+vector<CGameObject*> CCollisionMgr::CursorCollisionTick()
+{
+	CLevel* pLevel = CLevelMgr::GetInst()->GetCurLevel();
+	vector<CGameObject*> resultObjs;
+	for (UINT iRow = 0; iRow < MAX_LAYER; ++iRow)
+	{
+		// iRow 레이어와 iCol 레이어는 서로 충돌검사를 진행한다.
+		vector<CGameObject*> layerObjs = CollisionBtwLayerCursor(pLevel->GetLayer(iRow), CMouseMgr::GetInst()->GetCursor());
+		for (int i = 0; i < layerObjs.size(); ++i)
+		{
+			resultObjs.push_back(layerObjs[i]);
+		}
+	}
+	return resultObjs;
+}
+
 void CCollisionMgr::tick()
 {
 	CLevel* pLevel = CLevelMgr::GetInst()->GetCurLevel();
@@ -35,11 +51,6 @@ void CCollisionMgr::tick()
 			// iRow 레이어와 iCol 레이어는 서로 충돌검사를 진행한다.
 			CollisionBtwLayer(pLevel->GetLayer(iRow), pLevel->GetLayer(iCol));
 		}
-	}
-	for (UINT iRow = 0; iRow < MAX_LAYER; ++iRow)
-	{
-		// iRow 레이어와 iCol 레이어는 서로 충돌검사를 진행한다.
-		CollisionBtwLayerCursor(pLevel->GetLayer(iRow), CMouseMgr::GetInst()->GetCursor());
 	}
 }
 
@@ -104,7 +115,7 @@ void CCollisionMgr::Collision2D(CGameObject* _LeftObject, CGameObject* _RightObj
 	}
 }
 
-void CCollisionMgr::Collision3D(CGameObject* _LeftObject, CGameObject* _RightObject)
+bool CCollisionMgr::Collision3D(CGameObject* _LeftObject, CGameObject* _RightObject)
 {
 	// 충돌체 ID 생성
 	CollisionID id = {};
@@ -151,6 +162,7 @@ void CCollisionMgr::Collision3D(CGameObject* _LeftObject, CGameObject* _RightObj
 				iter->second = true;
 			}
 		}
+		return true;
 	}
 	else
 	{
@@ -161,19 +173,27 @@ void CCollisionMgr::Collision3D(CGameObject* _LeftObject, CGameObject* _RightObj
 			_RightObject->Collider3D()->EndOverlap(_LeftObject->Collider3D());
 			iter->second = false;
 		}
+		return false;
 	}
 }
 
-void CCollisionMgr::CollisionBtwLayerCursor(CLayer* _Layer, CGameObject* _Cursor)
+vector<CGameObject*> CCollisionMgr::CollisionBtwLayerCursor(CLayer* _Layer, CGameObject* _Cursor)
 {
+	vector<CGameObject*> colObjs;
     const vector<CGameObject*> objs = _Layer->GetObjects();
 	for (int i = 0; i < objs.size(); ++i)
 	{
 		if (objs[i]->Collider3D() && objs[i]->Collider3D()->GetTrigger())
 		{
-			CollisionBtwObject(objs[i], _Cursor);
+			bool flag = Collision3D(objs[i], _Cursor);
+			
+			if (flag)
+			{
+				colObjs.push_back(objs[i]);
+			}
 		}
 	}
+	return colObjs;
 }
 
 void CCollisionMgr::CollisionBtwLayer(CLayer* _Left, CLayer* _Right)

@@ -13,6 +13,7 @@ enum class TILE_OWNER_TYPE
     ENEMY,
     END
 };
+class CTileScript;
 
 class CTileMgr :
     public CSingleton<CTileMgr>
@@ -38,5 +39,6 @@ public:
     vector<int> Find(int _istart, int _iend);
     Vec2 GetTilePos(int _itile);
     void SetStartPos(const Vec3& _start) { m_StartPos = _start; }
+    CTileScript* GetTile(int _iid);
 };
 

@@ -1,10 +1,11 @@
 #pragma once
 #include <Engine\CScript.h>
+#include <Engine\IMouseEvent.h>
 enum class TILE_TYPE;
 enum class TILE_OWNER_TYPE;
 
 class CTileScript :
-    public CScript
+    public CScript , public IMouseDownEvent, public IMouseUpEvent
 {
 private:
     TILE_TYPE            m_Type;
@@ -17,9 +18,13 @@ public:
     virtual void OnOverlap(CCollider* _Other)override;
     virtual void EndOverlap(CCollider* _Other) override;
 
+    virtual void DownEvent(PointerEventData)override;
+    virtual void UpEvent(PointerEventData) override;
+
     void SetTileInfo(TILE_TYPE _type, TILE_OWNER_TYPE _ownerType, int _num) { m_Type = _type; m_OwnerType = _ownerType;  m_Number = _num; }
     TILE_TYPE GetType() { return m_Type; }
     int GetNumber() { return m_Number; }
+    void AddItem(CGameObject* _obj);
 public:
     CLONE(CTileScript)
     CTileScript();

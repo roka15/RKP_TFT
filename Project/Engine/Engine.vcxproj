@@ -244,6 +244,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="framework.h" />
     <ClInclude Include="func.h" />
     <ClInclude Include="global.h" />
+    <ClInclude Include="IMouseEvent.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ptr.h" />
     <ClInclude Include="SimpleMath.h" />

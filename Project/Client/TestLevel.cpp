@@ -21,6 +21,7 @@
 #include <Script\CBaseCharacterScript.h>
 #include <Script\CCharacterTrigger.h>
 #include <Script\CTileMgr.h>
+#include <Script\CTileScript.h>
 void CreateTestLevel()
 {
 	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
@@ -744,35 +745,39 @@ void CreateTestLevel()
 	pObj = pMeshData->Instantiate();
 	pObj->SetName(L"Attrox");
 	pObj->Transform()->SetRelativeScale(Vec3{ 1.5f,1.5f,1.5f });
-	SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), 0);
+	pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(90), 0.f, 0.f));
+	pObj->AddComponent(new CBoxCollider);
 	pAttroxObj = pObj;
+	{
+		CTileScript* tile = CTileMgr::GetInst()->GetTile(0);
+		tile->AddItem(pAttroxObj);
+	}
+	//CGameObject* pNewObj = new CGameObject;
+	//pNewObj->SetName(L"Cube1");
+	//pNewObj->AddComponent(new CTransform);
+	//pNewObj->AddComponent(new CMeshRender);
+	//pNewObj->AddComponent(new CBoxCollider);
+	//CCollider3D* cubeCollider = (CCollider3D*)pNewObj->GetComponent(COMPONENT_TYPE::COLLIDER3D);
+	//cubeCollider->SetTrigger(true);
+	//pNewObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//pNewObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	////pNewObj->MeshRender()->GetMaterial(0)->SetTexParam()
 
-	CGameObject* pNewObj = new CGameObject;
-	pNewObj->SetName(L"Cube1");
-	pNewObj->AddComponent(new CTransform);
-	pNewObj->AddComponent(new CMeshRender);
-	pNewObj->AddComponent(new CBoxCollider);
-	CCollider3D* cubeCollider = (CCollider3D*)pNewObj->GetComponent(COMPONENT_TYPE::COLLIDER3D);
-	cubeCollider->SetTrigger(true);
-	pNewObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	pNewObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
-	//pNewObj->MeshRender()->GetMaterial(0)->SetTexParam()
-
-	pNewObj->Transform()->SetRelativeScale(Vec3(500.f, 500.f, 500.f));
-	SpawnGameObject(pNewObj, Vec3(0.f, 0.f, 0.f), 2);
+	//pNewObj->Transform()->SetRelativeScale(Vec3(500.f, 500.f, 500.f));
+	//SpawnGameObject(pNewObj, Vec3(0.f, 0.f, 0.f), 2);
 
 
-    pNewObj = new CGameObject;
-	pNewObj->SetName(L"Cube2");
-	pNewObj->AddComponent(new CTransform);
-	pNewObj->AddComponent(new CMeshRender);
-	pNewObj->AddComponent(new CBoxCollider);
-	pNewObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	pNewObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
-	//pNewObj->MeshRender()->GetMaterial(0)->SetTexParam()
+ //   pNewObj = new CGameObject;
+	//pNewObj->SetName(L"Cube2");
+	//pNewObj->AddComponent(new CTransform);
+	//pNewObj->AddComponent(new CMeshRender);
+	//pNewObj->AddComponent(new CBoxCollider);
+	//pNewObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//pNewObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	////pNewObj->MeshRender()->GetMaterial(0)->SetTexParam()
 
-	pNewObj->Transform()->SetRelativeScale(Vec3(500.f, 500.f, 500.f));
-	SpawnGameObject(pNewObj, Vec3(0.f, 0.f, 0.f), 3);
+	//pNewObj->Transform()->SetRelativeScale(Vec3(500.f, 500.f, 500.f));
+	//SpawnGameObject(pNewObj, Vec3(0.f, 0.f, 0.f), 3);
 
 	//{
 	//	// 인스턴싱 테스트

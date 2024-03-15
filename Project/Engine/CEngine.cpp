@@ -102,7 +102,7 @@ void CEngine::tick()
 	// Level Update
 	// Level 안에 존재하는 모든 GameObject 들이 Tick 을 호출받음
 	CLevelMgr::GetInst()->tick();
-
+	
 	// Level 내에 GameObject 들의 변경점에 의해서 발생한 충돌을 체크한다.
 	CCollisionMgr::GetInst()->tick();
 }

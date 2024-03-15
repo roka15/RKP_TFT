@@ -226,6 +226,9 @@
     <ClInclude Include="CMouseMgr.h">
       <Filter>Source\03. Manager\12.MouseMgr</Filter>
     </ClInclude>
+    <ClInclude Include="IMouseEvent.h">
+      <Filter>Source\00. Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">

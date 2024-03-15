@@ -123,3 +123,8 @@ Vec2 CTileMgr::GetTilePos(int _itile)
 {
 	return Vec2();
 }
+
+CTileScript* CTileMgr::GetTile(int _iid)
+{
+	return m_vecTile[_iid]->GetScript<CTileScript>();
+}
