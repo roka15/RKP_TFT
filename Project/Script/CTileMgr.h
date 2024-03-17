@@ -40,5 +40,6 @@ public:
     Vec2 GetTilePos(int _itile);
     void SetStartPos(const Vec3& _start) { m_StartPos = _start; }
     CTileScript* GetTile(int _iid);
+    void EnableSelectBattleTile(bool _flag);
 };
 

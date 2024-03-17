@@ -22,7 +22,8 @@ void CMouseMgr::tick()
 	m_fCurTime += DT;
 	vector<CGameObject*> objs;
 	PointerEventData curEventInfo = {};
-	
+
+
 	if (CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::TAP ||
 		CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::PRESSED)
 	{

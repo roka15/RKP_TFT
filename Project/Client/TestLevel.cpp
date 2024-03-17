@@ -22,8 +22,22 @@
 #include <Script\CCharacterTrigger.h>
 #include <Script\CTileMgr.h>
 #include <Script\CTileScript.h>
+#include <Script\CPlayerScript.h>
+
+#include "CGameMgr.h"
+#include "CGame.h"
 void CreateTestLevel()
 {
+	
+	CGameObject* pPlayer = new CGameObject();
+	pPlayer->SetName(L"Player01");
+	pPlayer->AddComponent(new CTransform());
+	//pPlayer->AddComponent(new CMeshRender());
+	pPlayer->AddComponent(new CPlayerScript());
+
+	SpawnGameObject(pPlayer, Vec3{ 0.f,0.f,0.f }, 0);
+	CGameMgr::GetInst()->EnterGame(0, pPlayer);
+
 	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
 	pCurLevel->ChangeState(LEVEL_STATE::STOP);
 
@@ -745,7 +759,7 @@ void CreateTestLevel()
 	pObj = pMeshData->Instantiate();
 	pObj->SetName(L"Attrox");
 	pObj->Transform()->SetRelativeScale(Vec3{ 1.5f,1.5f,1.5f });
-	pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(90), 0.f, 0.f));
+	pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(90), 0.f, DEGREE2RADIAN(180.f)));
 	pObj->AddComponent(new CBoxCollider);
 	pAttroxObj = pObj;
 	{

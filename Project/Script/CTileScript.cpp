@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "CTileScript.h"
+#include "CTileMgr.h"
 #include <Engine\CTimeMgr.h>
 #include <Engine\CMouseMgr.h>
+#include "CBaseCharacterScript.h"
 #include "CCursor.h"
 
 
@@ -56,4 +58,30 @@ void CTileScript::UpEvent(PointerEventData _data)
 void CTileScript::AddItem(CGameObject* _obj)
 {
 	GetOwner()->AddChild(_obj);
+}
+
+void CTileScript::ChangeItemState(bool _flag)
+{
+	if (m_Type == TILE_TYPE::BATTLE)
+	{
+		CGameObject* owner = GetOwner();
+		owner->Collider3D()->SetActive(_flag);
+		const vector<CGameObject*>& childs = owner->GetChild();
+
+		for (int i = 0; i < childs.size(); ++i)
+		{
+			CBaseCharacterScript* character = childs[i]->GetScript<CBaseCharacterScript>();
+			if (character == nullptr)
+				return;
+			if (_flag)
+			{
+				character->SetWait(true);
+			}
+			else
+			{
+				character->SetWait(false);
+			}
+			
+		}
+	}
 }

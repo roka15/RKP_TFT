@@ -25,6 +25,7 @@ public:
     TILE_TYPE GetType() { return m_Type; }
     int GetNumber() { return m_Number; }
     void AddItem(CGameObject* _obj);
+    void ChangeItemState(bool _flag);
 public:
     CLONE(CTileScript)
     CTileScript();

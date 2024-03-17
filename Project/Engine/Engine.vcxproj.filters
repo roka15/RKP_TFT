@@ -229,6 +229,9 @@
     <ClInclude Include="IMouseEvent.h">
       <Filter>Source\00. Header</Filter>
     </ClInclude>
+    <ClInclude Include="CClientMgr.h">
+      <Filter>Source\03. Manager\13.ClientMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -446,6 +449,9 @@
     </ClCompile>
     <ClCompile Include="CMouseMgr.cpp">
       <Filter>Source\03. Manager\12.MouseMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="CClientMgr.cpp">
+      <Filter>Source\03. Manager\13.ClientMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -673,6 +679,9 @@
     </Filter>
     <Filter Include="Source\03. Manager\12.MouseMgr">
       <UniqueIdentifier>{abb7666c-d32a-4fb4-a186-f921c512054d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\03. Manager\13.ClientMgr">
+      <UniqueIdentifier>{e47e1664-2ab1-4ad9-826d-d8f5309548b5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

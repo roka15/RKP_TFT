@@ -64,6 +64,9 @@
     <Filter Include="Script\Cursor">
       <UniqueIdentifier>{b772d50e-a21b-4858-8199-d9aede909f55}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\Player">
+      <UniqueIdentifier>{4d229760-2d45-482f-ba64-510cb4c4653b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CCameraMoveScript.h">
@@ -73,9 +76,6 @@
       <Filter>Script</Filter>
     </ClInclude>
     <ClInclude Include="CMonsterScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="CPlayerScript.h">
       <Filter>Script</Filter>
     </ClInclude>
     <ClInclude Include="framework.h">
@@ -150,6 +150,9 @@
     <ClInclude Include="CCursor.h">
       <Filter>Script\Cursor</Filter>
     </ClInclude>
+    <ClInclude Include="CPlayerScript.h">
+      <Filter>Script\Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CCameraMoveScript.cpp">
@@ -159,9 +162,6 @@
       <Filter>Script</Filter>
     </ClCompile>
     <ClCompile Include="CMonsterScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="CPlayerScript.cpp">
       <Filter>Script</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
@@ -232,6 +232,9 @@
     </ClCompile>
     <ClCompile Include="CCursor.cpp">
       <Filter>Script\Cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayerScript.cpp">
+      <Filter>Script\Player</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

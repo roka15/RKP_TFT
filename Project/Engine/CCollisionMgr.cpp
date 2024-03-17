@@ -117,6 +117,9 @@ void CCollisionMgr::Collision2D(CGameObject* _LeftObject, CGameObject* _RightObj
 
 bool CCollisionMgr::Collision3D(CGameObject* _LeftObject, CGameObject* _RightObject)
 {
+	if (_LeftObject->Collider3D()->GetActive() == false ||
+		_RightObject->Collider3D()->GetActive() == false)
+		return false;
 	// 中宜端 ID 持失
 	CollisionID id = {};
 	id.LeftID = _LeftObject->Collider3D()->GetID();

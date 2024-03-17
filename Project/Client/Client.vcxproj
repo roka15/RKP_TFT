@@ -157,6 +157,8 @@
     <ClInclude Include="Animator3DUI.h" />
     <ClInclude Include="CameraUI.h" />
     <ClInclude Include="CEditorObjMgr.h" />
+    <ClInclude Include="CGame.h" />
+    <ClInclude Include="CGameMgr.h" />
     <ClInclude Include="CGameObjectEx.h" />
     <ClInclude Include="CLevelSaveLoad.h" />
     <ClInclude Include="Client.h" />
@@ -214,6 +216,8 @@
     <ClCompile Include="Animator3DUI.cpp" />
     <ClCompile Include="CameraUI.cpp" />
     <ClCompile Include="CEditorObjMgr.cpp" />
+    <ClCompile Include="CGame.cpp" />
+    <ClCompile Include="CGameMgr.cpp" />
     <ClCompile Include="CGameObjectEx.cpp" />
     <ClCompile Include="CLevelSaveLoad.cpp" />
     <ClCompile Include="Collider2DUI.cpp" />

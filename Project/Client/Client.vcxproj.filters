@@ -125,6 +125,9 @@
     <Filter Include="UI\Module\AniControllerEditUI\AniEditParamUI">
       <UniqueIdentifier>{acaf3c13-65d5-41e1-83d3-59ae462a8110}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Manager\Game">
+      <UniqueIdentifier>{1747e67d-1aed-4ec7-ba63-26a73a1a1421}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -290,6 +293,12 @@
     <ClInclude Include="AniControllerEditParamUI.h">
       <Filter>UI\Module\AniControllerEditUI\AniEditParamUI</Filter>
     </ClInclude>
+    <ClInclude Include="CGameMgr.h">
+      <Filter>Manager\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="CGame.h">
+      <Filter>Manager\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -447,6 +456,12 @@
     </ClCompile>
     <ClCompile Include="AniControllerEditParamUI.cpp">
       <Filter>UI\Module\AniControllerEditUI\AniEditParamUI</Filter>
+    </ClCompile>
+    <ClCompile Include="CGameMgr.cpp">
+      <Filter>Manager\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="CGame.cpp">
+      <Filter>Manager\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

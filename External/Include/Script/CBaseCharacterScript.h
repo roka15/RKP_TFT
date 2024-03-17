@@ -22,6 +22,7 @@ public:
     bool IsAttack() { return m_ChState.bAttack; }
     bool IsDance() { return m_ChState.bDance; }
     bool IsEnd() { return m_ChState.bEnd; }
+    void SetWait(bool _flag) { m_ChState.bWaiting = _flag; }
     virtual bool IsFindEnemy() { return m_pTarget != nullptr; }
     virtual bool IsWithinAttackRange();
     void SetWaitingSeat(bool _flag) { m_ChState.bWaiting = _flag; }

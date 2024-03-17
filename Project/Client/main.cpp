@@ -10,6 +10,9 @@
 // ImGui
 #include "ImGuiMgr.h"
 
+// Client Manager
+#include <Engine\CClientMgr.h>
+#include "CGameMgr.h"
 #include "TestLevel.h"
 
 // 전역 변수:
@@ -37,7 +40,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     {
         return FALSE;
     }
-
+    //engine이 아닌 client 단계의 manager를 engine에서 관리할 수 있도록 등록시킨다.
+    CClientMgr::GetInst()->RegisterManager(CGameMgr::GetInst());
+    CGameMgr::GetInst()->CreateGame();
     // CEngine 초기화
     if (FAILED(CEngine::GetInst()->init(g_hWnd, 1280, 768)))
     {

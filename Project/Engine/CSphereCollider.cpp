@@ -5,6 +5,9 @@ void CSphereCollider::finaltick()
 {
 	assert(0 <= m_iCollisionCount);
 
+	if (m_bActive == false)
+		return;
+
 	float fScale = m_fRadius * 2;
 	m_matCollider3D = XMMatrixScaling(fScale, fScale, fScale);
 	m_matCollider3D *= XMMatrixTranslation(m_v3OffsetPos.x, m_v3OffsetPos.y, m_v3OffsetPos.z);

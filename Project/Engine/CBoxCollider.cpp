@@ -6,6 +6,8 @@ void CBoxCollider::finaltick()
 {
 	assert(0 <= m_iCollisionCount);
 
+	if (m_bActive == false)
+		return;
 	m_matCollider3D = XMMatrixScaling(m_v3OffsetScale.x, m_v3OffsetScale.y, m_v3OffsetScale.z);
 	m_matCollider3D *= XMMatrixTranslation(m_v3OffsetPos.x, m_v3OffsetPos.y, m_v3OffsetPos.z);
 

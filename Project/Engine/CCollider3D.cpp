@@ -21,7 +21,9 @@ void CCollider3D::LoadFromLevelFile(FILE* _File)
 	fread(&m_eShape, sizeof(UINT), 1, _File);
 }
 
-CCollider3D::CCollider3D():CCollider(COMPONENT_TYPE::COLLIDER3D)
+CCollider3D::CCollider3D()
+	:CCollider(COMPONENT_TYPE::COLLIDER3D),
+	m_bActive(true)
 {
 }
 

@@ -12,6 +12,7 @@
 #include "CRenderMgr.h"
 #include "CEventMgr.h"
 #include "CFontMgr.h"
+#include "CClientMgr.h"
 #include <Script\CScriptMgr.h>
 #include "CInstancingBuffer.h"
 
@@ -72,7 +73,7 @@ int CEngine::init(HWND _hWnd, UINT _iWidth, UINT _iHeight)
 	
 	CInstancingBuffer::GetInst()->init();
 
-
+	CClientMgr::GetInst()->init();
 	return S_OK;
 }
 
@@ -98,6 +99,9 @@ void CEngine::tick()
 
 	// FMOD Update
 	CSound::g_pFMOD->update();
+
+	// client manager들 update
+	CClientMgr::GetInst()->tick();
 
 	// Level Update
 	// Level 안에 존재하는 모든 GameObject 들이 Tick 을 호출받음

@@ -14,7 +14,6 @@ CTileMgr::~CTileMgr()
 {
 
 }
-
 void CTileMgr::BattleSetInfo(const Vec2& _offset, const Vec2& _size, const Vec2& _count, const Vec3& _start)
 {
 	m_Offset = _offset;
@@ -95,11 +94,11 @@ CGameObject* CTileMgr::CreateTile(TILE_OWNER_TYPE _type)
 				eType = TILE_TYPE::BATTLE;
 				meshRender->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"mesh\\indicator hexagon.mesh"));
 			}
-			
-			tile->SetTileInfo(eType,_type, s_number);
+
+			tile->SetTileInfo(eType, _type, s_number);
 
 			meshRender->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"InActiveTileMtrl"), 0);
-			
+
 			pNewObj->Transform()->SetRelativeScale(Vec3(m_Size.x, 1.0f, m_Size.y));
 			pNewObj->Transform()->SetRelativePos(Vec3(v2Pos.x, v2Pos.y, v2Pos.z));
 			pNewObj->Transform()->SetRelativeRot(Vec3(-90 * XM_PI / 180, 0.0f, 0.0f));
@@ -127,4 +126,17 @@ Vec2 CTileMgr::GetTilePos(int _itile)
 CTileScript* CTileMgr::GetTile(int _iid)
 {
 	return m_vecTile[_iid]->GetScript<CTileScript>();
+}
+
+void CTileMgr::EnableSelectBattleTile(bool _flag)
+{
+	for (int i = 0; i < m_vecTile.size(); ++i)
+	{
+		CTileScript* tile = m_vecTile[i]->GetScript<CTileScript>();
+		if (tile == nullptr)
+			continue;
+		TILE_TYPE type = tile->GetType();
+		if (type == TILE_TYPE::BATTLE)
+			m_vecTile[i]->GetScript<CTileScript>()->ChangeItemState(_flag);
+	}
 }
