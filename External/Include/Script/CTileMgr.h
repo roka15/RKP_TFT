@@ -1,6 +1,6 @@
 #pragma once
 #include <Engine\CSingleton.h>
-
+#include <Engine\CClientMgr.h>
 enum class TILE_TYPE
 {
     WAIT,
@@ -16,7 +16,7 @@ enum class TILE_OWNER_TYPE
 class CTileScript;
 
 class CTileMgr :
-    public CSingleton<CTileMgr>
+    public CSingleton<CTileMgr>, public IClientManager
 {
     SINGLE(CTileMgr)
 private:
@@ -32,14 +32,21 @@ private:
 
     static int              s_number;
     vector<CGameObject*>    m_vecTile;
+    vector<CGameObject*>    m_vecBattleTile;
+public:
+    virtual void init()override;
+    virtual void tick()override;
+public:
+    //get set
+    Vec2 GetTilePos(int _itile);
+    CTileScript* GetTile(int _iid);
+    bool EmptyBattleTile(int _iid);
+    void EnableSelectBattleTile(bool _flag);
+    Vec2 GetBattleCount() { return m_Count; }
 public:
     void BattleSetInfo(const Vec2& _offset, const Vec2& _size, const Vec2& _count, const Vec3& _start);
     void WaitSetInfo(const Vec2& _offset, const Vec2& _size, const Vec2& _count, const Vec3& _start);
     CGameObject* CreateTile(TILE_OWNER_TYPE _type);
-    vector<int> Find(int _istart, int _iend);
-    Vec2 GetTilePos(int _itile);
-    void SetStartPos(const Vec3& _start) { m_StartPos = _start; }
-    CTileScript* GetTile(int _iid);
-    void EnableSelectBattleTile(bool _flag);
+   
 };
 

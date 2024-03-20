@@ -67,6 +67,9 @@
     <Filter Include="Script\Player">
       <UniqueIdentifier>{4d229760-2d45-482f-ba64-510cb4c4653b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Manager\A%2a">
+      <UniqueIdentifier>{71b5730c-c4dd-4b31-842c-9934d7daf935}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CCameraMoveScript.h">
@@ -153,6 +156,9 @@
     <ClInclude Include="CPlayerScript.h">
       <Filter>Script\Player</Filter>
     </ClInclude>
+    <ClInclude Include="CAStarMgr.h">
+      <Filter>Manager\A%2a</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CCameraMoveScript.cpp">
@@ -235,6 +241,9 @@
     </ClCompile>
     <ClCompile Include="CPlayerScript.cpp">
       <Filter>Script\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="CAStarMgr.cpp">
+      <Filter>Manager\A%2a</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

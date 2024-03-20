@@ -13,6 +13,8 @@
 // Client Manager
 #include <Engine\CClientMgr.h>
 #include "CGameMgr.h"
+#include <Script\CAStarMgr.h>
+#include <Script\CTileMgr.h>
 #include "TestLevel.h"
 
 // 전역 변수:
@@ -24,6 +26,7 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+void RegisterClientMgr();
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -41,8 +44,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
     //engine이 아닌 client 단계의 manager를 engine에서 관리할 수 있도록 등록시킨다.
-    CClientMgr::GetInst()->RegisterManager(CGameMgr::GetInst());
-    CGameMgr::GetInst()->CreateGame();
+    RegisterClientMgr();
+   
     // CEngine 초기화
     if (FAILED(CEngine::GetInst()->init(g_hWnd, 1280, 768)))
     {
@@ -223,4 +226,11 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     }
     return (INT_PTR)FALSE;
+}
+void RegisterClientMgr()
+{
+    CClientMgr::GetInst()->RegisterManager(CGameMgr::GetInst());
+    CGameMgr::GetInst()->CreateGame();
+    CClientMgr::GetInst()->RegisterManager(CTileMgr::GetInst());
+    CClientMgr::GetInst()->RegisterManager(CAStarMgr::GetInst());
 }

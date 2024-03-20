@@ -4,6 +4,7 @@
 #include <list>
 #include <map>
 #include <string>
+#include <queue>
 
 using std::vector;
 using std::list;

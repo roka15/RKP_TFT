@@ -16,7 +16,9 @@
 #include <Engine/CSetColorShader.h>
 #include <Engine\AnimatorController.h>
 #include <Engine\Transition.h>
+
 #include <Script\CScriptMgr.h>
+#include <Script\CAStarMgr.h>
 #include <Script\CAttroxMachineScript.h>
 #include <Script\CBaseCharacterScript.h>
 #include <Script\CCharacterTrigger.h>
@@ -29,6 +31,7 @@
 void CreateTestLevel()
 {
 	
+
 	CGameObject* pPlayer = new CGameObject();
 	pPlayer->SetName(L"Player01");
 	pPlayer->AddComponent(new CTransform());
@@ -733,8 +736,6 @@ void CreateTestLevel()
 		pObj->SetName(L"Structures1");
 		pObj->Transform()->SetRelativePos(Vec3(-500.f, -100.f, -450.f));
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), 0.f, 0.f));
-		CTileMgr::GetInst()->BattleSetInfo(Vec2{ 304,245 }, Vec2{ 1.15f,1.15f }, Vec2{ 7,4 }, Vec3{ 525,-70,-106 });
-		CTileMgr::GetInst()->WaitSetInfo(Vec2{ 252.0f,82.5f }, Vec2{ 1.5f,1.5f }, Vec2{ 9,1 }, Vec3{ -240.f,100.0f,0.0f });
 		CGameObject* TileSet = CTileMgr::GetInst()->CreateTile(TILE_OWNER_TYPE::PLAYER);
 		TileSet->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(90), 0.f, 0.f));
 		pObj->AddChild(TileSet);
@@ -1015,4 +1016,5 @@ void CreateTestLevel()
 
 	// 충돌 시킬 레이어 짝 지정
 	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");
+	vector<int> numbers = CAStarMgr::GetInst()->GetNextNodeAStar(0, 18, 7, 8);
 }

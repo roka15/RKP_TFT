@@ -172,6 +172,7 @@ call CodeGen.exe</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CAStarMgr.h" />
     <ClInclude Include="CBaseCharacterScript.h" />
     <ClInclude Include="CAttroxBattleAttack.h" />
     <ClInclude Include="CAttroxBattleIdle.h" />
@@ -202,6 +203,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CAStarMgr.cpp" />
     <ClCompile Include="CBaseCharacterScript.cpp" />
     <ClCompile Include="CAttroxBattleAttack.cpp" />
     <ClCompile Include="CAttroxBattleIdle.cpp" />
