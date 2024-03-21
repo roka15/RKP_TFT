@@ -21,7 +21,10 @@ void CTileMgr::init()
 }
 void CTileMgr::tick()
 {
-	int a = 0;
+	for (int i = 0; i < m_vecBattleTile.size(); ++i)
+	{
+		m_vecBattleTile[i]->GetScript<CTileScript>()->HighlightColor(false);
+	}
 }
 void CTileMgr::BattleSetInfo(const Vec2& _offset, const Vec2& _size, const Vec2& _count, const Vec3& _start)
 {
@@ -53,18 +56,18 @@ CGameObject* CTileMgr::CreateTile(TILE_OWNER_TYPE _type)
 
 	if (_type == TILE_OWNER_TYPE::ENEMY)
 	{
-		for (int z = zMax-1; z >= 0; --z)
+		for (int z = zMax - 1; z >= 0; --z)
 		{
 			v2Pos.z = (z * (m_Size.y + m_Offset.y));
 			int iXLoop = m_Count.x;
-			
+
 			if (z == 0)
 			{
 				iXLoop = m_WaitCount.x;
 				v2Pos.z -= WaitOffset;
 			}
 
-			for (int x = iXLoop-1; x >=0 ; --x)
+			for (int x = iXLoop - 1; x >= 0; --x)
 			{
 				if (z % 2 == 0 && z != 0)
 				{
@@ -196,7 +199,7 @@ CGameObject* CTileMgr::CreateTile(TILE_OWNER_TYPE _type)
 			}
 		}
 	}
-	
+
 	pEmpty->Transform()->SetRelativePos(m_StartPos);
 	return pEmpty;
 }
@@ -207,9 +210,20 @@ Vec2 CTileMgr::GetTilePos(int _itile)
 	return Vec2();
 }
 
+const TILE_OWNER_TYPE& CTileMgr::GetTileOwnerType(int _iTileNum)
+{
+	return GetTile(_iTileNum)->GetOwnerType();
+}
+
 CTileScript* CTileMgr::GetTile(int _iid)
 {
 	return m_vecTile[_iid]->GetScript<CTileScript>();
+}
+
+void CTileMgr::RegisterItem(int _iTileNum, CGameObject* _pObj)
+{
+	CTileScript* script = GetTile(_iTileNum);
+	script->AddItem(_pObj);
 }
 
 bool CTileMgr::EmptyBattleTile(int _iid)
@@ -228,4 +242,54 @@ void CTileMgr::EnableSelectBattleTile(bool _flag)
 		if (type == TILE_TYPE::BATTLE)
 			m_vecTile[i]->GetScript<CTileScript>()->ChangeItemState(_flag);
 	}
+}
+
+vector<int> CTileMgr::GetAnotherPlayer(TILE_OWNER_TYPE _eType)
+{
+	int size = m_vecBattleTile.size();
+	vector<int> vecEnemyNums = {};
+	int Start = 0;
+	int Loop = 0;
+	switch (_eType)
+	{
+	case TILE_OWNER_TYPE::PLAYER:
+		Start = 0;
+		Loop = (size / 2);
+		break;
+	case TILE_OWNER_TYPE::ENEMY:
+		Start = (size / 2);
+		Loop = size;
+		break;
+	}
+
+	for (int i = Start; i < Loop; ++i)
+	{
+		vector<CGameObject*> vecChild = m_vecBattleTile[i]->GetChild();
+		if (vecChild.size() == 0)
+			continue;
+		else
+		{
+			CTileScript* script = m_vecBattleTile[i]->GetScript<CTileScript>();
+			if (script == nullptr)
+				continue;
+
+			TILE_TYPE eType = script->GetType();
+			if (eType != TILE_TYPE::BATTLE)
+				continue;
+			int Number = script->GetNumber();
+			vecEnemyNums.push_back(Number);
+		}
+	}
+	return vecEnemyNums;
+}
+
+void CTileMgr::BattleRouteRender(vector<int> _vecRoute)
+{
+	int Offset = m_WaitCount.x;
+	for (int i = 0; i < _vecRoute.size(); ++i)
+	{
+		int Idx = _vecRoute[i] +Offset;
+		GetTile(Idx)->HighlightColor(true);
+	}
+	
 }

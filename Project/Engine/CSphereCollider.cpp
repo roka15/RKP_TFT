@@ -22,12 +22,14 @@ void CSphereCollider::finaltick()
 	{
 		m_matCollider3D *= matWorld;
 	}
+	if (m_bView)
+	{
+		Vec4 vColor = Vec4(0.f, 1.f, 0.f, 1.f);
+		if (0 < m_iCollisionCount)
+			vColor = Vec4(1.f, 0.f, 0.f, 1.f);
 
-	Vec4 vColor = Vec4(0.f, 1.f, 0.f, 1.f);
-	if (0 < m_iCollisionCount)
-		vColor = Vec4(1.f, 0.f, 0.f, 1.f);
-
-	DrawDebugSphere(m_matCollider3D, vColor, 0.f);
+		DrawDebugSphere(m_matCollider3D, vColor, 0.f);
+	}
 }
 
 void CSphereCollider::SaveToLevelFile(FILE* _File)

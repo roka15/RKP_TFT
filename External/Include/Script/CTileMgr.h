@@ -36,13 +36,19 @@ private:
 public:
     virtual void init()override;
     virtual void tick()override;
+private:
+    CTileScript* GetTile(int _iid);
 public:
     //get set
     Vec2 GetTilePos(int _itile);
-    CTileScript* GetTile(int _iid);
+    const TILE_OWNER_TYPE& GetTileOwnerType(int _iTileNum);
+    void RegisterItem(int _tileNum, CGameObject* _pObj);
     bool EmptyBattleTile(int _iid);
     void EnableSelectBattleTile(bool _flag);
     Vec2 GetBattleCount() { return m_Count; }
+    Vec2 GetWaitCount() { return m_WaitCount; }
+    vector<int> GetAnotherPlayer(TILE_OWNER_TYPE _eType);
+    void BattleRouteRender(vector<int> _vecRoute);
 public:
     void BattleSetInfo(const Vec2& _offset, const Vec2& _size, const Vec2& _count, const Vec3& _start);
     void WaitSetInfo(const Vec2& _offset, const Vec2& _size, const Vec2& _count, const Vec3& _start);

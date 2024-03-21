@@ -132,6 +132,8 @@ void CreateTestLevel()
 
 
 	CGameObject* pAttroxObj = nullptr;
+	CGameObject* pTestEnemy = nullptr;
+	CGameObject* pTestEnemy2 = nullptr;
 	Ptr<CMeshData> pMeshData = nullptr;
 	CGameObject* pMap = new CGameObject();
 	pMap->AddComponent(new CTransform());
@@ -763,9 +765,25 @@ void CreateTestLevel()
 	pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(90), 0.f, DEGREE2RADIAN(180.f)));
 	pObj->AddComponent(new CBoxCollider);
 	pAttroxObj = pObj;
+
+	pTestEnemy = new CGameObject();
+	pTestEnemy->SetName(L"TestEnemy");
+	pTestEnemy->AddComponent(new CTransform());
+	pTestEnemy->AddComponent(new CMeshRender());
+	pTestEnemy->Transform()->SetRelativeScale(Vec3{ 100.f,100.f,100.f });
+	pTestEnemy->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+	pTestEnemy->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"),0);
+	pTestEnemy2 = new CGameObject();
+	pTestEnemy2->SetName(L"TestEnemy");
+	pTestEnemy2->AddComponent(new CTransform());
+	pTestEnemy2->AddComponent(new CMeshRender());
+	pTestEnemy2->Transform()->SetRelativeScale(Vec3{ 100.f,100.f,100.f });
+	pTestEnemy2->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+	pTestEnemy2->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
 	{
-		CTileScript* tile = CTileMgr::GetInst()->GetTile(0);
-		tile->AddItem(pAttroxObj);
+		CTileMgr::GetInst()->RegisterItem(29, pAttroxObj);
+		CTileMgr::GetInst()->RegisterItem(49, pTestEnemy);
+		CTileMgr::GetInst()->RegisterItem(44, pTestEnemy2);
 	}
 	//CGameObject* pNewObj = new CGameObject;
 	//pNewObj->SetName(L"Cube1");
@@ -1016,5 +1034,4 @@ void CreateTestLevel()
 
 	// 충돌 시킬 레이어 짝 지정
 	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");
-	vector<int> numbers = CAStarMgr::GetInst()->GetNextNodeAStar(0, 18, 7, 8);
 }

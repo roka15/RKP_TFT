@@ -24,7 +24,7 @@ void CTileScript::BeginOverlap(CCollider* _Other)
 {
 	if (CMouseMgr::GetInst()->GetCursor()->Collider3D() == _Other)
 	{
-		GetOwner()->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"ActiveTileMtrl"), 0);
+		HighlightColor(true);
 	}
 }
 
@@ -36,7 +36,7 @@ void CTileScript::EndOverlap(CCollider* _Other)
 {
 	if (CMouseMgr::GetInst()->GetCursor()->Collider3D() == _Other)
 	{
-		GetOwner()->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"InActiveTileMtrl"), 0);
+		HighlightColor(false);
 	}
 }
 
@@ -84,4 +84,18 @@ void CTileScript::ChangeItemState(bool _flag)
 			
 		}
 	}
+}
+
+void CTileScript::HighlightColor(bool _flag)
+{
+	wstring Key;
+	if (_flag)
+	{
+		Key = L"ActiveTileMtrl";
+	}
+	else
+	{
+		Key = L"InActiveTileMtrl";
+	}
+	GetOwner()->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(Key), 0);
 }

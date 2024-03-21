@@ -2,6 +2,7 @@
 #include "CCollisionMgr.h"
 
 #include "CLevelMgr.h"
+#include "CKeyMgr.h"
 #include "CMouseMgr.h"
 #include "CLevel.h"
 #include "CLayer.h"
@@ -10,7 +11,8 @@
 #include "CCollider3D.h"
 
 CCollisionMgr::CCollisionMgr()
-	: m_matrix{}
+	: m_matrix{},
+	m_ActiveView(true)
 {
 
 }
@@ -39,6 +41,11 @@ vector<CGameObject*> CCollisionMgr::CursorCollisionTick()
 
 void CCollisionMgr::tick()
 {
+	if (CKeyMgr::GetInst()->GetKeyState(KEY::ESC) == KEY_STATE::TAP)
+	{
+		m_ActiveView = !m_ActiveView;
+		ColliderRenderActive(m_ActiveView);
+	}
 	CLevel* pLevel = CLevelMgr::GetInst()->GetCurLevel();
 
 	for (UINT iRow = 0; iRow < MAX_LAYER; ++iRow)
@@ -52,6 +59,29 @@ void CCollisionMgr::tick()
 			CollisionBtwLayer(pLevel->GetLayer(iRow), pLevel->GetLayer(iCol));
 		}
 	}
+}
+
+void CCollisionMgr::ColliderRenderActive(bool _bflag)
+{
+	CLevel* pLevel = CLevelMgr::GetInst()->GetCurLevel();
+	//모든 오브젝트의 collider를 검사해서 있으면 view = on/off
+	for (UINT iRow = 0; iRow < MAX_LAYER; ++iRow)
+	{
+		const vector<CGameObject*>& vecObjs = pLevel->GetLayer(iRow)->GetObjects();
+
+		for (int i = 0; i < vecObjs.size(); ++i)
+		{
+			CCollider3D* collider = vecObjs[i]->Collider3D();
+			if (collider == nullptr)
+				continue;
+			vecObjs[i]->Collider3D()->ActiveView(_bflag);
+		}
+	}
+	//cursor의 collider view = on/off
+	CCollider3D* collider = CMouseMgr::GetInst()->GetCursor()->Collider3D();
+	if (collider == nullptr)
+		return;
+	collider->ActiveView(_bflag);
 }
 
 void CCollisionMgr::Collision2D(CGameObject* _LeftObject, CGameObject* _RightObject)
@@ -183,13 +213,13 @@ bool CCollisionMgr::Collision3D(CGameObject* _LeftObject, CGameObject* _RightObj
 vector<CGameObject*> CCollisionMgr::CollisionBtwLayerCursor(CLayer* _Layer, CGameObject* _Cursor)
 {
 	vector<CGameObject*> colObjs;
-    const vector<CGameObject*> objs = _Layer->GetObjects();
+	const vector<CGameObject*> objs = _Layer->GetObjects();
 	for (int i = 0; i < objs.size(); ++i)
 	{
 		if (objs[i]->Collider3D() && objs[i]->Collider3D()->GetTrigger())
 		{
 			bool flag = Collision3D(objs[i], _Cursor);
-			
+
 			if (flag)
 			{
 				colObjs.push_back(objs[i]);
@@ -309,7 +339,7 @@ bool CCollisionMgr::CollisionBtwCollider(CCollider3D* _pLeft, CCollider3D* _pRig
 
 	// 두 충돌체의 각 표면 벡터 2개씩 구함
 	Vec3 arrProj[iProjCnt] = {};
-	
+
 	//도형 A의 x,y
 	arrProj[0] = XMVector3TransformCoord(arrLocal[1], _pLeft->GetColliderWorldMat()) - XMVector3TransformCoord(arrLocal[0], _pLeft->GetColliderWorldMat());
 	arrProj[1] = XMVector3TransformCoord(arrLocal[3], _pLeft->GetColliderWorldMat()) - XMVector3TransformCoord(arrLocal[0], _pLeft->GetColliderWorldMat());

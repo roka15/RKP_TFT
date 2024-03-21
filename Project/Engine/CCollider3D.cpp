@@ -23,7 +23,8 @@ void CCollider3D::LoadFromLevelFile(FILE* _File)
 
 CCollider3D::CCollider3D()
 	:CCollider(COMPONENT_TYPE::COLLIDER3D),
-	m_bActive(true)
+	m_bActive(true),
+	m_bView(true)
 {
 }
 

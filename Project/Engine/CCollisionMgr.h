@@ -25,7 +25,7 @@ class CCollisionMgr :
 private:
 	UINT					m_matrix[MAX_LAYER];
 	map<UINT_PTR, bool>		m_mapColID;
-
+	bool					m_ActiveView;
 public:
 	void LayerCheck(UINT _left, UINT _right);
 	void LayerCheck(const wstring& _strLeftLayer, const wstring& _strRightLayer);
@@ -40,6 +40,7 @@ public:
 	void tick();
 
 private:
+	void ColliderRenderActive(bool _bflag);
 	void Collision2D(CGameObject* _LeftObject, CGameObject* _RightObject);
 	bool Collision3D(CGameObject* _LeftObject, CGameObject* _RightObject);
 	void CollisionBtwLayer(CLayer* _LeftLayer, CLayer* _RightLayer);

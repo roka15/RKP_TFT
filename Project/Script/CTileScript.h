@@ -22,10 +22,12 @@ public:
     virtual void UpEvent(PointerEventData) override;
 
     void SetTileInfo(TILE_TYPE _type, TILE_OWNER_TYPE _ownerType, int _num) { m_Type = _type; m_OwnerType = _ownerType;  m_Number = _num; }
-    TILE_TYPE GetType() { return m_Type; }
+    const TILE_TYPE& GetType()const { return m_Type; }
+    const TILE_OWNER_TYPE& GetOwnerType()const { return m_OwnerType; }
     int GetNumber() { return m_Number; }
     void AddItem(CGameObject* _obj);
     void ChangeItemState(bool _flag);
+    void HighlightColor(bool _flag);
 public:
     CLONE(CTileScript)
     CTileScript();

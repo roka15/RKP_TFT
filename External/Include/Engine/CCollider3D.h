@@ -11,6 +11,7 @@ protected:
     Matrix          m_matCollider3D;
     bool            m_bTrigger;
     bool            m_bActive;
+    bool            m_bView;
 public:
     virtual void finaltick()override;
 public:
@@ -20,6 +21,7 @@ public:
     bool GetTrigger() { return m_bTrigger; }
     void SetActive(bool _bFlag) { m_bActive = _bFlag; }
     bool GetActive() { return m_bActive; }
+    void ActiveView(bool _bFlag) { m_bView = _bFlag; }
     const Matrix& GetColliderWorldMat() { return m_matCollider3D; }
 public:
     virtual void SaveToLevelFile(FILE* _File) override;

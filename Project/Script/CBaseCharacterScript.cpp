@@ -1,7 +1,10 @@
 #include "pch.h"
+#include "CTileMgr.h"
+#include "CAStarMgr.h"
 #include "CBaseCharacterScript.h"
 #include "CAttroxMachineScript.h"
 #include "CCharacterTrigger.h"
+#include "CTileScript.h"
 CBaseCharacterScript::CBaseCharacterScript() :
 	CScript((UINT)SCRIPT_TYPE::BASECHARACTERSCRIPT),
 	m_ChState{ true,false,false,false,false,false }
@@ -25,7 +28,7 @@ void CBaseCharacterScript::tick()
 	//3번키 : attack  on/off
 	//4번키 : ult     on/off
 	//5번키 : dance   on/off
-	KEY eInput = KEY::END;
+	/*KEY eInput = KEY::END;
 
 	if (CKeyMgr::GetInst()->GetKeyState(KEY::_1) == KEY_STATE::TAP)
 	{
@@ -80,9 +83,23 @@ void CBaseCharacterScript::tick()
 	case KEY::_5:
 		Dance();
 		break;
-	}
+	}*/
 
+	CGameObject* tile = GetOwner()->GetParent();
+	if (tile == nullptr)
+		return;
+	CTileScript* tileScript = tile->GetScript<CTileScript>();
+	if (tileScript == nullptr)
+		return;
+	if (tileScript->GetType() != TILE_TYPE::BATTLE)
+		return;
+	int startNumber = tileScript->GetNumber();
+	int endNumber = CAStarMgr::GetInst()->SearchTarget(startNumber);
+	if (endNumber == -1)
+		return;
 
+	vector<int> Route = CAStarMgr::GetInst()->GetNextNodeAStar(startNumber,endNumber);
+	CTileMgr::GetInst()->BattleRouteRender(Route);
 }
 
 void CBaseCharacterScript::BeginOverlap(CCollider* _Other)
