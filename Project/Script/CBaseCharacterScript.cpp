@@ -5,6 +5,7 @@
 #include "CAttroxMachineScript.h"
 #include "CCharacterTrigger.h"
 #include "CTileScript.h"
+#include "CPlayerScript.h"
 #include  "CGameMgr.h"
 
 
@@ -136,6 +137,7 @@ void CBaseCharacterScript::tick()
 				if (diff.x <= abs(m_v2Dir.x) && diff.y <= abs(m_v2Dir.y))
 				{
 					m_bMove = false;
+					ChangeTransInfo();
 					CTileMgr::GetInst()->RegisterItem(m_iTargetNum, GetOwner());
 					pos = Vec3{ 0.f,0.f,pos.z };
 				}
@@ -308,5 +310,36 @@ void CBaseCharacterScript::SetTarget(CCollider* _Other)
 			m_pTarget = otherTF;
 		}
 	}*/
+}
+
+void CBaseCharacterScript::ChangeTransInfo()
+{
+	TILE_OWNER_TYPE eTileType = CTileMgr::GetInst()->GetTileOwnerType(m_iTargetNum);
+	PLAYER_TYPE ePlayerType = GetPlayer()->GetScript<CPlayerScript>()->GetPlayerType();
+	switch (eTileType)
+	{
+	case TILE_OWNER_TYPE::ENEMY:
+		switch (ePlayerType)
+		{
+		case PLAYER_TYPE::CLIENT:
+			GetOwner()->Transform()->SetRelativeRot(DEGREE2RADIAN(90.f), 0.f, DEGREE2RADIAN(0));
+			break;
+		case PLAYER_TYPE::ANOTHER:
+			GetOwner()->Transform()->SetRelativeRot(DEGREE2RADIAN(90.f), 0.f, DEGREE2RADIAN(180));
+			break;
+		}
+		break;
+	case TILE_OWNER_TYPE::PLAYER:
+		switch (ePlayerType)
+		{
+		case PLAYER_TYPE::CLIENT:
+			GetOwner()->Transform()->SetRelativeRot(DEGREE2RADIAN(90.f), 0.f, DEGREE2RADIAN(180));
+			break;
+		case PLAYER_TYPE::ANOTHER:
+			GetOwner()->Transform()->SetRelativeRot(DEGREE2RADIAN(90.f), 0.f, DEGREE2RADIAN(0));
+			break;
+		}
+		break;
+	}
 }
 

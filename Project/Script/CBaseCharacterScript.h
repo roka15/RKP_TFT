@@ -14,7 +14,8 @@ private:
     int                 m_iTargetNum;
     bool                m_bMove;
     Vec2                m_v2Dir;
-  
+private:
+    void ChangeTransInfo();
 public:
     virtual void tick()override;
     virtual void BeginOverlap(CCollider* _Other)override;
@@ -41,6 +42,7 @@ public:
     virtual void UltAttack();
     virtual void Dance();
     virtual void SetTarget(CCollider* _Other);
+
 public:
     CBaseCharacterScript();
     CBaseCharacterScript(SCRIPT_TYPE _eType);

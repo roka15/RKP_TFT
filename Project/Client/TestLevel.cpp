@@ -29,6 +29,7 @@
 #include <Script\CPlayerScript.h>
 
 
+
 void CreateTestLevel()
 {
 	CGameObject* pPlayer = new CGameObject();
@@ -36,6 +37,7 @@ void CreateTestLevel()
 	pPlayer->AddComponent(new CTransform());
 	//pPlayer->AddComponent(new CMeshRender());
 	pPlayer->AddComponent(new CPlayerScript());
+	pPlayer->GetScript<CPlayerScript>()->SetPlayerType(PLAYER_TYPE::CLIENT);
 
 	SpawnGameObject(pPlayer, Vec3{ 0.f,0.f,0.f }, 0);
 	CGameMgr::GetInst()->EnterGame(0, pPlayer);

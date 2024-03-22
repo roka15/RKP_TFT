@@ -11,6 +11,7 @@ private:
     int                             m_GameKey;
     int                             m_Money;
     vector<CGameObject*>            m_vecItem;
+    PLAYER_TYPE                     m_ePlayerType;
 public:
     virtual void begin() override;
     virtual void tick() override;
@@ -28,6 +29,8 @@ public:
     int GetGameID() { return m_GameKey; }
     const int& GetMoney() { return m_Money; }
     void AddItem(CGameObject* _pObj) { m_vecItem.push_back(_pObj); }
+    void SetPlayerType(PLAYER_TYPE _eType) { m_ePlayerType = _eType; }
+    PLAYER_TYPE GetPlayerType() { return m_ePlayerType; }
 public:
     CPlayerScript();
     ~CPlayerScript();

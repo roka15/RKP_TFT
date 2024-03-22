@@ -12,3 +12,9 @@ enum class GAME_STATE
     ITEM,
     END,
 };
+enum class PLAYER_TYPE
+{
+    CLIENT=0,
+    ANOTHER,
+    END,
+};
