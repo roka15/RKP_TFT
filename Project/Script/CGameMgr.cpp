@@ -74,6 +74,17 @@ int CGameMgr::GetState(CGameObject* _pObj)
 	return pGame->GetGameState();;
 }
 
+int CGameMgr::GetState()
+{
+	CPlayerScript* player = m_ClientOwner->GetScript<CPlayerScript>();
+	if (player == nullptr)
+		return -1;
+	UINT iGameID = player->GetGameID();
+	CGame* pGame = m_vecGames[iGameID];
+
+	return pGame->GetGameState();;
+}
+
 bool CGameMgr::BuyItem(int _iGameID, CHARACTER_TYPE _eType, CGameObject* _pPlayer)
 {
 	return m_vecGames[_iGameID]->BuyItem(_eType,_pPlayer);
@@ -90,7 +101,7 @@ void CGameMgr::CreateCharacterPrefabs()
 	pObj = pMeshData->Instantiate();
 	pObj->SetName(L"Attrox");
 	pObj->Transform()->SetRelativeScale(Vec3{ 1.5f,1.5f,1.5f });
-	pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(90), 0.f, DEGREE2RADIAN(180.f)));
+	pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(90.f), 0.f, DEGREE2RADIAN(180.f)));
 	pObj->AddComponent(new CBoxCollider);
 
 	Ptr<CAnimatorController> pAniController = nullptr;
@@ -242,7 +253,6 @@ void CGameMgr::CreateCharacterPrefabs()
 	pObj->Animator3D()->SetController(pAniController);
 	pObj->AddComponent(fsmScript);
 	pObj->AddComponent(chScript);
-
 	CPrefab* CH_Attrox = new CPrefab();
 	CH_Attrox->RegisterProtoObject(pObj);
 	CResMgr::GetInst()->AddRes<CPrefab>(L"Ch_Attrox", CH_Attrox);

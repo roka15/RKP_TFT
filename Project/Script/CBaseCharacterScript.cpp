@@ -121,36 +121,36 @@ void CBaseCharacterScript::tick()
 		}
 		else
 		{
-			//test를 위해 항상 검사
+			//test를 위해 항상 검사 - 경로 타일 색깔 바뀌게 하기 위함
 			vector<int> Route = CAStarMgr::GetInst()->GetNextNodeAStar(startNumber, endNumber);
 			CTileMgr::GetInst()->BattleRouteRender(Route);
 			//move
 			//방향은 다음 타일을 바라보고 움직이기.
 			//목표 지점까지 이동이 완료 될 때까지는 검사 X
+			int BattleOffset = CTileMgr::GetInst()->GetWaitCount().x;
 			if (m_bMove)
 			{
 				Vec3 WorldPos = GetOwner()->Transform()->GetWorldPos();
-				Vec2 diff = Vec2(abs(WorldPos.x - m_v3TargetPos.x), abs(WorldPos.y - m_v3TargetPos.y));
+				Vec2 diff = Vec2(abs(WorldPos.x - m_v3TargetPos.x), abs(WorldPos.z - m_v3TargetPos.z));
 				Vec3 pos = GetOwner()->Transform()->GetRelativePos();
-				if (diff.x < 0.1f && diff.y < 0.1f)
+				if (diff.x <= abs(m_v2Dir.x) && diff.y <= abs(m_v2Dir.y))
 				{
 					m_bMove = false;
-
 					CTileMgr::GetInst()->RegisterItem(m_iTargetNum, GetOwner());
-					pos = Vec3{ 0.f,pos.y,0.f };
+					pos = Vec3{ 0.f,0.f,pos.z };
 				}
-				else if (diff.x < 0.1f)
+				else if (diff.x <= abs(m_v2Dir.x))
 				{
-					pos.z += m_v2Dir.y;
+					pos.y += m_v2Dir.y;
 				}
-				else if (diff.y < 0.1f)
+				else if (diff.y <= abs(m_v2Dir.y))
 				{
 					pos.x += m_v2Dir.x;
 				}
 				else
 				{
 					pos.x += m_v2Dir.x;
-					pos.z += m_v2Dir.y;
+					pos.y += m_v2Dir.y;
 				}
 
 				GetOwner()->Transform()->SetRelativePos(pos);
@@ -160,14 +160,16 @@ void CBaseCharacterScript::tick()
 				/*vector<int> Route = CAStarMgr::GetInst()->GetNextNodeAStar(startNumber, endNumber);
 				CTileMgr::GetInst()->BattleRouteRender(Route);*/
 				int size = Route.size();
-				int nextTile = Route[size - 1];
+				int nextTile = Route[size - 2];
+				int curTile = GetOwner()->GetParent()->GetScript<CTileScript>()->GetNumber() - BattleOffset;
+			
 				//다음 tile의 transform target으로 지정.
 				//현재 위치에서 다음 타일 방향으로 현재 오브젝트 회전
-				m_iTargetNum = nextTile;
-				m_v3TargetPos = CTileMgr::GetInst()->GetBattleTilePos(nextTile);
-				Vec3 CurPos = GetOwner()->Transform()->GetWorldPos();
-				m_v2Dir.x = CurPos.x - m_v3TargetPos.x;
-				m_v2Dir.y = CurPos.z - m_v3TargetPos.y;
+				m_iTargetNum = nextTile + BattleOffset;
+				m_v3TargetPos = CTileMgr::GetInst()->GetBattleTileWorldPos(nextTile);
+				Vec3 CurPos = CTileMgr::GetInst()->GetBattleTileWorldPos(curTile);
+				m_v2Dir.x = m_v3TargetPos.x - CurPos.x;
+				m_v2Dir.y = -(m_v3TargetPos.z - CurPos.z);
 				m_v2Dir.Normalize();
 				m_bMove = true;
 			}

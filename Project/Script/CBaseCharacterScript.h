@@ -10,7 +10,7 @@ private:
     tCharacterState     m_ChState;
     tCharacterStatus    m_ChStatus;
     tItemInfo           m_Items[MAX_ITEM];
-    Vec2                m_v3TargetPos;
+    Vec3                m_v3TargetPos;
     int                 m_iTargetNum;
     bool                m_bMove;
     Vec2                m_v2Dir;

@@ -39,6 +39,7 @@ void CreateTestLevel()
 
 	SpawnGameObject(pPlayer, Vec3{ 0.f,0.f,0.f }, 0);
 	CGameMgr::GetInst()->EnterGame(0, pPlayer);
+	CGameMgr::GetInst()->SetClientOwner(pPlayer);
 
 	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
 	pCurLevel->ChangeState(LEVEL_STATE::STOP);

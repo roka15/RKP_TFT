@@ -40,7 +40,7 @@ private:
     CTileScript* GetTile(int _iid);
 public:
     //get set
-    Vec2 GetBattleTilePos(int _itile);
+    Vec3 GetBattleTileWorldPos(int _itile);
     const TILE_OWNER_TYPE& GetTileOwnerType(int _iTileNum);
     void RegisterItem(int _tileNum, CGameObject* _pObj);
     bool EmptyBattleTile(int _iid);

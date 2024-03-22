@@ -3,7 +3,7 @@
 #include <Engine\CGameObject.h>
 #include <Engine\CResMgr.h>
 #include "CTileScript.h"
-
+#include "CGameMgr.h"
 
 int  CTileMgr::s_number = 0;
 CTileMgr::CTileMgr()
@@ -21,9 +21,13 @@ void CTileMgr::init()
 }
 void CTileMgr::tick()
 {
-	for (int i = 0; i < m_vecBattleTile.size(); ++i)
+	int iGameState = CGameMgr::GetInst()->GetState();
+	if (iGameState == 1)//battle
 	{
-		m_vecBattleTile[i]->GetScript<CTileScript>()->HighlightColor(false);
+		for (int i = 0; i < m_vecBattleTile.size(); ++i)
+		{
+			m_vecBattleTile[i]->GetScript<CTileScript>()->HighlightColor(false);
+		}
 	}
 }
 void CTileMgr::BattleSetInfo(const Vec2& _offset, const Vec2& _size, const Vec2& _count, const Vec3& _start)
@@ -205,10 +209,9 @@ CGameObject* CTileMgr::CreateTile(TILE_OWNER_TYPE _type)
 }
 
 
-Vec2 CTileMgr::GetBattleTilePos(int _itile)
+Vec3 CTileMgr::GetBattleTileWorldPos(int _itile)
 {
-	Vec3 pos = m_vecBattleTile[_itile]->Transform()->GetWorldPos();
-	return Vec2{pos.x,pos.z};
+	return  m_vecBattleTile[_itile]->Transform()->GetWorldPos();
 }
 
 const TILE_OWNER_TYPE& CTileMgr::GetTileOwnerType(int _iTileNum)

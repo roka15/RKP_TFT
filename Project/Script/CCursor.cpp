@@ -4,7 +4,6 @@
 
 void CCursor::RegisterDragItem(CGameObject* _obj)
 {
-	_obj->Transform()->SetAbsolute(true);
 	GetOwner()->AddChild(_obj);
 }
 
@@ -37,7 +36,6 @@ void CCursor::UpEvent(PointerEventData _data)
 			return;
 		CGameObject* dragObj = childs[0];
 		_data.lastPress->AddChild(dragObj);
-		dragObj->Transform()->SetAbsolute(false);
 	}
 	else
 	{
@@ -45,7 +43,6 @@ void CCursor::UpEvent(PointerEventData _data)
 			return;
 		CGameObject* dragObj = childs[0];
 		_data.pointerPress->AddChild(dragObj);
-		dragObj->Transform()->SetAbsolute(false);
 	}
 }
 
