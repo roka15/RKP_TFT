@@ -185,10 +185,13 @@ call CodeGen.exe</Command>
     <ClInclude Include="CAttroxUltMove.h" />
     <ClInclude Include="CCameraMoveScript.h" />
     <ClInclude Include="CCursor.h" />
+    <ClInclude Include="CGame.h" />
+    <ClInclude Include="CGameMgr.h" />
     <ClInclude Include="CharacterInfo.h" />
     <ClInclude Include="CCharacterState.h" />
     <ClInclude Include="CCharacterTrigger.h" />
     <ClInclude Include="CGravityScript.h" />
+    <ClInclude Include="CItem.h" />
     <ClInclude Include="CMissileScript.h" />
     <ClInclude Include="CMonsterScript.h" />
     <ClInclude Include="CPlayerScript.h" />
@@ -199,6 +202,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="CTileMgr.h" />
     <ClInclude Include="CTileScript.h" />
     <ClInclude Include="CTrigger.h" />
+    <ClInclude Include="define.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
@@ -218,7 +222,10 @@ call CodeGen.exe</Command>
     <ClCompile Include="CCharacterState.cpp" />
     <ClCompile Include="CCharacterTrigger.cpp" />
     <ClCompile Include="CCursor.cpp" />
+    <ClCompile Include="CGame.cpp" />
+    <ClCompile Include="CGameMgr.cpp" />
     <ClCompile Include="CGravityScript.cpp" />
+    <ClCompile Include="CItem.cpp" />
     <ClCompile Include="CMissileScript.cpp" />
     <ClCompile Include="CMonsterScript.cpp" />
     <ClCompile Include="CPlayerScript.cpp" />

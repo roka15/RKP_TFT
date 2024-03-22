@@ -5,7 +5,7 @@
 
 #include <Engine\global.h>
 #include <Engine\CEngine.h>
-
+#include <Script\define.h>
 
 // Engine Library
 #ifdef _DEBUG

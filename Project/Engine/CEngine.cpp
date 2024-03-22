@@ -72,8 +72,6 @@ int CEngine::init(HWND _hWnd, UINT _iWidth, UINT _iHeight)
 	CLevelMgr::GetInst()->init();		
 	
 	CInstancingBuffer::GetInst()->init();
-
-	CClientMgr::GetInst()->init();
 	return S_OK;
 }
 

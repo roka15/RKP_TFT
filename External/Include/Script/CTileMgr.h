@@ -40,7 +40,7 @@ private:
     CTileScript* GetTile(int _iid);
 public:
     //get set
-    Vec2 GetTilePos(int _itile);
+    Vec2 GetBattleTilePos(int _itile);
     const TILE_OWNER_TYPE& GetTileOwnerType(int _iTileNum);
     void RegisterItem(int _tileNum, CGameObject* _pObj);
     bool EmptyBattleTile(int _iid);
@@ -49,6 +49,7 @@ public:
     Vec2 GetWaitCount() { return m_WaitCount; }
     vector<int> GetAnotherPlayer(TILE_OWNER_TYPE _eType);
     void BattleRouteRender(vector<int> _vecRoute);
+    int FindEmptyWaitTile();
 public:
     void BattleSetInfo(const Vec2& _offset, const Vec2& _size, const Vec2& _count, const Vec3& _start);
     void WaitSetInfo(const Vec2& _offset, const Vec2& _size, const Vec2& _count, const Vec3& _start);

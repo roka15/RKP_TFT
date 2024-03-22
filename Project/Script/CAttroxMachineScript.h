@@ -17,6 +17,7 @@ public:
     CLONE(CAttroxMachineScript)
 public:
     CAttroxMachineScript();
+    CAttroxMachineScript(const CAttroxMachineScript& _ref);
     virtual ~CAttroxMachineScript();
 };
 

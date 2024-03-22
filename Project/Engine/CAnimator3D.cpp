@@ -26,6 +26,7 @@ CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
 	: m_pBoneFinalMatBuffer(nullptr)
 	, m_iCurIdx(0)
 	, m_bBlending(false)
+	, m_pController(_origin.m_pController)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
 {
 	m_pBoneFinalMatBuffer = new CStructuredBuffer;

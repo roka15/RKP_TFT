@@ -1,6 +1,7 @@
 #pragma once
 #include <Engine\CSingleton.h>
 #include <Engine\CClientMgr.h>
+
 class CGame;
 
 class CGameMgr :
@@ -15,5 +16,8 @@ public:
 public:
     void CreateGame();
     bool EnterGame(int _iID, CGameObject* _pObj);
+    int GetState(CGameObject* _pObj);
+    bool BuyItem(int _iGameID,CHARACTER_TYPE _eType,CGameObject* _pPlayer);
+    void CreateCharacterPrefabs();
 };
 

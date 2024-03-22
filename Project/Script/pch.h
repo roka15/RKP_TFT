@@ -13,6 +13,7 @@
 #include <Engine\global.h>
 
 #include "CScriptMgr.h"
+#include "define.h"
 
 
 #endif //PCH_H

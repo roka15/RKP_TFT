@@ -13,9 +13,6 @@
     <Filter Include="Script\FSM">
       <UniqueIdentifier>{80e8bac6-b0ea-47f6-b85f-67615c9ef340}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Script\Character">
-      <UniqueIdentifier>{a4701cb8-12ee-435f-8abb-a0a70e1efdb3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Script\FSM\Trigger">
       <UniqueIdentifier>{b68f658c-1d32-4152-ab79-dca001d41b0b}</UniqueIdentifier>
     </Filter>
@@ -69,6 +66,15 @@
     </Filter>
     <Filter Include="Manager\A%2a">
       <UniqueIdentifier>{71b5730c-c4dd-4b31-842c-9934d7daf935}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\Game">
+      <UniqueIdentifier>{be97edd6-4e9d-4a86-9435-8e65a1a4b8bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Item">
+      <UniqueIdentifier>{06161706-8197-4955-99dd-974219c42e00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Item\Character">
+      <UniqueIdentifier>{a4701cb8-12ee-435f-8abb-a0a70e1efdb3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -139,10 +145,10 @@
       <Filter>Script\FSM\State\Champ\Attrox\Ult</Filter>
     </ClInclude>
     <ClInclude Include="CharacterInfo.h">
-      <Filter>Script\Character</Filter>
+      <Filter>Script\Item\Character</Filter>
     </ClInclude>
     <ClInclude Include="CBaseCharacterScript.h">
-      <Filter>Script\Character</Filter>
+      <Filter>Script\Item\Character</Filter>
     </ClInclude>
     <ClInclude Include="CTileScript.h">
       <Filter>Script\Tile</Filter>
@@ -158,6 +164,18 @@
     </ClInclude>
     <ClInclude Include="CAStarMgr.h">
       <Filter>Manager\A%2a</Filter>
+    </ClInclude>
+    <ClInclude Include="CGame.h">
+      <Filter>Manager\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="CGameMgr.h">
+      <Filter>Manager\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="define.h">
+      <Filter>Default</Filter>
+    </ClInclude>
+    <ClInclude Include="CItem.h">
+      <Filter>Script\Item</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -228,7 +246,7 @@
       <Filter>Script\FSM\State\Champ\Attrox\Ult</Filter>
     </ClCompile>
     <ClCompile Include="CBaseCharacterScript.cpp">
-      <Filter>Script\Character</Filter>
+      <Filter>Script\Item\Character</Filter>
     </ClCompile>
     <ClCompile Include="CTileScript.cpp">
       <Filter>Script\Tile</Filter>
@@ -244,6 +262,15 @@
     </ClCompile>
     <ClCompile Include="CAStarMgr.cpp">
       <Filter>Manager\A%2a</Filter>
+    </ClCompile>
+    <ClCompile Include="CGame.cpp">
+      <Filter>Manager\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="CGameMgr.cpp">
+      <Filter>Manager\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="CItem.cpp">
+      <Filter>Script\Item</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

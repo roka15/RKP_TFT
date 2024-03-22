@@ -19,6 +19,8 @@
 
 #include <Script\CScriptMgr.h>
 #include <Script\CAStarMgr.h>
+#include <Script\CGameMgr.h>
+#include <Script\CGame.h>
 #include <Script\CAttroxMachineScript.h>
 #include <Script\CBaseCharacterScript.h>
 #include <Script\CCharacterTrigger.h>
@@ -26,12 +28,9 @@
 #include <Script\CTileScript.h>
 #include <Script\CPlayerScript.h>
 
-#include "CGameMgr.h"
-#include "CGame.h"
+
 void CreateTestLevel()
 {
-	
-
 	CGameObject* pPlayer = new CGameObject();
 	pPlayer->SetName(L"Player01");
 	pPlayer->AddComponent(new CTransform());
@@ -757,14 +756,6 @@ void CreateTestLevel()
 	SpawnGameObject(pMap, Vec3{ 0.f,0.f,0.f }, 0);
 #pragma endregion
 
-	pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Attrox.fbx");
-	pObj = nullptr;
-	pObj = pMeshData->Instantiate();
-	pObj->SetName(L"Attrox");
-	pObj->Transform()->SetRelativeScale(Vec3{ 1.5f,1.5f,1.5f });
-	pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(90), 0.f, DEGREE2RADIAN(180.f)));
-	pObj->AddComponent(new CBoxCollider);
-	pAttroxObj = pObj;
 
 	pTestEnemy = new CGameObject();
 	pTestEnemy->SetName(L"TestEnemy");
@@ -781,7 +772,6 @@ void CreateTestLevel()
 	pTestEnemy2->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
 	pTestEnemy2->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
 	{
-		CTileMgr::GetInst()->RegisterItem(29, pAttroxObj);
 		CTileMgr::GetInst()->RegisterItem(49, pTestEnemy);
 		CTileMgr::GetInst()->RegisterItem(44, pTestEnemy2);
 	}
@@ -849,185 +839,8 @@ void CreateTestLevel()
 	////pLandScape->LandScape()->SetHeightMap(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\HeightMap_01.jpg"));
 
 	//SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 0);
-
-	// ============
-	// Ani Controller Init
-	// ============	
-	Ptr<CAnimatorController> pAniController = nullptr;
-	wstring strPath = L"controller\\Attrox.controller";
-	Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Dance_Loop.anm");
-	pClip->SetLoop(true);
-	pAniController = CResMgr::GetInst()->FindRes<CAnimatorController>(strPath);
-
-	//test code 1
-	//pAniController = new CAnimatorController();
-	//CResMgr::GetInst()->AddRes<CAnimatorController>(strPath, pAniController);
-
-
-	//pAniController->RegisterParam(L"1to2", 0);
-	//pAniController->RegisterParam(L"2to3", 0);
-	//pAniController->Init();
-	//pAniController->SetName(strPath);
-	//CAniNode* pOutNode = pAniController->GetNode(L"Entry");
-	//CAniNode* pInNode = pAniController->CreateNode(L"Ani1", L"anim3D\\Dance_Windup.anm");
-	//pAniController->CreateTransition(L"Entry_Ani1", pInNode, pOutNode,false);
-	//
-	//pOutNode = pInNode;
-	//pInNode = pAniController->CreateNode(L"Ani2", L"anim3D\\Dance_Loop.anm");
-	//CTransition* t1 = pAniController->CreateTransition(L"Ani1_Ani2", pInNode, pOutNode, false);
-	//t1->RegisterCondition(L"1to2", 1, COMPARISON_TYPE::EQUAL);
-
-	//pOutNode = pInNode;
-	//pInNode = pAniController->CreateNode(L"Ani3", L"anim3D\\Aatrox_Idle1.anm");
-	//CTransition* t2 = pAniController->CreateTransition(L"Ani2_Ani3", pInNode, pOutNode, false);
-	//t2->RegisterCondition(L"2to3", 2, COMPARISON_TYPE::EQUAL);
-
-	//pAniController->Save(strPath);
-
-	//test code 2
-	if (pAniController == nullptr)
-	{
-		Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Aatrox_Idle1.anm");
-		pClip->SetLoop(true);
-		pClip->Save(L"anim3D\\Aatrox_Idle1.anm");
-		pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Aatrox_ULT_Idle.anm");
-		pClip->SetLoop(true);
-		pClip->Save(L"anim3D\\Aatrox_ULT_Idle.anm");
-		pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Idle1.anm");
-		pClip->SetLoop(true);
-
-		//pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Dance_Windup.anm");
-		//pClip->SetLoop(true);
-		pClip->Save(L"anim3D\\Idle1.anm");
-
-		pAniController = new CAnimatorController();
-		CResMgr::GetInst()->AddRes<CAnimatorController>(strPath, pAniController);
-		pAniController->RegisterParam(L"Battle", 0);
-		pAniController->RegisterParam(L"ULT", 0);
-		pAniController->RegisterParam(L"Move", 0);
-		pAniController->RegisterParam(L"Attack", false, true);
-		pAniController->RegisterParam(L"Dance", false, true);
-		pAniController->RegisterParam(L"End", false, true);
-
-		pAniController->Init();
-		pAniController->SetName(strPath);
-		CAniNode* pAnyNode = pAniController->GetNode(L"AnyState");
-		CAniNode* pExitNode = pAniController->GetNode(L"Exit");
-		CAniNode* pOutNode = pAniController->GetNode(L"Entry");
-		//Idle_in_sheath
-		CAniNode* pInNode = pAniController->CreateNode(L"Intro1", L"anim3D\\Aatrox_ReSheath_fullbody.anm");
-		CTransition* t1 = pAniController->CreateTransition(L"Entry_Intro1", pInNode, pOutNode, true);
-		pOutNode = pInNode;
-		pInNode = pAniController->CreateNode(L"Intro2", L"anim3D\\Idle_in_sheath.anm");
-		t1 = pAniController->CreateTransition(L"Intro1_Intro2", pInNode, pOutNode, true);
-		//t1->RegisterCondition(L"Battle", 0, COMPARISON_TYPE::EQUAL);
-
-		CAniNode* NIdleNode = pInNode;
-		pOutNode = NIdleNode;
-		pInNode = pAniController->CreateNode(L"Normal_Idle", L"anim3D\\Aatrox_Idle1.anm");
-		t1 = pAniController->CreateTransition(L"Intro2_Normal_Idle", pInNode, pOutNode, true);
-
-		//Battle Idle
-		CAniNode* BIdleIntroNode = pAniController->CreateNode(L"Battle_Idle_Intro", L"anim3D\\Aatrox_unsheath.anm");
-		pOutNode = pInNode;
-		t1 = pAniController->CreateTransition(L"Normal_Battle_Intro", BIdleIntroNode, pOutNode, false);
-		t1->RegisterCondition(L"Battle", 1, COMPARISON_TYPE::EQUAL);
-
-		pInNode = pAniController->CreateNode(L"Battle_Idle", L"anim3D\\Idle1.anm");
-		t1 = pAniController->CreateTransition(L"Normal_Battle_Idle", pInNode, BIdleIntroNode, true);
-
-		t1 = pAniController->CreateTransition(L"Battle_Idle_Exit", pExitNode, pInNode, false);
-		t1->RegisterCondition(L"Battle", 0, COMPARISON_TYPE::EQUAL);
-
-		CAniNode* BIdleNode = pInNode;
-
-		pOutNode = BIdleNode;
-		pInNode = pAniController->CreateNode(L"Battle_Move", L"anim3D\\Unsheath_run01.anm");
-		t1 = pAniController->CreateTransition(L"Battle_Idle_Move", pInNode, pOutNode, false);
-		t1->RegisterCondition(L"Move", 1, COMPARISON_TYPE::EQUAL);
-		t1 = pAniController->CreateTransition(L"Battle_Move_Idle", pOutNode, pInNode, false);
-		t1->RegisterCondition(L"Move", 0, COMPARISON_TYPE::EQUAL);
-
-		CAniNode* BMoveNode = pInNode;
-
-		CAniNode* UIdleNode;
-		pOutNode = BIdleNode;
-		pInNode = pAniController->CreateNode(L"ULT_Idle", L"anim3D\\Aatrox_ULT_Idle.anm");
-		UIdleNode = pInNode;
-
-		CAniNode* UInMoveNode;
-		pInNode = pAniController->CreateNode(L"ULT_InMove", L"anim3D\\Aatrox_ULT_Spell_Dash.anm");
-
-		CAniNode* UInNode;
-		pOutNode = UIdleNode;
-		UInMoveNode = pInNode;
-		pInNode = pAniController->CreateNode(L"ULT_In", L"anim3D\\ULT_Idlein.anm");
-		UInNode = pInNode;
-
-		t1 = pAniController->CreateTransition(L"ULT_In_Idle", pOutNode, pInNode, true);
-		t1 = pAniController->CreateTransition(L"Battle_Ult_In", pInNode, BIdleNode, false);
-		t1->RegisterCondition(L"ULT", 1, COMPARISON_TYPE::EQUAL);
-		t1 = pAniController->CreateTransition(L"Ult_Idle_In_Move", UInMoveNode, pOutNode, false);
-		t1->RegisterCondition(L"Move", 1, COMPARISON_TYPE::EQUAL);
-		UInNode = pInNode;
-
-		CAniNode* UOutNode;
-		pOutNode = UIdleNode;
-		pInNode = pAniController->CreateNode(L"ULT_Out", L"anim3D\\ULT_out.anm");
-		t1 = pAniController->CreateTransition(L"ULT_Idle_Out", pInNode, pOutNode, false);
-		t1->RegisterCondition(L"ULT", 0, COMPARISON_TYPE::EQUAL);
-		t1 = pAniController->CreateTransition(L"ULT_Out_Battle_Idle", BIdleNode, pInNode, true);
-		UOutNode = pInNode;
-
-		CAniNode* UMoveNode;
-		pOutNode = UIdleNode;
-		pInNode = pAniController->CreateNode(L"ULT_Move", L"anim3D\\Run_Ult.anm");
-
-		t1 = pAniController->CreateTransition(L"ULT_In_Move", pInNode, UInMoveNode, true);
-		t1 = pAniController->CreateTransition(L"ULT_Move_Idle_In", UInNode, pInNode, false);
-		t1->RegisterCondition(L"Move", 0, COMPARISON_TYPE::EQUAL);
-
-		UMoveNode = pInNode;
-
-		pOutNode = pAnyNode;
-		pInNode = pAniController->CreateNode(L"Dance_In", L"anim3D\\Dance_Windup.anm");
-		t1 = pAniController->CreateTransition(L"AnyState_Dance_In", pInNode, pOutNode, false);
-		t1->RegisterCondition(L"Dance", true, true, COMPARISON_TYPE::EQUAL);
-		pOutNode = pInNode;
-		pInNode = pAniController->CreateNode(L"Dance_Loop", L"anim3D\\Dance_Loop.anm");
-		t1 = pAniController->CreateTransition(L"AnyState_Dance_Loop", pInNode, pOutNode, true);
-		pOutNode = pInNode;
-		t1 = pAniController->CreateTransition(L"AnyState_Dance_Exit", pExitNode, pOutNode, false);
-		t1->RegisterCondition(L"End", true, true, COMPARISON_TYPE::EQUAL);
-
-
-		pOutNode = pAnyNode;
-		pInNode = pAniController->CreateNode(L"Battle_Attack", L"anim3D\\Attack1.anm");
-		t1 = pAniController->CreateTransition(L"AnyState_Battle_Attack", pInNode, pOutNode, false);
-		t1->RegisterCondition(L"Attack", true, true, COMPARISON_TYPE::EQUAL);
-		t1->RegisterCondition(L"Battle", 1, COMPARISON_TYPE::EQUAL);
-		t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", BIdleNode, pInNode, true);
-		//t1->RegisterCondition(L"End", true, COMPARISON_TYPE::EQUAL);
-		CAniNode* BAttackNode = pInNode;
-
-		pOutNode = pAnyNode;
-		pInNode = pAniController->CreateNode(L"ULT_Attack", L"anim3D\\Attack1_Ult.anm");
-		t1 = pAniController->CreateTransition(L"AnyState_ULT_Attack", pInNode, pOutNode, false);
-		t1->RegisterCondition(L"Attack", true, true, COMPARISON_TYPE::EQUAL);
-		t1->RegisterCondition(L"ULT", 1, COMPARISON_TYPE::EQUAL);
-		CAniNode* UAttackNode = pInNode;
-
-		t1 = pAniController->CreateTransition(L"ULT_Attack_Idle", UIdleNode, pInNode, true);
-		//t1->RegisterCondition(L"End", true, COMPARISON_TYPE::EQUAL);
-
-		pAniController->Save(strPath);
-	}
-	CAttroxMachineScript* fsmScript = (CAttroxMachineScript*)CScriptMgr::GetScript(SCRIPT_TYPE::ATTROXMACHINESCRIPT);
-	CBaseCharacterScript* chScript = (CBaseCharacterScript*)CScriptMgr::GetScript(SCRIPT_TYPE::BASECHARACTERSCRIPT);
-	pAttroxObj->Animator3D()->SetController(pAniController);
-	pAttroxObj->AddComponent(fsmScript);
-	pAttroxObj->AddComponent(chScript);
-
+	CPlayerScript* pPlayerScript = pPlayer->GetScript<CPlayerScript>();
+	CGameMgr::GetInst()->BuyItem(pPlayerScript->GetGameID(), CHARACTER_TYPE::ATTROX, pPlayer);
 	/*CCharacterTrigger trigger;
 	trigger.SetEvtType(TRIGGER_TYPE::);
 	script->notify(&trigger);*/

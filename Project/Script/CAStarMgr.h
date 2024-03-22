@@ -41,7 +41,7 @@ public:
 	virtual void init()override;
 	virtual void tick()override;
 public:
-	int SearchTarget(UINT _startNode);
+	int SearchTarget(UINT _startNode,int& _out_distance);
 	vector<int> GetNextNodeAStar(UINT _startNode, UINT _endNode);
 };
 

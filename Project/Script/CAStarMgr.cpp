@@ -14,7 +14,7 @@ CAStarMgr::~CAStarMgr()
 	delete m_arrOddDirX;
 	delete m_arrEvenDirX;
 }
-int CAStarMgr::SearchTarget(UINT _startNode)
+int CAStarMgr::SearchTarget(UINT _startNode, int& _out_distance)
 {
 	//p1 대기석 - p1 전투석 - p2 전투석 - p2 대기석 순으로 저장되기 때문에
 	//p1 대기석 갯수를 빼줘야 함.
@@ -38,7 +38,7 @@ int CAStarMgr::SearchTarget(UINT _startNode)
 			iTargetNum = vecEnumyNums[i];
 		}
 	}
-
+	_out_distance = min;
 	return iTargetNum;
 }
 vector<int> CAStarMgr::GetNextNodeAStar(UINT _startNode, UINT _endNode)

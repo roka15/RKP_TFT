@@ -5,14 +5,21 @@
 #include "CAttroxMachineScript.h"
 #include "CCharacterTrigger.h"
 #include "CTileScript.h"
+#include  "CGameMgr.h"
+
+
+
 CBaseCharacterScript::CBaseCharacterScript() :
-	CScript((UINT)SCRIPT_TYPE::BASECHARACTERSCRIPT),
-	m_ChState{ true,false,false,false,false,false }
+	CItem(SCRIPT_TYPE::BASECHARACTERSCRIPT),
+	m_ChState{ true,false,false,false,false,false },
+	m_bMove(false)
 {
+	m_ChStatus.fAttackRange = 1;
+	SetCost(10);
 }
 
 CBaseCharacterScript::CBaseCharacterScript(SCRIPT_TYPE _eType) :
-	CScript((UINT)_eType)
+	CItem(_eType)
 {
 }
 
@@ -94,12 +101,82 @@ void CBaseCharacterScript::tick()
 	if (tileScript->GetType() != TILE_TYPE::BATTLE)
 		return;
 	int startNumber = tileScript->GetNumber();
-	int endNumber = CAStarMgr::GetInst()->SearchTarget(startNumber);
+	int distance = 0;
+	int endNumber = CAStarMgr::GetInst()->SearchTarget(startNumber, distance);
 	if (endNumber == -1)
 		return;
+	CGameObject* pPlayer = GetPlayer();
+	if (pPlayer == nullptr)
+		return;
+	UINT iGameState = CGameMgr::GetInst()->GetState(pPlayer);
+	switch (iGameState)
+	{
+	case 0://select
+		break;
+	case 1://battle
+		if (m_ChStatus.fAttackRange == distance)
+		{
+			//attack
+			//방향은 end 방향을 바라보기
+		}
+		else
+		{
+			//test를 위해 항상 검사
+			vector<int> Route = CAStarMgr::GetInst()->GetNextNodeAStar(startNumber, endNumber);
+			CTileMgr::GetInst()->BattleRouteRender(Route);
+			//move
+			//방향은 다음 타일을 바라보고 움직이기.
+			//목표 지점까지 이동이 완료 될 때까지는 검사 X
+			if (m_bMove)
+			{
+				Vec3 WorldPos = GetOwner()->Transform()->GetWorldPos();
+				Vec2 diff = Vec2(abs(WorldPos.x - m_v3TargetPos.x), abs(WorldPos.y - m_v3TargetPos.y));
+				Vec3 pos = GetOwner()->Transform()->GetRelativePos();
+				if (diff.x < 0.1f && diff.y < 0.1f)
+				{
+					m_bMove = false;
 
-	vector<int> Route = CAStarMgr::GetInst()->GetNextNodeAStar(startNumber,endNumber);
-	CTileMgr::GetInst()->BattleRouteRender(Route);
+					CTileMgr::GetInst()->RegisterItem(m_iTargetNum, GetOwner());
+					pos = Vec3{ 0.f,pos.y,0.f };
+				}
+				else if (diff.x < 0.1f)
+				{
+					pos.z += m_v2Dir.y;
+				}
+				else if (diff.y < 0.1f)
+				{
+					pos.x += m_v2Dir.x;
+				}
+				else
+				{
+					pos.x += m_v2Dir.x;
+					pos.z += m_v2Dir.y;
+				}
+
+				GetOwner()->Transform()->SetRelativePos(pos);
+			}
+			else
+			{
+				/*vector<int> Route = CAStarMgr::GetInst()->GetNextNodeAStar(startNumber, endNumber);
+				CTileMgr::GetInst()->BattleRouteRender(Route);*/
+				int size = Route.size();
+				int nextTile = Route[size - 1];
+				//다음 tile의 transform target으로 지정.
+				//현재 위치에서 다음 타일 방향으로 현재 오브젝트 회전
+				m_iTargetNum = nextTile;
+				m_v3TargetPos = CTileMgr::GetInst()->GetBattleTilePos(nextTile);
+				Vec3 CurPos = GetOwner()->Transform()->GetWorldPos();
+				m_v2Dir.x = CurPos.x - m_v3TargetPos.x;
+				m_v2Dir.y = CurPos.z - m_v3TargetPos.y;
+				m_v2Dir.Normalize();
+				m_bMove = true;
+			}
+		}
+		break;
+	case 2://item
+		break;
+	}
+	
 }
 
 void CBaseCharacterScript::BeginOverlap(CCollider* _Other)
@@ -115,14 +192,14 @@ void CBaseCharacterScript::OnOverlap(CCollider* _Other)
 
 void CBaseCharacterScript::EndOverlap(CCollider* _Other)
 {
-	m_pTarget = nullptr;
+	//m_pTarget = nullptr;
 }
 
 bool CBaseCharacterScript::IsWithinAttackRange()
 {
-	if (m_pTarget == nullptr)
-		return false;
-	Vec3 position = m_pTarget->GetRelativePos();
+	//if (m_pTarget == nullptr)
+	//	return false;
+	//Vec3 position = m_pTarget->GetRelativePos();
 
 	return false;
 }
@@ -204,7 +281,7 @@ void CBaseCharacterScript::Dance()
 
 void CBaseCharacterScript::SetTarget(CCollider* _Other)
 {
-	CTransform* otherTF = _Other->Transform();
+	/*CTransform* otherTF = _Other->Transform();
 	if (m_pTarget == nullptr)
 		m_pTarget = otherTF;
 	else
@@ -228,6 +305,6 @@ void CBaseCharacterScript::SetTarget(CCollider* _Other)
 		{
 			m_pTarget = otherTF;
 		}
-	}
+	}*/
 }
 

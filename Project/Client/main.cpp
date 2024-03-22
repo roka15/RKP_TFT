@@ -12,7 +12,7 @@
 
 // Client Manager
 #include <Engine\CClientMgr.h>
-#include "CGameMgr.h"
+#include <Script\CGameMgr.h>
 #include <Script\CAStarMgr.h>
 #include <Script\CTileMgr.h>
 #include "TestLevel.h"
@@ -27,6 +27,7 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 void RegisterClientMgr();
+void ClientMgrInit();
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -57,7 +58,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
        
     // ImGui 초기화
     ImGuiMgr::GetInst()->init(g_hWnd);
-
+    ClientMgrInit();
     // 테스트 용 레벨 생성
     CreateTestLevel();
 
@@ -233,4 +234,8 @@ void RegisterClientMgr()
     CGameMgr::GetInst()->CreateGame();
     CClientMgr::GetInst()->RegisterManager(CTileMgr::GetInst());
     CClientMgr::GetInst()->RegisterManager(CAStarMgr::GetInst());
+}
+void ClientMgrInit()
+{
+    CClientMgr::GetInst()->init();
 }

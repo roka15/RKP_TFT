@@ -3,6 +3,7 @@ CBaseCharacterScript
 CCameraMoveScript
 CCursor
 CGravityScript
+CItem
 CMissileScript
 CMonsterScript
 CPlayerScript

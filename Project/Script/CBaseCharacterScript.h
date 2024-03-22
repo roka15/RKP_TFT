@@ -1,15 +1,20 @@
 #pragma once
-#include <Engine\CScript.h>
+#include "CItem.h"
 #include "CharacterInfo.h"
 #include <Engine\CKeyMgr.h>
+
 class CBaseCharacterScript :
-    public CScript
+    public CItem
 {
 private:
     tCharacterState     m_ChState;
     tCharacterStatus    m_ChStatus;
     tItemInfo           m_Items[MAX_ITEM];
-    CTransform*         m_pTarget;
+    Vec2                m_v3TargetPos;
+    int                 m_iTargetNum;
+    bool                m_bMove;
+    Vec2                m_v2Dir;
+  
 public:
     virtual void tick()override;
     virtual void BeginOverlap(CCollider* _Other)override;
@@ -23,7 +28,6 @@ public:
     bool IsDance() { return m_ChState.bDance; }
     bool IsEnd() { return m_ChState.bEnd; }
     void SetWait(bool _flag) { m_ChState.bWaiting = _flag; }
-    virtual bool IsFindEnemy() { return m_pTarget != nullptr; }
     virtual bool IsWithinAttackRange();
     void SetWaitingSeat(bool _flag) { m_ChState.bWaiting = _flag; }
     virtual void UltGaugeUp();

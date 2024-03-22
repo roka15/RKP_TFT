@@ -205,9 +205,10 @@ CGameObject* CTileMgr::CreateTile(TILE_OWNER_TYPE _type)
 }
 
 
-Vec2 CTileMgr::GetTilePos(int _itile)
+Vec2 CTileMgr::GetBattleTilePos(int _itile)
 {
-	return Vec2();
+	Vec3 pos = m_vecBattleTile[_itile]->Transform()->GetWorldPos();
+	return Vec2{pos.x,pos.z};
 }
 
 const TILE_OWNER_TYPE& CTileMgr::GetTileOwnerType(int _iTileNum)
@@ -292,4 +293,15 @@ void CTileMgr::BattleRouteRender(vector<int> _vecRoute)
 		GetTile(Idx)->HighlightColor(true);
 	}
 	
+}
+
+int CTileMgr::FindEmptyWaitTile()
+{
+	for (int i = 0; i < m_WaitCount.x; ++i)
+	{
+		int size = m_vecTile[i]->GetChild().size();
+		if (size == 0)
+			return i;
+	}
+	return -1;
 }
