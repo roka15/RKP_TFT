@@ -244,7 +244,7 @@ void CTileMgr::EnableSelectBattleTile(bool _flag)
 			continue;
 		TILE_TYPE type = tile->GetType();
 		if (type == TILE_TYPE::BATTLE)
-			m_vecTile[i]->GetScript<CTileScript>()->ChangeItemState(_flag);
+			m_vecTile[i]->GetScript<CTileScript>()->ChangeTileState(_flag);
 	}
 }
 

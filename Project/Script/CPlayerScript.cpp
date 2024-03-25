@@ -21,13 +21,12 @@ void CPlayerScript::SetGameStateInfo()
 		case GAME_STATE::BATTLE:
 			//select때 설정한 캐릭터 초기 위치 저장
 			pCharacterScript->CurStartTile();
-			break;
+			pCharacterScript->SetMove(true);
 		case GAME_STATE::LOADING:
 			//select때 설정한 초기 위치로 이동.
 			pCharacterScript->ResetTile();
 			break;
 		}
-
 	}
 	
 }

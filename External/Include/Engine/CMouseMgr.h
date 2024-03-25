@@ -38,6 +38,8 @@ public:
     Vec3 GetMousePos();
     CGameObject* GetCursor() { return m_pCursor; }
 
+	void CursorDownEvent(PointerEventData& _data);
+	void CursorUpEvent(PointerEventData& _data);
     void MouseDownEvent(vector<CGameObject*>& _pObjs,PointerEventData& _data);
     void MouseDragEvent(vector<CGameObject*>& _pObjs, PointerEventData& _data);
     void MouseUpEvent(vector<CGameObject*>& _pObjs, PointerEventData& _data);

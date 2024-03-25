@@ -110,10 +110,11 @@ void CBaseCharacterScript::tick()
 	if (pPlayer == nullptr)
 		return;
 	UINT iGameState = CGameMgr::GetInst()->GetState(pPlayer);
+
 	switch (iGameState)
 	{
 	case 0://select
-		m_iStartTileNum = GetOwner()->GetParent()->GetScript<CTileScript>()->GetNumber();
+		m_iStartTileNum = tileScript->GetNumber();
 		break;
 	case 1://battle
 		if (m_ChStatus.fAttackRange == distance)
@@ -225,29 +226,24 @@ void CBaseCharacterScript::Search()
 
 void CBaseCharacterScript::Wait()
 {
-	if (m_ChState.bMove || m_ChState.bAttack || m_ChState.bDance || m_ChState.bUlt)
+	if (m_ChState.bAttack == false && m_ChState.bDance == false && m_ChState.bMove == false && m_ChState.bUlt == false)
 	{
-		int a;
-		return;
-	}
-	m_ChState.bUlt = false;
-	m_ChState.bMove = false;
-	m_ChState.bAttack = false;
-	m_ChState.bDance = false;
-	m_ChState.bEnd = false;
-
-	if (m_ChState.bWaiting)
-	{
+		m_ChState.bWaiting = !m_ChState.bWaiting;
+		m_ChState.bUlt = false;
+		m_ChState.bMove = false;
+		m_ChState.bAttack = false;
+		m_ChState.bDance = false;
+		m_ChState.bEnd = false;
 	}
 	else
 	{
+		return;
 	}
 }
 
 void CBaseCharacterScript::Move()
 {
-	if (m_ChState.bMove == false)
-		return;
+	m_ChState.bMove = !m_ChState.bMove;
 	m_ChState.bWaiting = false;
 	m_ChState.bAttack = false;
 }
@@ -325,6 +321,7 @@ void CBaseCharacterScript::ResetTile()
 	CTileMgr::GetInst()->RegisterItem(m_iStartTileNum, pOwner);
 	GetOwner()->Transform()->SetRelativeRot(DEGREE2RADIAN(90.f), 0.f, DEGREE2RADIAN(180));
 }
+
 
 void CBaseCharacterScript::ChangeTransInfo()
 {

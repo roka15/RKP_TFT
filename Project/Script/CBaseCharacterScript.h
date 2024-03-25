@@ -29,7 +29,7 @@ public:
 	bool IsAttack() { return m_ChState.bAttack; }
 	bool IsDance() { return m_ChState.bDance; }
 	bool IsEnd() { return m_ChState.bEnd; }
-	void SetWait(bool _flag) { m_ChState.bWaiting = _flag; }
+	
 	virtual bool IsWithinAttackRange();
 	void SetWaitingSeat(bool _flag) { m_ChState.bWaiting = _flag; }
 	virtual void UltGaugeUp();
@@ -44,8 +44,11 @@ public:
 	virtual void Dance();
 	virtual void SetTarget(CCollider* _Other);
 public:
+	void SetMove(bool _flag) { m_ChState.bMove = _flag; }
+	void SetWait(bool _flag) { m_ChState.bWaiting = _flag; }
 	void CurStartTile();
 	void ResetTile(); 
+
 
 public:
 	CBaseCharacterScript();

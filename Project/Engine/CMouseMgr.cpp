@@ -82,6 +82,32 @@ Vec3 CMouseMgr::GetMousePos()
 	return Ray;
 }
 
+void CMouseMgr::CursorDownEvent(PointerEventData& _data)
+{
+	//cursor
+	vector<CScript*> vecScript = m_pCursor->GetScripts();
+	for (int i = 0; i < vecScript.size(); ++i)
+	{
+		CScript* script = vecScript[i];
+		IMouseDownEvent* pEvent = dynamic_cast<IMouseDownEvent*>(script);
+		if (pEvent)
+			pEvent->DownEvent(_data);
+	}
+}
+
+void CMouseMgr::CursorUpEvent(PointerEventData& _data)
+{
+	//cursor
+	vector<CScript*> vecScript = m_pCursor->GetScripts();
+	for (int i = 0; i < vecScript.size(); ++i)
+	{
+		CScript* script = vecScript[i];
+		IMouseUpEvent* pEvent = dynamic_cast<IMouseUpEvent*>(script);
+		if (pEvent)
+			pEvent->UpEvent(_data);
+	}
+}
+
 void CMouseMgr::MouseDownEvent(vector<CGameObject*>& _pObjs, PointerEventData& _data)
 {
 
@@ -98,11 +124,14 @@ void CMouseMgr::MouseDownEvent(vector<CGameObject*>& _pObjs, PointerEventData& _
 		{
 			_data.pointerPress = nullptr;
 			_data.lastPress = _data.pointerPress;
+			CursorDownEvent(_data);
 		}
 		else //클릭한 곳에 Object가 있다면.
 		{
 			_data.pointerPress = _pObjs[0];
 			_data.lastPress = _data.pointerPress;
+
+			CursorDownEvent(_data);
 
 			vector<CScript*> vecScript = _pObjs[0]->GetScripts();
 			for (int i = 0; i < vecScript.size(); ++i)
@@ -114,15 +143,7 @@ void CMouseMgr::MouseDownEvent(vector<CGameObject*>& _pObjs, PointerEventData& _
 			}
 		}
 
-		//cursor
-		vector<CScript*> vecScript = m_pCursor->GetScripts();
-		for (int i = 0; i < vecScript.size(); ++i)
-		{
-			CScript* script = vecScript[i];
-			IMouseDownEvent* pEvent = dynamic_cast<IMouseDownEvent*>(script);
-			if (pEvent)
-				pEvent->DownEvent(_data);
-		}
+		
 
 		m_BeforEventInfo = _data;
 	}
@@ -147,11 +168,12 @@ void CMouseMgr::MouseUpEvent(vector<CGameObject*>& _pObjs, PointerEventData& _da
 		if (_pObjs.size() == 0)
 		{
 			_data.pointerPress = nullptr;
+			CursorUpEvent(_data);
 		}
 		else
 		{
 			_data.pointerPress = _pObjs[0];
-
+			CursorUpEvent(_data);
 			vector<CScript*> vecScript = _pObjs[0]->GetScripts();
 			for (int i = 0; i < vecScript.size(); ++i)
 			{
@@ -162,17 +184,9 @@ void CMouseMgr::MouseUpEvent(vector<CGameObject*>& _pObjs, PointerEventData& _da
 			}
 		}
 	}
-
-	//cursor
-	vector<CScript*> vecScript = m_pCursor->GetScripts();
-	for (int i = 0; i < vecScript.size(); ++i)
-	{
-		CScript* script = vecScript[i];
-		IMouseUpEvent* pEvent = dynamic_cast<IMouseUpEvent*>(script);
-		if (pEvent)
-			pEvent->UpEvent(_data);
-	}
+	
 	m_BeforEventInfo = {};
+	
 	return;
 }
 

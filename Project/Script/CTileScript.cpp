@@ -53,6 +53,17 @@ void CTileScript::DownEvent(PointerEventData _data)
 
 void CTileScript::UpEvent(PointerEventData _data)
 {
+	vector<CGameObject*> vecChilds = GetOwner()->GetChild();
+	CBaseCharacterScript* pCharacterScript = vecChilds[0]->GetScript<CBaseCharacterScript>();
+	switch (m_Type)
+	{
+	case TILE_TYPE::BATTLE:
+		pCharacterScript->SetWait(false);
+		break;
+	case TILE_TYPE::WAIT:
+		pCharacterScript->SetWait(true);
+		break;
+	}
 }
 
 void CTileScript::AddItem(CGameObject* _obj)
@@ -60,29 +71,12 @@ void CTileScript::AddItem(CGameObject* _obj)
 	GetOwner()->AddChild(_obj);
 }
 
-void CTileScript::ChangeItemState(bool _flag)
+void CTileScript::ChangeTileState(bool _flag)
 {
 	if (m_Type == TILE_TYPE::BATTLE)
 	{
 		CGameObject* owner = GetOwner();
 		owner->Collider3D()->SetActive(_flag);
-		const vector<CGameObject*>& childs = owner->GetChild();
-
-		for (int i = 0; i < childs.size(); ++i)
-		{
-			CBaseCharacterScript* character = childs[i]->GetScript<CBaseCharacterScript>();
-			if (character == nullptr)
-				return;
-			if (_flag)
-			{
-				character->SetWait(true);
-			}
-			else
-			{
-				character->SetWait(false);
-			}
-			
-		}
 	}
 }
 

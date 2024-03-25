@@ -26,7 +26,7 @@ public:
     const TILE_OWNER_TYPE& GetOwnerType()const { return m_OwnerType; }
     int GetNumber() { return m_Number; }
     void AddItem(CGameObject* _obj);
-    void ChangeItemState(bool _flag);
+    void ChangeTileState(bool _flag);
     void HighlightColor(bool _flag);
 public:
     CLONE(CTileScript)
