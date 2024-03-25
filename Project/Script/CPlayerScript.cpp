@@ -4,9 +4,33 @@
 #include <Engine\CMeshRender.h>
 #include <Engine\CMaterial.h>
 #include <Engine\CMouseMgr.h>
+#include "CTileMgr.h"
 
 #include "CMissileScript.h"
+#include "CBaseCharacterScript.h"
 
+
+void CPlayerScript::SetGameStateInfo()
+{
+	for (int i = 0; i < m_vecItem.size(); ++i)
+	{
+		CGameObject* pItem = m_vecItem[i];
+		CBaseCharacterScript* pCharacterScript = pItem->GetScript<CBaseCharacterScript>();
+		switch ((GAME_STATE)m_GameState)
+		{
+		case GAME_STATE::BATTLE:
+			//select때 설정한 캐릭터 초기 위치 저장
+			pCharacterScript->CurStartTile();
+			break;
+		case GAME_STATE::LOADING:
+			//select때 설정한 초기 위치로 이동.
+			pCharacterScript->ResetTile();
+			break;
+		}
+
+	}
+	
+}
 
 CPlayerScript::CPlayerScript()
 	: CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT)

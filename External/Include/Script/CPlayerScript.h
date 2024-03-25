@@ -24,13 +24,14 @@ public:
     virtual void LoadFromLevelFile(FILE* _FILE) override;
     CLONE(CPlayerScript);
 public:
-    void SetGameState(UINT _iMode) { m_GameState = _iMode; }
+	void SetGameState(UINT _iMode) { m_GameState = _iMode; }
     void SetGameID(UINT _iID) { m_GameKey = _iID; }
     int GetGameID() { return m_GameKey; }
     const int& GetMoney() { return m_Money; }
     void AddItem(CGameObject* _pObj) { m_vecItem.push_back(_pObj); }
     void SetPlayerType(PLAYER_TYPE _eType) { m_ePlayerType = _eType; }
     PLAYER_TYPE GetPlayerType() { return m_ePlayerType; }
+	void SetGameStateInfo();
 public:
     CPlayerScript();
     ~CPlayerScript();

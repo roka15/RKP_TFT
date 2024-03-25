@@ -12,7 +12,8 @@ private:
     float                                        m_fSelectTime;
     float                                        m_fBettleTime;
     float                                        m_fItemTime;
-    UINT                                         m_iRoundCnt;
+	float									     m_fLoadingTime;
+    UINT                                         m_iRoundCnt; 
     GAME_STATE                                   m_eGameState;
     vector<CPlayerScript*>                       m_vecUsers;
     map<CHARACTER_TYPE, queue<CGameObject*>>     m_mapShop;

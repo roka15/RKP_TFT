@@ -49,11 +49,16 @@ void CGame::tick()
 		break;
 	case GAME_STATE::BATTLE:
 		CompareTime = m_fBettleTime;
-		GameMode = GAME_STATE::SELECT;
-		bBattleTile = true;
+		GameMode = GAME_STATE::LOADING;
+		bBattleTile = false;
 		break;
 	case GAME_STATE::ITEM:
 		CompareTime = m_fItemTime;
+		GameMode = GAME_STATE::LOADING;
+		bBattleTile = false;
+		break;
+	case GAME_STATE::LOADING:
+		CompareTime = m_fLoadingTime;
 		GameMode = GAME_STATE::SELECT;
 		bBattleTile = true;
 		break;
@@ -61,12 +66,15 @@ void CGame::tick()
 
 	if (m_fCurTime - m_fStartTime > CompareTime)
 	{
-		++m_iRoundCnt;
+		if (GameMode == GAME_STATE::BATTLE)
+			++m_iRoundCnt;
 		m_fStartTime = m_fCurTime;
 
 		if (m_iRoundCnt % 4 == 0)
+		{
 			GameMode = GAME_STATE::ITEM;
-
+			++m_iRoundCnt;
+		}
 		m_eGameState = GameMode;
 
 		if (bBattleTile)
@@ -129,6 +137,7 @@ void CGame::SendGameState(UINT _iState)
 			continue;
 
 		player->SetGameState(_iState);
+		player->SetGameStateInfo();
 	}
 }
 
@@ -146,7 +155,8 @@ CGame::CGame()
 	m_fCurTime(0.f),
 	m_fSelectTime(20.f),
 	m_fBettleTime(30.f),
-	m_fItemTime(60.f)
+	m_fItemTime(30.f),
+	m_fLoadingTime(10.f)
 {
 }
 

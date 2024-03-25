@@ -113,6 +113,7 @@ void CBaseCharacterScript::tick()
 	switch (iGameState)
 	{
 	case 0://select
+		m_iStartTileNum = GetOwner()->GetParent()->GetScript<CTileScript>()->GetNumber();
 		break;
 	case 1://battle
 		if (m_ChStatus.fAttackRange == distance)
@@ -310,6 +311,19 @@ void CBaseCharacterScript::SetTarget(CCollider* _Other)
 			m_pTarget = otherTF;
 		}
 	}*/
+}
+
+void CBaseCharacterScript::CurStartTile()
+{
+	int iNumber = GetOwner()->GetParent()->GetScript<CTileScript>()->GetNumber();
+	m_iStartTileNum = iNumber;
+}
+
+void CBaseCharacterScript::ResetTile()
+{
+	CGameObject* pOwner = GetOwner();
+	CTileMgr::GetInst()->RegisterItem(m_iStartTileNum, pOwner);
+	GetOwner()->Transform()->SetRelativeRot(DEGREE2RADIAN(90.f), 0.f, DEGREE2RADIAN(180));
 }
 
 void CBaseCharacterScript::ChangeTransInfo()
