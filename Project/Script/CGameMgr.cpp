@@ -130,7 +130,7 @@ void CGameMgr::CreateCharacterPrefabs()
 		pAniController->RegisterParam(L"Battle", 0);
 		pAniController->RegisterParam(L"ULT", 0);
 		pAniController->RegisterParam(L"Move", 0);
-		pAniController->RegisterParam(L"Attack", false, true);
+		pAniController->RegisterParam(L"Attack", false, false);
 		pAniController->RegisterParam(L"Dance", false, true);
 		pAniController->RegisterParam(L"End", false, true);
 
@@ -229,10 +229,10 @@ void CGameMgr::CreateCharacterPrefabs()
 		pOutNode = pAnyNode;
 		pInNode = pAniController->CreateNode(L"Battle_Attack", L"anim3D\\Attack1.anm");
 		t1 = pAniController->CreateTransition(L"AnyState_Battle_Attack", pInNode, pOutNode, false);
-		t1->RegisterCondition(L"Attack", true, true, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
 		t1->RegisterCondition(L"Battle", 1, COMPARISON_TYPE::EQUAL);
 		t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", BIdleNode, pInNode, true);
-		//t1->RegisterCondition(L"End", true, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Attack", false,false, COMPARISON_TYPE::EQUAL);
 		CAniNode* BAttackNode = pInNode;
 
 		pOutNode = pAnyNode;

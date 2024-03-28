@@ -325,6 +325,8 @@ void CBaseCharacterScript::Battle(CGameObject* _pTileObj)
 	}
 	else
 	{
+		//SetAtk(false);
+		
 		//test를 위해 항상 검사 - 경로 타일 색깔 바뀌게 하기 위함
 		vector<int> Route = CAStarMgr::GetInst()->GetNextNodeAStar(startNumber, endNumber);
 		CTileMgr::GetInst()->BattleRouteRender(Route);
@@ -337,19 +339,20 @@ void CBaseCharacterScript::Battle(CGameObject* _pTileObj)
 			Vec3 WorldPos = GetOwner()->Transform()->GetWorldPos();
 			Vec2 diff = Vec2(abs(WorldPos.x - m_v3TargetPos.x), abs(WorldPos.z - m_v3TargetPos.z));
 			Vec3 pos = GetOwner()->Transform()->GetRelativePos();
-			
-			if (diff.x <= abs(m_v2Dir.x) && diff.y <= abs(m_v2Dir.y))
+
+			if ((diff.x <= abs(m_v2Dir.x)|| m_v2Dir.x == 0) 
+				&& (diff.y <= abs(m_v2Dir.y) || m_v2Dir.y ==0))
 			{
 				m_bMove = false;
 				ChangeTransInfo();
 				CTileMgr::GetInst()->RegisterItem(m_iTargetNum, GetOwner());
 				pos = Vec3{ 0.f,0.f,pos.z };
 			}
-			else if (diff.x <= abs(m_v2Dir.x))
+			else if (diff.x <= abs(m_v2Dir.x) && m_v2Dir.y != 0)
 			{
 				WorldPos.y += dir.y;
 			}
-			else if (diff.y <= abs(m_v2Dir.y))
+			else if (diff.y <= abs(m_v2Dir.y) && m_v2Dir.x != 0)
 			{
 				WorldPos.x += dir.x;
 			}

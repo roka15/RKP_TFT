@@ -21,12 +21,12 @@ void CAttroxBattleAttack::OnEntry(CStateMachineScript* _pSMachine, CState* _pSta
 		return;
 
 	pController->SetIntParam(L"Battle", 1);
-	pController->SetTriggerParam(L"Attack", true);
+	pController->SetBoolParam(L"Attack", true);
 
-	CBaseCharacterScript* pChScript = _pSMachine->GetOwner()->GetScript<CBaseCharacterScript>();
-	if (pChScript == nullptr)
-		return;
-	pChScript->AttackOFF();
+	//CBaseCharacterScript* pChScript = _pSMachine->GetOwner()->GetScript<CBaseCharacterScript>();
+	//if (pChScript == nullptr)
+	//	return;
+	//pChScript->AttackOFF();
 }
 
 void CAttroxBattleAttack::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
@@ -121,6 +121,11 @@ void CAttroxBattleAttack::tick(CStateMachineScript* _pSMachine)
 		if (bMove)
 		{
 			trigger.SetEvtType(TRIGGER_TYPE::BMOVE);
+			bChange = true;
+		}
+		else if (bAttack)
+		{
+			trigger.SetEvtType(TRIGGER_TYPE::BATTACK);
 			bChange = true;
 		}
 	    else if (bAttack == false && bWait == false)

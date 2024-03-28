@@ -767,7 +767,7 @@ void CreateTestLevel()
 	pTestEnemy->Transform()->SetRelativeScale(Vec3{ 100.f,100.f,100.f });
 	pTestEnemy->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
 	pTestEnemy->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"),0);
-	pTestEnemy->AddComponent(new CItem());
+	pTestEnemy->AddComponent(new CBaseCharacterScript());
 	pTestEnemy2 = new CGameObject();
 	pTestEnemy2->SetName(L"TestEnemy");
 	pTestEnemy2->AddComponent(new CTransform());
@@ -775,7 +775,7 @@ void CreateTestLevel()
 	pTestEnemy2->Transform()->SetRelativeScale(Vec3{ 100.f,100.f,100.f });
 	pTestEnemy2->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
 	pTestEnemy2->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
-	pTestEnemy2->AddComponent(new CItem());
+	pTestEnemy2->AddComponent(new CBaseCharacterScript());
 	{
 		CTileMgr::GetInst()->RegisterItem(51, pTestEnemy);
 		CTileMgr::GetInst()->RegisterItem(56, pTestEnemy2);
