@@ -29,6 +29,7 @@ public:
     int GetGameID() { return m_GameKey; }
     const int& GetMoney() { return m_Money; }
     void AddItem(CGameObject* _pObj) { m_vecItem.push_back(_pObj); }
+    vector<Vec3> GetItemPos();
     void SetPlayerType(PLAYER_TYPE _eType) { m_ePlayerType = _eType; }
     PLAYER_TYPE GetPlayerType() { return m_ePlayerType; }
 	void SetGameStateInfo();

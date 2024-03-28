@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CAStarMgr.h"
 #include <Engine\CPathMgr.h>
+#include "CGameMgr.h"
 #include "CTileMgr.h"
 #include "CTileScript.h"
 
@@ -19,16 +20,14 @@ int CAStarMgr::SearchTarget(UINT _startNode, int& _out_distance)
 	//p1 대기석 - p1 전투석 - p2 전투석 - p2 대기석 순으로 저장되기 때문에
 	//p1 대기석 갯수를 빼줘야 함.
 	int Offset = CTileMgr::GetInst()->GetWaitCount().x * -1;
-	const TILE_OWNER_TYPE& eType = CTileMgr::GetInst()->GetTileOwnerType(_startNode);
-	TILE_OWNER_TYPE eEnemy = eType == TILE_OWNER_TYPE::PLAYER ? TILE_OWNER_TYPE::ENEMY : TILE_OWNER_TYPE::PLAYER;
-	vector<int> vecEnumyNums = CTileMgr::GetInst()->GetAnotherPlayer(eEnemy);
+	vector<int> vecEnumyNums = CTileMgr::GetInst()->SearchEnemyTile();
 	int size = vecEnumyNums.size();
 	int min = 100000;
 	int iTargetNum = -1;
 	for (int i = 0; i < size; ++i)
 	{
 		Vec2 StartIdx = ConvertNumberToOffset(_startNode + Offset);
-		Vec2 EndIdx = ConvertNumberToOffset(vecEnumyNums[i] + Offset);
+ 		Vec2 EndIdx = ConvertNumberToOffset(vecEnumyNums[i] + Offset);
 		Vec3 cube1 = ConvertOffsetToCube(StartIdx.x, StartIdx.y);
 		Vec3 cube2 = ConvertOffsetToCube(EndIdx.x, EndIdx.y);
 		int diff = CalcuDistance(cube1, cube2);
@@ -162,8 +161,9 @@ void CAStarMgr::LoadFile(FILE* _pFile)
 }
 Vec3 CAStarMgr::ConvertOffsetToCube(UINT _col, UINT _row)
 {
-	if (_row % 2 != 0)
+	/*if (_row % 2 != 0)
 		_col += 1;
+	*/
 	int q = _col - (_row + (_row & 1)) / 2;
 	int r = _row;
 	return Vec3(q, r, -q - r);

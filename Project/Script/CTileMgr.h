@@ -54,6 +54,6 @@ public:
     void BattleSetInfo(const Vec2& _offset, const Vec2& _size, const Vec2& _count, const Vec3& _start);
     void WaitSetInfo(const Vec2& _offset, const Vec2& _size, const Vec2& _count, const Vec3& _start);
     CGameObject* CreateTile(TILE_OWNER_TYPE _type);
-   
+    vector<int> SearchEnemyTile();
 };
 

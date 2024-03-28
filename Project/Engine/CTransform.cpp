@@ -22,6 +22,8 @@ CTransform::~CTransform()
 
 void CTransform::finaltick()
 {
+	if (GetOwner()->GetName().compare(L"Attrox") == 0)
+		int a = 0;
 	m_matWorldScale = XMMatrixIdentity();
 	m_matWorldScale = XMMatrixScaling(m_vRelativeScale.x, m_vRelativeScale.y, m_vRelativeScale.z);
 

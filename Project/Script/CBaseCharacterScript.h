@@ -46,10 +46,12 @@ public:
 public:
 	void SetMove(bool _flag) { m_ChState.bMove = _flag; }
 	void SetWait(bool _flag) { m_ChState.bWaiting = _flag; }
+	void SetAtk(bool _flag) { m_ChState.bAttack = _flag; }
 	void CurStartTile();
 	void ResetTile(); 
 
-
+protected:
+	void Battle(CGameObject* _pTileObj);
 public:
 	CBaseCharacterScript();
 	CBaseCharacterScript(SCRIPT_TYPE _eType);

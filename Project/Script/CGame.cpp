@@ -16,6 +16,7 @@ int CGame::CanEnter()
 	}
 	return -1;
 }
+
 void CGame::init()
 {
 	m_vecUsers.resize(m_iUserCnt);
@@ -154,7 +155,7 @@ CGame::CGame()
 	m_fStartTime(0.f),
 	m_fCurTime(0.f),
 	m_fSelectTime(20.f),
-	m_fBettleTime(30.f),
+	m_fBettleTime(1000000.f),
 	m_fItemTime(30.f),
 	m_fLoadingTime(10.f)
 {

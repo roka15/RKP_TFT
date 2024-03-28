@@ -4,6 +4,7 @@
 #include <Engine\CResMgr.h>
 #include "CTileScript.h"
 #include "CGameMgr.h"
+#include "CItem.h"
 
 int  CTileMgr::s_number = 0;
 CTileMgr::CTileMgr()
@@ -206,6 +207,31 @@ CGameObject* CTileMgr::CreateTile(TILE_OWNER_TYPE _type)
 
 	pEmpty->Transform()->SetRelativePos(m_StartPos);
 	return pEmpty;
+}
+
+vector<int> CTileMgr::SearchEnemyTile()
+{
+	vector<int> vecEnemyNums;
+	for (int i = 0; i < m_vecBattleTile.size(); ++i)
+	{
+		vector<CGameObject*> vecChilds = m_vecBattleTile[i]->GetChild();
+		if (vecChilds.size() == 0)
+			continue;
+		CGameObject* pItemObj = vecChilds[0];
+	
+		CItem* pItemScript = pItemObj->GetScript<CItem>();
+		CGameObject* pPlayer = pItemScript->GetPlayer();
+		bool bSame = CGameMgr::GetInst()->IsSamePlayer(pPlayer);
+		if (bSame == false)
+		{
+			CTileScript* script = m_vecBattleTile[i]->GetScript<CTileScript>();
+			if (script == nullptr)
+				continue;
+			int Number = script->GetNumber();
+			vecEnemyNums.push_back(Number);
+		}
+	}
+	return vecEnemyNums;
 }
 
 

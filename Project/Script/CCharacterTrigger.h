@@ -9,7 +9,11 @@ enum class TRIGGER_TYPE
     BMOVE,
     UMOVE,
     BATTACK,
+    BATTACK2,
+    BATTACK3,
     UATTACK,
+    UATTACK2,
+    UATTACK3,
     DANCE,
     END,
 };

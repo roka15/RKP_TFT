@@ -259,4 +259,9 @@ void CGameMgr::CreateCharacterPrefabs()
 #pragma endregion
 }
 
+bool CGameMgr::IsSamePlayer(CGameObject* _pObj)
+{
+	return m_ClientOwner == _pObj;
+}
+
 

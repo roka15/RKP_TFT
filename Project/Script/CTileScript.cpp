@@ -54,6 +54,8 @@ void CTileScript::DownEvent(PointerEventData _data)
 void CTileScript::UpEvent(PointerEventData _data)
 {
 	vector<CGameObject*> vecChilds = GetOwner()->GetChild();
+	if (vecChilds.size() == 0)
+		return;
 	CBaseCharacterScript* pCharacterScript = vecChilds[0]->GetScript<CBaseCharacterScript>();
 	switch (m_Type)
 	{
