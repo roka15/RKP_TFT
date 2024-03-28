@@ -34,6 +34,8 @@ CAnimation3D::CAnimation3D(Ptr<CAniClip> _clip) :
 		m_iFrameCount = 30;
 		break;
 	}
+	int size = m_pClip->m_Events.size();
+	m_bEvents.resize(size,false);
 }
 CAnimation3D::~CAnimation3D()
 {
@@ -68,6 +70,39 @@ void CAnimation3D::finaltick()
 	m_fRatio = (float)(dFrameIdx - (double)m_iFrameIdx);
 
 	m_bFinalMatUpdate = false;
+
+	for (int i = 0; i < m_bEvents.size(); ++i)
+	{
+		if (m_bEvents[i])
+			return;
+		t_AniEventPoint point = m_pClip->m_Events[i];
+
+		if (m_iFrameIdx >= point.Time)
+		{
+			if (point.mNormalFunc!=nullptr)
+			{
+				point.mNormalFunc();
+			}
+			if (point.mFloatFunc != nullptr)
+			{
+				point.mFloatFunc(point.Float);
+			}
+			if (point.mIntFunc != nullptr)
+			{
+				point.mIntFunc(point.Int);
+			}
+			if (point.mStringFunc != nullptr)
+			{
+				point.mStringFunc(point.String);
+			}
+			if (point.mObjFunc != nullptr)
+			{
+				point.mObjFunc(point.Obj);
+			}
+
+			m_bEvents[i] = true;
+		}
+	}
 }
 void CAnimation3D::Reset()
 {
@@ -87,6 +122,8 @@ void CAnimation3D::Reset()
 	m_iNextFrameIdx = 0;
 	m_fRatio = 0.f;
 	m_bFinish = false;
+	int size = m_bEvents.size();
+	m_bEvents.resize(size, false);
 }
 void CAnimation3D::SetClip(const std::wstring& _strKey)
 {

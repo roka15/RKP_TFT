@@ -18,8 +18,8 @@ private:
     float           m_fRatio;
     int             m_iFrameCount;
     bool            m_bFinalMatUpdate;
-    
     bool            m_bFinish;
+    vector<bool>    m_bEvents;
 public:
     void finaltick();
     void Reset();

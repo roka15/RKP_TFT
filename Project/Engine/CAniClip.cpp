@@ -8,6 +8,8 @@ CAniClip::CAniClip() :CRes(RES_TYPE::ANICLIP, true)
 {
 }
 
+
+
 CAniClip::~CAniClip()
 {
 	if (m_pBoneOffset != nullptr)
@@ -115,7 +117,46 @@ void CAniClip::CreateStructBuffer()
 	m_pBoneFrameData->Create(sizeof(tFrameTrans), (UINT)vecOffset.size() * m_tInfo.iFrameLength
 		, SB_TYPE::READ_ONLY, false, vecFrameTrans.data());
 }
+vector<int>  CAniClip::GetEventPointNumber()
+{
+	vector<int> vecNumbers;
+	for (int i = 0; i < m_Events.size(); ++i)
+	{
+		vecNumbers.push_back(m_Events[i].Time);
+	}
+	return vecNumbers;
+}
 
+void CAniClip::RegisterEventVoidFunc(int _iFrame, std::function<void()>& _func)
+{
+	if (m_Events.size() <= _iFrame)
+		return;
+	m_Events[_iFrame].mNormalFunc = _func;
+}
+void CAniClip::RegisterEventFloatFunc(int _iFrame, std::function<void(float)>& _func)
+{
+	if (m_Events.size() <= _iFrame)
+		return;
+	m_Events[_iFrame].mFloatFunc = _func;
+}
+void CAniClip::RegisterEventIntFunc(int _iFrame, std::function<void(int)>& _func)
+{
+	if (m_Events.size() <= _iFrame)
+		return;
+	m_Events[_iFrame].mIntFunc = _func;
+}
+void CAniClip::RegisterEventStringFunc(int _iFrame, std::function<void(string)>& _func)
+{
+	if (m_Events.size() <= _iFrame)
+		return;
+	m_Events[_iFrame].mStringFunc = _func;
+}
+void CAniClip::RegisterEventObjFunc(int _iFrame, std::function<void(CGameObject*)>& _func)
+{
+	if (m_Events.size() <= _iFrame)
+		return;
+	m_Events[_iFrame].mObjFunc = _func;
+}
 int CAniClip::Save(const wstring& _strRelativePath)
 {
 	// 상대경로 저장
