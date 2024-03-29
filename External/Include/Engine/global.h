@@ -13,6 +13,7 @@ using std::make_pair;
 using std::wstring;
 using std::string;
 
+#include <optional>
 #include <typeinfo>
 #include <assert.h>
 

@@ -22,7 +22,7 @@ void CGame::init()
 	m_vecUsers.resize(m_iUserCnt);
 	Ptr<CPrefab> prefab;
 	CHARACTER_TYPE eType;
-	const int AttroxCnt = 1;
+	const int AttroxCnt = 3;
 	m_mapShop.insert(std::make_pair(CHARACTER_TYPE::ATTROX, queue<CGameObject*>()));
 	eType = CHARACTER_TYPE::ATTROX;
 	prefab = CResMgr::GetInst()->FindRes<CPrefab>(L"Ch_Attrox");

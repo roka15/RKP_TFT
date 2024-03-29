@@ -2,7 +2,6 @@
 #include "CEntity.h"
 class CTransition;
 class CAnimatorController;
-class CAnimation3D;
 class CStructuredBuffer;
 
 class CAniNode :
@@ -12,17 +11,17 @@ private:
     vector<CTransition*>        m_vecOutConditions;
     vector<CTransition*>        m_vecInConditions;
     CAnimatorController*        m_pController;
-    CAnimation3D*               m_pMotionClip;
+    wstring                     m_strAniKey;
     bool                        m_bBlending;
 private:
-    void check_bone(CStructuredBuffer*& _finalMat);
+    ANI_NODE_RETURN NextNode(int _iOutSize, bool _bFinish, bool _bCurNullNode, bool _bLoop);
 public:
     int Save(FILE* _pFile);
     int Load(FILE* _pFile);
     int LoadAfterProcess();
     CAnimatorController* GetController() { return m_pController; }
     void SetController(CAnimatorController* _pController) { m_pController = _pController; }
-    
+    wstring GetAnimationKey() { return m_strAniKey; }
     void AddOutTransition(CTransition* _pTransition);
     void AddInTransition(CTransition* _pTransition);
     void RemoveOutTransition(CTransition* _pTransition);
@@ -31,11 +30,9 @@ public:
     void RemoveAllOutTransition();
     void Destory();
     void SetBlending(bool _flag) { m_bBlending = _flag; }
-    bool NextNode(int _iOutSize,bool _bFinish,bool _bCurNullNode);
-    UINT GetBoneCount();
+    ANI_NODE_RETURN NextNode(bool _bFinish ,bool _bLoop);
+
 public:
-    void finaltick();
-    void UpdateData(CStructuredBuffer*& _finalMat);
     CLONE(CAniNode)
 public:
     CAniNode();

@@ -316,3 +316,12 @@ enum class COMPARISON_TYPE
 	EQUAL,
 	END,
 };
+
+enum class ANI_NODE_RETURN
+{
+	NOTHING,
+	ENTRTY,
+	EXIT,
+	RESET,
+	CHANGE,
+};

@@ -108,7 +108,7 @@ void ContentUI::Reload()
 				continue;
 
 			wstring strFilePath = strContentPath + pair.first;
-			if (!filesystem::exists(strFilePath))
+			if (!exists(strFilePath))
 			{
 				tEvent evn = {};
 				evn.Type = EVENT_TYPE::DELETE_RESOURCE;

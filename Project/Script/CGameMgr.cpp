@@ -110,6 +110,24 @@ void CGameMgr::CreateCharacterPrefabs()
 	pObj->AddComponent(fsmScript);
 	pObj->AddComponent(chScript);
 
+#pragma region Animator - Animation Register
+	CAnimator3D* pAnimator = pObj->Animator3D();
+	pAnimator->RegisterAnimation(L"anim3D\\Aatrox_ReSheath_fullbody.anm");
+	pAnimator->RegisterAnimation(L"anim3D\\Idle_in_sheath.anm");
+	pAnimator->RegisterAnimation(L"anim3D\\Aatrox_Idle1.anm");
+	pAnimator->RegisterAnimation(L"anim3D\\Aatrox_unsheath.anm");
+	pAnimator->RegisterAnimation(L"anim3D\\Idle1.anm");
+	pAnimator->RegisterAnimation(L"anim3D\\Unsheath_run01.anm");
+	pAnimator->RegisterAnimation(L"anim3D\\Aatrox_ULT_Idle.anm");
+	pAnimator->RegisterAnimation(L"anim3D\\Aatrox_ULT_Spell_Dash.anm");
+	pAnimator->RegisterAnimation(L"anim3D\\ULT_Idlein.anm");
+	pAnimator->RegisterAnimation(L"anim3D\\ULT_out.anm");
+	pAnimator->RegisterAnimation(L"anim3D\\Run_Ult.anm");
+	pAnimator->RegisterAnimation(L"anim3D\\Dance_Windup.anm");
+	pAnimator->RegisterAnimation(L"anim3D\\Dance_Loop.anm");
+	pAnimator->RegisterAnimation(L"anim3D\\Attack1.anm");
+	pAnimator->RegisterAnimation(L"anim3D\\Attack1_Ult.anm");
+#pragma endregion
 	Ptr<CAnimatorController> pAniController = nullptr;
 	wstring strPath = L"controller\\Attrox.controller";
 	Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Dance_Loop.anm");
@@ -235,7 +253,7 @@ void CGameMgr::CreateCharacterPrefabs()
 
 		pOutNode = pAnyNode;
 		pInNode = pAniController->CreateNode(L"Battle_Attack", L"anim3D\\Attack1.anm");
-		t1 = pAniController->CreateTransition(L"AnyState_Battle_Attack", pInNode, pOutNode, false);
+		t1 = pAniController->CreateTransition(L"AnyState_Battle_Attack", pInNode, pOutNode, true);
 		t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
 		t1->RegisterCondition(L"Battle", 1, COMPARISON_TYPE::EQUAL);
 		t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", BIdleNode, pInNode, true);

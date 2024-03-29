@@ -11,13 +11,6 @@ CAniNode::CAniNode() :
 	m_bBlending(false)
 {
 }
-
-CAniNode::CAniNode(const CAniNode& _ref):
-	m_bBlending(_ref.m_bBlending)
-{
-
-}
-
 //OutConditions : node 에서 삭제하기
 //InConditions  : node 에서 참조 끊기.
 CAniNode::CAniNode(wstring _strClipName) :
@@ -25,14 +18,7 @@ CAniNode::CAniNode(wstring _strClipName) :
 {
 	CAnimation3D* pAni = nullptr;
 	size_t len = _strClipName.size();
-	if (len != 0)
-	{
-		Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(_strClipName);
-		pAni = new CAnimation3D(pClip);
-		pAni->SetOwner(this);
-	}
-
-	m_pMotionClip = pAni;
+	m_strAniKey = _strClipName;
 }
 
 CAniNode::~CAniNode()
@@ -41,16 +27,6 @@ CAniNode::~CAniNode()
 	RemoveAllOutTransition();
 }
 
-void CAniNode::check_bone(CStructuredBuffer*& _finalMat)
-{
-	if (m_pMotionClip == nullptr)
-		return;
-	UINT iBoneCount = m_pMotionClip->m_pClip->GetBoneCount();
-	if (_finalMat->GetElementCount() != iBoneCount)
-	{
-		_finalMat->Create(sizeof(Matrix), iBoneCount, SB_TYPE::READ_WRITE, false, nullptr);
-	}
-}
 
 int CAniNode::Save(FILE* _pFile)
 {
@@ -60,14 +36,9 @@ int CAniNode::Save(FILE* _pFile)
 	{
 		m_vecOutConditions[i]->Save(_pFile);
 	}
-	wstring strClipKey = {};
-	if (m_pMotionClip == nullptr)
-		strClipKey = L"";
-	else
-		strClipKey = m_pMotionClip->GetClip()->GetName();
-	int strLen = strClipKey.size() * UNICODELEN;
+	int strLen = m_strAniKey.size() * UNICODELEN;
 	fwrite(&strLen, sizeof(int), 1, _pFile);
-	fwrite(strClipKey.c_str(), strLen, 1, _pFile);
+	fwrite(m_strAniKey.c_str(), strLen, 1, _pFile);
 	fwrite(&m_bBlending, sizeof(bool), 1, _pFile);
 	return S_OK;
 }
@@ -86,12 +57,7 @@ int CAniNode::Load(FILE* _pFile)
 	wchar_t strBuff[MAXLEN] = {};
 	fread(&strLen, sizeof(int), 1, _pFile);
 	fread(strBuff, strLen, 1, _pFile);
-	if (strLen != 0)
-	{
-		strBuff[strLen + 1] = '\0';
-		Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(strBuff);
-		m_pMotionClip = new CAnimation3D(pClip);
-	}
+	m_strAniKey = strBuff;
 	fread(&m_bBlending, sizeof(bool), 1, _pFile);
 	return 0;
 }
@@ -179,27 +145,37 @@ void CAniNode::Destory()
 
 	RemoveAllOutTransition();
 }
-bool CAniNode::NextNode(int _iOutSize, bool _bFinish, bool _bCurNullNode)
+ANI_NODE_RETURN CAniNode::NextNode(bool _bFinish, bool _bLoop)
+{
+	wstring strName = GetName();
+	bool NoClipNode = false;
+	if (strName.compare(L"Entry") == 0 || strName.compare(L"Exit") == 0 || strName.compare(L"AnyState") == 0)
+		NoClipNode = true;
+
+	size_t iOutSize = m_vecOutConditions.size();
+	return NextNode(iOutSize, _bFinish, NoClipNode, _bLoop);
+}
+ANI_NODE_RETURN CAniNode::NextNode(int _iOutSize, bool _bFinish, bool _bCurNullNode, bool _bLoop)
 {
 	wstring CurName = GetName();
 	if (CurName.compare(L"Exit") == 0)
 	{
 		CAniNode* Entry = m_pController->GetNode(L"Entry");
 		m_pController->SetCurNode(Entry);
-		return true;
+		return ANI_NODE_RETURN::ENTRTY;
 	}
 
 	//다음 transition이 없다면 loop를 수행할지 말지 정한다.
 	if (_bFinish == true && _iOutSize == 0)
 	{
-		bool bLoop = m_pMotionClip->IsLoop();
-		if (bLoop)
-			m_pMotionClip->Reset();
-
-		return false;
+		if (_bLoop)
+		{
+			return  ANI_NODE_RETURN::RESET;
+		}
+		return  ANI_NODE_RETURN::NOTHING;
 	}
 
- 	for (int i = 0; i < _iOutSize; ++i)
+	for (int i = 0; i < _iOutSize; ++i)
 	{
 		CTransition* pOutTransition = m_vecOutConditions[i];
 
@@ -223,16 +199,16 @@ bool CAniNode::NextNode(int _iOutSize, bool _bFinish, bool _bCurNullNode)
 		{
 			if (bExitTime)
 			{
-				if (m_pMotionClip)
-					m_pMotionClip->Reset();
-				pOutTransition->RegisterCurNode(m_pController);
-				return true;
+				bool bChange = pOutTransition->RegisterCurNode(m_pController);
+				if (bChange)
+					return ANI_NODE_RETURN::CHANGE;
+				else
+					return ANI_NODE_RETURN::NOTHING;
 			}
 			else
 			{
 				//loop 의 값과 무관하게 같은 애니를 반복한다.
-				if (m_pMotionClip)
-					m_pMotionClip->Reset();
+				return ANI_NODE_RETURN::RESET;
 			}
 		}
 		else
@@ -243,71 +219,20 @@ bool CAniNode::NextNode(int _iOutSize, bool _bFinish, bool _bCurNullNode)
 			}
 			else
 			{
-				if (CurName.compare(L"AnyState") == 0)
-					int a = 0;
 				//재생을 완료하지 않았어도 Condition을 만족하면 다음 노드로 이동한다.
 				bool bActive = pOutTransition->IsActive(m_pController);
 				//condition active 되면 넘어감.
 				if (bActive)
 				{
-					if (CurName.compare(L"AnyState"))
-						int a = 0;
-					if (m_pMotionClip)
-						m_pMotionClip->Reset();
-					pOutTransition->RegisterCurNode(m_pController);
-					return true;
+					bool bChange = pOutTransition->RegisterCurNode(m_pController);
+					if (bChange)
+						return ANI_NODE_RETURN::CHANGE;
+					else
+						return ANI_NODE_RETURN::NOTHING;
 				}
 			}
 		}
 	}
-	return false;
-}
-UINT CAniNode::GetBoneCount()
-{
-	if (m_pMotionClip == nullptr)
-		return -1;
-	return m_pMotionClip->m_pClip->GetBoneCount();
-}
-void CAniNode::finaltick()
-{
-	bool bNullClip = m_pMotionClip == nullptr; // Entry,Exit,AniState 같은 노드는 Clip이 없다.
-	bool bFinish = false;
-	if (bNullClip == false)
-		bFinish = m_pMotionClip->IsFinish();
-
-	size_t iOutSize = m_vecOutConditions.size();
-	bool bNextNode = NextNode(iOutSize, bFinish, bNullClip);
-	if (bNextNode)
-		return;
-
-
-	if (m_pMotionClip != nullptr)
-		m_pMotionClip->finaltick();
+	return ANI_NODE_RETURN::NOTHING;
 }
 
-void CAniNode::UpdateData(CStructuredBuffer*& _finalMat)
-{
-	if (m_pMotionClip == nullptr)
-		return;
-	if (m_pMotionClip->m_bFinalMatUpdate == false)
-	{
-		// Animation3D Update Compute Shader
-		CAnimation3DShader* pUpdateShader = (CAnimation3DShader*)CResMgr::GetInst()->FindRes<CComputeShader>(L"Animation3DUpdateCS").Get();
-		check_bone(_finalMat);
-		pUpdateShader->SetFrameDataBuffer(m_pMotionClip->m_pClip->GetBoneFrameBuffer());
-		pUpdateShader->SetOffsetMatBuffer(m_pMotionClip->m_pClip->GetBoneOffsetBuffer());
-		pUpdateShader->SetOutputBuffer(_finalMat);
-
-		UINT iBoneCount = m_pMotionClip->m_pClip->GetBoneCount();
-		pUpdateShader->SetBoneCount(iBoneCount);
-		pUpdateShader->SetFrameIndex(m_pMotionClip->m_iFrameIdx);
-		pUpdateShader->SetNextFrameIdx(m_pMotionClip->m_iNextFrameIdx);
-		pUpdateShader->SetBlendingFlag(m_bBlending);
-		pUpdateShader->SetFrameRatio(m_pMotionClip->m_fRatio);
-
-		// 업데이트 쉐이더 실행
-		pUpdateShader->Execute();
-
-		m_pMotionClip->m_bFinalMatUpdate = true;
-	}
-}

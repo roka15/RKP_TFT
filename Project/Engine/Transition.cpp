@@ -281,9 +281,12 @@ void CTransition::RegisterCondition(wstring _Key, bool _bValue, bool _bTrigger, 
 	m_mapComparisonConditions.insert(std::make_pair(_Key, _tComparison));
 }
 
-void CTransition::RegisterCurNode(Ptr<CAnimatorController> _pController)
+bool CTransition::RegisterCurNode(Ptr<CAnimatorController> _pController)
 {
+	if (_pController->GetCurNode() == m_pConnectNode)
+		return false;
 	_pController->SetCurNode(m_pConnectNode);
+	return true;
 }
 
 void CTransition::SetConnectNode(CAniNode* _pConnectNode)

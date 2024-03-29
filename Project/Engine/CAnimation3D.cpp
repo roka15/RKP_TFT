@@ -4,17 +4,29 @@
 #include "CResMgr.h"
 #include "CTimeMgr.h"
 #include "AniNode.h"
-
-
+#include "CStructuredBuffer.h"
+#include "CAnimation3DShader.h"
 CAnimation3D::CAnimation3D() :
 	m_dCurTime(0.)
-	, m_iFrameCount(30)
+	, m_iFrameCount(24)
 	, m_bFinalMatUpdate(false)
 	, m_bFinish(false)
 	, m_iFrameIdx(0)
 	, m_iNextFrameIdx(0)
 	, m_fRatio(0.f)
 {
+}
+CAnimation3D::CAnimation3D(const CAnimation3D& _ref):
+	  m_dCurTime(0.)
+	, m_iFrameCount(_ref.m_iFrameCount)
+	, m_bFinalMatUpdate(false)
+	, m_bFinish(false)
+	, m_iFrameIdx(0) 
+	, m_iNextFrameIdx(0)
+	, m_fRatio(0.f)
+	, m_pClip(_ref.m_pClip)
+{
+	m_bEvents.resize(_ref.m_bEvents.size(), false);
 }
 CAnimation3D::CAnimation3D(Ptr<CAniClip> _clip) :
 	m_pClip(_clip)
@@ -41,6 +53,14 @@ CAnimation3D::CAnimation3D(Ptr<CAniClip> _clip) :
 }
 CAnimation3D::~CAnimation3D()
 {
+}
+void CAnimation3D::check_bone(CStructuredBuffer*& _finalMat)
+{
+	UINT iBoneCount =m_pClip->GetBoneCount();
+	if (_finalMat->GetElementCount() != iBoneCount)
+	{
+		_finalMat->Create(sizeof(Matrix), iBoneCount, SB_TYPE::READ_WRITE, false, nullptr);
+	}
 }
 void CAnimation3D::finaltick()
 {
@@ -73,42 +93,73 @@ void CAnimation3D::finaltick()
 
 	m_bFinalMatUpdate = false;
 
+	int iEventSize = m_pClip->m_Events.size();
+	if (m_iFrameIdx < 0 || m_iFrameIdx >= iEventSize)
+		return;
 
 	t_AniEventPoint* point = m_pClip->m_Events[m_iFrameIdx];
 	if (point == nullptr)
 		return;
 
 	wstring strKey = point->Function;
-	CAniNode* pAniNode = m_pOwner;
-	CAnimatorController* pController = pAniNode->GetController();
-	CAnimator3D* pAnimator3D = pController->GetAnimator();
-	std::function<void()>& voidFunc = pAnimator3D->GetVOID_EventFunc(strKey);
-	if (voidFunc)
+	CAnimator3D* pAnimator3D = m_pOwner;
+	
+	auto voidFunc = pAnimator3D->GetVOID_EventFunc(strKey);
+	if (voidFunc.has_value())
 	{
-		voidFunc();
+		std::function<void()>& FuncRef = voidFunc.value().get();
+		FuncRef();
 	}
-	std::function<void(float)>& floatFunc = pAnimator3D->GetFLOAT_EventFunc(strKey);
-	if (floatFunc)
+	auto floatFunc = pAnimator3D->GetFLOAT_EventFunc(strKey);
+	if (floatFunc.has_value())
 	{
-		floatFunc(point->Float);
+		std::function<void(float)>& FuncRef = floatFunc.value().get();
+		FuncRef(point->Float);
 	}
-	std::function<void(int)>& intFunc = pAnimator3D->GetINT_EventFunc(strKey);
-	if (intFunc)
+	auto intFunc = pAnimator3D->GetINT_EventFunc(strKey);
+	if (intFunc.has_value())
 	{
-		intFunc(point->Int);
+		std::function<void(int)>& FuncRef = intFunc.value().get();
+		FuncRef(point->Int);
 	}
-	std::function<void(string)>& stringFunc = pAnimator3D->GetSTRING_EventFunc(strKey);
-	if (stringFunc)
+	auto stringFunc = pAnimator3D->GetSTRING_EventFunc(strKey);
+	if (stringFunc.has_value())
 	{
-		stringFunc(point->String);
+		std::function<void(string)>& FuncRef = stringFunc.value().get();
+		FuncRef(point->String);
 	}
-	std::function<void(CGameObject*)>& objFunc = pAnimator3D->GetOBJ_EventFunc(strKey);
-	if (objFunc)
+	auto objFunc = pAnimator3D->GetOBJ_EventFunc(strKey);
+	if (objFunc.has_value())
 	{
-		objFunc(point->Obj);
+		std::function<void(CGameObject*)>& FuncRef = objFunc.value().get();
+		FuncRef(point->Obj);
 	}
 	m_bEvents[m_iFrameIdx] = true;
 
+}
+void CAnimation3D::UpdateData(CStructuredBuffer*& _bonMat)
+{
+	if (m_bFinalMatUpdate == false)
+	{
+		// Animation3D Update Compute Shader
+		CAnimation3DShader* pUpdateShader = (CAnimation3DShader*)CResMgr::GetInst()->FindRes<CComputeShader>(L"Animation3DUpdateCS").Get();
+		check_bone(_bonMat);
+		pUpdateShader->SetFrameDataBuffer(m_pClip->GetBoneFrameBuffer());
+		pUpdateShader->SetOffsetMatBuffer(m_pClip->GetBoneOffsetBuffer());
+		pUpdateShader->SetOutputBuffer(_bonMat);
+
+		UINT iBoneCount = m_pClip->GetBoneCount();
+		pUpdateShader->SetBoneCount(iBoneCount);
+		pUpdateShader->SetFrameIndex(m_iFrameIdx);
+		pUpdateShader->SetNextFrameIdx(m_iNextFrameIdx);
+		//pUpdateShader->SetBlendingFlag(m_bBlending);
+		pUpdateShader->SetFrameRatio(m_fRatio);
+
+		// 업데이트 쉐이더 실행
+		pUpdateShader->Execute();
+
+		m_bFinalMatUpdate = true;
+	}
 }
 void CAnimation3D::Reset()
 {

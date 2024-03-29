@@ -9,7 +9,6 @@ class CAnimatorController :
     public CRes
 {
 private:
-    CAnimator3D*        m_Animator;
     map<wstring, int>   m_mapIntParams;
     map<wstring, float> m_mapFloatParams;
     map<wstring, bool>  m_mapBoolParams;
@@ -24,10 +23,6 @@ public:
     virtual int Save(const wstring& _strFilePath)override;
 public:
     void Init();
-    void finaltick();
-    void UpdateData(CStructuredBuffer*& _finalMat);
-    CAnimator3D* GetAnimator() { return m_Animator; }
-    void SetAnimator(CAnimator3D* _pAnimator) { m_Animator = _pAnimator; }
     CAniNode* CreateNode(wstring _strName, wstring _strClipName);
     void DestroyNode(wstring _strName);
     CTransition* CreateTransition(wstring _strName,CAniNode* _pInNode, CAniNode* _pOutNode,bool _bExitTime=false);
@@ -46,13 +41,13 @@ public:
     bool SetBoolParam(wstring _strName, bool _bValue);
 
     CAniNode* GetCurNode() { return m_pCurNode; }
+    wstring GetCurAniKey();
     void SetCurNode(CAniNode* _pCurNode) { m_pCurNode = _pCurNode; }
     CAniNode* GetNode(const wstring _strName) { return m_mapNode[_strName]; }
-    UINT GetBoneCount();
+
+    ANI_NODE_RETURN NextNode(bool _bFinish,bool _bLoop);
 public:
     CAnimatorController();
-    CAnimatorController(const CAnimatorController& _ref);
     virtual ~CAnimatorController();
-    CLONE(CAnimatorController)
 };
 

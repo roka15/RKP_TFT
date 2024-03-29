@@ -28,8 +28,17 @@ CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
 	, m_bBlending(false)
 	, m_pController(_origin.m_pController)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
+	, m_pCurAnimation(nullptr)
 {
 	m_pBoneFinalMatBuffer = new CStructuredBuffer;
+	for (auto itr = _origin.m_mapAnimation.begin(); itr != _origin.m_mapAnimation.end(); ++itr)
+	{
+		wstring Key = itr->first;
+		CAnimation3D* Value = itr->second;
+		CAnimation3D* newValue = new CAnimation3D(*Value);
+		newValue->SetOwner(this);
+		m_mapAnimation.insert(std::make_pair(Key, newValue));
+	}
 }
 
 CAnimator3D::~CAnimator3D()
@@ -39,12 +48,44 @@ CAnimator3D::~CAnimator3D()
 }
 
 
+void CAnimator3D::ChangeAnimation(wstring _AniKey)
+{
+	CAnimation3D* pAnimation3D = m_mapAnimation[_AniKey];
+	if (pAnimation3D == nullptr)
+		return;
+	m_pCurAnimation = pAnimation3D;
+}
+
 void CAnimator3D::finaltick()
 {
 	if (m_pController == nullptr)
 		return;
+	bool bFinish = false;
+	bool bLoop = false;
 
-	m_pController->finaltick();
+	if (m_pCurAnimation)
+	{
+		bFinish = m_pCurAnimation->IsFinish();
+		bLoop = m_pCurAnimation->IsLoop();
+	}
+
+	ANI_NODE_RETURN eType = m_pController->NextNode(bFinish, bLoop);
+
+	switch (eType)
+	{
+	case ANI_NODE_RETURN::RESET:
+		if (m_pCurAnimation)
+			m_pCurAnimation->Reset();
+		break;
+	case ANI_NODE_RETURN::CHANGE:
+		if (m_pCurAnimation)
+			m_pCurAnimation->Reset();
+		ChangeAnimation(m_pController->GetCurAniKey());
+		break;
+	}
+
+	if (m_pCurAnimation)
+		m_pCurAnimation->finaltick();
 }
 
 void CAnimator3D::UpdateData()
@@ -52,7 +93,7 @@ void CAnimator3D::UpdateData()
 	if (m_pController == nullptr)
 		return;
 
-	m_pController->UpdateData(m_pBoneFinalMatBuffer);
+	m_pCurAnimation->UpdateData(m_pBoneFinalMatBuffer);
 
 	// t30 레지스터에 최종행렬 데이터(구조버퍼) 바인딩		
 	m_pBoneFinalMatBuffer->UpdateData(30, PIPELINE_STAGE::PS_VERTEX);
@@ -61,8 +102,7 @@ void CAnimator3D::UpdateData()
 
 void CAnimator3D::SetController(Ptr<CAnimatorController> _pController)
 {
-	m_pController = _pController; 
-	m_pController->SetAnimator(this);
+	m_pController = _pController;
 }
 
 void CAnimator3D::SetController(wstring _strName)
@@ -77,7 +117,7 @@ void CAnimator3D::RegisterAniEventInfoVOID(wstring _Key, std::function<void()> _
 {
 	map<wstring, std::function<void()>>& mapVoidEvent = m_AniEvent.m_mapVoid;
 	auto itr = mapVoidEvent.find(_Key);
-	if (itr == mapVoidEvent.end())
+	if (itr != mapVoidEvent.end())
 		return;
 	mapVoidEvent.insert(std::make_pair(_Key, _Func));
 }
@@ -116,34 +156,59 @@ vector<wstring> CAnimator3D::GetAniEventList()
 	}
 	return vecKeys;
 }
-std::function<void()>& CAnimator3D::GetVOID_EventFunc(wstring _Key)
+std::optional<std::reference_wrapper<std::function<void()>>> CAnimator3D::GetVOID_EventFunc(wstring _Key)
 {
 	map<wstring, std::function<void()>>& mapVoidEvent = m_AniEvent.m_mapVoid;
-	return mapVoidEvent[_Key];
+	auto itr = mapVoidEvent.find(_Key);
+	if (itr == mapVoidEvent.end())
+		return std::nullopt;
+	return std::ref(mapVoidEvent[_Key]);
 }
-std::function<void(float)>& CAnimator3D::GetFLOAT_EventFunc(wstring _Key)
+std::optional<std::reference_wrapper<std::function<void(float)>>> CAnimator3D::GetFLOAT_EventFunc(wstring _Key)
 {
 	map<wstring, std::function<void(float)>>& mapFloatEvent = m_AniEvent.m_mapFloat;
-	return mapFloatEvent[_Key];
+	auto itr = mapFloatEvent.find(_Key);
+	if (itr == mapFloatEvent.end())
+		return std::nullopt;
+	return std::ref(mapFloatEvent[_Key]);
 }
-std::function<void(int)>& CAnimator3D::GetINT_EventFunc(wstring _Key)
+std::optional<std::reference_wrapper<std::function<void(int)>>>  CAnimator3D::GetINT_EventFunc(wstring _Key)
 {
 	map<wstring, std::function<void(int)>>& mapIntEvent = m_AniEvent.m_mapInt;
-	return mapIntEvent[_Key];
+	auto itr = mapIntEvent.find(_Key);
+	if (itr == mapIntEvent.end())
+		return std::nullopt;
+	return std::ref(mapIntEvent[_Key]);
 }
-std::function<void(string)>& CAnimator3D::GetSTRING_EventFunc(wstring _Key)
+std::optional<std::reference_wrapper<std::function<void(string)>>> CAnimator3D::GetSTRING_EventFunc(wstring _Key)
 {
 	map<wstring, std::function<void(string)>>& mapStringEvent = m_AniEvent.m_mapString;
-	return mapStringEvent[_Key];
+	auto itr = mapStringEvent.find(_Key);
+	if (itr == mapStringEvent.end())
+		return std::nullopt;
+	return std::ref(mapStringEvent[_Key]);
 }
-std::function<void(CGameObject*)>& CAnimator3D::GetOBJ_EventFunc(wstring _Key)
+std::optional<std::reference_wrapper<std::function<void(CGameObject*)>>> CAnimator3D::GetOBJ_EventFunc(wstring _Key)
 {
 	map<wstring, std::function<void(CGameObject*)>>& mapObjEvent = m_AniEvent.m_mapObj;
-	return mapObjEvent[_Key];
+	auto itr = mapObjEvent.find(_Key);
+	if (itr == mapObjEvent.end())
+		return std::nullopt;
+	return std::ref(mapObjEvent[_Key]);
+}
+void CAnimator3D::RegisterAnimation(wstring _AniClipName)
+{
+	Ptr<CAniClip> pAniClip = CResMgr::GetInst()->FindRes<CAniClip>(_AniClipName);
+	CAnimation3D* pAnimation = new CAnimation3D(pAniClip);
+	auto itr = m_mapAnimation.find(_AniClipName);
+	if (itr != m_mapAnimation.end())
+		return;
+	pAnimation->SetOwner(this);
+	m_mapAnimation.insert(std::make_pair(_AniClipName, pAnimation));
 }
 UINT CAnimator3D::GetBoneCount()
 {
-	return m_pController->GetBoneCount();
+	return m_pCurAnimation->GetBoneCount();
 }
 void CAnimator3D::ClearData()
 {

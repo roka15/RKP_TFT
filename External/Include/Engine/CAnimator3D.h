@@ -26,8 +26,12 @@ private:
     bool                                        m_bBlending;
     CStructuredBuffer*                          m_pBoneFinalMatBuffer;  // 특정 프레임의 최종 행렬
     Ptr<CAnimatorController>                    m_pController;
-    AniEventFunc                                 m_AniEvent;
+    AniEventFunc                                m_AniEvent;
+    map<wstring, CAnimation3D*>                 m_mapAnimation;
+    CAnimation3D*                               m_pCurAnimation;
 
+private:
+    void ChangeAnimation(wstring _AniKey);
 public:
     virtual void finaltick() override;
     void UpdateData();
@@ -40,12 +44,14 @@ public:
 
     void RegisterAniEventInfoVOID(wstring _Key, std::function<void()> _Func);
     vector<wstring> GetAniEventList();
-    std::function<void()>& GetVOID_EventFunc(wstring _Key);
-    std::function<void(float)>& GetFLOAT_EventFunc(wstring _Key);
-    std::function<void(int)>& GetINT_EventFunc(wstring _Key);
-    std::function<void(string)>& GetSTRING_EventFunc(wstring _Key);
-    std::function<void(CGameObject*)>& GetOBJ_EventFunc(wstring _Key);
+    std::optional<std::reference_wrapper<std::function<void()>>> GetVOID_EventFunc(wstring _Key);
+    std::optional<std::reference_wrapper<std::function<void(float)>>> GetFLOAT_EventFunc(wstring _Key);
+    std::optional<std::reference_wrapper<std::function<void(int)>>> GetINT_EventFunc(wstring _Key);
+    std::optional<std::reference_wrapper<std::function<void(string)>>>GetSTRING_EventFunc(wstring _Key);
+    std::optional<std::reference_wrapper<std::function<void(CGameObject*)>>> GetOBJ_EventFunc(wstring _Key);
     //void SetClipTime(int _iClipIdx, float _fTime);
+
+    void RegisterAnimation(wstring _AniClipName);
 
     UINT GetBoneCount();
     CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMatBuffer; }

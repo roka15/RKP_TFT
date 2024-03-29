@@ -10,11 +10,6 @@ CAnimatorController::CAnimatorController() :CRes(RES_TYPE::ANICONTROLLER, true)
 {
 }
 
-CAnimatorController::CAnimatorController(const CAnimatorController& _ref):
-	 CRes(_ref)
-{
-}
-
 CAnimatorController::~CAnimatorController()
 {
 	for (auto itr = m_mapNode.begin(); itr != m_mapNode.end(); ++itr)
@@ -227,21 +222,6 @@ void CAnimatorController::Init()
 	m_pExitNode->SetController(this);
 	m_pAnyStateNode->SetController(this);
 }
-
-void CAnimatorController::finaltick()
-{
-	if (m_pCurNode)
-		m_pCurNode->finaltick();
-	if (m_pAnyStateNode)
-		m_pAnyStateNode->finaltick();
-}
-
-void CAnimatorController::UpdateData(CStructuredBuffer*& _finalMat)
-{
-	if (m_pCurNode)
-		m_pCurNode->UpdateData(_finalMat);
-}
-
 CAniNode* CAnimatorController::CreateNode(wstring _strName, wstring _strClipName)
 {
 	auto itr = m_mapNode.find(_strName);
@@ -395,8 +375,19 @@ bool CAnimatorController::SetBoolParam(wstring _strName, bool _bValue)
 	return true;
 }
 
-
-UINT CAnimatorController::GetBoneCount()
+wstring CAnimatorController::GetCurAniKey()
 {
-	return m_pCurNode->GetBoneCount();
+	return m_pCurNode->GetAnimationKey();
+}
+
+ANI_NODE_RETURN CAnimatorController::NextNode(bool _bFinish, bool _bLoop)
+{
+	//AnyState가 Change 면 CurNode 보다 우선순위가 높음.
+	ANI_NODE_RETURN eType1 = m_pCurNode->NextNode(_bFinish,_bLoop);
+	ANI_NODE_RETURN eType2 = m_pAnyStateNode->NextNode(_bFinish, _bLoop);
+
+	if (eType2 == ANI_NODE_RETURN::CHANGE)
+		return eType2;
+	else
+		return eType1;
 }

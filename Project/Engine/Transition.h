@@ -33,7 +33,7 @@ public:
     void SetOwner(CAniNode* _pOwnerNode) { m_pOwner = _pOwnerNode; }
     CAniNode* GetOwner() { return m_pOwner; }
     
-    void RegisterCurNode(Ptr<CAnimatorController> _pController);
+    bool RegisterCurNode(Ptr<CAnimatorController> _pController);
     void SetConnectNode(CAniNode* _pConnectNode);
     wstring GetConnectNodeName() { return m_strConnectNode; }
     wstring GetOwnerNodeName() { return m_strOwnerNode; }
