@@ -10,6 +10,11 @@ CAnimatorController::CAnimatorController() :CRes(RES_TYPE::ANICONTROLLER, true)
 {
 }
 
+CAnimatorController::CAnimatorController(const CAnimatorController& _ref):
+	 CRes(_ref)
+{
+}
+
 CAnimatorController::~CAnimatorController()
 {
 	for (auto itr = m_mapNode.begin(); itr != m_mapNode.end(); ++itr)

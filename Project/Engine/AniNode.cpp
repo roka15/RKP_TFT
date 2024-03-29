@@ -12,6 +12,12 @@ CAniNode::CAniNode() :
 {
 }
 
+CAniNode::CAniNode(const CAniNode& _ref):
+	m_bBlending(_ref.m_bBlending)
+{
+
+}
+
 //OutConditions : node 에서 삭제하기
 //InConditions  : node 에서 참조 끊기.
 CAniNode::CAniNode(wstring _strClipName) :
@@ -23,6 +29,7 @@ CAniNode::CAniNode(wstring _strClipName) :
 	{
 		Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(_strClipName);
 		pAni = new CAnimation3D(pClip);
+		pAni->SetOwner(this);
 	}
 
 	m_pMotionClip = pAni;

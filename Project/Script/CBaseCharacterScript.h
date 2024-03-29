@@ -18,6 +18,7 @@ private:
 private:
 	void ChangeTransInfo();
 public:
+	virtual void start()override;
 	virtual void tick()override;
 	virtual void BeginOverlap(CCollider* _Other)override;
 	virtual void OnOverlap(CCollider* _Other)override;
@@ -43,6 +44,8 @@ public:
 	virtual void UltAttack();
 	virtual void Dance();
 	virtual void SetTarget(CCollider* _Other);
+	virtual void SendDamage();
+	virtual void RecvDamage(float _damage);
 public:
 	void SetMove(bool _flag) { m_ChState.bMove = _flag; }
 	void SetWait(bool _flag) { m_ChState.bWaiting = _flag; }

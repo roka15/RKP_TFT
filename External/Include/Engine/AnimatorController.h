@@ -4,10 +4,12 @@
 class CStructuredBuffer;
 class CAniNode;
 class CTransition;
+class CAnimator3D;
 class CAnimatorController :
     public CRes
 {
 private:
+    CAnimator3D*        m_Animator;
     map<wstring, int>   m_mapIntParams;
     map<wstring, float> m_mapFloatParams;
     map<wstring, bool>  m_mapBoolParams;
@@ -24,6 +26,8 @@ public:
     void Init();
     void finaltick();
     void UpdateData(CStructuredBuffer*& _finalMat);
+    CAnimator3D* GetAnimator() { return m_Animator; }
+    void SetAnimator(CAnimator3D* _pAnimator) { m_Animator = _pAnimator; }
     CAniNode* CreateNode(wstring _strName, wstring _strClipName);
     void DestroyNode(wstring _strName);
     CTransition* CreateTransition(wstring _strName,CAniNode* _pInNode, CAniNode* _pOutNode,bool _bExitTime=false);

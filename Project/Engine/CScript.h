@@ -45,6 +45,7 @@ public:
     const vector<tScriptParam>& GetScritpParam() { return m_vecParam; }
 
 public:   
+    virtual void start() {};
     virtual void finaltick() final {};
     virtual void BeginOverlap(CCollider* _Other) {}
     virtual void OnOverlap(CCollider* _Other) {}

@@ -3,6 +3,7 @@
 #include "CAniClip.h"
 #include "CFBXLoader.h"
 #include "CStructuredBuffer.h"
+#include "CScript.h"
 
 CAniClip::CAniClip() :CRes(RES_TYPE::ANICLIP, true)
 {
@@ -16,6 +17,9 @@ CAniClip::~CAniClip()
 		delete m_pBoneOffset;
 	if (m_pBoneFrameData != nullptr)
 		delete m_pBoneFrameData;
+
+	for (int i = 0; i < m_Events.size(); ++i)
+		delete m_Events[i];
 }
 
 void CAniClip::CreateBoneFrameData(CFBXLoader& _loader, tAnimClip*& _pClipData, vector<tKeyFrame> _vecframeData, int _iBoneIdx)
@@ -30,6 +34,24 @@ void CAniClip::CreateBoneFrameData(CFBXLoader& _loader, tAnimClip*& _pClipData, 
 		pClip = new CAniClip();
 		UINT iBoneCount = _loader.GetBones().size();
 		pClip->m_vecBones.resize(iBoneCount);
+
+		tMTAnimClip tClip = {};
+		tClip.strAnimName = _pClipData->strName;
+		tClip.dStartTime = _pClipData->tStartTime.GetSecondDouble();
+		tClip.dEndTime = _pClipData->tEndTime.GetSecondDouble();
+		tClip.dTimeLength = tClip.dEndTime - tClip.dStartTime;
+
+		tClip.iStartFrame = (int)_pClipData->tStartTime.GetFrameCount(_pClipData->eMode);
+		tClip.iEndFrame = (int)_pClipData->tEndTime.GetFrameCount(_pClipData->eMode);
+		tClip.iFrameLength = tClip.iEndFrame - tClip.iStartFrame;
+		tClip.bLoop = false;
+		tClip.eMode = _pClipData->eMode;
+
+		pClip->m_tInfo = std::move(tClip);
+
+		int Length = pClip->m_tInfo.iFrameLength;
+		pClip->m_Events.resize(Length);
+		
 		CResMgr::GetInst()->AddRes<CAniClip>(strPath, pClip);
 	}
 	
@@ -38,22 +60,7 @@ void CAniClip::CreateBoneFrameData(CFBXLoader& _loader, tAnimClip*& _pClipData, 
 	tBone* CurBone = Bones[_iBoneIdx];
 	FbxAMatrix MatBone = Bones[_iBoneIdx]->matBone;
 	FbxAMatrix MatBoneOffset = Bones[_iBoneIdx]->matOffset;
-
-	if (CurBone->strBoneName.compare(L"R_Foot") == 0 || CurBone->strBoneName.compare(L"L_Foot") == 0)
-		int a = 0;
-	tMTAnimClip tClip = {};
-	tClip.strAnimName = _pClipData->strName;
-	tClip.dStartTime = _pClipData->tStartTime.GetSecondDouble();
-	tClip.dEndTime = _pClipData->tEndTime.GetSecondDouble();
-	tClip.dTimeLength = tClip.dEndTime - tClip.dStartTime;
-
- 	tClip.iStartFrame = (int)_pClipData->tStartTime.GetFrameCount(_pClipData->eMode);
-	tClip.iEndFrame = (int)_pClipData->tEndTime.GetFrameCount(_pClipData->eMode);
-	tClip.iFrameLength = tClip.iEndFrame - tClip.iStartFrame;
-	tClip.bLoop = false;
-	tClip.eMode = _pClipData->eMode;
-
-	pClip->m_tInfo = std::move(tClip);
+	
 	
 	tMTBone Bone = {};
 	Bone.iDepth = CurBone->iDepth;
@@ -86,7 +93,7 @@ void CAniClip::CreateBoneFrameData(CFBXLoader& _loader, tAnimClip*& _pClipData, 
 
 	pClip->m_vecBones[_iBoneIdx] = Bone;
 	//pClip->m_vecBones.push_back(Bone);
-
+	
 	return;
 }
 
@@ -122,41 +129,11 @@ vector<int>  CAniClip::GetEventPointNumber()
 	vector<int> vecNumbers;
 	for (int i = 0; i < m_Events.size(); ++i)
 	{
-		vecNumbers.push_back(m_Events[i].Time);
+		vecNumbers.push_back(m_Events[i]->Time);
 	}
 	return vecNumbers;
 }
 
-void CAniClip::RegisterEventVoidFunc(int _iFrame, std::function<void()>& _func)
-{
-	if (m_Events.size() <= _iFrame)
-		return;
-	m_Events[_iFrame].mNormalFunc = _func;
-}
-void CAniClip::RegisterEventFloatFunc(int _iFrame, std::function<void(float)>& _func)
-{
-	if (m_Events.size() <= _iFrame)
-		return;
-	m_Events[_iFrame].mFloatFunc = _func;
-}
-void CAniClip::RegisterEventIntFunc(int _iFrame, std::function<void(int)>& _func)
-{
-	if (m_Events.size() <= _iFrame)
-		return;
-	m_Events[_iFrame].mIntFunc = _func;
-}
-void CAniClip::RegisterEventStringFunc(int _iFrame, std::function<void(string)>& _func)
-{
-	if (m_Events.size() <= _iFrame)
-		return;
-	m_Events[_iFrame].mStringFunc = _func;
-}
-void CAniClip::RegisterEventObjFunc(int _iFrame, std::function<void(CGameObject*)>& _func)
-{
-	if (m_Events.size() <= _iFrame)
-		return;
-	m_Events[_iFrame].mObjFunc = _func;
-}
 int CAniClip::Save(const wstring& _strRelativePath)
 {
 	// 상대경로 저장
@@ -203,7 +180,23 @@ int CAniClip::Save(const wstring& _strRelativePath)
 			fwrite(&m_vecBones[i].vecKeyFrame[j], sizeof(tMTKeyFrame), 1, pFile);
 		}
 	}
+	//event
+	UINT iEventCnt =  m_Events.size();
+	fwrite(&iEventCnt, sizeof(int), 1, pFile);
+	for (int i = 0; i < iEventCnt; ++i)
+	{
+		t_AniEventPoint* point = m_Events[i];
+		bool bFlag = false;
+		if (point == nullptr)
+			bFlag = false;
+		else
+			bFlag = true;
+		fwrite(&bFlag, sizeof(bool), 1, pFile);
 
+		if(bFlag)
+		fwrite(point, sizeof(t_AniEventPoint), 1, pFile);
+	}
+	
 	fclose(pFile);
 	return 0;
 }
@@ -261,6 +254,26 @@ int CAniClip::Load(const wstring& _strFilePath)
 	if (m_vecBones.size() > 0)
 	{
 		CreateStructBuffer();
+	}
+
+	//event
+	UINT iEventCnt = 0;
+	fread(&iEventCnt, sizeof(int), 1, pFile);
+	m_Events.resize(iEventCnt);
+	for (int i = 0; i < iEventCnt; ++i)
+	{
+		bool bFlag = false;
+		fread(&bFlag, sizeof(bool), 1, pFile);
+		if (bFlag)
+		{
+			t_AniEventPoint* point = new t_AniEventPoint();
+			fread(point, sizeof(t_AniEventPoint), 1, pFile);
+			m_Events[i] = point;
+		}
+		else
+		{
+			m_Events[i] = nullptr;
+		}
 	}
 
 	fclose(pFile);

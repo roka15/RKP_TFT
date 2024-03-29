@@ -4,6 +4,7 @@
 #include <Engine\CResMgr.h>
 #include <Engine\AnimatorController.h>
 #include <Engine\Transition.h>
+#include <Engine\CAnimation3D.h>
 #include "CAttroxMachineScript.h"
 #include "CPlayerScript.h"
 #include "CGame.h"
@@ -104,11 +105,17 @@ void CGameMgr::CreateCharacterPrefabs()
 	pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(90.f), 0.f, DEGREE2RADIAN(180.f)));
 	pObj->AddComponent(new CBoxCollider);
 
+	CAttroxMachineScript* fsmScript = (CAttroxMachineScript*)CScriptMgr::GetScript(SCRIPT_TYPE::ATTROXMACHINESCRIPT);
+	CBaseCharacterScript* chScript = (CBaseCharacterScript*)CScriptMgr::GetScript(SCRIPT_TYPE::BASECHARACTERSCRIPT);
+	pObj->AddComponent(fsmScript);
+	pObj->AddComponent(chScript);
+
 	Ptr<CAnimatorController> pAniController = nullptr;
 	wstring strPath = L"controller\\Attrox.controller";
 	Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Dance_Loop.anm");
 	pClip->SetLoop(true);
 	pAniController = CResMgr::GetInst()->FindRes<CAnimatorController>(strPath);
+
 #pragma region Attrox_Controller
 	if (pAniController == nullptr)
 	{
@@ -120,7 +127,7 @@ void CGameMgr::CreateCharacterPrefabs()
 		pClip->Save(L"anim3D\\Aatrox_ULT_Idle.anm");
 		pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Idle1.anm");
 		pClip->SetLoop(true);
-
+		
 		//pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Dance_Windup.anm");
 		//pClip->SetLoop(true);
 		pClip->Save(L"anim3D\\Idle1.anm");
@@ -248,11 +255,8 @@ void CGameMgr::CreateCharacterPrefabs()
 		pAniController->Save(strPath);
 	}
 #pragma endregion
-	CAttroxMachineScript* fsmScript = (CAttroxMachineScript*)CScriptMgr::GetScript(SCRIPT_TYPE::ATTROXMACHINESCRIPT);
-	CBaseCharacterScript* chScript = (CBaseCharacterScript*)CScriptMgr::GetScript(SCRIPT_TYPE::BASECHARACTERSCRIPT);
+
 	pObj->Animator3D()->SetController(pAniController);
-	pObj->AddComponent(fsmScript);
-	pObj->AddComponent(chScript);
 	CPrefab* CH_Attrox = new CPrefab();
 	CH_Attrox->RegisterProtoObject(pObj);
 	CResMgr::GetInst()->AddRes<CPrefab>(L"Ch_Attrox", CH_Attrox);

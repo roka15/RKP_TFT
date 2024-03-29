@@ -178,6 +178,7 @@ void CGameObject::AddComponent(CComponent* _Component)
 	// 컴포넌트가 스크립트인 경우
 	if (COMPONENT_TYPE::SCRIPT == _Component->GetType())
 	{
+		((CScript*)_Component)->start();
 		m_vecScript.push_back((CScript*)_Component);
 	}
 

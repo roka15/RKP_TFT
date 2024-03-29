@@ -256,6 +256,15 @@ void CTileMgr::RegisterItem(int _iTileNum, CGameObject* _pObj)
 	script->AddItem(_pObj);
 }
 
+CGameObject* CTileMgr::GetItem(int _tileNum)
+{
+	vector<CGameObject*> vecObj = m_vecTile[_tileNum]->GetChild();
+	if (vecObj.size() == 0)
+		return nullptr;
+	
+	return vecObj[0];
+}
+
 bool CTileMgr::EmptyBattleTile(int _iid)
 {
 	return m_vecBattleTile[_iid]->GetChild().size() == 0;
@@ -334,3 +343,5 @@ int CTileMgr::FindEmptyWaitTile()
 	}
 	return -1;
 }
+
+

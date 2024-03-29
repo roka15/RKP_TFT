@@ -3,6 +3,8 @@
 #include "CAnimator3D.h"
 #include "CResMgr.h"
 #include "CTimeMgr.h"
+#include "AniNode.h"
+
 
 CAnimation3D::CAnimation3D() :
 	m_dCurTime(0.)
@@ -35,7 +37,7 @@ CAnimation3D::CAnimation3D(Ptr<CAniClip> _clip) :
 		break;
 	}
 	int size = m_pClip->m_Events.size();
-	m_bEvents.resize(size,false);
+	m_bEvents.resize(size, false);
 }
 CAnimation3D::~CAnimation3D()
 {
@@ -71,38 +73,42 @@ void CAnimation3D::finaltick()
 
 	m_bFinalMatUpdate = false;
 
-	for (int i = 0; i < m_bEvents.size(); ++i)
+
+	t_AniEventPoint* point = m_pClip->m_Events[m_iFrameIdx];
+	if (point == nullptr)
+		return;
+
+	wstring strKey = point->Function;
+	CAniNode* pAniNode = m_pOwner;
+	CAnimatorController* pController = pAniNode->GetController();
+	CAnimator3D* pAnimator3D = pController->GetAnimator();
+	std::function<void()>& voidFunc = pAnimator3D->GetVOID_EventFunc(strKey);
+	if (voidFunc)
 	{
-		if (m_bEvents[i])
-			return;
-		t_AniEventPoint point = m_pClip->m_Events[i];
-
-		if (m_iFrameIdx >= point.Time)
-		{
-			if (point.mNormalFunc!=nullptr)
-			{
-				point.mNormalFunc();
-			}
-			if (point.mFloatFunc != nullptr)
-			{
-				point.mFloatFunc(point.Float);
-			}
-			if (point.mIntFunc != nullptr)
-			{
-				point.mIntFunc(point.Int);
-			}
-			if (point.mStringFunc != nullptr)
-			{
-				point.mStringFunc(point.String);
-			}
-			if (point.mObjFunc != nullptr)
-			{
-				point.mObjFunc(point.Obj);
-			}
-
-			m_bEvents[i] = true;
-		}
+		voidFunc();
 	}
+	std::function<void(float)>& floatFunc = pAnimator3D->GetFLOAT_EventFunc(strKey);
+	if (floatFunc)
+	{
+		floatFunc(point->Float);
+	}
+	std::function<void(int)>& intFunc = pAnimator3D->GetINT_EventFunc(strKey);
+	if (intFunc)
+	{
+		intFunc(point->Int);
+	}
+	std::function<void(string)>& stringFunc = pAnimator3D->GetSTRING_EventFunc(strKey);
+	if (stringFunc)
+	{
+		stringFunc(point->String);
+	}
+	std::function<void(CGameObject*)>& objFunc = pAnimator3D->GetOBJ_EventFunc(strKey);
+	if (objFunc)
+	{
+		objFunc(point->Obj);
+	}
+	m_bEvents[m_iFrameIdx] = true;
+
 }
 void CAnimation3D::Reset()
 {

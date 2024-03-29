@@ -59,6 +59,12 @@ void CAnimator3D::UpdateData()
 	return;
 }
 
+void CAnimator3D::SetController(Ptr<CAnimatorController> _pController)
+{
+	m_pController = _pController; 
+	m_pController->SetAnimator(this);
+}
+
 void CAnimator3D::SetController(wstring _strName)
 {
 	m_pController = CResMgr::GetInst()->FindRes<CAnimatorController>(_strName);
@@ -66,6 +72,74 @@ void CAnimator3D::SetController(wstring _strName)
 const wstring& CAnimator3D::GetCurControllerName()
 {
 	return m_pController->GetName();
+}
+void CAnimator3D::RegisterAniEventInfoVOID(wstring _Key, std::function<void()> _Func)
+{
+	map<wstring, std::function<void()>>& mapVoidEvent = m_AniEvent.m_mapVoid;
+	auto itr = mapVoidEvent.find(_Key);
+	if (itr == mapVoidEvent.end())
+		return;
+	mapVoidEvent.insert(std::make_pair(_Key, _Func));
+}
+vector<wstring> CAnimator3D::GetAniEventList()
+{
+	vector<wstring> vecKeys;
+	map<wstring, std::function<void()>>& mapVoidEvent = m_AniEvent.m_mapVoid;
+	for (auto itr = mapVoidEvent.begin(); itr != mapVoidEvent.end(); ++itr)
+	{
+		wstring Key = itr->first;
+		vecKeys.push_back(Key);
+	}
+	map<wstring, std::function<void(float)>>& mapFloatEvent = m_AniEvent.m_mapFloat;
+	for (auto itr = mapFloatEvent.begin(); itr != mapFloatEvent.end(); ++itr)
+	{
+		wstring Key = itr->first;
+		vecKeys.push_back(Key);
+	}
+	map<wstring, std::function<void(int)>>& mapIntEvent = m_AniEvent.m_mapInt;
+	for (auto itr = mapIntEvent.begin(); itr != mapIntEvent.end(); ++itr)
+	{
+		wstring Key = itr->first;
+		vecKeys.push_back(Key);
+	}
+	map<wstring, std::function<void(string)>>& mapStringEvent = m_AniEvent.m_mapString;
+	for (auto itr = mapStringEvent.begin(); itr != mapStringEvent.end(); ++itr)
+	{
+		wstring Key = itr->first;
+		vecKeys.push_back(Key);
+	}
+	map<wstring, std::function<void(CGameObject*)>>& mapObjEvent = m_AniEvent.m_mapObj;
+	for (auto itr = mapObjEvent.begin(); itr != mapObjEvent.end(); ++itr)
+	{
+		wstring Key = itr->first;
+		vecKeys.push_back(Key);
+	}
+	return vecKeys;
+}
+std::function<void()>& CAnimator3D::GetVOID_EventFunc(wstring _Key)
+{
+	map<wstring, std::function<void()>>& mapVoidEvent = m_AniEvent.m_mapVoid;
+	return mapVoidEvent[_Key];
+}
+std::function<void(float)>& CAnimator3D::GetFLOAT_EventFunc(wstring _Key)
+{
+	map<wstring, std::function<void(float)>>& mapFloatEvent = m_AniEvent.m_mapFloat;
+	return mapFloatEvent[_Key];
+}
+std::function<void(int)>& CAnimator3D::GetINT_EventFunc(wstring _Key)
+{
+	map<wstring, std::function<void(int)>>& mapIntEvent = m_AniEvent.m_mapInt;
+	return mapIntEvent[_Key];
+}
+std::function<void(string)>& CAnimator3D::GetSTRING_EventFunc(wstring _Key)
+{
+	map<wstring, std::function<void(string)>>& mapStringEvent = m_AniEvent.m_mapString;
+	return mapStringEvent[_Key];
+}
+std::function<void(CGameObject*)>& CAnimator3D::GetOBJ_EventFunc(wstring _Key)
+{
+	map<wstring, std::function<void(CGameObject*)>>& mapObjEvent = m_AniEvent.m_mapObj;
+	return mapObjEvent[_Key];
 }
 UINT CAnimator3D::GetBoneCount()
 {

@@ -20,6 +20,7 @@ public:
     int Save(FILE* _pFile);
     int Load(FILE* _pFile);
     int LoadAfterProcess();
+    CAnimatorController* GetController() { return m_pController; }
     void SetController(CAnimatorController* _pController) { m_pController = _pController; }
     
     void AddOutTransition(CTransition* _pTransition);

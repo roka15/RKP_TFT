@@ -7,7 +7,8 @@
 #include "CTileScript.h"
 #include "CPlayerScript.h"
 #include  "CGameMgr.h"
-
+#include <Engine\CAnimation3D.h>
+#include <Engine\CAnimator3D.h>
 
 
 
@@ -30,6 +31,13 @@ CBaseCharacterScript::~CBaseCharacterScript()
 {
 }
 
+
+void CBaseCharacterScript::start()
+{
+	CAnimator3D* pAnimator3D = GetOwner()->Animator3D();
+	if (pAnimator3D != nullptr)
+		pAnimator3D->RegisterAniEventInfoVOID(L"SendDamage", std::bind(&CBaseCharacterScript::SendDamage, this));
+}
 
 void CBaseCharacterScript::tick()
 {
@@ -103,7 +111,7 @@ void CBaseCharacterScript::tick()
 		return;
 	if (tileScript->GetType() != TILE_TYPE::BATTLE)
 		return;
-	
+
 	CGameObject* pPlayer = GetPlayer();
 	if (pPlayer == nullptr)
 		return;
@@ -120,7 +128,7 @@ void CBaseCharacterScript::tick()
 	case 2://item
 		break;
 	}
-	
+
 }
 
 void CBaseCharacterScript::BeginOverlap(CCollider* _Other)
@@ -247,6 +255,20 @@ void CBaseCharacterScript::SetTarget(CCollider* _Other)
 	}*/
 }
 
+void CBaseCharacterScript::SendDamage()
+{
+	CGameObject* Target = CTileMgr::GetInst()->GetItem(m_iTargetNum);
+	CBaseCharacterScript* pCharacterScript = Target->GetScript<CBaseCharacterScript>();
+	if (pCharacterScript == nullptr)
+		return;
+	pCharacterScript->RecvDamage(10);
+}
+
+void CBaseCharacterScript::RecvDamage(float _damage)
+{
+	int a = 0;
+}
+
 void CBaseCharacterScript::CurStartTile()
 {
 	int iNumber = GetOwner()->GetParent()->GetScript<CTileScript>()->GetNumber();
@@ -326,7 +348,7 @@ void CBaseCharacterScript::Battle(CGameObject* _pTileObj)
 	else
 	{
 		//SetAtk(false);
-		
+
 		//test를 위해 항상 검사 - 경로 타일 색깔 바뀌게 하기 위함
 		vector<int> Route = CAStarMgr::GetInst()->GetNextNodeAStar(startNumber, endNumber);
 		CTileMgr::GetInst()->BattleRouteRender(Route);
@@ -340,8 +362,8 @@ void CBaseCharacterScript::Battle(CGameObject* _pTileObj)
 			Vec2 diff = Vec2(abs(WorldPos.x - m_v3TargetPos.x), abs(WorldPos.z - m_v3TargetPos.z));
 			Vec3 pos = GetOwner()->Transform()->GetRelativePos();
 
-			if ((diff.x <= abs(m_v2Dir.x)|| m_v2Dir.x == 0) 
-				&& (diff.y <= abs(m_v2Dir.y) || m_v2Dir.y ==0))
+			if ((diff.x <= abs(m_v2Dir.x) || m_v2Dir.x == 0)
+				&& (diff.y <= abs(m_v2Dir.y) || m_v2Dir.y == 0))
 			{
 				m_bMove = false;
 				ChangeTransInfo();
@@ -361,9 +383,9 @@ void CBaseCharacterScript::Battle(CGameObject* _pTileObj)
 				WorldPos.x += dir.x;
 				WorldPos.y += dir.y;
 			}
- 			Matrix worldInvMat = GetOwner()->Transform()->GetWorldInvMat();
+			Matrix worldInvMat = GetOwner()->Transform()->GetWorldInvMat();
 			Vec3 localPos = XMVector3TransformCoord(WorldPos, worldInvMat);
-			GetOwner()->Transform()->SetRelativePos(pos+localPos);
+			GetOwner()->Transform()->SetRelativePos(pos + localPos);
 		}
 		else
 		{
