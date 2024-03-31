@@ -19,12 +19,26 @@ CBaseCharacterScript::CBaseCharacterScript() :
 	m_bMove(false)
 {
 	m_ChStatus.fAttackRange = 1;
+	m_ChStatus.iHp = 100;
+	m_ChStatus.dCurUltGauge = 0;
+	m_ChStatus.dAddUltGauge = 10;
+	m_ChStatus.dMinusUltGauge = 10;
+	m_ChStatus.dMaxUltGauge = 50;
+
 	SetCost(10);
 }
 
 CBaseCharacterScript::CBaseCharacterScript(SCRIPT_TYPE _eType) :
 	CItem(_eType)
 {
+	m_ChStatus.fAttackRange = 1;
+	m_ChStatus.iHp = 100;
+	m_ChStatus.dCurUltGauge = 0;
+	m_ChStatus.dAddUltGauge = 10;
+	m_ChStatus.dMinusUltGauge = 10;
+	m_ChStatus.dMaxUltGauge = 50;
+
+	SetCost(10);
 }
 
 CBaseCharacterScript::CBaseCharacterScript(const CBaseCharacterScript& _ref)
@@ -33,6 +47,11 @@ CBaseCharacterScript::CBaseCharacterScript(const CBaseCharacterScript& _ref)
 	m_bMove(false)
 {
 	m_ChStatus.fAttackRange = 1;
+	m_ChStatus.iHp = 100;
+	m_ChStatus.dCurUltGauge = 0;
+	m_ChStatus.dAddUltGauge = 10;
+	m_ChStatus.dMinusUltGauge = 10;
+	m_ChStatus.dMaxUltGauge = 50;
 	SetCost(10);
 }
 
@@ -266,16 +285,42 @@ void CBaseCharacterScript::SetTarget(CCollider* _Other)
 
 void CBaseCharacterScript::SendDamage()
 {
-	CGameObject* Target = CTileMgr::GetInst()->GetItem(m_iTargetNum);
+	CGameObject* Target = CTileMgr::GetInst()->GetItem(m_iAtkTargetNum);
 	CBaseCharacterScript* pCharacterScript = Target->GetScript<CBaseCharacterScript>();
 	if (pCharacterScript == nullptr)
 		return;
 	pCharacterScript->RecvDamage(10);
+	if (m_ChState.bUlt)
+	{
+		m_ChStatus.dCurUltGauge -= m_ChStatus.dMinusUltGauge;
+		if (m_ChStatus.dCurUltGauge <= 0)
+		{
+			m_ChStatus.dCurUltGauge = 0;
+			m_ChState.bUlt = false;
+			m_ChState.bWaiting = true;
+		}
+	}
+	else
+	{
+		m_ChStatus.dCurUltGauge += m_ChStatus.dAddUltGauge;
+		if (m_ChStatus.dCurUltGauge >= m_ChStatus.dMaxUltGauge)
+		{
+			m_ChStatus.dCurUltGauge = m_ChStatus.dMaxUltGauge;
+			m_ChState.bUlt = true;
+			m_ChState.bWaiting = false;
+		}
+	}
+	
 }
 
 void CBaseCharacterScript::RecvDamage(float _damage)
 {
-	int a = 0;
+	m_ChStatus.iHp -= _damage;
+	if (m_ChStatus.iHp <= 0)
+	{
+		//죽음 처리
+		int a = 0;
+	}
 }
 
 void CBaseCharacterScript::CurStartTile()
@@ -294,7 +339,7 @@ void CBaseCharacterScript::ResetTile()
 
 void CBaseCharacterScript::ChangeTransInfo()
 {
-	TILE_OWNER_TYPE eTileType = CTileMgr::GetInst()->GetTileOwnerType(m_iTargetNum);
+	TILE_OWNER_TYPE eTileType = CTileMgr::GetInst()->GetTileOwnerType(m_iMoveTargetNum);
 	PLAYER_TYPE ePlayerType = GetPlayer()->GetScript<CPlayerScript>()->GetPlayerType();
 	switch (eTileType)
 	{
@@ -345,7 +390,7 @@ void CBaseCharacterScript::Battle(CGameObject* _pTileObj)
 		SetMove(false);
 		return;
 	}
-
+	m_iAtkTargetNum = endNumber;
 	//적이 있고 사거리내에 도착했다면 Atk 상태로 변경
 	if (m_ChStatus.fAttackRange == distance)
 	{
@@ -376,7 +421,7 @@ void CBaseCharacterScript::Battle(CGameObject* _pTileObj)
 			{
 				m_bMove = false;
 				ChangeTransInfo();
-				CTileMgr::GetInst()->RegisterItem(m_iTargetNum, GetOwner());
+				CTileMgr::GetInst()->RegisterItem(m_iMoveTargetNum, GetOwner());
 				pos = Vec3{ 0.f,0.f,pos.z };
 			}
 			else if (diff.x <= abs(m_v2Dir.x) && m_v2Dir.y != 0)
@@ -406,7 +451,7 @@ void CBaseCharacterScript::Battle(CGameObject* _pTileObj)
 
 			//다음 tile의 transform target으로 지정.
 			//현재 위치에서 다음 타일 방향으로 현재 오브젝트 회전
-			m_iTargetNum = nextTile + BattleOffset;
+			m_iMoveTargetNum = nextTile + BattleOffset;
 			m_v3TargetPos = CTileMgr::GetInst()->GetBattleTileWorldPos(nextTile);
 			Vec3 CurPos = CTileMgr::GetInst()->GetBattleTileWorldPos(curTile);
 			m_v2Dir.x = m_v3TargetPos.x - CurPos.x;

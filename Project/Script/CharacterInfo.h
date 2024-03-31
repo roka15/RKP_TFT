@@ -33,4 +33,5 @@ struct tCharacterStatus
 	float	 fDEF;				//방어력
 	float	 fAttackRange;		//사거리
 	float	 fMoveSpeed;		//이동 속도
+	int	     iHp;
 };

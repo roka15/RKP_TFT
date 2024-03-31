@@ -255,19 +255,20 @@ void CGameMgr::CreateCharacterPrefabs()
 		pInNode = pAniController->CreateNode(L"Battle_Attack", L"anim3D\\Attack1.anm");
 		t1 = pAniController->CreateTransition(L"AnyState_Battle_Attack", pInNode, pOutNode, false);
 		t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
-		t1->RegisterCondition(L"Battle", 1, COMPARISON_TYPE::EQUAL);
-		t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", BIdleNode, pInNode, true);
+		t1->RegisterCondition(L"ULT", 0, COMPARISON_TYPE::EQUAL);
+		t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", BIdleNode, pInNode, false);
 		t1->RegisterCondition(L"Attack", false,false, COMPARISON_TYPE::EQUAL);
 		CAniNode* BAttackNode = pInNode;
 
 		pOutNode = pAnyNode;
 		pInNode = pAniController->CreateNode(L"ULT_Attack", L"anim3D\\Attack1_Ult.anm");
 		t1 = pAniController->CreateTransition(L"AnyState_ULT_Attack", pInNode, pOutNode, false);
-		t1->RegisterCondition(L"Attack", true, true, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
 		t1->RegisterCondition(L"ULT", 1, COMPARISON_TYPE::EQUAL);
 		CAniNode* UAttackNode = pInNode;
 
-		t1 = pAniController->CreateTransition(L"ULT_Attack_Idle", UIdleNode, pInNode, true);
+		t1 = pAniController->CreateTransition(L"ULT_Attack_Idle", UIdleNode, pInNode, false);
+		t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
 		//t1->RegisterCondition(L"End", true, COMPARISON_TYPE::EQUAL);
 
 		pAniController->Save(strPath);

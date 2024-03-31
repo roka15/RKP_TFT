@@ -761,7 +761,7 @@ void CreateTestLevel()
 
 
 	pTestEnemy = new CGameObject();
-	pTestEnemy->SetName(L"TestEnemy");
+	pTestEnemy->SetName(L"TestEnemy1");
 	pTestEnemy->AddComponent(new CTransform());
 	pTestEnemy->AddComponent(new CMeshRender());
 	pTestEnemy->Transform()->SetRelativeScale(Vec3{ 100.f,100.f,100.f });
@@ -769,7 +769,7 @@ void CreateTestLevel()
 	pTestEnemy->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"),0);
 	pTestEnemy->AddComponent(new CBaseCharacterScript());
 	pTestEnemy2 = new CGameObject();
-	pTestEnemy2->SetName(L"TestEnemy");
+	pTestEnemy2->SetName(L"TestEnemy2");
 	pTestEnemy2->AddComponent(new CTransform());
 	pTestEnemy2->AddComponent(new CMeshRender());
 	pTestEnemy2->Transform()->SetRelativeScale(Vec3{ 100.f,100.f,100.f });

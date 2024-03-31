@@ -11,12 +11,15 @@ private:
 	tCharacterStatus    m_ChStatus;
 	tItemInfo           m_Items[MAX_ITEM];
 	Vec3                m_v3TargetPos;
-	int                 m_iTargetNum;
+	int                 m_iMoveTargetNum;
 	int					m_iStartTileNum;
+	int					m_iAtkTargetNum;
 	bool                m_bMove;
 	Vec2                m_v2Dir;
 private:
 	void ChangeTransInfo();
+
+	void AddULTGauge();
 public:
 	virtual void start()override;
 	virtual void tick()override;

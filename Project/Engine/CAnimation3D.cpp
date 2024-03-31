@@ -97,6 +97,8 @@ void CAnimation3D::finaltick()
 	if (m_iFrameIdx < 0 || m_iFrameIdx >= iEventSize)
 		return;
 
+	if (m_bEvents[m_iFrameIdx])
+		return;
 	t_AniEventPoint* point = m_pClip->m_Events[m_iFrameIdx];
 	if (point == nullptr)
 		return;
@@ -182,7 +184,8 @@ void CAnimation3D::Reset()
 	m_fRatio = 0.f;
 	m_bFinish = false;
 	int size = m_bEvents.size();
-	m_bEvents.resize(size, false);
+	for (int i = 0; i != m_bEvents.size(); ++i)
+		m_bEvents[i] = false;
 }
 void CAnimation3D::SetClip(const std::wstring& _strKey)
 {
