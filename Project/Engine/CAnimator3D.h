@@ -56,7 +56,7 @@ public:
     UINT GetBoneCount();
     CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMatBuffer; }
     void ClearData();
-    bool IsActiveAni() { return m_pController != nullptr; }
+    bool IsActiveAni() { return m_pCurAnimation != nullptr; }
 public:
     virtual void SaveToLevelFile(FILE* _pFile) override;
     virtual void LoadFromLevelFile(FILE* _pFile) override;

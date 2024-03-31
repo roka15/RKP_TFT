@@ -93,10 +93,13 @@ void CAnimator3D::UpdateData()
 	if (m_pController == nullptr)
 		return;
 
-	m_pCurAnimation->UpdateData(m_pBoneFinalMatBuffer);
+	if (m_pCurAnimation)
+	{
+		m_pCurAnimation->UpdateData(m_pBoneFinalMatBuffer);
 
-	// t30 레지스터에 최종행렬 데이터(구조버퍼) 바인딩		
-	m_pBoneFinalMatBuffer->UpdateData(30, PIPELINE_STAGE::PS_VERTEX);
+		// t30 레지스터에 최종행렬 데이터(구조버퍼) 바인딩		
+		m_pBoneFinalMatBuffer->UpdateData(30, PIPELINE_STAGE::PS_VERTEX);
+	}
 	return;
 }
 
