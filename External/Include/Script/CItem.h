@@ -15,6 +15,7 @@ public:
 public:
 	CItem();
 	CItem(SCRIPT_TYPE _eType);
+	CItem(const CItem& _ref);
 	virtual ~CItem();
 	CLONE(CItem);
 };

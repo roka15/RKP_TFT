@@ -58,6 +58,7 @@ protected:
 public:
 	CBaseCharacterScript();
 	CBaseCharacterScript(SCRIPT_TYPE _eType);
+	CBaseCharacterScript(const CBaseCharacterScript& _ref);
 	virtual ~CBaseCharacterScript();
 	CLONE(CBaseCharacterScript)
 };

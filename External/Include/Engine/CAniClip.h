@@ -11,7 +11,7 @@ struct tKeyFrame;
 struct t_AniEventPoint
 {
     double                             Time;
-    wstring                            Function;
+    string                             UIFunction;
    
     float                              Float;
     int                                Int;

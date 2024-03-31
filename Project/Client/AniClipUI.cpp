@@ -36,27 +36,48 @@ int AniClipUI::render_update()
 
 	if (pClip->m_Events[m_curSliderFrame] == nullptr)
 		return 0;
+	bool bChange = false;
 	char arrStrName[255] = {};
-	string strFunc;
+
+	string& strFunc = pClip->m_Events[m_curSliderFrame]->UIFunction;
+	strcpy_s(arrStrName, strFunc.c_str());
 	ImGui::Text("Function");
 	ImGui::SameLine();
 	ImGui::InputText("##Frame Event Function", arrStrName,64);
-	strFunc = arrStrName;
-	wstring& wstrFunc = pClip->m_Events[m_curSliderFrame]->Function;
-	wstrFunc.assign(strFunc.begin(), strFunc.end());
 	
-
+	if (strFunc.compare(arrStrName) != 0)
+		bChange = true;
+	strFunc = arrStrName;
+	
+	float fValue = pClip->m_Events[m_curSliderFrame]->Float;
 	ImGui::Text("Float");
 	ImGui::SameLine();
-	ImGui::DragFloat("##Frame Event Float", &pClip->m_Events[m_curSliderFrame]->Float);
+	ImGui::DragFloat("##Frame Event Float", &fValue);
+	if (pClip->m_Events[m_curSliderFrame]->Float != fValue)
+		bChange = true;
+	pClip->m_Events[m_curSliderFrame]->Float = fValue;
 
+	int iValue = pClip->m_Events[m_curSliderFrame]->Int;
 	ImGui::Text("Int");
 	ImGui::SameLine();
-	ImGui::DragInt("##Frame Event Int", &pClip->m_Events[m_curSliderFrame]->Int);
+	ImGui::DragInt("##Frame Event Int", &iValue);
+	if (pClip->m_Events[m_curSliderFrame]->Int != iValue)
+		bChange = true;
+	pClip->m_Events[m_curSliderFrame]->Int = iValue;
 
+	memset(arrStrName, 0, 255);
+	strcpy_s(arrStrName, pClip->m_Events[m_curSliderFrame]->String.c_str());
 	ImGui::Text("String");
 	ImGui::SameLine();
-	ImGui::InputText("##Frame Event String", (char*)pClip->m_Events[m_curSliderFrame]->String.data(), 64);
+	ImGui::InputText("##Frame Event String",arrStrName, 64);
+	if (pClip->m_Events[m_curSliderFrame]->String.compare(arrStrName) != 0)
+		bChange = true;
+	pClip->m_Events[m_curSliderFrame]->String = arrStrName;
+
+	if (bChange)
+	{
+		pClip->Save(pClip->GetRelativePath());
+	}
 
 
 

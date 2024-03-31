@@ -16,6 +16,12 @@ CItem::CItem(SCRIPT_TYPE _eType)
 {
 }
 
+CItem::CItem(const CItem& _ref)
+	:CScript(_ref),
+	m_pPlayer(nullptr)
+{
+}
+
 CItem::~CItem()
 {
 }

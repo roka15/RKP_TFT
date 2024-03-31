@@ -27,6 +27,15 @@ CBaseCharacterScript::CBaseCharacterScript(SCRIPT_TYPE _eType) :
 {
 }
 
+CBaseCharacterScript::CBaseCharacterScript(const CBaseCharacterScript& _ref)
+	:CItem(_ref),
+	m_ChState{ true,false,false,false,false,false },
+	m_bMove(false)
+{
+	m_ChStatus.fAttackRange = 1;
+	SetCost(10);
+}
+
 CBaseCharacterScript::~CBaseCharacterScript()
 {
 }
