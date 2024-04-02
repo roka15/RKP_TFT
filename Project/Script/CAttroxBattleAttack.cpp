@@ -77,6 +77,15 @@ void CAttroxBattleAttack::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pT
 	case TRIGGER_TYPE::DANCE:
 		pMachine->transition((UINT)STATE_TYPE::DANCE);
 		break;
+	case TRIGGER_TYPE::BATTACK:
+		pController->SetIntParam(L"Attack_Number", 0);
+		break;
+	case TRIGGER_TYPE::BATTACK2:
+		pController->SetIntParam(L"Attack_Number", 1);
+		break;
+	case TRIGGER_TYPE::BATTACK3:
+		pController->SetIntParam(L"Attack_Number", 2);
+		break;
 	}
 }
 
@@ -93,6 +102,7 @@ void CAttroxBattleAttack::tick(CStateMachineScript* _pSMachine)
 	bool bMove = pChScript->IsMove();
 	bool bAttack = pChScript->IsAttack();
 	bool bDance = pChScript->IsDance();
+	int  bAtkNum = pChScript->GetAtkNumber();
 
 	CCharacterTrigger trigger;
 	bool bChange = false;
@@ -126,6 +136,18 @@ void CAttroxBattleAttack::tick(CStateMachineScript* _pSMachine)
 		else if (bAttack)
 		{
 			trigger.SetEvtType(TRIGGER_TYPE::BATTACK);
+			switch (bAtkNum)
+			{
+			case 0:
+				trigger.SetEvtType(TRIGGER_TYPE::BATTACK);
+				break;
+			case 1:
+				trigger.SetEvtType(TRIGGER_TYPE::BATTACK2);
+				break;
+			case 2:
+				trigger.SetEvtType(TRIGGER_TYPE::BATTACK3);
+				break;
+			}
 			bChange = true;
 		}
 	    else if (bAttack == false && bWait == false)

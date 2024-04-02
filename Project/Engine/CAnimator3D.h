@@ -43,6 +43,7 @@ public:
     const wstring& GetCurControllerName();
 
     void RegisterAniEventInfoVOID(wstring _Key, std::function<void()> _Func);
+    void RegisterAniEventInfoINT(wstring _Key, std::function<void(int)> _Func);
     vector<wstring> GetAniEventList();
     std::optional<std::reference_wrapper<std::function<void()>>> GetVOID_EventFunc(wstring _Key);
     std::optional<std::reference_wrapper<std::function<void(float)>>> GetFLOAT_EventFunc(wstring _Key);

@@ -15,6 +15,7 @@ struct tCharacterState
 	bool	 bUlt;
 	bool	 bMove;
 	bool	 bDance;
+	int	     iAtkNum;
 	//이건 나중에 게임 정보에 넣어야함.
 	bool	 bEnd;
 };

@@ -32,6 +32,7 @@ private:
 private:
     virtual int Load(const wstring& _strFilePath)override;
     void RegisterEvents(int _iFrame, t_AniEventPoint* _point) { m_Events[_iFrame] = _point; }
+    void RemoveEvents(int _iFrame);
 public:
     static void CreateBoneFrameData(CFBXLoader& _loader,tAnimClip*& _clipData, vector<tKeyFrame> _frameData,int _boneIdx);
     void CreateStructBuffer();

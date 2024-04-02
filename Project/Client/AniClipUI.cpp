@@ -18,12 +18,18 @@ int AniClipUI::render_update()
 	Ptr<CAniClip> pClip = (CAniClip*)GetTargetRes().Get();
 	string strKey = string(pClip->GetKey().begin(), pClip->GetKey().end());
 	ImGui::InputText("##MtrlUIName", (char*)strKey.c_str(), ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly);
-	int Length = pClip->m_tInfo.iFrameLength;
+	int Length = pClip->m_tInfo.iFrameLength -1 ;
 	string Str = "Length    " + std::to_string(Length);
 	ImGui::Text(Str.c_str());
 	ImGui::Checkbox("Loop", &pClip->m_tInfo.bLoop);
 	ImGui::Text("Events");
 	int iFrameMin = 0;
+	if (m_curAniClip.compare(strKey) != 0)
+	{
+		m_curSliderFrame = 0;
+		m_curAniClip = strKey;
+	}
+
 	ImGui::SliderScalar("Frame", ImGuiDataType_U8, &m_curSliderFrame, &iFrameMin, &Length, "%u");
 	if (ImGui::Button("Add Point", ImVec2(100, 30)))
 	{
@@ -33,6 +39,7 @@ int AniClipUI::render_update()
 		pClip->RegisterEvents(m_curSliderFrame, point);
 		pClip->Save(pClip->GetRelativePath());
 	}
+	
 
 	if (pClip->m_Events[m_curSliderFrame] == nullptr)
 		return 0;
@@ -79,6 +86,11 @@ int AniClipUI::render_update()
 		pClip->Save(pClip->GetRelativePath());
 	}
 
+	if (ImGui::Button("Remove Point", ImVec2(100, 30)))
+	{
+		pClip->RemoveEvents(m_curSliderFrame);
+		pClip->Save(pClip->GetRelativePath());
+	}
 
 
 

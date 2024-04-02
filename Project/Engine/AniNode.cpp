@@ -193,6 +193,10 @@ ANI_NODE_RETURN CAniNode::NextNode(int _iOutSize, bool _bFinish, bool _bCurNullN
 			{
 				_bFinish = true;
 			}
+			else
+			{
+				_bFinish = false;
+			}
 		}
 
 		if (_bFinish)

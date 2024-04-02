@@ -81,6 +81,12 @@ void CAttroxUltAttack::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrig
 	case TRIGGER_TYPE::DANCE:
 		pMachine->transition((UINT)STATE_TYPE::DANCE);
 		break;
+	case TRIGGER_TYPE::UATTACK:
+		pController->SetIntParam(L"Attack_Number", 0);
+		break;
+	case TRIGGER_TYPE::UATTACK2:
+		pController->SetIntParam(L"Attack_Number", 1);
+		break;
 	}
 }
 void CAttroxUltAttack::tick(CStateMachineScript* _pSMachine)
@@ -96,6 +102,7 @@ void CAttroxUltAttack::tick(CStateMachineScript* _pSMachine)
 	bool bMove = pChScript->IsMove();
 	bool bAttack = pChScript->IsAttack();
 	bool bDance = pChScript->IsDance();
+	int  bAtkNum = pChScript->GetAtkNumber();
 
 	CCharacterTrigger trigger;
 	bool bChange = false;
@@ -111,6 +118,20 @@ void CAttroxUltAttack::tick(CStateMachineScript* _pSMachine)
 		if (bMove)
 		{
 			trigger.SetEvtType(TRIGGER_TYPE::UMOVE);
+			bChange = true;
+		}
+		else if (bAttack)
+		{
+			switch (bAtkNum)
+			{
+			case 0:
+			case 2:
+				trigger.SetEvtType(TRIGGER_TYPE::UATTACK);
+				break;
+			case 1:
+				trigger.SetEvtType(TRIGGER_TYPE::UATTACK2);
+				break;
+			}
 			bChange = true;
 		}
 		else 

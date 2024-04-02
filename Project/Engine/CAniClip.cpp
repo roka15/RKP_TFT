@@ -280,3 +280,10 @@ int CAniClip::Load(const wstring& _strFilePath)
 	return 0;
 }
 
+void CAniClip::RemoveEvents(int _iFrame)
+{
+	t_AniEventPoint* pPoint = m_Events[_iFrame];
+	m_Events[_iFrame] = nullptr;
+	delete pPoint;
+}
+

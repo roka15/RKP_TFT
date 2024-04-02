@@ -64,7 +64,10 @@ void CBaseCharacterScript::start()
 {
 	CAnimator3D* pAnimator3D = GetOwner()->Animator3D();
 	if (pAnimator3D != nullptr)
+	{
 		pAnimator3D->RegisterAniEventInfoVOID(L"SendDamage", std::bind(&CBaseCharacterScript::SendDamage, this));
+		pAnimator3D->RegisterAniEventInfoINT(L"SetAtkNumber", std::bind(&CBaseCharacterScript::SetAtkNumber, this , std::placeholders::_1));
+	}
 }
 
 void CBaseCharacterScript::tick()
@@ -297,7 +300,7 @@ void CBaseCharacterScript::SendDamage()
 		{
 			m_ChStatus.dCurUltGauge = 0;
 			m_ChState.bUlt = false;
-			m_ChState.bWaiting = true;
+			m_ChState.bWaiting = false;
 		}
 	}
 	else

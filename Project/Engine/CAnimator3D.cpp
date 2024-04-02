@@ -124,6 +124,14 @@ void CAnimator3D::RegisterAniEventInfoVOID(wstring _Key, std::function<void()> _
 		return;
 	mapVoidEvent.insert(std::make_pair(_Key, _Func));
 }
+void CAnimator3D::RegisterAniEventInfoINT(wstring _Key, std::function<void(int)> _Func)
+{
+	map<wstring, std::function<void(int)>>& mapINTEvent = m_AniEvent.m_mapInt;
+	auto itr = mapINTEvent.find(_Key);
+	if (itr != mapINTEvent.end())
+		return;
+	mapINTEvent.insert(std::make_pair(_Key, _Func));
+}
 vector<wstring> CAnimator3D::GetAniEventList()
 {
 	vector<wstring> vecKeys;

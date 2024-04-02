@@ -4,6 +4,7 @@ class AniClipUI :
     public ResUI
 {
 private:
+    string  m_curAniClip;
     UINT    m_curSliderFrame;
 public:
   

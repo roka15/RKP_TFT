@@ -33,6 +33,7 @@ public:
 	bool IsAttack() { return m_ChState.bAttack; }
 	bool IsDance() { return m_ChState.bDance; }
 	bool IsEnd() { return m_ChState.bEnd; }
+	int  GetAtkNumber() { return m_ChState.iAtkNum; }
 	
 	virtual bool IsWithinAttackRange();
 	void SetWaitingSeat(bool _flag) { m_ChState.bWaiting = _flag; }
@@ -53,6 +54,7 @@ public:
 	void SetMove(bool _flag) { m_ChState.bMove = _flag; }
 	void SetWait(bool _flag) { m_ChState.bWaiting = _flag; }
 	void SetAtk(bool _flag) { m_ChState.bAttack = _flag; }
+	void SetAtkNumber(int _iNumber) { m_ChState.iAtkNum = _iNumber; }
 	void CurStartTile();
 	void ResetTile(); 
 
