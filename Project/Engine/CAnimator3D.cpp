@@ -31,6 +31,7 @@ CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
 	, m_pCurAnimation(nullptr)
 {
 	m_pBoneFinalMatBuffer = new CStructuredBuffer;
+	m_pController->CopyParams(this);
 	for (auto itr = _origin.m_mapAnimation.begin(); itr != _origin.m_mapAnimation.end(); ++itr)
 	{
 		wstring Key = itr->first;
@@ -48,13 +49,17 @@ CAnimator3D::~CAnimator3D()
 }
 
 
-void CAnimator3D::ChangeAnimation(wstring _AniKey)
+bool CAnimator3D::ChangeAnimation(wstring _AniKey)
 {
 	CAnimation3D* pAnimation3D = m_mapAnimation[_AniKey];
 	if (pAnimation3D == nullptr)
-		return;
+		return false;
+	if (pAnimation3D == m_pCurAnimation)
+		return false;
 	m_pCurAnimation = pAnimation3D;
+	return true;
 }
+
 
 void CAnimator3D::finaltick()
 {
@@ -62,26 +67,41 @@ void CAnimator3D::finaltick()
 		return;
 	bool bFinish = false;
 	bool bLoop = false;
-
+	ANI_NODE_RETURN eType;
 	if (m_pCurAnimation)
 	{
 		bFinish = m_pCurAnimation->IsFinish();
 		bLoop = m_pCurAnimation->IsLoop();
-	}
 
-	ANI_NODE_RETURN eType = m_pController->NextNode(bFinish, bLoop);
+		wstring CurAniName = m_pCurAnimation->GetClip()->GetKey();
+		ANI_NODE_RETURN eType = m_pController->NextNode(bFinish, bLoop, CurAniName, this);
 
-	switch (eType)
+		while (eType == ANI_NODE_RETURN::ENTRY || eType == ANI_NODE_RETURN::EXIT)
+		{
+			switch (eType)
+			{
+			case ANI_NODE_RETURN::ENTRY:
+				eType = m_pController->NextNode(bFinish, bLoop, L"Entry", this);
+				break;
+			case ANI_NODE_RETURN::EXIT:
+				eType = m_pController->NextNode(bFinish, bLoop, L"Exit", this);
+				break;
+			}
+
+		}
+
+		switch (eType)
+		{
+		case ANI_NODE_RETURN::RESET:
+		case ANI_NODE_RETURN::CHANGE:
+			if (m_pCurAnimation)
+				m_pCurAnimation->Reset();
+			break;
+		}
+	}//현재 설정된 Ani가 없다면 Entry.
+	else
 	{
-	case ANI_NODE_RETURN::RESET:
-		if (m_pCurAnimation)
-			m_pCurAnimation->Reset();
-		break;
-	case ANI_NODE_RETURN::CHANGE:
-		if (m_pCurAnimation)
-			m_pCurAnimation->Reset();
-		ChangeAnimation(m_pController->GetCurAniKey());
-		break;
+		eType = m_pController->NextNode(bFinish, bLoop, L"Entry", this);
 	}
 
 	if (m_pCurAnimation)
@@ -106,11 +126,13 @@ void CAnimator3D::UpdateData()
 void CAnimator3D::SetController(Ptr<CAnimatorController> _pController)
 {
 	m_pController = _pController;
+	m_pController->CopyParams(this);
 }
 
 void CAnimator3D::SetController(wstring _strName)
 {
 	m_pController = CResMgr::GetInst()->FindRes<CAnimatorController>(_strName);
+	m_pController->CopyParams(this);
 }
 const wstring& CAnimator3D::GetCurControllerName()
 {
@@ -216,6 +238,46 @@ void CAnimator3D::RegisterAnimation(wstring _AniClipName)
 		return;
 	pAnimation->SetOwner(this);
 	m_mapAnimation.insert(std::make_pair(_AniClipName, pAnimation));
+}
+bool CAnimator3D::SetIntParam(wstring _strName, int _iValue)
+{
+	auto itr = m_AniParams.mapIntParams.find(_strName);
+	if (itr == m_AniParams.mapIntParams.end())
+	{
+		return false;
+	}
+	itr->second = _iValue;
+	return true;
+}
+bool CAnimator3D::SetFloatParam(wstring _strName, float _fValue)
+{
+	auto itr = m_AniParams.mapFloatParams.find(_strName);
+	if (itr == m_AniParams.mapFloatParams.end())
+	{
+		return false;
+	}
+	itr->second = _fValue;
+	return true;
+}
+bool CAnimator3D::SetTriggerParam(wstring _strName, bool _bValue)
+{
+	auto itr = m_AniParams.mapTriggerParams.find(_strName);
+	if (itr == m_AniParams.mapTriggerParams.end())
+	{
+		return false;
+	}
+	itr->second = _bValue;
+	return true;
+}
+bool CAnimator3D::SetBoolParam(wstring _strName, bool _bValue)
+{
+	auto itr = m_AniParams.mapBoolParams.find(_strName);
+	if (itr == m_AniParams.mapBoolParams.end())
+	{
+		return false;
+	}
+	itr->second = _bValue;
+	return true;
 }
 UINT CAnimator3D::GetBoneCount()
 {

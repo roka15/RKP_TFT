@@ -3,6 +3,7 @@
 #include "AniNode.h"
 #include "AnimatorController.h"
 #include "ptr.h"
+#include "CAnimator3D.h"
 
 CTransition::CTransition():
 	m_bHasExitTime(false)
@@ -174,7 +175,7 @@ int CTransition::Load(FILE* _pFile)
 	return S_OK;
 }
 
-bool CTransition::IsActive(Ptr<CAnimatorController> _pController)
+bool CTransition::IsActive(Ptr<CAnimatorController> _pController, CAnimator3D* _pAnimator)
 {
 	wstring strKey = {};
 	bool bActive = false;
@@ -184,12 +185,13 @@ bool CTransition::IsActive(Ptr<CAnimatorController> _pController)
 		bFail = false;
 		strKey = itr->first;
 		int iCondition = itr->second;
-		int iValue = _pController->GetIntParam(strKey, bFail);
-		if (bFail)
+		auto valueItr = _pAnimator->m_AniParams.mapIntParams.find(strKey);
+		if (valueItr == _pAnimator->m_AniParams.mapIntParams.end())
 		{
-			//이곳에는 등록되어있는 param이 controller에 등록되지 않을 수 없기 때문에 이런 경우 에러 띄운다.
+			//이곳에는 등록되어있는 param이 animator에 등록되지 않을 수 없기 때문에 이런 경우 에러 띄운다.
 			assert(nullptr);
 		}
+		int iValue = valueItr->second;
 		COMPARISON_TYPE tComparisonType = m_mapComparisonConditions.find(strKey)->second;
 		
 		bActive = ComparisonCalculator(iCondition, iValue, tComparisonType);
@@ -202,28 +204,31 @@ bool CTransition::IsActive(Ptr<CAnimatorController> _pController)
 		bFail = false;
 		strKey = itr->first;
 		float fCondition = itr->second;
-		float fValue = _pController->GetFloatParam(strKey, bFail);
-		if (bFail)
+		auto valueItr = _pAnimator->m_AniParams.mapFloatParams.find(strKey);
+		if (valueItr == _pAnimator->m_AniParams.mapFloatParams.end())
 		{
+			//이곳에는 등록되어있는 param이 animator에 등록되지 않을 수 없기 때문에 이런 경우 에러 띄운다.
 			assert(nullptr);
 		}
+		float fValue = valueItr->second;
 		COMPARISON_TYPE tComparisonType = m_mapComparisonConditions.find(strKey)->second;
 
 		bActive = ComparisonCalculator(fCondition, fValue, tComparisonType);
 		if (bActive == false)
 			return false;
 	}
-
 	for (auto itr = m_mapBoolConditions.begin(); itr != m_mapBoolConditions.end(); ++itr)
 	{
 		bFail = false;
 		strKey = itr->first;
 		bool bCondition = itr->second;
-		bool bValue = _pController->GetBoolParam(strKey, bFail);
-		if (bFail)
+		auto valueItr = _pAnimator->m_AniParams.mapBoolParams.find(strKey);
+		if (valueItr == _pAnimator->m_AniParams.mapBoolParams.end())
 		{
+			//이곳에는 등록되어있는 param이 animator에 등록되지 않을 수 없기 때문에 이런 경우 에러 띄운다.
 			assert(nullptr);
 		}
+		bool bValue = valueItr->second;
 		COMPARISON_TYPE tComparisonType = m_mapComparisonConditions.find(strKey)->second;
 
 		bActive = ComparisonCalculator(bCondition, bValue, tComparisonType);
@@ -236,25 +241,31 @@ bool CTransition::IsActive(Ptr<CAnimatorController> _pController)
 		bFail = false;
 		strKey = itr->first;
 		bool bCondition = itr->second;
-		bool bValue = _pController->GetTriggerParam(strKey, bFail);
-		if (bFail)
+		auto valueItr = _pAnimator->m_AniParams.mapTriggerParams.find(strKey);
+		if (valueItr == _pAnimator->m_AniParams.mapTriggerParams.end())
 		{
+			//이곳에는 등록되어있는 param이 animator에 등록되지 않을 수 없기 때문에 이런 경우 에러 띄운다.
 			assert(nullptr);
 		}
+		bool bValue = valueItr->second;
 		COMPARISON_TYPE tComparisonType = m_mapComparisonConditions.find(strKey)->second;
 
 		bActive = ComparisonCalculator(bCondition, bValue, tComparisonType);
 		if (bActive == false)
 			return false;
 	}
-
 	for (auto itr = m_mapTriggerConditions.begin(); itr != m_mapTriggerConditions.end(); ++itr)
 	{
 		bFail = false;
 		strKey = itr->first;
-		bool bValue = _pController->SetTriggerParam(strKey, false);
+		auto valueItr = _pAnimator->m_AniParams.mapTriggerParams.find(strKey);
+		if (valueItr == _pAnimator->m_AniParams.mapTriggerParams.end())
+		{
+			//이곳에는 등록되어있는 param이 animator에 등록되지 않을 수 없기 때문에 이런 경우 에러 띄운다.
+			assert(nullptr);
+		}
+		_pAnimator->m_AniParams.mapTriggerParams[strKey] = false;
 	}
-
 
 	return bActive;
 }
@@ -281,12 +292,9 @@ void CTransition::RegisterCondition(wstring _Key, bool _bValue, bool _bTrigger, 
 	m_mapComparisonConditions.insert(std::make_pair(_Key, _tComparison));
 }
 
-bool CTransition::RegisterCurNode(Ptr<CAnimatorController> _pController)
+bool CTransition::RegisterCurNode(CAnimator3D* _pAnimator)
 {
-	if (_pController->GetCurNode() == m_pConnectNode)
-		return false;
-	_pController->SetCurNode(m_pConnectNode);
-	return true;
+	return _pAnimator->ChangeAnimation(m_pConnectNode->GetAnimationKey());
 }
 
 void CTransition::SetConnectNode(CAniNode* _pConnectNode)

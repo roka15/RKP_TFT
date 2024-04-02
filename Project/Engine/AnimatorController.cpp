@@ -3,6 +3,7 @@
 
 #include "CPathMgr.h"
 #include "CResMgr.h"
+#include "CAnimator3D.h"
 #include "AniNode.h"
 #include "Transition.h"
 
@@ -114,7 +115,6 @@ int CAnimatorController::Load(const wstring& _strFilePath)
 	m_pEntryNode = m_mapNode[L"Entry"];
 	m_pAnyStateNode = m_mapNode[L"AnyState"];
 	m_pExitNode = m_mapNode[L"Exit"];
-	m_pCurNode = m_pEntryNode;
 	fclose(pFile);
 	return S_OK;
 }
@@ -216,7 +216,6 @@ void CAnimatorController::Init()
 	m_mapNode.insert(std::make_pair(m_pExitNode->GetName(), m_pExitNode));
 	m_mapNode.insert(std::make_pair(m_pAnyStateNode->GetName(), m_pAnyStateNode));
 
-	m_pCurNode = m_pEntryNode;
 
 	m_pEntryNode->SetController(this);
 	m_pExitNode->SetController(this);
@@ -279,115 +278,73 @@ void CAnimatorController::RegisterParam(wstring _strName, bool _bValue, bool _bT
 		m_mapBoolParams.insert(std::make_pair(_strName, _bValue));
 }
 
-void CAnimatorController::DeleteParam(PARAM_TYPE _eType, wstring _strName)
+ANI_NODE_RETURN CAnimatorController::NextNode(bool _bFinish, bool _bLoop, wstring _strCurName, CAnimator3D* _pAnimator)
 {
-}
-
-int CAnimatorController::GetIntParam(wstring _strName, bool& _bfail)
-{
-	auto itr = m_mapIntParams.find(_strName);
-	if (itr == m_mapIntParams.end())
+	CAniNode* CurNode = nullptr;
+	auto NodeItr = m_mapNode.find(_strCurName);
+	//_strCurName 이 any name 인 경우.
+	if (NodeItr == m_mapNode.end())
 	{
-		_bfail = true;
-		return -1;
-	}
-	_bfail = false;
-	return itr->second;
-}
-
-float CAnimatorController::GetFloatParam(wstring _strName, bool& _bfail)
-{
-	auto itr = m_mapFloatParams.find(_strName);
-	if (itr == m_mapFloatParams.end())
+		for (auto itr = m_mapNode.begin(); itr != m_mapNode.end(); ++itr)
+		{
+			wstring key = itr->second->GetAnimationKey();
+			if (key.compare(_strCurName) == 0)
+			{
+				CurNode = itr->second;
+				break;
+			}
+		}
+	}//entry,exit node 인 경우
+	else
 	{
-		_bfail = true;
-		return -1.0f;
+		CurNode = NodeItr->second;
 	}
-	_bfail = false;
-	return itr->second;
-}
 
-bool CAnimatorController::GetBoolParam(wstring _strName, bool& _bfail)
-{
-	auto itr = m_mapBoolParams.find(_strName);
-	if (itr == m_mapBoolParams.end())
-	{
-		_bfail = true;
-		return false;
-	}
-	_bfail = false;
-	return itr->second;
-}
-
-bool CAnimatorController::GetTriggerParam(wstring _strName, bool& _bfail)
-{
-	auto itr = m_mapTriggerParams.find(_strName);
-	if (itr == m_mapTriggerParams.end())
-	{
-		_bfail = true;
-		return false;
-	}
-	_bfail = false;
-	return itr->second;
-}
-
-bool CAnimatorController::SetIntParam(wstring _strName, int _iValue)
-{
-	auto itr = m_mapIntParams.find(_strName);
-	if (itr == m_mapIntParams.end())
-	{
-		return false;
-	}
-	itr->second = _iValue;
-	return true;
-}
-
-bool CAnimatorController::SetFloatParam(wstring _strName, float _fValue)
-{
-	auto itr = m_mapFloatParams.find(_strName);
-	if (itr == m_mapFloatParams.end())
-	{
-		return false;
-	}
-	itr->second = _fValue;
-	return true;
-}
-
-bool CAnimatorController::SetTriggerParam(wstring _strName, bool _bValue)
-{
-	auto itr = m_mapTriggerParams.find(_strName);
-	if (itr == m_mapTriggerParams.end())
-	{
-		return false;
-	}
-	itr->second = _bValue;
-	return true;
-}
-
-bool CAnimatorController::SetBoolParam(wstring _strName, bool _bValue)
-{
-	auto itr = m_mapBoolParams.find(_strName);
-	if (itr == m_mapBoolParams.end())
-	{
-		return false;
-	}
-	itr->second = _bValue;
-	return true;
-}
-
-wstring CAnimatorController::GetCurAniKey()
-{
-	return m_pCurNode->GetAnimationKey();
-}
-
-ANI_NODE_RETURN CAnimatorController::NextNode(bool _bFinish, bool _bLoop)
-{
+	if (CurNode == nullptr)
+		return ANI_NODE_RETURN::NOTHING;
+	
 	//AnyState가 Change 면 CurNode 보다 우선순위가 높음.
-	ANI_NODE_RETURN eType1 = m_pCurNode->NextNode(_bFinish,_bLoop);
-	ANI_NODE_RETURN eType2 = m_pAnyStateNode->NextNode(_bFinish, _bLoop);
+	ANI_NODE_RETURN eType1 = CurNode->NextNode(_bFinish,_bLoop, _pAnimator);
+	ANI_NODE_RETURN eType2 = m_pAnyStateNode->NextNode(_bFinish, _bLoop, _pAnimator);
 
 	if (eType2 == ANI_NODE_RETURN::CHANGE)
 		return eType2;
 	else
 		return eType1;
+}
+
+void CAnimatorController::CopyParams(CAnimator3D* _pAnimator)
+{
+	_pAnimator->m_AniParams.mapIntParams.clear();
+	for (auto itr = m_mapIntParams.begin(); itr != m_mapIntParams.end(); ++itr)
+	{
+		wstring key = itr->first;
+		int value = itr->second;
+
+		_pAnimator->m_AniParams.mapIntParams.insert(std::make_pair(key, value));
+	}
+
+	for (auto itr = m_mapFloatParams.begin(); itr != m_mapFloatParams.end(); ++itr)
+	{
+		wstring key = itr->first;
+		float value = itr->second;
+
+		_pAnimator->m_AniParams.mapFloatParams.insert(std::make_pair(key, value));
+	}
+
+	for (auto itr = m_mapBoolParams.begin(); itr != m_mapBoolParams.end(); ++itr)
+	{
+		wstring key = itr->first;
+		bool value = itr->second;
+
+		_pAnimator->m_AniParams.mapBoolParams.insert(std::make_pair(key, value));
+	}
+
+	for (auto itr = m_mapTriggerParams.begin(); itr != m_mapTriggerParams.end(); ++itr)
+	{
+		wstring key = itr->first;
+		bool value = itr->second;
+
+		_pAnimator->m_AniParams.mapTriggerParams.insert(std::make_pair(key, value));
+	}
 }

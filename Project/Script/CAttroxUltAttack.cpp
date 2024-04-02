@@ -6,7 +6,6 @@
 #include "CCharacterState.h"
 #include "CBaseCharacterScript.h"
 #include <Engine\CTimeMgr.h>
-#include <Engine\AnimatorController.h>
 #include <Engine\CKeyMgr.h>
 
 
@@ -19,11 +18,8 @@ void CAttroxUltAttack::OnEntry(CStateMachineScript* _pSMachine, CState* _pState)
 	CAnimator3D* pAni = _pSMachine->Animator3D();
 	if (pAni == nullptr)
 		return;
-	Ptr<CAnimatorController> pController = pAni->GetController();
-	if (pController == nullptr)
-		return;
-	pController->SetIntParam(L"ULT", 1);
-	pController->SetTriggerParam(L"Attack", true);
+	pAni->SetIntParam(L"ULT", 1);
+	pAni->SetTriggerParam(L"Attack", true);
 
 	CBaseCharacterScript* pChScript = _pSMachine->GetOwner()->GetScript<CBaseCharacterScript>();
 	if (pChScript == nullptr)
@@ -36,12 +32,9 @@ void CAttroxUltAttack::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
 	CAnimator3D* pAni = _pSMachine->Animator3D();
 	if (pAni == nullptr)
 		return;
-	Ptr<CAnimatorController> pController = pAni->GetController();
-	if (pController == nullptr)
-		return;
 
 	//모든 param들 condition 비활성화.
-	pController->SetIntParam(L"ULT", 0);
+	pAni->SetIntParam(L"ULT", 0);
 	//pController->SetTriggerParam(L"UltOut", true);
 }
 
@@ -53,9 +46,6 @@ void CAttroxUltAttack::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrig
 	TRIGGER_TYPE eType = pTrigger->GetEvtType();
 	CAnimator3D* pAni = _pSMachine->Animator3D();
 	if (pAni == nullptr)
-		return;
-	Ptr<CAnimatorController> pController = pAni->GetController();
-	if (pController == nullptr)
 		return;
 
 	CAttroxMachineScript* pMachine = dynamic_cast<CAttroxMachineScript*>(_pSMachine);
@@ -82,10 +72,10 @@ void CAttroxUltAttack::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrig
 		pMachine->transition((UINT)STATE_TYPE::DANCE);
 		break;
 	case TRIGGER_TYPE::UATTACK:
-		pController->SetIntParam(L"Attack_Number", 0);
+		pAni->SetIntParam(L"Attack_Number", 0);
 		break;
 	case TRIGGER_TYPE::UATTACK2:
-		pController->SetIntParam(L"Attack_Number", 1);
+		pAni->SetIntParam(L"Attack_Number", 1);
 		break;
 	}
 }

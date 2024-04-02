@@ -2,6 +2,7 @@
 #include "CEntity.h"
 class CAniNode;
 class CAnimatorController;
+class CAnimator3D;
 
 class CTransition :
     public CEntity
@@ -24,7 +25,7 @@ private:
 public:
     int Save(FILE* _pFile);
     int Load(FILE* _pFile);
-    bool IsActive(Ptr<CAnimatorController> _pController);
+    bool IsActive(Ptr<CAnimatorController> _pController,CAnimator3D* _pAnimator);
     bool IsExitTime() { return m_bHasExitTime; }
     void SetExitTime(bool _flag) { m_bHasExitTime = _flag; }
     void RegisterCondition(wstring _Key, int _iValue,COMPARISON_TYPE _tComparison);
@@ -33,7 +34,7 @@ public:
     void SetOwner(CAniNode* _pOwnerNode) { m_pOwner = _pOwnerNode; }
     CAniNode* GetOwner() { return m_pOwner; }
     
-    bool RegisterCurNode(Ptr<CAnimatorController> _pController);
+    bool RegisterCurNode(CAnimator3D* _pAnimator);
     void SetConnectNode(CAniNode* _pConnectNode);
     wstring GetConnectNodeName() { return m_strConnectNode; }
     wstring GetOwnerNodeName() { return m_strOwnerNode; }

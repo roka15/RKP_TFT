@@ -5,7 +5,6 @@
 #include "CCharacterTrigger.h"
 #include "CBaseCharacterScript.h"
 #include <Engine\CTimeMgr.h>
-#include <Engine\AnimatorController.h>
 
 void CAttroxDance::OnEntry(CStateMachineScript* _pSMachine, CState* _pState)
 {
@@ -16,11 +15,7 @@ void CAttroxDance::OnEntry(CStateMachineScript* _pSMachine, CState* _pState)
 	CAnimator3D* pAni = _pSMachine->Animator3D();
 	if (pAni == nullptr)
 		return;
-	Ptr<CAnimatorController> pController = pAni->GetController();
-	if (pController == nullptr)
-		return;
-
-	pController->SetTriggerParam(L"Dance", true);
+	pAni->SetTriggerParam(L"Dance", true);
 }
 
 void CAttroxDance::OnExit(CStateMachineScript* _pSMachine, CState* _pState)

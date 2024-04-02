@@ -6,7 +6,6 @@
 #include "CCharacterState.h"
 #include "CBaseCharacterScript.h"
 #include <Engine\CTimeMgr.h>
-#include <Engine\AnimatorController.h>
 #include <Engine\CKeyMgr.h>
 
 void CAttroxNormalIdle::OnEntry(CStateMachineScript* _pSMachine, CState* _pState)

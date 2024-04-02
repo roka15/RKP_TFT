@@ -14,7 +14,7 @@ private:
     wstring                     m_strAniKey;
     bool                        m_bBlending;
 private:
-    ANI_NODE_RETURN NextNode(int _iOutSize, bool _bFinish, bool _bCurNullNode, bool _bLoop);
+    ANI_NODE_RETURN NextNode(int _iOutSize, bool _bFinish, bool _bCurNullNode, bool _bLoop, CAnimator3D* _pAnimator);
 public:
     int Save(FILE* _pFile);
     int Load(FILE* _pFile);
@@ -30,7 +30,7 @@ public:
     void RemoveAllOutTransition();
     void Destory();
     void SetBlending(bool _flag) { m_bBlending = _flag; }
-    ANI_NODE_RETURN NextNode(bool _bFinish ,bool _bLoop);
+    ANI_NODE_RETURN NextNode(bool _bFinish ,bool _bLoop, CAnimator3D* _pAnimator);
 
 public:
     CLONE(CAniNode)

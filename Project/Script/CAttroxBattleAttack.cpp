@@ -5,7 +5,7 @@
 #include "CCharacterTrigger.h"
 #include "CBaseCharacterScript.h"
 #include <Engine\CTimeMgr.h>
-#include <Engine\AnimatorController.h>
+
 
 void CAttroxBattleAttack::OnEntry(CStateMachineScript* _pSMachine, CState* _pState)
 {
@@ -16,12 +16,9 @@ void CAttroxBattleAttack::OnEntry(CStateMachineScript* _pSMachine, CState* _pSta
 	CAnimator3D* pAni = _pSMachine->Animator3D();
 	if (pAni == nullptr)
 		return;
-	Ptr<CAnimatorController> pController = pAni->GetController();
-	if (pController == nullptr)
-		return;
 
-	pController->SetIntParam(L"Battle", 1);
-	pController->SetBoolParam(L"Attack", true);
+	pAni->SetIntParam(L"Battle", 1);
+	pAni->SetBoolParam(L"Attack", true);
 
 	//CBaseCharacterScript* pChScript = _pSMachine->GetOwner()->GetScript<CBaseCharacterScript>();
 	//if (pChScript == nullptr)
@@ -34,12 +31,9 @@ void CAttroxBattleAttack::OnExit(CStateMachineScript* _pSMachine, CState* _pStat
 	CAnimator3D* pAni = _pSMachine->Animator3D();
 	if (pAni == nullptr)
 		return;
-	Ptr<CAnimatorController> pController = pAni->GetController();
-	if (pController == nullptr)
-		return;
 
 	//모든 param들 condition 비활성화.
-	pController->SetIntParam(L"Battle", 0);
+	pAni->SetIntParam(L"Battle", 0);
 }
 
 void CAttroxBattleAttack::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)
@@ -50,9 +44,6 @@ void CAttroxBattleAttack::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pT
 	TRIGGER_TYPE eType = pTrigger->GetEvtType();
 	CAnimator3D* pAni = _pSMachine->Animator3D();
 	if (pAni == nullptr)
-		return;
-	Ptr<CAnimatorController> pController = pAni->GetController();
-	if (pController == nullptr)
 		return;
 	CAttroxMachineScript* pMachine = dynamic_cast<CAttroxMachineScript*>(_pSMachine);
 	if (pMachine == nullptr)
@@ -78,13 +69,13 @@ void CAttroxBattleAttack::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pT
 		pMachine->transition((UINT)STATE_TYPE::DANCE);
 		break;
 	case TRIGGER_TYPE::BATTACK:
-		pController->SetIntParam(L"Attack_Number", 0);
+		pAni->SetIntParam(L"Attack_Number", 0);
 		break;
 	case TRIGGER_TYPE::BATTACK2:
-		pController->SetIntParam(L"Attack_Number", 1);
+		pAni->SetIntParam(L"Attack_Number", 1);
 		break;
 	case TRIGGER_TYPE::BATTACK3:
-		pController->SetIntParam(L"Attack_Number", 2);
+		pAni->SetIntParam(L"Attack_Number", 2);
 		break;
 	}
 }

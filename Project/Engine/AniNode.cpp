@@ -145,7 +145,7 @@ void CAniNode::Destory()
 
 	RemoveAllOutTransition();
 }
-ANI_NODE_RETURN CAniNode::NextNode(bool _bFinish, bool _bLoop)
+ANI_NODE_RETURN CAniNode::NextNode(bool _bFinish, bool _bLoop, CAnimator3D* _pAnimator)
 {
 	wstring strName = GetName();
 	bool NoClipNode = false;
@@ -153,16 +153,14 @@ ANI_NODE_RETURN CAniNode::NextNode(bool _bFinish, bool _bLoop)
 		NoClipNode = true;
 
 	size_t iOutSize = m_vecOutConditions.size();
-	return NextNode(iOutSize, _bFinish, NoClipNode, _bLoop);
+	return NextNode(iOutSize, _bFinish, NoClipNode, _bLoop, _pAnimator);
 }
-ANI_NODE_RETURN CAniNode::NextNode(int _iOutSize, bool _bFinish, bool _bCurNullNode, bool _bLoop)
+ANI_NODE_RETURN CAniNode::NextNode(int _iOutSize, bool _bFinish, bool _bCurNullNode, bool _bLoop, CAnimator3D* _pAnimator)
 {
 	wstring CurName = GetName();
 	if (CurName.compare(L"Exit") == 0)
 	{
-		CAniNode* Entry = m_pController->GetNode(L"Entry");
-		m_pController->SetCurNode(Entry);
-		return ANI_NODE_RETURN::ENTRTY;
+		return ANI_NODE_RETURN::ENTRY;
 	}
 
 	//다음 transition이 없다면 loop를 수행할지 말지 정한다.
@@ -203,7 +201,7 @@ ANI_NODE_RETURN CAniNode::NextNode(int _iOutSize, bool _bFinish, bool _bCurNullN
 		{
 			if (bExitTime)
 			{
-				bool bChange = pOutTransition->RegisterCurNode(m_pController);
+				bool bChange = pOutTransition->RegisterCurNode(_pAnimator);
 				if (bChange)
 					return ANI_NODE_RETURN::CHANGE;
 				else
@@ -224,11 +222,16 @@ ANI_NODE_RETURN CAniNode::NextNode(int _iOutSize, bool _bFinish, bool _bCurNullN
 			else
 			{
 				//재생을 완료하지 않았어도 Condition을 만족하면 다음 노드로 이동한다.
-				bool bActive = pOutTransition->IsActive(m_pController);
+				bool bActive = pOutTransition->IsActive(m_pController,_pAnimator);
+				
+				
 				//condition active 되면 넘어감.
 				if (bActive)
 				{
-					bool bChange = pOutTransition->RegisterCurNode(m_pController);
+					if (pOutTransition->GetConnectNodeName().compare(L"Exit") == 0)
+						return ANI_NODE_RETURN::EXIT;
+
+					bool bChange = pOutTransition->RegisterCurNode(_pAnimator);
 					if (bChange)
 						return ANI_NODE_RETURN::CHANGE;
 					else

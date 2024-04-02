@@ -3,7 +3,6 @@
 #include "CAttroxMachineScript.h"
 #include "CCharacterTrigger.h"
 #include <Engine\CTimeMgr.h>
-#include <Engine\AnimatorController.h>
 #include "CBaseCharacterScript.h"
 
 void CAttroxBattleIdle::OnEntry(CStateMachineScript* _pSMachine, CState* _pState)
@@ -15,11 +14,7 @@ void CAttroxBattleIdle::OnEntry(CStateMachineScript* _pSMachine, CState* _pState
 	CAnimator3D* pAni = _pSMachine->Animator3D();
 	if (pAni == nullptr)
 		return;
-	Ptr<CAnimatorController> pController = pAni->GetController();
-	if (pController == nullptr)
-		return;
-
-	pController->SetIntParam(L"Battle", 1);
+	pAni->SetIntParam(L"Battle", 1);
 }
 
 void CAttroxBattleIdle::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
@@ -27,12 +22,9 @@ void CAttroxBattleIdle::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
 	CAnimator3D* pAni = _pSMachine->Animator3D();
 	if (pAni == nullptr)
 		return;
-	Ptr<CAnimatorController> pController = pAni->GetController();
-	if (pController == nullptr)
-		return;
 
 	//모든 param들 condition 비활성화.
-	pController->SetIntParam(L"Battle", 0);
+	pAni->SetIntParam(L"Battle", 0);
 }
 
 void CAttroxBattleIdle::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)

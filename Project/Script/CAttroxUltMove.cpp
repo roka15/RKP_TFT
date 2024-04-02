@@ -6,7 +6,6 @@
 #include "CCharacterState.h"
 #include "CBaseCharacterScript.h"
 #include <Engine\CTimeMgr.h>
-#include <Engine\AnimatorController.h>
 #include <Engine\CKeyMgr.h>
 
 
@@ -18,12 +17,10 @@ void CAttroxUltMove::OnEntry(CStateMachineScript* _pSMachine, CState* _pState)
 	CAnimator3D* pAni = _pSMachine->Animator3D();
 	if (pAni == nullptr)
 		return;
-	Ptr<CAnimatorController> pController = pAni->GetController();
-	if (pController == nullptr)
-		return;
-	pController->SetIntParam(L"Battle", 1);
-	pController->SetIntParam(L"ULT", 1);
-	pController->SetIntParam(L"Move", 1);
+	
+	pAni->SetIntParam(L"Battle", 1);
+	pAni->SetIntParam(L"ULT", 1);
+	pAni->SetIntParam(L"Move", 1);
 }
 
 void CAttroxUltMove::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
@@ -31,14 +28,11 @@ void CAttroxUltMove::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
 	CAnimator3D* pAni = _pSMachine->Animator3D();
 	if (pAni == nullptr)
 		return;
-	Ptr<CAnimatorController> pController = pAni->GetController();
-	if (pController == nullptr)
-		return;
-
+	
 	//모든 param들 condition 비활성화.
-	pController->SetIntParam(L"Battle", 0);
-	pController->SetIntParam(L"ULT", 0);
-	pController->SetIntParam(L"Move", 0);
+	pAni->SetIntParam(L"Battle", 0);
+	pAni->SetIntParam(L"ULT", 0);
+	pAni->SetIntParam(L"Move", 0);
 	//pController->SetTriggerParam(L"UltOut", true);
 }
 

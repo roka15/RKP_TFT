@@ -16,7 +16,6 @@ private:
     CAniNode*           m_pEntryNode;
     CAniNode*           m_pExitNode;
     CAniNode*           m_pAnyStateNode;
-    CAniNode*           m_pCurNode;
     map<wstring, CAniNode*> m_mapNode;
 public:
     virtual int Load(const wstring& _strFilePath)override;
@@ -30,22 +29,11 @@ public:
     void RegisterParam(wstring _strName, int _iValue);
     void RegisterParam(wstring _strName, float _fValue);
     void RegisterParam(wstring _strName, bool _bValue , bool _bTrigger);
-    void DeleteParam(PARAM_TYPE _eType, wstring _strName);
-    int GetIntParam(wstring _strName, bool& _bfail);
-    float GetFloatParam(wstring _strName, bool& _bfail);
-    bool GetBoolParam(wstring _strName,bool& _bfail);
-    bool GetTriggerParam(wstring _strName, bool& _bfail);
-    bool SetIntParam(wstring _strName,int _iValue);
-    bool SetFloatParam(wstring _strName,float _fValue);
-    bool SetTriggerParam(wstring _strName,bool _bValue);
-    bool SetBoolParam(wstring _strName, bool _bValue);
 
-    CAniNode* GetCurNode() { return m_pCurNode; }
-    wstring GetCurAniKey();
-    void SetCurNode(CAniNode* _pCurNode) { m_pCurNode = _pCurNode; }
     CAniNode* GetNode(const wstring _strName) { return m_mapNode[_strName]; }
 
-    ANI_NODE_RETURN NextNode(bool _bFinish,bool _bLoop);
+    ANI_NODE_RETURN NextNode(bool _bFinish,bool _bLoop,wstring _strCurName, CAnimator3D* _pAnimator);
+    void CopyParams(CAnimator3D* _pAnimator);
 public:
     CAnimatorController();
     virtual ~CAnimatorController();

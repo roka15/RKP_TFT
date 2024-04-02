@@ -10,13 +10,20 @@ class CStructuredBuffer;
 class CAnimation3D;
 class CAnimatorController;
 
-struct AniEventFunc
+struct t_AniEventFunc
 {
     map<wstring, std::function<void()>>                  m_mapVoid;
     map<wstring, std::function<void(float)>>             m_mapFloat;
     map<wstring, std::function<void(int)>>               m_mapInt;
     map<wstring, std::function<void(string)>>            m_mapString;
     map<wstring, std::function<void(CGameObject*)>>      m_mapObj;
+};
+struct t_AniParams
+{
+    map<wstring, int>   mapIntParams;
+    map<wstring, float> mapFloatParams;
+    map<wstring, bool>  mapBoolParams;
+    map<wstring, bool>  mapTriggerParams;
 };
 class CAnimator3D :
     public CComponent
@@ -26,12 +33,13 @@ private:
     bool                                        m_bBlending;
     CStructuredBuffer*                          m_pBoneFinalMatBuffer;  // 특정 프레임의 최종 행렬
     Ptr<CAnimatorController>                    m_pController;
-    AniEventFunc                                m_AniEvent;
+    t_AniEventFunc                                m_AniEvent;
     map<wstring, CAnimation3D*>                 m_mapAnimation;
     CAnimation3D*                               m_pCurAnimation;
+    t_AniParams                                 m_AniParams;
 
 private:
-    void ChangeAnimation(wstring _AniKey);
+    bool ChangeAnimation(wstring _AniKey);
 public:
     virtual void finaltick() override;
     void UpdateData();
@@ -53,6 +61,12 @@ public:
     //void SetClipTime(int _iClipIdx, float _fTime);
 
     void RegisterAnimation(wstring _AniClipName);
+ 
+    //params
+    bool SetIntParam(wstring _strName, int _iValue);
+    bool SetFloatParam(wstring _strName, float _fValue);
+    bool SetTriggerParam(wstring _strName, bool _bValue);
+    bool SetBoolParam(wstring _strName, bool _bValue);
 
     UINT GetBoneCount();
     CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMatBuffer; }
@@ -62,7 +76,8 @@ public:
     virtual void SaveToLevelFile(FILE* _pFile) override;
     virtual void LoadFromLevelFile(FILE* _pFile) override;
     CLONE(CAnimator3D);
-
+    friend class CAnimatorController;
+    friend class CTransition;
 public:
     CAnimator3D();
     CAnimator3D(const CAnimator3D& _origin);

@@ -846,6 +846,7 @@ void CreateTestLevel()
 	//SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 0);
 	CPlayerScript* pPlayerScript = pPlayer->GetScript<CPlayerScript>();
 	CGameMgr::GetInst()->BuyItem(pPlayerScript->GetGameID(), CHARACTER_TYPE::ATTROX, pPlayer);
+	CGameMgr::GetInst()->BuyItem(pPlayerScript->GetGameID(), CHARACTER_TYPE::ATTROX, pPlayer);
 	/*CCharacterTrigger trigger;
 	trigger.SetEvtType(TRIGGER_TYPE::);
 	script->notify(&trigger);*/
