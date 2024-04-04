@@ -204,7 +204,6 @@ void CGameObject::AddChild(CGameObject* _Object)
 		_Object->ChangeToChildType();
 	}
 
-
 	// 부모 자식 연결
 	_Object->m_Parent = this;
 	m_vecChild.push_back(_Object);
@@ -225,6 +224,8 @@ bool CGameObject::IsAncestor(CGameObject* _Target)
 
 	return false;
 }
+
+
 
 void CGameObject::DisconnectFromParent()
 {

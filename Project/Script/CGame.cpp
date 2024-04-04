@@ -79,15 +79,26 @@ void CGame::tick()
 
 	if (m_fCurTime - m_fStartTime > CompareTime)
 	{
-		if (GameMode == GAME_STATE::BATTLE)
+		switch (GameMode)
+		{
+		case GAME_STATE::SELECT:
+			SpawnMinion(m_iRoundCnt);
+		    break;
+		case GAME_STATE::BATTLE:
 			++m_iRoundCnt;
+			break;
+		case GAME_STATE::LOADING:
+			DespawnMinion();
+			break;
+		}
+	
 		m_fStartTime = m_fCurTime;
 
-		if (m_iRoundCnt % 4 == 0)
+		/*if (m_iRoundCnt % 4 == 0)
 		{
 			GameMode = GAME_STATE::ITEM;
 			++m_iRoundCnt;
-		}
+		}*/
 		m_eGameState = GameMode;
 
 		if (bBattleTile)
@@ -162,6 +173,16 @@ int CGame::Buy(CItem* _pItem, CPlayerScript* _pPlayer)
 
 void CGame::CreateMinion()
 {
+	CGameObject* pMinionContainer = new CGameObject();
+	pMinionContainer->AddComponent(new CTransform());
+	/*pMinionContainer->AddComponent(new CMeshRender());
+	
+	pMinionContainer->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+	pMinionContainer->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);*/
+
+	pMinionContainer->SetName(L"MinionContainer");
+	SpawnGameObject(pMinionContainer, Vec3{ 0.f,-1000.f,0.f }, 0);
+
 	Ptr<CPrefab> prefab;
 	CHARACTER_TYPE eType;
 	const int MinionCnt = 5;
@@ -169,18 +190,80 @@ void CGame::CreateMinion()
 	for (int i = 0; i < MinionCnt; ++i)
 	{
 		CGameObject* obj = prefab->Instantiate();
-		m_vecMinion.push_back(obj);
+		m_DespawnMinion.push(obj);
+		pMinionContainer->AddChild(obj);
+	}
+
+	const int iMinionRoundCnt = 3;
+	const int arrMinionCnt[iMinionRoundCnt] = { 2,3,4 };
+	vector<vector<int>> vecTileNums;
+	vecTileNums.resize(iMinionRoundCnt);
+	vecTileNums[0].push_back(60);
+	vecTileNums[0].push_back(62);
+	vecTileNums[1].push_back(60);
+	vecTileNums[1].push_back(62);
+	vecTileNums[1].push_back(47);
+	vecTileNums[2].push_back(60);
+	vecTileNums[2].push_back(62);
+	vecTileNums[2].push_back(53);
+	vecTileNums[2].push_back(54);
+
+	for (int i = 0; i < iMinionRoundCnt; ++i)
+	{
+		t_RoundInfo tRound = {};
+		tRound.iMinionCnt = arrMinionCnt[i];
+		for (int j = 0; j < tRound.iMinionCnt; ++j)
+			tRound.vecMinionTileNum.push_back(vecTileNums[i][j]);
+
+		//1~3 라운드에 minion 배치 정보 저장.
+		m_RoundInfo.insert(std::make_pair(i, tRound));
+	}
+}
+
+bool CGame::SpawnMinion(int _iRound)
+{
+	auto itr = m_RoundInfo.find(_iRound);
+	if (itr == m_RoundInfo.end())
+		return false;
+
+	const int& iCnt = itr->second.iMinionCnt;
+	const vector<int>& iTileNums = itr->second.vecMinionTileNum;
+
+	for (int i = 0; i < iCnt; ++i)
+	{
+		CGameObject* pMinion = m_DespawnMinion.front();
+		m_DespawnMinion.pop();
+		m_SpawnMinion.push(pMinion);
+
+		int iTileNum = iTileNums[i];
+		CTileMgr::GetInst()->RegisterItem(iTileNum, pMinion);
+	}
+	return true;
+}
+
+void CGame::DespawnMinion()
+{
+	int iCnt = m_SpawnMinion.size();
+	for (int i = 0; i < iCnt; ++i)
+	{
+		CGameObject* pMinion = m_SpawnMinion.front();
+		m_SpawnMinion.pop();
+		m_DespawnMinion.push(pMinion);
+		CBaseCharacterScript* pChScript = pMinion->GetScript<CBaseCharacterScript>();
+		pChScript->start();
+		CGameObject* pMinionContainer = CLevelMgr::GetInst()->GetCurLevel()->FindObjectByName(L"MinionContainer");
+		pMinionContainer->AddChild(pMinion);
 	}
 }
 
 CGame::CGame()
 	:m_iUserCnt(8),
-	m_eGameState(GAME_STATE::SELECT),
+	m_eGameState(GAME_STATE::LOADING),
 	m_iRoundCnt(0),
 	m_fStartTime(0.f),
 	m_fCurTime(0.f),
 	m_fSelectTime(20.f),
-	m_fBettleTime(1000000.f),
+	m_fBettleTime(30.f),
 	m_fItemTime(30.f),
 	m_fLoadingTime(10.f)
 {

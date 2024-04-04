@@ -98,7 +98,7 @@ public:
 
     bool IsDead() { return m_bDead; }
     bool IsAncestor(CGameObject* _Target);
-
+    void DisConnectChild(CGameObject* _pObj);
 
 private:
     void DisconnectFromParent();

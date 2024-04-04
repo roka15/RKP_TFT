@@ -73,6 +73,8 @@ void CTileScript::AddItem(CGameObject* _obj)
 	GetOwner()->AddChild(_obj);
 }
 
+
+
 void CTileScript::ChangeTileState(bool _flag)
 {
 	if (m_Type == TILE_TYPE::BATTLE)

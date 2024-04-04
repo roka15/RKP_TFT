@@ -760,26 +760,28 @@ void CreateTestLevel()
 #pragma endregion
 
 
-	pTestEnemy = new CGameObject();
-	pTestEnemy->SetName(L"TestEnemy1");
-	pTestEnemy->AddComponent(new CTransform());
-	pTestEnemy->AddComponent(new CMeshRender());
-	pTestEnemy->Transform()->SetRelativeScale(Vec3{ 100.f,100.f,100.f });
-	pTestEnemy->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-	pTestEnemy->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"),0);
-	pTestEnemy->AddComponent(new CBaseCharacterScript());
-	pTestEnemy2 = new CGameObject();
-	pTestEnemy2->SetName(L"TestEnemy2");
-	pTestEnemy2->AddComponent(new CTransform());
-	pTestEnemy2->AddComponent(new CMeshRender());
-	pTestEnemy2->Transform()->SetRelativeScale(Vec3{ 100.f,100.f,100.f });
-	pTestEnemy2->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-	pTestEnemy2->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
-	pTestEnemy2->AddComponent(new CBaseCharacterScript());
-	{
-		CTileMgr::GetInst()->RegisterItem(51, pTestEnemy);
-		CTileMgr::GetInst()->RegisterItem(56, pTestEnemy2);
-	}
+	//pTestEnemy = new CGameObject();
+	//pTestEnemy->SetName(L"TestEnemy1");
+	//pTestEnemy->AddComponent(new CTransform());
+	//pTestEnemy->AddComponent(new CMeshRender());
+	//pTestEnemy->Transform()->SetRelativeScale(Vec3{ 100.f,100.f,100.f });
+	//pTestEnemy->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+	//pTestEnemy->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"),0);
+	//pTestEnemy->AddComponent(new CBaseCharacterScript());
+	//pTestEnemy2 = new CGameObject();
+	//pTestEnemy2->SetName(L"TestEnemy2");
+	//pTestEnemy2->AddComponent(new CTransform());
+	//pTestEnemy2->AddComponent(new CMeshRender());
+	//pTestEnemy2->Transform()->SetRelativeScale(Vec3{ 100.f,100.f,100.f });
+	//pTestEnemy2->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+	//pTestEnemy2->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
+	//pTestEnemy2->AddComponent(new CBaseCharacterScript());
+	//{
+	//	CTileMgr::GetInst()->RegisterItem(51, pTestEnemy);
+	//	CTileMgr::GetInst()->RegisterItem(56, pTestEnemy2);
+	//}
+	
+
 	//CGameObject* pNewObj = new CGameObject;
 	//pNewObj->SetName(L"Cube1");
 	//pNewObj->AddComponent(new CTransform);
@@ -847,7 +849,6 @@ void CreateTestLevel()
 	CPlayerScript* pPlayerScript = pPlayer->GetScript<CPlayerScript>();
 	CGameMgr::GetInst()->BuyItem(pPlayerScript->GetGameID(), CHARACTER_TYPE::ATTROX, pPlayer);
 	CGameMgr::GetInst()->BuyItem(pPlayerScript->GetGameID(), CHARACTER_TYPE::ATTROX, pPlayer);
-	CGameMgr::GetInst()->BuyItem(pPlayerScript->GetGameID(), CHARACTER_TYPE::ZED, pPlayer);
 	/*CCharacterTrigger trigger;
 	trigger.SetEvtType(TRIGGER_TYPE::);
 	script->notify(&trigger);*/

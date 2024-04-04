@@ -68,6 +68,9 @@ void CBaseCharacterScript::start()
 		pAnimator3D->RegisterAniEventInfoVOID(L"SendDamage", std::bind(&CBaseCharacterScript::SendDamage, this));
 		pAnimator3D->RegisterAniEventInfoINT(L"SetAtkNumber", std::bind(&CBaseCharacterScript::SetAtkNumber, this , std::placeholders::_1));
 	}
+
+	m_ChStatus.iHp = 100;
+	m_ChStatus.dCurUltGauge = 0;
 }
 
 void CBaseCharacterScript::tick()
@@ -289,6 +292,8 @@ void CBaseCharacterScript::SetTarget(CCollider* _Other)
 void CBaseCharacterScript::SendDamage()
 {
 	CGameObject* Target = CTileMgr::GetInst()->GetItem(m_iAtkTargetNum);
+	if (Target == nullptr)
+		return;
 	CBaseCharacterScript* pCharacterScript = Target->GetScript<CBaseCharacterScript>();
 	if (pCharacterScript == nullptr)
 		return;
