@@ -22,11 +22,23 @@ void CGame::init()
 	m_vecUsers.resize(m_iUserCnt);
 	Ptr<CPrefab> prefab;
 	CHARACTER_TYPE eType;
+	CreateMinion();
+
 	const int AttroxCnt = 3;
 	m_mapShop.insert(std::make_pair(CHARACTER_TYPE::ATTROX, queue<CGameObject*>()));
 	eType = CHARACTER_TYPE::ATTROX;
 	prefab = CResMgr::GetInst()->FindRes<CPrefab>(L"Ch_Attrox");
 	for (int i = 0; i < AttroxCnt; ++i)
+	{
+		CGameObject* obj = prefab->Instantiate();
+		m_mapShop[eType].push(obj);
+	}
+
+	const int ZedCnt = 1;
+	m_mapShop.insert(std::make_pair(CHARACTER_TYPE::ZED, queue<CGameObject*>()));
+	eType = CHARACTER_TYPE::ZED;
+	prefab = CResMgr::GetInst()->FindRes<CPrefab>(L"Ch_Zed");
+	for (int i = 0; i < ZedCnt; ++i)
 	{
 		CGameObject* obj = prefab->Instantiate();
 		m_mapShop[eType].push(obj);
@@ -146,6 +158,19 @@ int CGame::Buy(CItem* _pItem, CPlayerScript* _pPlayer)
 {
 	const int& Money = _pPlayer->GetMoney();
 	return _pItem->Buy(Money);
+}
+
+void CGame::CreateMinion()
+{
+	Ptr<CPrefab> prefab;
+	CHARACTER_TYPE eType;
+	const int MinionCnt = 5;
+	prefab = CResMgr::GetInst()->FindRes<CPrefab>(L"Ch_Zed");
+	for (int i = 0; i < MinionCnt; ++i)
+	{
+		CGameObject* obj = prefab->Instantiate();
+		m_vecMinion.push_back(obj);
+	}
 }
 
 CGame::CGame()

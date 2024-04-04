@@ -136,7 +136,7 @@ void CFBXLoader::LoadMeshDataFromNode(FbxNode* _pNode)
 		{
 			m_bMultiUVFlag = true;
 		}
-		
+
 		if (NULL != pMesh)
 			LoadMesh(pMesh);
 	}
@@ -233,7 +233,7 @@ void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 			{
 				Container.vecPos[iIdx] = tempVecPos[iIdx];
 			}
-			
+
 			++iVtxOrder;
 		}
 		/*	if (iMtrlCnt == 0)
@@ -307,10 +307,10 @@ void CFBXLoader::GetTangent(FbxMesh* _pMesh
 	if (1 < iTangentCnt)
 		assert(NULL); // 정점 1개가 포함하는 탄젠트 정보가 2개 이상이다.
 
-	if (1 ==iTangentCnt)
+	if (1 == iTangentCnt)
 	{
 		// 탄젠트 data 의 시작 주소
-		FbxGeometryElementTangent* pTangent =_pMesh->GetElementTangent();
+		FbxGeometryElementTangent* pTangent = _pMesh->GetElementTangent();
 		UINT iTangentIdx = 0;
 		fbxsdk::FbxLayerElement::EMappingMode mode = pTangent->GetMappingMode();
 		FbxVector4 vTangent = {};
@@ -477,7 +477,7 @@ void CFBXLoader::GetUV(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int 
 	UINT iUVIdx = 0;
 
 	/*
-	    if (pUV->GetReferenceMode() == FbxGeometryElement::eDirect)
+		if (pUV->GetReferenceMode() == FbxGeometryElement::eDirect)
 			iUVIdx = _iIdx;
 		else
 			iUVIdx = pUV->GetIndexArray().GetAt(_iIdx);
@@ -738,12 +738,15 @@ void CFBXLoader::LoadAnimationClip()
 			continue;
 
 		tAnimClip* pAnimClip = new tAnimClip;
-
+		int StartIndex = m_Path.rfind("\\") + 1;
+		int EndIndex = m_Path.rfind(".");
+		int Length = EndIndex - StartIndex;
+		string strOwnerName = m_Path.substr(StartIndex,Length);
 		string strClipName = pAnimStack->GetName();
 		size_t iFindIdx = strClipName.rfind("|") + 1;
-		pAnimClip->strName = L"anim3D\\" + wstring(strClipName.begin() + iFindIdx, strClipName.end()) + L".anm";
+		pAnimClip->strName = L"anim3D\\" +wstring(strOwnerName.begin(), strOwnerName.end())+L"\\" + wstring(strClipName.begin() + iFindIdx, strClipName.end()) + L".anm";
 		pAnimClip->originName = wstring(strClipName.begin(), strClipName.end());
-		FbxTakeInfo* pTakeInfo = m_pScene->GetTakeInfo(pAnimStack->GetName());
+		FbxTakeInfo * pTakeInfo = m_pScene->GetTakeInfo(pAnimStack->GetName());
 		pAnimClip->tStartTime = pTakeInfo->mLocalTimeSpan.GetStart();
 		pAnimClip->tEndTime = pTakeInfo->mLocalTimeSpan.GetStop();
 
@@ -808,6 +811,8 @@ void CFBXLoader::LoadAnimationData(FbxMesh* _pMesh, tContainer* _pContainer)
 					int iBoneIdx = FindBoneIndex(pCluster->GetLink()->GetName());
 					if (-1 == iBoneIdx)
 						assert(NULL);
+					if (iBoneIdx >= iClusterCount)
+						break;
 
 					FbxAMatrix matNodeTransform = GetTransform(_pMesh->GetNode());
 

@@ -203,6 +203,10 @@ call CodeGen.exe</Command>
     <ClInclude Include="CTileMgr.h" />
     <ClInclude Include="CTileScript.h" />
     <ClInclude Include="CTrigger.h" />
+    <ClInclude Include="CZedAttack.h" />
+    <ClInclude Include="CZedIdle.h" />
+    <ClInclude Include="CZedMachineScript.h" />
+    <ClInclude Include="CZedMove.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
@@ -237,6 +241,10 @@ call CodeGen.exe</Command>
     <ClCompile Include="CTileMgr.cpp" />
     <ClCompile Include="CTileScript.cpp" />
     <ClCompile Include="CTrigger.cpp" />
+    <ClCompile Include="CZedAttack.cpp" />
+    <ClCompile Include="CZedIdle.cpp" />
+    <ClCompile Include="CZedMachineScript.cpp" />
+    <ClCompile Include="CZedMove.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

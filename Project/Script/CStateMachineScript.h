@@ -23,6 +23,7 @@ public:
     virtual void notify(CTrigger* _pTrigger);
     virtual CState* get_state(void)const;
     virtual void add_state(CState* _pState) { m_pStateList.push_back(_pState); };
+    virtual void add_state(CState* _pState, UINT _iType);
 protected:
     virtual void transition(CState* _pState);
 public:

@@ -11,6 +11,7 @@ enum class STATE_TYPE
     BATTACK,
     UATTACK,
     DANCE,
+    END,
 };
 class CCharacterState
     :public CState

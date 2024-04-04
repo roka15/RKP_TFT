@@ -13,6 +13,7 @@
 #include "CStateMachineScript.h"
 #include "CTestScript.h"
 #include "CTileScript.h"
+#include "CZedMachineScript.h"
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
@@ -28,6 +29,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CStateMachineScript");
 	_vec.push_back(L"CTestScript");
 	_vec.push_back(L"CTileScript");
+	_vec.push_back(L"CZedMachineScript");
 }
 
 CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
@@ -56,6 +58,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CTestScript;
 	if (L"CTileScript" == _strScriptName)
 		return new CTileScript;
+	if (L"CZedMachineScript" == _strScriptName)
+		return new CZedMachineScript;
 	return nullptr;
 }
 
@@ -98,6 +102,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::TILESCRIPT:
 		return new CTileScript;
+		break;
+	case (UINT)SCRIPT_TYPE::ZEDMACHINESCRIPT:
+		return new CZedMachineScript;
 		break;
 	}
 	return nullptr;
@@ -153,6 +160,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::TILESCRIPT:
 		return L"CTileScript";
+		break;
+
+	case SCRIPT_TYPE::ZEDMACHINESCRIPT:
+		return L"CZedMachineScript";
 		break;
 
 	}

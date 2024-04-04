@@ -34,6 +34,11 @@ CState* CStateMachineScript::get_state(void) const
 	return m_pState;
 }
 
+void CStateMachineScript::add_state(CState* _pState, UINT _iType)
+{
+	m_pStateList[_iType] = _pState;
+}
+
 CStateMachineScript::CStateMachineScript():CScript(SCRIPT_TYPE::STATEMACHINESCRIPT)
 {
 }

@@ -10,3 +10,4 @@ CPlayerScript
 CStateMachineScript
 CTestScript
 CTileScript
+CZedMachineScript

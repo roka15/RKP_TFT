@@ -17,9 +17,11 @@ private:
     GAME_STATE                                   m_eGameState;
     vector<CPlayerScript*>                       m_vecUsers;
     map<CHARACTER_TYPE, queue<CGameObject*>>     m_mapShop;
+    vector<CGameObject*>                         m_vecMinion;
 private:
     void SendGameState(UINT _iState);
     int Buy(CItem* _pItem, CPlayerScript* _pPlayer);
+    void CreateMinion();
 public:
     void SetGameID(int _iID) { m_GameID = _iID; }
     const int& GetGameID() { return m_GameID; }

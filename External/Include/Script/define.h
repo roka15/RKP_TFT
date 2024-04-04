@@ -2,6 +2,7 @@
 enum class CHARACTER_TYPE
 {
 	ATTROX,
+    ZED,
     SLOT_ITEM,
 	END,
 };

@@ -21,4 +21,6 @@ CAStarMgr.h
 CGame.h
 CGameMgr.h
 define.h
-
+CZedIdle.h
+CZedAttack.h
+CZedMove.h

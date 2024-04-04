@@ -76,6 +76,21 @@
     <Filter Include="Script\Item\Character">
       <UniqueIdentifier>{a4701cb8-12ee-435f-8abb-a0a70e1efdb3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\FSM\Machine\Champ\Zed">
+      <UniqueIdentifier>{905f89dc-0bb1-4ded-8f10-f5d5ba6705db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\FSM\State\Champ\Zed">
+      <UniqueIdentifier>{66fe0787-aa02-49ba-b5c6-e7b626d8e9ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\FSM\State\Champ\Zed\Idle">
+      <UniqueIdentifier>{9f905823-542d-4552-a07d-1f31d0300089}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\FSM\State\Champ\Zed\Attack">
+      <UniqueIdentifier>{63e292bb-6a68-4555-a387-7c34b2d0a0e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\FSM\State\Champ\Zed\Move">
+      <UniqueIdentifier>{b567b16e-c821-4e30-9a22-be42a2cd3f42}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CCameraMoveScript.h">
@@ -177,6 +192,18 @@
     <ClInclude Include="CItem.h">
       <Filter>Script\Item</Filter>
     </ClInclude>
+    <ClInclude Include="CZedMachineScript.h">
+      <Filter>Script\FSM\Machine\Champ\Zed</Filter>
+    </ClInclude>
+    <ClInclude Include="CZedIdle.h">
+      <Filter>Script\FSM\State\Champ\Zed\Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="CZedAttack.h">
+      <Filter>Script\FSM\State\Champ\Zed\Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="CZedMove.h">
+      <Filter>Script\FSM\State\Champ\Zed\Move</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CCameraMoveScript.cpp">
@@ -271,6 +298,18 @@
     </ClCompile>
     <ClCompile Include="CItem.cpp">
       <Filter>Script\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="CZedMachineScript.cpp">
+      <Filter>Script\FSM\Machine\Champ\Zed</Filter>
+    </ClCompile>
+    <ClCompile Include="CZedIdle.cpp">
+      <Filter>Script\FSM\State\Champ\Zed\Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="CZedAttack.cpp">
+      <Filter>Script\FSM\State\Champ\Zed\Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="CZedMove.cpp">
+      <Filter>Script\FSM\State\Champ\Zed\Move</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

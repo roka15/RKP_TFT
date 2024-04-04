@@ -33,7 +33,7 @@ private:
     bool                                        m_bBlending;
     CStructuredBuffer*                          m_pBoneFinalMatBuffer;  // 특정 프레임의 최종 행렬
     Ptr<CAnimatorController>                    m_pController;
-    t_AniEventFunc                                m_AniEvent;
+    t_AniEventFunc                              m_AniEvent;
     map<wstring, CAnimation3D*>                 m_mapAnimation;
     CAnimation3D*                               m_pCurAnimation;
     t_AniParams                                 m_AniParams;
