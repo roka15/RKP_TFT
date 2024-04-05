@@ -19,7 +19,7 @@ void CAttroxUltAttack::OnEntry(CStateMachineScript* _pSMachine, CState* _pState)
 	if (pAni == nullptr)
 		return;
 	pAni->SetIntParam(L"ULT", 1);
-	pAni->SetTriggerParam(L"Attack", true);
+	pAni->SetBoolParam(L"Attack", true);
 
 	CBaseCharacterScript* pChScript = _pSMachine->GetOwner()->GetScript<CBaseCharacterScript>();
 	if (pChScript == nullptr)
@@ -35,6 +35,7 @@ void CAttroxUltAttack::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
 
 	//모든 param들 condition 비활성화.
 	pAni->SetIntParam(L"ULT", 0);
+	pAni->SetBoolParam(L"Attack", false);
 	//pController->SetTriggerParam(L"UltOut", true);
 }
 

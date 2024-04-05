@@ -33,7 +33,8 @@ void CAttroxBattleAttack::OnExit(CStateMachineScript* _pSMachine, CState* _pStat
 		return;
 
 	//모든 param들 condition 비활성화.
-	pAni->SetIntParam(L"Battle", 0);
+	pAni->SetBoolParam(L"Attack", false);
+
 }
 
 void CAttroxBattleAttack::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)

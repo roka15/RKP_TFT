@@ -33,7 +33,7 @@ void CPlayerScript::SetGameStateInfo()
 			pCharacterScript->CurStartTile();
 		case GAME_STATE::LOADING:
 			//select때 설정한 초기 위치로 이동.
-			pCharacterScript->ResetTile();
+			pCharacterScript->Reset();
 			break;
 		}
 	}

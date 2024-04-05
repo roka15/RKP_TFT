@@ -28,10 +28,19 @@ void CGame::init()
 	m_mapShop.insert(std::make_pair(CHARACTER_TYPE::ATTROX, queue<CGameObject*>()));
 	eType = CHARACTER_TYPE::ATTROX;
 	prefab = CResMgr::GetInst()->FindRes<CPrefab>(L"Ch_Attrox");
+	
 	for (int i = 0; i < AttroxCnt; ++i)
 	{
-		CGameObject* obj = prefab->Instantiate();
-		m_mapShop[eType].push(obj);
+		//game 객체를 재활용 하는 경우 이미 멤버변수들은 생성되어 있기 때문에  초기화를 진행한다.
+		if (m_mapShop[eType].size() == AttroxCnt)
+		{
+
+		}
+		else
+		{
+			CGameObject* obj = prefab->Instantiate();
+			m_mapShop[eType].push(obj);
+		}
 	}
 
 	const int ZedCnt = 1;
@@ -39,10 +48,18 @@ void CGame::init()
 	eType = CHARACTER_TYPE::ZED;
 	prefab = CResMgr::GetInst()->FindRes<CPrefab>(L"Ch_Zed");
 	for (int i = 0; i < ZedCnt; ++i)
-	{
-		CGameObject* obj = prefab->Instantiate();
-		m_mapShop[eType].push(obj);
+	{//game 객체를 재활용 하는 경우 이미 멤버변수들은 생성되어 있기 때문에  초기화를 진행한다.
+		if (m_mapShop[eType].size() == ZedCnt)
+		{
+		
+		}
+		else
+		{
+			CGameObject* obj = prefab->Instantiate();
+			m_mapShop[eType].push(obj);
+		}
 	}
+	m_bFirstLoading = false;
 }
 
 void CGame::tick()
@@ -73,6 +90,12 @@ void CGame::tick()
 	case GAME_STATE::LOADING:
 		CompareTime = m_fLoadingTime;
 		GameMode = GAME_STATE::SELECT;
+		//첫 로딩때만 여기서 Spawn 한다. 이후에는 아래의 Spawn 함수에서 수행.
+		if (m_bFirstLoading == false)
+		{
+			SpawnMinion(m_iRoundCnt);
+			m_bFirstLoading = true;
+		}
 		bBattleTile = true;
 		break;
 	}
@@ -82,13 +105,14 @@ void CGame::tick()
 		switch (GameMode)
 		{
 		case GAME_STATE::SELECT:
-			SpawnMinion(m_iRoundCnt);
+			
 		    break;
 		case GAME_STATE::BATTLE:
 			++m_iRoundCnt;
 			break;
 		case GAME_STATE::LOADING:
 			DespawnMinion();
+			SpawnMinion(m_iRoundCnt);
 			break;
 		}
 	
@@ -173,50 +197,56 @@ int CGame::Buy(CItem* _pItem, CPlayerScript* _pPlayer)
 
 void CGame::CreateMinion()
 {
-	CGameObject* pMinionContainer = new CGameObject();
-	pMinionContainer->AddComponent(new CTransform());
-	/*pMinionContainer->AddComponent(new CMeshRender());
-	
-	pMinionContainer->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-	pMinionContainer->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);*/
-
-	pMinionContainer->SetName(L"MinionContainer");
-	SpawnGameObject(pMinionContainer, Vec3{ 0.f,-1000.f,0.f }, 0);
-
-	Ptr<CPrefab> prefab;
-	CHARACTER_TYPE eType;
-	const int MinionCnt = 5;
-	prefab = CResMgr::GetInst()->FindRes<CPrefab>(L"Ch_Zed");
-	for (int i = 0; i < MinionCnt; ++i)
+	CGameObject* pMinionContainer = CLevelMgr::GetInst()->GetCurLevel()->FindObjectByName(L"MinionContainer"); 
+	//game 객체를 재활용 하는 경우 이미 필요한 객체들은 생성되어 있기 때문에  초기화를 진행한다.
+	if (pMinionContainer)
 	{
-		CGameObject* obj = prefab->Instantiate();
-		m_DespawnMinion.push(obj);
-		pMinionContainer->AddChild(obj);
+		DespawnMinion();
 	}
-
-	const int iMinionRoundCnt = 3;
-	const int arrMinionCnt[iMinionRoundCnt] = { 2,3,4 };
-	vector<vector<int>> vecTileNums;
-	vecTileNums.resize(iMinionRoundCnt);
-	vecTileNums[0].push_back(60);
-	vecTileNums[0].push_back(62);
-	vecTileNums[1].push_back(60);
-	vecTileNums[1].push_back(62);
-	vecTileNums[1].push_back(47);
-	vecTileNums[2].push_back(60);
-	vecTileNums[2].push_back(62);
-	vecTileNums[2].push_back(53);
-	vecTileNums[2].push_back(54);
-
-	for (int i = 0; i < iMinionRoundCnt; ++i)
+	else
 	{
-		t_RoundInfo tRound = {};
-		tRound.iMinionCnt = arrMinionCnt[i];
-		for (int j = 0; j < tRound.iMinionCnt; ++j)
-			tRound.vecMinionTileNum.push_back(vecTileNums[i][j]);
+		pMinionContainer = new CGameObject();
+		pMinionContainer->AddComponent(new CTransform());
 
-		//1~3 라운드에 minion 배치 정보 저장.
-		m_RoundInfo.insert(std::make_pair(i, tRound));
+
+		pMinionContainer->SetName(L"MinionContainer");
+		SpawnGameObject(pMinionContainer, Vec3{ 0.f,-1000.f,0.f }, 0);
+
+		Ptr<CPrefab> prefab;
+		CHARACTER_TYPE eType;
+		const int MinionCnt = 5;
+		prefab = CResMgr::GetInst()->FindRes<CPrefab>(L"Ch_Zed");
+		for (int i = 0; i < MinionCnt; ++i)
+		{
+			CGameObject* obj = prefab->Instantiate();
+			m_DespawnMinion.push(obj);
+			pMinionContainer->AddChild(obj);
+		}
+
+		const int iMinionRoundCnt = 3;
+		const int arrMinionCnt[iMinionRoundCnt] = { 2,3,4 };
+		vector<vector<int>> vecTileNums;
+		vecTileNums.resize(iMinionRoundCnt);
+		vecTileNums[0].push_back(60);
+		vecTileNums[0].push_back(62);
+		vecTileNums[1].push_back(60);
+		vecTileNums[1].push_back(62);
+		vecTileNums[1].push_back(47);
+		vecTileNums[2].push_back(60);
+		vecTileNums[2].push_back(62);
+		vecTileNums[2].push_back(53);
+		vecTileNums[2].push_back(54);
+
+		for (int i = 0; i < iMinionRoundCnt; ++i)
+		{
+			t_RoundInfo tRound = {};
+			tRound.iMinionCnt = arrMinionCnt[i];
+			for (int j = 0; j < tRound.iMinionCnt; ++j)
+				tRound.vecMinionTileNum.push_back(vecTileNums[i][j]);
+
+			//1~3 라운드에 minion 배치 정보 저장.
+			m_RoundInfo.insert(std::make_pair(i, tRound));
+		}
 	}
 }
 
@@ -265,7 +295,8 @@ CGame::CGame()
 	m_fSelectTime(20.f),
 	m_fBettleTime(30.f),
 	m_fItemTime(30.f),
-	m_fLoadingTime(10.f)
+	m_fLoadingTime(10.f),
+	m_bFirstLoading(false)
 {
 }
 

@@ -54,9 +54,10 @@ public:
 	void SetMove(bool _flag) { m_ChState.bMove = _flag; }
 	void SetWait(bool _flag) { m_ChState.bWaiting = _flag; }
 	void SetAtk(bool _flag) { m_ChState.bAttack = _flag; }
+	void SetUlt(bool _flag) { m_ChState.bUlt = _flag; }
 	void SetAtkNumber(int _iNumber) { m_ChState.iAtkNum = _iNumber; }
 	void CurStartTile();
-	void ResetTile(); 
+	void Reset(); 
 
 protected:
 	void Battle(CGameObject* _pTileObj);

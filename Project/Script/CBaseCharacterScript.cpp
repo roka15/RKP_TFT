@@ -155,6 +155,8 @@ void CBaseCharacterScript::tick()
 	{
 	case 0://select
 		m_iStartTileNum = tileScript->GetNumber();
+		SetAtk(false);
+		SetMove(false);
 		break;
 	case 1://battle
 		Battle(tile);
@@ -337,11 +339,16 @@ void CBaseCharacterScript::CurStartTile()
 	m_iStartTileNum = iNumber;
 }
 
-void CBaseCharacterScript::ResetTile()
+void CBaseCharacterScript::Reset()
 {
 	CGameObject* pOwner = GetOwner();
 	CTileMgr::GetInst()->RegisterItem(m_iStartTileNum, pOwner);
 	GetOwner()->Transform()->SetRelativeRot(DEGREE2RADIAN(90.f), 0.f, DEGREE2RADIAN(180));
+
+
+	SetAtk(false);
+	SetMove(false);
+	SetUlt(false);
 }
 
 
@@ -409,7 +416,7 @@ void CBaseCharacterScript::Battle(CGameObject* _pTileObj)
 	}
 	else
 	{
-		//SetAtk(false);
+		SetAtk(false);
 
 		//test를 위해 항상 검사 - 경로 타일 색깔 바뀌게 하기 위함
 		vector<int> Route = CAStarMgr::GetInst()->GetNextNodeAStar(startNumber, endNumber);
