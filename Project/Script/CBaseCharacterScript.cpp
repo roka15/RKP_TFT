@@ -66,11 +66,12 @@ void CBaseCharacterScript::start()
 	if (pAnimator3D != nullptr)
 	{
 		pAnimator3D->RegisterAniEventInfoVOID(L"SendDamage", std::bind(&CBaseCharacterScript::SendDamage, this));
-		pAnimator3D->RegisterAniEventInfoINT(L"SetAtkNumber", std::bind(&CBaseCharacterScript::SetAtkNumber, this , std::placeholders::_1));
+		pAnimator3D->RegisterAniEventInfoINT(L"SetAtkNumber", std::bind(&CBaseCharacterScript::SetAtkNumber, this, std::placeholders::_1));
 	}
 
 	m_ChStatus.iHp = 100;
 	m_ChStatus.dCurUltGauge = 0;
+	BattleStateReset();
 }
 
 void CBaseCharacterScript::tick()
@@ -320,7 +321,7 @@ void CBaseCharacterScript::SendDamage()
 			m_ChState.bWaiting = false;
 		}
 	}
-	
+
 }
 
 void CBaseCharacterScript::RecvDamage(float _damage)
@@ -335,7 +336,10 @@ void CBaseCharacterScript::RecvDamage(float _damage)
 
 void CBaseCharacterScript::CurStartTile()
 {
-	int iNumber = GetOwner()->GetParent()->GetScript<CTileScript>()->GetNumber();
+	CTileScript* pTileScript = GetOwner()->GetParent()->GetScript<CTileScript>();
+	if (pTileScript == nullptr)
+		return;
+	int iNumber = pTileScript->GetNumber();
 	m_iStartTileNum = iNumber;
 }
 
@@ -344,8 +348,12 @@ void CBaseCharacterScript::Reset()
 	CGameObject* pOwner = GetOwner();
 	CTileMgr::GetInst()->RegisterItem(m_iStartTileNum, pOwner);
 	GetOwner()->Transform()->SetRelativeRot(DEGREE2RADIAN(90.f), 0.f, DEGREE2RADIAN(180));
+	GetOwner()->Transform()->SetRelativePos(0.f, 0.f, 0.f);
+}
 
-
+void CBaseCharacterScript::BattleStateReset()
+{
+	m_bMove = false;
 	SetAtk(false);
 	SetMove(false);
 	SetUlt(false);
@@ -365,6 +373,7 @@ void CBaseCharacterScript::ChangeTransInfo()
 			GetOwner()->Transform()->SetRelativeRot(DEGREE2RADIAN(90.f), 0.f, DEGREE2RADIAN(0));
 			break;
 		case PLAYER_TYPE::ANOTHER:
+		case PLAYER_TYPE::AI:
 			GetOwner()->Transform()->SetRelativeRot(DEGREE2RADIAN(90.f), 0.f, DEGREE2RADIAN(180));
 			break;
 		}
@@ -376,6 +385,7 @@ void CBaseCharacterScript::ChangeTransInfo()
 			GetOwner()->Transform()->SetRelativeRot(DEGREE2RADIAN(90.f), 0.f, DEGREE2RADIAN(180));
 			break;
 		case PLAYER_TYPE::ANOTHER:
+		case PLAYER_TYPE::AI:
 			GetOwner()->Transform()->SetRelativeRot(DEGREE2RADIAN(90.f), 0.f, DEGREE2RADIAN(0));
 			break;
 		}
@@ -391,7 +401,8 @@ void CBaseCharacterScript::Battle(CGameObject* _pTileObj)
 
 	int startNumber = pTileScript->GetNumber();
 	int distance = 0;
-	int endNumber = CAStarMgr::GetInst()->SearchTarget(startNumber, distance);
+	CGameObject* pPlayer = GetPlayer();
+	int endNumber = CAStarMgr::GetInst()->SearchTarget(startNumber, distance, pPlayer);
 	const TILE_OWNER_TYPE& eTileType = pTileScript->GetOwnerType();
 	Vec2 dir = m_v2Dir;
 	if (eTileType == TILE_OWNER_TYPE::PLAYER)
@@ -407,7 +418,7 @@ void CBaseCharacterScript::Battle(CGameObject* _pTileObj)
 	}
 	m_iAtkTargetNum = endNumber;
 	//적이 있고 사거리내에 도착했다면 Atk 상태로 변경
-	if (m_ChStatus.fAttackRange == distance)
+	if (m_ChStatus.fAttackRange >= distance && m_bMove == false)
 	{
 		//attack
 		//방향은 end 방향을 바라보기
@@ -417,14 +428,15 @@ void CBaseCharacterScript::Battle(CGameObject* _pTileObj)
 	else
 	{
 		SetAtk(false);
-
+		int BattleOffset = CTileMgr::GetInst()->GetWaitCount().x;
+		bool bClientFlag = CGameMgr::GetInst()->IsSamePlayer(pPlayer);
 		//test를 위해 항상 검사 - 경로 타일 색깔 바뀌게 하기 위함
 		vector<int> Route = CAStarMgr::GetInst()->GetNextNodeAStar(startNumber, endNumber);
-		CTileMgr::GetInst()->BattleRouteRender(Route);
+		//if (bClientFlag)
+			CTileMgr::GetInst()->BattleRouteRender(m_iMoveTargetNum - BattleOffset);
 		//move
 		//방향은 다음 타일을 바라보고 움직이기.
 		//목표 지점까지 이동이 완료 될 때까지는 검사 X
-		int BattleOffset = CTileMgr::GetInst()->GetWaitCount().x;
 		if (m_bMove)
 		{
 			Vec3 WorldPos = GetOwner()->Transform()->GetWorldPos();
@@ -436,6 +448,7 @@ void CBaseCharacterScript::Battle(CGameObject* _pTileObj)
 			{
 				m_bMove = false;
 				ChangeTransInfo();
+				CAStarMgr::GetInst()->CancelReserve(m_iMoveTargetNum - BattleOffset);
 				CTileMgr::GetInst()->RegisterItem(m_iMoveTargetNum, GetOwner());
 				pos = Vec3{ 0.f,0.f,pos.z };
 			}
@@ -458,19 +471,25 @@ void CBaseCharacterScript::Battle(CGameObject* _pTileObj)
 		}
 		else
 		{
-			/*vector<int> Route = CAStarMgr::GetInst()->GetNextNodeAStar(startNumber, endNumber);
-			CTileMgr::GetInst()->BattleRouteRender(Route);*/
 			int size = Route.size();
-			int nextTile = Route[size - 2];
+			int index = size - 2;
+			if (index < 0)
+				return;
+			int nextTile = Route[index];
 			int curTile = GetOwner()->GetParent()->GetScript<CTileScript>()->GetNumber() - BattleOffset;
 
 			//다음 tile의 transform target으로 지정.
 			//현재 위치에서 다음 타일 방향으로 현재 오브젝트 회전
 			m_iMoveTargetNum = nextTile + BattleOffset;
+			CAStarMgr::GetInst()->Reserve(m_iMoveTargetNum - BattleOffset);
 			m_v3TargetPos = CTileMgr::GetInst()->GetBattleTileWorldPos(nextTile);
 			Vec3 CurPos = CTileMgr::GetInst()->GetBattleTileWorldPos(curTile);
+
+
 			m_v2Dir.x = m_v3TargetPos.x - CurPos.x;
 			m_v2Dir.y = -(m_v3TargetPos.z - CurPos.z);
+			m_v2Dir.x *= bClientFlag == true ? 1 : -1;
+			//m_v2Dir.y *= bClientFlag == true ? 1 : -1;
 			m_v2Dir.Normalize();
 			m_bMove = true;
 			SetMove(true);

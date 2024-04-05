@@ -50,12 +50,13 @@ public:
     Vec2 GetWaitCount() { return m_WaitCount; }
     vector<int> GetAnotherPlayer(TILE_OWNER_TYPE _eType);
     void BattleRouteRender(vector<int> _vecRoute);
+    void BattleRouteRender(int _iNextNode);
     int FindEmptyWaitTile();
 
 public:
     void BattleSetInfo(const Vec2& _offset, const Vec2& _size, const Vec2& _count, const Vec3& _start);
     void WaitSetInfo(const Vec2& _offset, const Vec2& _size, const Vec2& _count, const Vec3& _start);
     CGameObject* CreateTile(TILE_OWNER_TYPE _type);
-    vector<int> SearchEnemyTile();
+    vector<int> SearchEnemyTile(CGameObject* _ownerPlayer);
 };
 

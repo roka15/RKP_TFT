@@ -15,12 +15,12 @@ CAStarMgr::~CAStarMgr()
 	delete m_arrOddDirX;
 	delete m_arrEvenDirX;
 }
-int CAStarMgr::SearchTarget(UINT _startNode, int& _out_distance)
+int CAStarMgr::SearchTarget(UINT _startNode, int& _out_distance,CGameObject* _pPlayer)
 {
 	//p1 대기석 - p1 전투석 - p2 전투석 - p2 대기석 순으로 저장되기 때문에
 	//p1 대기석 갯수를 빼줘야 함.
 	int Offset = CTileMgr::GetInst()->GetWaitCount().x * -1;
-	vector<int> vecEnumyNums = CTileMgr::GetInst()->SearchEnemyTile();
+	vector<int> vecEnumyNums = CTileMgr::GetInst()->SearchEnemyTile(_pPlayer);
 	int size = vecEnumyNums.size();
 	int min = 100000;
 	int iTargetNum = -1;
@@ -77,12 +77,13 @@ vector<int> CAStarMgr::GetNextNodeAStar(UINT _startNode, UINT _endNode)
 	startNode.Cur = StartIdx;
 	startNode.Parent = Vec2{ -1,-1 }; // start 라는 의미
 	queue.push(startNode);
-	while (1)
+	while (queue.empty()==false)
 	{
 		t_AStarNode curNode = queue.top();
 		queue.pop();
 
 		closeList[curNode.Cur.y][curNode.Cur.x] = true;
+		int iCurNodeIndex = curNode.Cur.y * width + curNode.Cur.x;
 		//육각형이기 때문.
 		// ↖ ↗
 		// ←  → 
@@ -126,8 +127,14 @@ vector<int> CAStarMgr::GetNextNodeAStar(UINT _startNode, UINT _endNode)
 			//이미 close 항목인지 체크
 			if (closeList[y][x] == true)
 				continue;
+			//이동이 예약된 목록인지
+			auto itr = m_mapReserv.find(iCurNodeIndex);
+			if (itr != m_mapReserv.end() && m_mapReserv[iCurNodeIndex])
+				continue;
 			//벽인지 체크
 			bool bEmpty = CTileMgr::GetInst()->EmptyBattleTile(x + (y * width));
+			if (bEmpty == false)
+				int a = 0;
 			//종료 지점은 타겟이 존재하기 때문에 오브젝트가 있다.그래서 EmptyTile 검사하면 false가 나옴.
 			if ((x != EndIdx.x || y != EndIdx.y) && bEmpty == false)
 				continue;
@@ -153,6 +160,19 @@ vector<int> CAStarMgr::GetNextNodeAStar(UINT _startNode, UINT _endNode)
 	}
 	return Result;
 }
+void CAStarMgr::Reserve(int _iNode)
+{
+	auto itr = m_mapReserv.find(_iNode);
+	if (itr == m_mapReserv.end())
+	{
+		m_mapReserv.insert(std::make_pair(_iNode,false));
+	}
+	m_mapReserv[_iNode] = true;
+}
+void CAStarMgr::CancelReserve(int _iNode)
+{
+	m_mapReserv[_iNode] = false;
+}
 void CAStarMgr::SaveFile(FILE* _pFile)
 {
 }
@@ -162,8 +182,8 @@ void CAStarMgr::LoadFile(FILE* _pFile)
 Vec3 CAStarMgr::ConvertOffsetToCube(UINT _col, UINT _row)
 {
 	/*if (_row % 2 != 0)
-		_col += 1;
-	*/
+		_col += 1;*/
+	
 	int q = _col - (_row + (_row & 1)) / 2;
 	int r = _row;
 	return Vec3(q, r, -q - r);

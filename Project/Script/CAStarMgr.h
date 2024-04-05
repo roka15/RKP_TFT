@@ -30,6 +30,7 @@ private:
 	int* m_arrDirY;
 	int* m_arrOddDirX;
 	int* m_arrEvenDirX;
+	map<int,bool>	m_mapReserv;
 private:
 	void SaveFile(FILE*);
 	void LoadFile(FILE*);
@@ -41,7 +42,9 @@ public:
 	virtual void init()override;
 	virtual void tick()override;
 public:
-	int SearchTarget(UINT _startNode,int& _out_distance);
+	int SearchTarget(UINT _startNode,int& _out_distance, CGameObject* _pPlayer);
 	vector<int> GetNextNodeAStar(UINT _startNode, UINT _endNode);
+	void Reserve(int _iNode);
+	void CancelReserve(int _iNode);
 };
 

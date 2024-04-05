@@ -99,6 +99,7 @@ void CZedAttack::tick(CStateMachineScript* _pSMachine)
 	else
 	{
 		trigger.SetEvtType(TRIGGER_TYPE::NIDLE);
+		bChange = true;
 	}
 	if (bChange)
 		pMachine->notify(&trigger);

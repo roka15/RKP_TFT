@@ -30,14 +30,18 @@ void CPlayerScript::SetGameStateInfo()
 		{
 		case GAME_STATE::BATTLE:
 			//select때 설정한 캐릭터 초기 위치 저장
-			pCharacterScript->CurStartTile();
+			if (m_ePlayerType != PLAYER_TYPE::AI)
+				pCharacterScript->CurStartTile();
 		case GAME_STATE::LOADING:
 			//select때 설정한 초기 위치로 이동.
-			pCharacterScript->Reset();
+			//상태에 대한 것들도 초기화(atk,move 등)
+			if (m_ePlayerType != PLAYER_TYPE::AI)
+				pCharacterScript->Reset();
+			pCharacterScript->BattleStateReset();
 			break;
 		}
 	}
-	
+
 }
 
 CPlayerScript::CPlayerScript()
@@ -71,7 +75,7 @@ void CPlayerScript::BeginOverlap(CCollider* _Other)
 
 	if (pOtherObject->GetName() == L"Monster")
 	{
-		DestroyObject(pOtherObject);		
+		DestroyObject(pOtherObject);
 	}
 }
 

@@ -58,6 +58,7 @@ public:
 	void SetAtkNumber(int _iNumber) { m_ChState.iAtkNum = _iNumber; }
 	void CurStartTile();
 	void Reset(); 
+	void BattleStateReset();
 
 protected:
 	void Battle(CGameObject* _pTileObj);

@@ -18,5 +18,6 @@ enum class PLAYER_TYPE
 {
     CLIENT=0,
     ANOTHER,
+    AI,
     END,
 };

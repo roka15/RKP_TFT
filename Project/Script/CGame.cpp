@@ -19,6 +19,16 @@ int CGame::CanEnter()
 
 void CGame::init()
 {
+	if (m_pAIPlayer == nullptr)
+	{
+		m_pAIPlayer = new CGameObject();
+		m_pAIPlayer->SetName(L"AIPlayer");
+		m_pAIPlayer->AddComponent(new CTransform());
+		m_pAIPlayer->AddComponent(new CPlayerScript());
+		CPlayerScript* pPlayerScript = m_pAIPlayer->GetScript<CPlayerScript>();
+		pPlayerScript->SetPlayerType(PLAYER_TYPE::AI);
+		SpawnGameObject(m_pAIPlayer, Vec3(0.f, 0.f, 0.f), 0);
+	}
 	m_vecUsers.resize(m_iUserCnt);
 	Ptr<CPrefab> prefab;
 	CHARACTER_TYPE eType;
@@ -187,6 +197,10 @@ void CGame::SendGameState(UINT _iState)
 		player->SetGameState(_iState);
 		player->SetGameStateInfo();
 	}
+
+	CPlayerScript* pPlayer =  m_pAIPlayer->GetScript<CPlayerScript>();
+	pPlayer->SetGameState(_iState);
+	pPlayer->SetGameStateInfo();
 }
 
 int CGame::Buy(CItem* _pItem, CPlayerScript* _pPlayer)
@@ -219,6 +233,10 @@ void CGame::CreateMinion()
 		for (int i = 0; i < MinionCnt; ++i)
 		{
 			CGameObject* obj = prefab->Instantiate();
+			CBaseCharacterScript* pChScript = obj->GetScript<CBaseCharacterScript>();
+			pChScript->SetPlayer(m_pAIPlayer);
+			CPlayerScript* pPlayer = m_pAIPlayer->GetScript<CPlayerScript>();
+			pPlayer->AddItem(obj);
 			m_DespawnMinion.push(obj);
 			pMinionContainer->AddChild(obj);
 		}

@@ -204,12 +204,11 @@ CGameObject* CTileMgr::CreateTile(TILE_OWNER_TYPE _type)
 			}
 		}
 	}
-
 	pEmpty->Transform()->SetRelativePos(m_StartPos);
 	return pEmpty;
 }
 
-vector<int> CTileMgr::SearchEnemyTile()
+vector<int> CTileMgr::SearchEnemyTile(CGameObject* _ownerPlayer)
 {
 	vector<int> vecEnemyNums;
 	for (int i = 0; i < m_vecBattleTile.size(); ++i)
@@ -221,7 +220,7 @@ vector<int> CTileMgr::SearchEnemyTile()
 	
 		CItem* pItemScript = pItemObj->GetScript<CItem>();
 		CGameObject* pPlayer = pItemScript->GetPlayer();
-		bool bSame = CGameMgr::GetInst()->IsSamePlayer(pPlayer);
+		bool bSame = _ownerPlayer == pPlayer;//CGameMgr::GetInst()->IsSamePlayer(pPlayer);
 		if (bSame == false)
 		{
 			CTileScript* script = m_vecBattleTile[i]->GetScript<CTileScript>();
@@ -331,6 +330,13 @@ void CTileMgr::BattleRouteRender(vector<int> _vecRoute)
 		GetTile(Idx)->HighlightColor(true);
 	}
 	
+}
+
+void CTileMgr::BattleRouteRender(int _iNextNode)
+{
+	int Offset = m_WaitCount.x;
+	int Idx = _iNextNode + Offset;
+	GetTile(Idx)->HighlightColor(true);
 }
 
 int CTileMgr::FindEmptyWaitTile()

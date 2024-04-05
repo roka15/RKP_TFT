@@ -94,6 +94,8 @@ void CGameObject::tick()
 
 	for (size_t i = 0; i < m_vecScript.size(); ++i)
 	{
+		if (GetName().compare(L"Zed") == 0)
+			int a = 0;
 		m_vecScript[i]->tick();
 	}
 

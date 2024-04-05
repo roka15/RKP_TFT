@@ -26,6 +26,7 @@ private:
     queue<CGameObject*>                          m_SpawnMinion;
     map<int, t_RoundInfo>                        m_RoundInfo;
     bool                                         m_bFirstLoading;
+    CGameObject*                                 m_pAIPlayer;
 private:
     void SendGameState(UINT _iState);
     int  Buy(CItem* _pItem, CPlayerScript* _pPlayer);
