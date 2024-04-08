@@ -40,5 +40,19 @@
 *.idb
 *.cso
 
+# Resource
+*.fbx
+*.mesh
+*.anm
+*.mtrl
+*.controller
+*.png
+*.tga
+*.jpg
+*.fbm
+*.mdat
+*.dds
+*.bmp
+
 
 # End of https://www.toptal.com/developers/gitignore/api/c++
