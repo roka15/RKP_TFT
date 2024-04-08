@@ -185,6 +185,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="CAttroxUltIdle.h" />
     <ClInclude Include="CAttroxUltMove.h" />
     <ClInclude Include="CCameraMoveScript.h" />
+    <ClInclude Include="CChMinionScript.h" />
     <ClInclude Include="CCursor.h" />
     <ClInclude Include="CGame.h" />
     <ClInclude Include="CGameMgr.h" />
@@ -204,6 +205,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="CTileScript.h" />
     <ClInclude Include="CTrigger.h" />
     <ClInclude Include="CZedAttack.h" />
+    <ClInclude Include="CZedDeath.h" />
     <ClInclude Include="CZedIdle.h" />
     <ClInclude Include="CZedMachineScript.h" />
     <ClInclude Include="CZedMove.h" />
@@ -226,6 +228,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="CCameraMoveScript.cpp" />
     <ClCompile Include="CCharacterState.cpp" />
     <ClCompile Include="CCharacterTrigger.cpp" />
+    <ClCompile Include="CChMinionScript.cpp" />
     <ClCompile Include="CCursor.cpp" />
     <ClCompile Include="CGame.cpp" />
     <ClCompile Include="CGameMgr.cpp" />
@@ -242,6 +245,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="CTileScript.cpp" />
     <ClCompile Include="CTrigger.cpp" />
     <ClCompile Include="CZedAttack.cpp" />
+    <ClCompile Include="CZedDeath.cpp" />
     <ClCompile Include="CZedIdle.cpp" />
     <ClCompile Include="CZedMachineScript.cpp" />
     <ClCompile Include="CZedMove.cpp" />

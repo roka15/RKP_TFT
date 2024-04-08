@@ -19,7 +19,7 @@ CBaseCharacterScript::CBaseCharacterScript() :
 	m_bMove(false)
 {
 	m_ChStatus.fAttackRange = 1;
-	m_ChStatus.iHp = 100;
+	m_ChStatus.iHp = 40;
 	m_ChStatus.dCurUltGauge = 0;
 	m_ChStatus.dAddUltGauge = 10;
 	m_ChStatus.dMinusUltGauge = 10;
@@ -32,7 +32,7 @@ CBaseCharacterScript::CBaseCharacterScript(SCRIPT_TYPE _eType) :
 	CItem(_eType)
 {
 	m_ChStatus.fAttackRange = 1;
-	m_ChStatus.iHp = 100;
+	m_ChStatus.iHp = 40;
 	m_ChStatus.dCurUltGauge = 0;
 	m_ChStatus.dAddUltGauge = 10;
 	m_ChStatus.dMinusUltGauge = 10;
@@ -47,7 +47,7 @@ CBaseCharacterScript::CBaseCharacterScript(const CBaseCharacterScript& _ref)
 	m_bMove(false)
 {
 	m_ChStatus.fAttackRange = 1;
-	m_ChStatus.iHp = 100;
+	m_ChStatus.iHp = 40;
 	m_ChStatus.dCurUltGauge = 0;
 	m_ChStatus.dAddUltGauge = 10;
 	m_ChStatus.dMinusUltGauge = 10;
@@ -69,75 +69,13 @@ void CBaseCharacterScript::start()
 		pAnimator3D->RegisterAniEventInfoINT(L"SetAtkNumber", std::bind(&CBaseCharacterScript::SetAtkNumber, this, std::placeholders::_1));
 	}
 
-	m_ChStatus.iHp = 100;
+	m_ChStatus.iHp = 40;
 	m_ChStatus.dCurUltGauge = 0;
 	BattleStateReset();
 }
 
 void CBaseCharacterScript::tick()
 {
-	//1번키 : waiting on/off
-	//2번키 : move    on/off
-	//3번키 : attack  on/off
-	//4번키 : ult     on/off
-	//5번키 : dance   on/off
-	/*KEY eInput = KEY::END;
-
-	if (CKeyMgr::GetInst()->GetKeyState(KEY::_1) == KEY_STATE::TAP)
-	{
-		if (m_ChState.bAttack == false && m_ChState.bDance == false && m_ChState.bMove == false && m_ChState.bUlt == false)
-		{
-			m_ChState.bWaiting = !m_ChState.bWaiting;
-		}
-		eInput = KEY::_1;
-	}
-	if (CKeyMgr::GetInst()->GetKeyState(KEY::_2) == KEY_STATE::TAP)
-	{
-		if (m_ChState.bWaiting == false)
-		{
-			m_ChState.bMove = !m_ChState.bMove;
-		}
-		eInput = KEY::_2;
-	}
-	if (CKeyMgr::GetInst()->GetKeyState(KEY::_3) == KEY_STATE::TAP)
-	{
-		m_ChState.bAttack = !m_ChState.bAttack;
-		eInput = KEY::_3;
-	}
-	if (CKeyMgr::GetInst()->GetKeyState(KEY::_4) == KEY_STATE::TAP)
-	{
-		if (m_ChState.bMove == false)
-		{
-			m_ChState.bUlt = !m_ChState.bUlt;
-		}
-		eInput = KEY::_4;
-	}
-	if (CKeyMgr::GetInst()->GetKeyState(KEY::_5) == KEY_STATE::TAP)
-	{
-		m_ChState.bDance = !m_ChState.bDance;
-		eInput = KEY::_5;
-	}
-
-	switch (eInput)
-	{
-	case KEY::_1:
-		Wait();
-		break;
-	case KEY::_2:
-		Move();
-		break;
-	case KEY::_3:
-		Attack();
-		break;
-	case KEY::_4:
-		Move();
-		Attack();
-		break;
-	case KEY::_5:
-		Dance();
-		break;
-	}*/
-
 	CGameObject* tile = GetOwner()->GetParent();
 	if (tile == nullptr)
 		return;
@@ -330,8 +268,17 @@ void CBaseCharacterScript::RecvDamage(float _damage)
 	if (m_ChStatus.iHp <= 0)
 	{
 		//죽음 처리
-		int a = 0;
+		m_ChState.bDeath = true;
 	}
+}
+
+void CBaseCharacterScript::Death()
+{
+	m_ChState.bDeath = false;
+	m_ChState.bMove = false;
+	m_ChState.bAttack = false;
+	m_ChState.bUlt = false;
+	m_ChState.iAtkNum = 0;
 }
 
 void CBaseCharacterScript::CurStartTile()

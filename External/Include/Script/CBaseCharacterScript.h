@@ -32,6 +32,7 @@ public:
 	bool IsMove() { return m_ChState.bMove; }
 	bool IsAttack() { return m_ChState.bAttack; }
 	bool IsDance() { return m_ChState.bDance; }
+	bool IsDeath() { return m_ChState.bDeath; }
 	bool IsEnd() { return m_ChState.bEnd; }
 	int  GetAtkNumber() { return m_ChState.iAtkNum; }
 	
@@ -50,6 +51,7 @@ public:
 	virtual void SetTarget(CCollider* _Other);
 	virtual void SendDamage();
 	virtual void RecvDamage(float _damage);
+	virtual void Death();
 public:
 	void SetMove(bool _flag) { m_ChState.bMove = _flag; }
 	void SetWait(bool _flag) { m_ChState.bWaiting = _flag; }

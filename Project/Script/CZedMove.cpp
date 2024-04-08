@@ -46,6 +46,9 @@ void CZedMove::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)
 	case TRIGGER_TYPE::BATTACK:
 		pMachine->transition((UINT)STATE_TYPE::BATTACK);
 		break;
+	case TRIGGER_TYPE::DEATH:
+		pMachine->transition((UINT)STATE_TYPE::DEATH);
+		break;
 	}
 }
 
@@ -59,10 +62,16 @@ void CZedMove::tick(CStateMachineScript* _pSMachine)
 		return;
 	bool bMove = pChScript->IsMove();
 	bool bAttack = pChScript->IsAttack();
+	bool bDeath = pChScript->IsDeath();
 	
 	CCharacterTrigger trigger;
 	bool bChange = false;
-	if (bAttack)
+	if (bDeath)
+	{
+		trigger.SetEvtType(TRIGGER_TYPE::DEATH);
+		bChange = true;
+	}
+	else if (bAttack)
 	{
 		trigger.SetEvtType(TRIGGER_TYPE::BATTACK);
 		bChange = true;

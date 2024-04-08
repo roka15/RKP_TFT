@@ -55,6 +55,9 @@ void CZedAttack::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)
 	case TRIGGER_TYPE::BATTACK3:
 		pAni->SetIntParam(L"Attack_Number", 2);
 		break;
+	case TRIGGER_TYPE::DEATH:
+		pMachine->transition((UINT)STATE_TYPE::DEATH);
+		break;
 	}
 }
 
@@ -71,10 +74,16 @@ void CZedAttack::tick(CStateMachineScript* _pSMachine)
 	bool bAttack = pChScript->IsAttack();
 	bool bDance = pChScript->IsDance();
 	int  iAtkNum = pChScript->GetAtkNumber();
+	bool bDeath = pChScript->IsDeath();
 
 	CCharacterTrigger trigger;
 	bool bChange = false;
-	if (bMove)
+	if (bDeath)
+	{
+		trigger.SetEvtType(TRIGGER_TYPE::DEATH);
+		bChange = true;
+	}
+	else if (bMove)
 	{
 		trigger.SetEvtType(TRIGGER_TYPE::BMOVE);
 		bChange = true;

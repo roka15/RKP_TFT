@@ -1,6 +1,7 @@
 CAttroxMachineScript
 CBaseCharacterScript
 CCameraMoveScript
+CChMinionScript
 CCursor
 CGravityScript
 CItem

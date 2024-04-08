@@ -11,6 +11,7 @@ enum class STATE_TYPE
     BATTACK,
     UATTACK,
     DANCE,
+    DEATH,
     END,
 };
 class CCharacterState

@@ -91,6 +91,12 @@
     <Filter Include="Script\FSM\State\Champ\Zed\Move">
       <UniqueIdentifier>{b567b16e-c821-4e30-9a22-be42a2cd3f42}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\FSM\State\Champ\Zed\Death">
+      <UniqueIdentifier>{0638f4ce-d55a-4a81-a18c-e367aaf2c236}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Item\Character\Champ">
+      <UniqueIdentifier>{dad18712-a419-45ca-aaf6-837efc79a2d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CCameraMoveScript.h">
@@ -204,6 +210,12 @@
     <ClInclude Include="CZedMove.h">
       <Filter>Script\FSM\State\Champ\Zed\Move</Filter>
     </ClInclude>
+    <ClInclude Include="CZedDeath.h">
+      <Filter>Script\FSM\State\Champ\Zed\Death</Filter>
+    </ClInclude>
+    <ClInclude Include="CChMinionScript.h">
+      <Filter>Script\Item\Character\Champ</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CCameraMoveScript.cpp">
@@ -310,6 +322,12 @@
     </ClCompile>
     <ClCompile Include="CZedMove.cpp">
       <Filter>Script\FSM\State\Champ\Zed\Move</Filter>
+    </ClCompile>
+    <ClCompile Include="CZedDeath.cpp">
+      <Filter>Script\FSM\State\Champ\Zed\Death</Filter>
+    </ClCompile>
+    <ClCompile Include="CChMinionScript.cpp">
+      <Filter>Script\Item\Character\Champ</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -4,6 +4,7 @@
 #include "CAttroxMachineScript.h"
 #include "CBaseCharacterScript.h"
 #include "CCameraMoveScript.h"
+#include "CChMinionScript.h"
 #include "CCursor.h"
 #include "CGravityScript.h"
 #include "CItem.h"
@@ -20,6 +21,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CAttroxMachineScript");
 	_vec.push_back(L"CBaseCharacterScript");
 	_vec.push_back(L"CCameraMoveScript");
+	_vec.push_back(L"CChMinionScript");
 	_vec.push_back(L"CCursor");
 	_vec.push_back(L"CGravityScript");
 	_vec.push_back(L"CItem");
@@ -40,6 +42,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CBaseCharacterScript;
 	if (L"CCameraMoveScript" == _strScriptName)
 		return new CCameraMoveScript;
+	if (L"CChMinionScript" == _strScriptName)
+		return new CChMinionScript;
 	if (L"CCursor" == _strScriptName)
 		return new CCursor;
 	if (L"CGravityScript" == _strScriptName)
@@ -75,6 +79,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::CAMERAMOVESCRIPT:
 		return new CCameraMoveScript;
+		break;
+	case (UINT)SCRIPT_TYPE::CHMINIONSCRIPT:
+		return new CChMinionScript;
 		break;
 	case (UINT)SCRIPT_TYPE::CURSOR:
 		return new CCursor;
@@ -124,6 +131,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::CAMERAMOVESCRIPT:
 		return L"CCameraMoveScript";
+		break;
+
+	case SCRIPT_TYPE::CHMINIONSCRIPT:
+		return L"CChMinionScript";
 		break;
 
 	case SCRIPT_TYPE::CURSOR:

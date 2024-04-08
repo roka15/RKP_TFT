@@ -33,6 +33,7 @@ private:
     void CreateMinion();
     bool SpawnMinion(int _iRound);
     void DespawnMinion();
+    void DespawnMinion(CGameObject* _pObj);
 public:
     void SetGameID(int _iID) { m_GameID = _iID; }
     const int& GetGameID() { return m_GameID; }
@@ -43,6 +44,7 @@ public:
     void tick();
     void RegisterUser(int _iGameID,int _iIdx,CGameObject* _pObj);
     bool BuyItem(CHARACTER_TYPE _eType, CGameObject* _pPlayer);
+    void DeathMinion(CGameObject* _pObj);
 public:
     CGame();
     virtual ~CGame();

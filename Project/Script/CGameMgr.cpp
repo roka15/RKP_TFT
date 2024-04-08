@@ -92,6 +92,11 @@ bool CGameMgr::BuyItem(int _iGameID, CHARACTER_TYPE _eType, CGameObject* _pPlaye
 	return m_vecGames[_iGameID]->BuyItem(_eType,_pPlayer);
 }
 
+void CGameMgr::DeathMinion(int _iGameID, CGameObject* _pMinion)
+{
+	m_vecGames[_iGameID]->DeathMinion(_pMinion);
+}
+
 void CGameMgr::CreateCharacterPrefabs()
 {
 	Ptr<CMeshData> pMeshData = nullptr;
@@ -106,7 +111,7 @@ void CGameMgr::CreateCharacterPrefabs()
 	pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(90.f), 0.f, DEGREE2RADIAN(180.f)));
 
 	CZedMachineScript* ZedFsmScript = (CZedMachineScript*)CScriptMgr::GetScript(SCRIPT_TYPE::ZEDMACHINESCRIPT);
-	CBaseCharacterScript* chScript = (CBaseCharacterScript*)CScriptMgr::GetScript(SCRIPT_TYPE::BASECHARACTERSCRIPT);
+	CBaseCharacterScript* chScript = (CBaseCharacterScript*)CScriptMgr::GetScript(SCRIPT_TYPE::CHMINIONSCRIPT);
 	pObj->AddComponent(ZedFsmScript);
 	pObj->AddComponent(chScript);
 #pragma region Animator - Animation Register
@@ -117,7 +122,7 @@ void CGameMgr::CreateCharacterPrefabs()
 	pAnimator->RegisterAnimation(L"anim3D\\Zed\\Zed_run.anm_Skeleton.anm");
 	pAnimator->RegisterAnimation(L"anim3D\\Zed\\Zed_attack1.anm_Skeleton.anm");
 	pAnimator->RegisterAnimation(L"anim3D\\Zed\\Zed_attack2.anm_Skeleton.anm");
-
+	pAnimator->RegisterAnimation(L"anim3D\\Zed\\Death_Skeleton.anm");
 #pragma endregion
 
 	Ptr<CAnimatorController> pAniController = nullptr;
@@ -140,6 +145,7 @@ void CGameMgr::CreateCharacterPrefabs()
 		pAniController->RegisterParam(L"Dance", false, true);
 		pAniController->RegisterParam(L"End", false, true);
 		pAniController->RegisterParam(L"Attack_Number", 0);
+		pAniController->RegisterParam(L"Death", false, false);
 
 		pAniController->Init();
 		pAniController->SetName(strPath);
@@ -181,6 +187,14 @@ void CGameMgr::CreateCharacterPrefabs()
 		t1->RegisterCondition(L"ULT", 0, COMPARISON_TYPE::EQUAL);
 		t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", IdleNode, pInNode, false);
 		t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
+
+		pOutNode = pAnyNode;
+		pInNode = pAniController->CreateNode(L"Death", L"anim3D\\Zed\\Death_Skeleton.anm");
+		t1 = pAniController->CreateTransition(L"AnyState_Death", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"Death", true, false, COMPARISON_TYPE::EQUAL);
+		t1 = pAniController->CreateTransition(L"Death_Exit", IdleNode, pInNode, false);
+		t1->RegisterCondition(L"Death", false, false, COMPARISON_TYPE::EQUAL);
+
 	}
 	pObj->Animator3D()->SetController(pAniController);
 #pragma endregion

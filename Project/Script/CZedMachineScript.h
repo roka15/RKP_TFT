@@ -3,6 +3,7 @@
 #include "CZedIdle.h"
 #include "CZedAttack.h"
 #include "CZedMove.h"
+#include "CZedDeath.h"
 class CZedMachineScript :
     public CStateMachineScript
 {

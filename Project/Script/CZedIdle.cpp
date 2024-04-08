@@ -31,6 +31,9 @@ void CZedIdle::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)
 	case TRIGGER_TYPE::BATTACK:
 		pMachine->transition((UINT)STATE_TYPE::BATTACK);
 		break;
+	case TRIGGER_TYPE::DEATH:
+		pMachine->transition((UINT)STATE_TYPE::DEATH);
+		break;
 	}
 }
 
@@ -43,10 +46,17 @@ void CZedIdle::tick(CStateMachineScript* _pSMachine)
 	bool bMove = pChScript->IsMove();
 	bool bAtk = pChScript->IsAttack();
 	int  bAtkNum = pChScript->GetAtkNumber();
+	bool bDeath = pChScript->IsDeath();
 	bool bChange = false;
 
+
 	CCharacterTrigger trigger;
-	if (bMove)
+	if (bDeath)
+	{
+		trigger.SetEvtType(TRIGGER_TYPE::DEATH);
+		bChange = true;
+	}
+	else if (bMove)
 	{
 		trigger.SetEvtType(TRIGGER_TYPE::BMOVE);
 		bChange = true;
@@ -56,6 +66,7 @@ void CZedIdle::tick(CStateMachineScript* _pSMachine)
 		trigger.SetEvtType(TRIGGER_TYPE::BATTACK);
 		bChange = true;
 	}
+	
 
 	if (bChange)
 		_pSMachine->notify(&trigger);

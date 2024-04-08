@@ -15,6 +15,7 @@ enum class TRIGGER_TYPE
     UATTACK2,
     UATTACK3,
     DANCE,
+    DEATH,
     END,
 };
 class CState;

@@ -27,6 +27,7 @@ void CGame::init()
 		m_pAIPlayer->AddComponent(new CPlayerScript());
 		CPlayerScript* pPlayerScript = m_pAIPlayer->GetScript<CPlayerScript>();
 		pPlayerScript->SetPlayerType(PLAYER_TYPE::AI);
+		pPlayerScript->SetGameID(m_GameID);
 		SpawnGameObject(m_pAIPlayer, Vec3(0.f, 0.f, 0.f), 0);
 	}
 	m_vecUsers.resize(m_iUserCnt);
@@ -186,6 +187,24 @@ bool CGame::BuyItem(CHARACTER_TYPE _eType, CGameObject* _pPlayer)
 	}
 }
 
+void CGame::DeathMinion(CGameObject* _pObj)
+{
+	int iCnt = m_SpawnMinion.size();
+	for (int i = 0; i < iCnt; ++i)
+	{
+		CGameObject* pMinion = m_SpawnMinion.front();
+		m_SpawnMinion.pop();
+		if (pMinion == _pObj)
+		{
+			DespawnMinion(_pObj);
+		}
+		else
+		{
+			m_SpawnMinion.push(pMinion);
+		}
+	}
+}
+
 void CGame::SendGameState(UINT _iState)
 {
 	for (int i = 0; i < m_vecUsers.size(); ++i)
@@ -296,12 +315,17 @@ void CGame::DespawnMinion()
 	{
 		CGameObject* pMinion = m_SpawnMinion.front();
 		m_SpawnMinion.pop();
-		m_DespawnMinion.push(pMinion);
-		CBaseCharacterScript* pChScript = pMinion->GetScript<CBaseCharacterScript>();
-		pChScript->start();
-		CGameObject* pMinionContainer = CLevelMgr::GetInst()->GetCurLevel()->FindObjectByName(L"MinionContainer");
-		pMinionContainer->AddChild(pMinion);
+		DespawnMinion(pMinion);
 	}
+}
+
+void CGame::DespawnMinion(CGameObject* _pObj)
+{
+	m_DespawnMinion.push(_pObj);
+	CBaseCharacterScript* pChScript = _pObj->GetScript<CBaseCharacterScript>();
+	pChScript->start();
+	CGameObject* pMinionContainer = CLevelMgr::GetInst()->GetCurLevel()->FindObjectByName(L"MinionContainer");
+	pMinionContainer->AddChild(_pObj);
 }
 
 CGame::CGame()
