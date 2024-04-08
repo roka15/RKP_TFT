@@ -93,7 +93,6 @@ CGameObject* CTileMgr::CreateTile(TILE_OWNER_TYPE _type)
 				wstring Name = L"Tile" + to_wstring(s_number);
 				pNewObj->SetName(Name);
 				pNewObj->AddComponent(new CTransform);
-				pNewObj->AddComponent(new CMeshRender);
 				pNewObj->AddComponent(new CBoxCollider);
 				CBoxCollider* collider = (CBoxCollider*)pNewObj->GetComponent(COMPONENT_TYPE::COLLIDER3D);
 				collider->SetTrigger(true);
@@ -103,21 +102,17 @@ CGameObject* CTileMgr::CreateTile(TILE_OWNER_TYPE _type)
 				pNewObj->AddComponent(tile);
 
 				TILE_TYPE eType = TILE_TYPE::END;
-				CMeshRender* meshRender = pNewObj->MeshRender();
+
 				if (z == 0)
 				{
 					eType = TILE_TYPE::WAIT;
-					meshRender->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"mesh\\square indicator.mesh"));
 				}
 				else
 				{
 					eType = TILE_TYPE::BATTLE;
-					meshRender->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"mesh\\indicator hexagon.mesh"));
 				}
 
 				tile->SetTileInfo(eType, _type, s_number);
-
-				meshRender->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"InActiveTileMtrl"), 0);
 
 				pNewObj->Transform()->SetRelativeScale(Vec3(m_Size.x, 1.0f, m_Size.y));
 				pNewObj->Transform()->SetRelativePos(Vec3(v2Pos.x, v2Pos.y, v2Pos.z));

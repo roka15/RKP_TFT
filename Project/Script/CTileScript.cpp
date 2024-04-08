@@ -86,6 +86,9 @@ void CTileScript::ChangeTileState(bool _flag)
 
 void CTileScript::HighlightColor(bool _flag)
 {
+	CMeshRender* pMeshRender = GetOwner()->MeshRender();
+	if (pMeshRender == nullptr)
+		return;
 	wstring Key;
 	if (_flag)
 	{
@@ -95,5 +98,5 @@ void CTileScript::HighlightColor(bool _flag)
 	{
 		Key = L"InActiveTileMtrl";
 	}
-	GetOwner()->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(Key), 0);
+	pMeshRender->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(Key), 0);
 }
