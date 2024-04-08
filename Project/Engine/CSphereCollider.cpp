@@ -5,7 +5,7 @@ void CSphereCollider::finaltick()
 {
 	assert(0 <= m_iCollisionCount);
 
-	if (m_bActive == false)
+	if (GetActive() == false)
 		return;
 
 	float fScale = m_fRadius * 2;

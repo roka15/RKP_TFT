@@ -48,6 +48,8 @@ void CTileScript::DownEvent(PointerEventData _data)
 		CGameObject* child = objs[0];
 		CCursor* cursor = (CCursor*)CMouseMgr::GetInst()->GetCursor()->GetScript<CCursor>();
 		cursor->RegisterDragItem(child);
+		//Tile Mgr 호출해서 Tile 외각선 표시 ON
+		CTileMgr::GetInst()->TileRender(true);
 	}
 }
 
@@ -66,6 +68,8 @@ void CTileScript::UpEvent(PointerEventData _data)
 		pCharacterScript->SetWait(true);
 		break;
 	}
+	//Tile Mgr 호출해서 Tile 외각선 표시 OFF
+	CTileMgr::GetInst()->TileRender(false);
 }
 
 void CTileScript::AddItem(CGameObject* _obj)

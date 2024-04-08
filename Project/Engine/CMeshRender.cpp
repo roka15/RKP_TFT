@@ -8,6 +8,7 @@
 CMeshRender::CMeshRender()
 	: CRenderComponent(COMPONENT_TYPE::MESHRENDER)		
 {
+	SetActive(true);
 }
 
 CMeshRender::~CMeshRender()
@@ -20,6 +21,10 @@ void CMeshRender::finaltick()
 
 void CMeshRender::render()
 {	
+	if (GetOwner()->GetName().compare(L"Tile0") == 0)
+		int a = 0;
+	if (GetActive() == false)
+		return;
 	if (nullptr == GetMesh() || nullptr == GetMaterial(0))
 		return;
 
@@ -75,6 +80,10 @@ void CMeshRender::render()
 
 void CMeshRender::render(UINT _iSubset)
 {
+	if (GetOwner()->GetName().compare(L"Tile0") == 0)
+		int a = 0;
+	if (GetActive() == false)
+		return;
 	if (nullptr == GetMesh() || nullptr == GetMaterial(_iSubset))
 		return;
 

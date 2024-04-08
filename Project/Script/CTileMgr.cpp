@@ -181,10 +181,12 @@ CGameObject* CTileMgr::CreateTile(TILE_OWNER_TYPE _type)
 					eType = TILE_TYPE::BATTLE;
 					meshRender->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"mesh\\indicator hexagon.mesh"));
 				}
+				meshRender->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"InActiveTileMtrl"), 0);
+				meshRender->SetActive(false);
 
 				tile->SetTileInfo(eType, _type, s_number);
 
-				meshRender->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"InActiveTileMtrl"), 0);
+				
 
 				pNewObj->Transform()->SetRelativeScale(Vec3(m_Size.x, 1.0f, m_Size.y));
 				pNewObj->Transform()->SetRelativePos(Vec3(v2Pos.x, v2Pos.y, v2Pos.z));
@@ -343,6 +345,36 @@ int CTileMgr::FindEmptyWaitTile()
 			return i;
 	}
 	return -1;
+}
+
+void CTileMgr::TileRender(bool _flag)
+{
+	for (int i = 0; i < m_vecTile.size(); ++i)
+	{
+		CMeshRender* pMeshRender = m_vecTile[i]->MeshRender();
+		if (pMeshRender == nullptr)
+			continue;
+		CTileScript* pTileScript = m_vecTile[i]->GetScript<CTileScript>();
+		const TILE_TYPE& eType = pTileScript->GetType();
+		if (_flag)
+		{
+			pMeshRender->SetActive(true);
+		}
+		else
+		{
+			pMeshRender->SetActive(false);
+		}
+		
+	}
+	
+	if (_flag)
+	{
+
+	}
+	else
+	{
+
+	}
 }
 
 

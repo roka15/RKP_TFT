@@ -15,7 +15,7 @@ class CComponent :
 private:
     CGameObject*         m_pOwner;
     const COMPONENT_TYPE m_Type;
-
+    bool                 m_bActive;
 public:
     COMPONENT_TYPE GetType() { return m_Type; }
     CGameObject* GetOwner() { return m_pOwner ; }
@@ -25,11 +25,12 @@ public:
     virtual void tick() {}
     virtual void finaltick() = 0;
     virtual CComponent* Clone() = 0;
-
 public:
     virtual void SaveToLevelFile(FILE* _File) = 0;
     virtual void LoadFromLevelFile(FILE* _FILE) = 0;
-
+public:
+    void SetActive(bool _flag) { m_bActive = _flag; }
+    const bool& GetActive() { return m_bActive; }
 public:  
     GET_OTHER_COMPONENT(Transform);
     GET_OTHER_COMPONENT(MeshRender);
