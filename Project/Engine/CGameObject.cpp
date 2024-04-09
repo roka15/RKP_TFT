@@ -178,7 +178,6 @@ void CGameObject::AddComponent(CComponent* _Component)
 	{
 		// 이미 보유하고 있는 컴포넌트인 경우
 		assert(!m_arrCom[(UINT)_Component->GetType()]);
-
 		m_arrCom[(UINT)_Component->GetType()] = _Component;
 
 		// RenderComponent 확인

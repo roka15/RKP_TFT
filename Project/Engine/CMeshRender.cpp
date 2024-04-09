@@ -1,12 +1,20 @@
 #include "pch.h"
 #include "CMeshRender.h"
 
+
 #include "CTransform.h"
 #include "CAnimator2D.h"
 #include "CAnimator3D.h"
+#include "CText.h"
+#include "CImage.h"
 
 CMeshRender::CMeshRender()
 	: CRenderComponent(COMPONENT_TYPE::MESHRENDER)		
+{
+	SetActive(true);
+}
+
+CMeshRender::CMeshRender(const CMeshRender& _ref) : CRenderComponent(_ref)
 {
 	SetActive(true);
 }
@@ -21,13 +29,19 @@ void CMeshRender::finaltick()
 
 void CMeshRender::render()
 {	
-	if (GetOwner()->GetName().compare(L"Tile0") == 0)
-		int a = 0;
 	if (GetActive() == false)
 		return;
 	if (nullptr == GetMesh() || nullptr == GetMaterial(0))
 		return;
-
+	if (GetOwner()->Text())
+	{
+		GetOwner()->Text()->UpdateData();
+		return;
+	}
+	else if (GetOwner()->Image())
+	{
+		GetOwner()->Image()->UpdateData();
+	}
 	// Transform 에 UpdateData 요청
 	Transform()->UpdateData();
 
@@ -80,12 +94,20 @@ void CMeshRender::render()
 
 void CMeshRender::render(UINT _iSubset)
 {
-	if (GetOwner()->GetName().compare(L"Tile0") == 0)
-		int a = 0;
 	if (GetActive() == false)
 		return;
 	if (nullptr == GetMesh() || nullptr == GetMaterial(_iSubset))
 		return;
+
+	if (GetOwner()->Text())
+	{
+		GetOwner()->Text()->UpdateData();
+		return;
+	}
+	else if (GetOwner()->Image())
+	{
+		GetOwner()->Image()->UpdateData();
+	}
 
 	// Transform 에 UpdateData 요청
 	Transform()->UpdateData();

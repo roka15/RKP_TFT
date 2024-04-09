@@ -19,6 +19,9 @@ class CTileMap;
 class CDecal;
 class CLandScape;
 class CScript;
+class CText;
+class CImage;
+class CButton;
 
 #define GET_COMPONENT(Type, TYPE) C##Type* Type() const { return (C##Type*)m_arrCom[(UINT)COMPONENT_TYPE::TYPE]; }
 
@@ -74,6 +77,10 @@ public:
     GET_COMPONENT(SkyBox, SKYBOX);
     GET_COMPONENT(Decal, DECAL);
     GET_COMPONENT(LandScape, LANDSCAPE);
+    GET_COMPONENT(Text, TEXT);
+    GET_COMPONENT(Image, IMAGE);
+    GET_COMPONENT(Button, BUTTON);
+
     
 
     CAnimator3D* Animator3D();

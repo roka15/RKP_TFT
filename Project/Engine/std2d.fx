@@ -7,6 +7,7 @@
 struct VS_IN
 {
 	float3 vLocalPos : POSITION;
+	float3 vColor : COLOR;
 	float2 vUV : TEXCOORD;
 };
 
@@ -70,6 +71,7 @@ VS_OUT VS_Std2D_Inst(VTX_IN_INST _in)
 	return output;
 }
 
+
 // 레스터라이저 스테이트
 float4 PS_Std2D(VS_OUT _in) : SV_Target
 {
@@ -91,8 +93,6 @@ float4 PS_Std2D(VS_OUT _in) : SV_Target
 
 	return vOutColor;
 }
-
-
 
 
 

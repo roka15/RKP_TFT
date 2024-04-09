@@ -29,7 +29,6 @@
 #include <Script\CPlayerScript.h>
 
 
-
 void CreateTestLevel()
 {
 	CGameObject* pPlayer = new CGameObject();
@@ -855,4 +854,45 @@ void CreateTestLevel()
 
 	// 충돌 시킬 레이어 짝 지정
 	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");
+
+
+	//UI Test
+	CGameObject* pTextObj = new CGameObject();
+	pTextObj->SetName(L"Text");
+	pTextObj->AddComponent(new CTransform());
+	pTextObj->AddComponent(new CMeshRender);
+	pTextObj->AddComponent(new CText());
+	pTextObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pTextObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
+	pTextObj->Text()->SetText(L"Hello World!");
+	pTextObj->Text()->SetSize(20.f);
+	pTextObj->Text()->SetColor(Vec4(0, 0, 255, 255));
+	SpawnGameObject(pTextObj, Vec3(0.f, 0.f, 0.f), 31);
+
+	CGameObject* pImageObj = new CGameObject();
+	pImageObj->SetName(L"Image1");
+	pImageObj->AddComponent(new CTransform());
+	pImageObj->AddComponent(new CMeshRender());
+	pImageObj->AddComponent(new CImage());
+	pImageObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pImageObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"),0);
+	pImageObj->Image()->SetTextureKey(L"texture\\Character.png");
+	pImageObj->Image()->SetColor(Vec4(0.f, 0.f, 1.f, 1.f));
+	pImageObj->Transform()->SetRelativePos(500.f, 500.f, 0.f);
+	pImageObj->Transform()->SetRelativeScale(100.f, 100.f, 0.f);
+	SpawnGameObject(pImageObj, Vec3(0.f, 0.f, 0.f), 31);
+
+	pImageObj = new CGameObject();
+	pImageObj->SetName(L"Image2");
+	pImageObj->AddComponent(new CTransform());
+	pImageObj->AddComponent(new CMeshRender());
+	pImageObj->AddComponent(new CImage());
+	pImageObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pImageObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
+	pImageObj->Image()->SetTextureKey(L"texture\\Fighter.bmp");
+	pImageObj->Image()->SetColor(Vec4(0.f, 0.f, 1.f, 1.f));
+	pImageObj->Transform()->SetRelativePos(300.f, 300.f, 0.f);
+	pImageObj->Transform()->SetRelativeScale(100.f, 100.f, 0.f);
+	SpawnGameObject(pImageObj, Vec3(0.f, 0.f, 0.f), 31);
+	
 }

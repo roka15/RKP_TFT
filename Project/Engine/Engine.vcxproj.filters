@@ -232,6 +232,21 @@
     <ClInclude Include="CClientMgr.h">
       <Filter>Source\03. Manager\13.ClientMgr</Filter>
     </ClInclude>
+    <ClInclude Include="CButton.h">
+      <Filter>Source\06. Component\9.UI\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="CImage.h">
+      <Filter>Source\06. Component\9.UI\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="CText.h">
+      <Filter>Source\06. Component\9.UI\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="CCanvas.h">
+      <Filter>Source\06. Component\8.Canvas</Filter>
+    </ClInclude>
+    <ClInclude Include="CUI.h">
+      <Filter>Source\06. Component\9.UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -452,6 +467,21 @@
     </ClCompile>
     <ClCompile Include="CClientMgr.cpp">
       <Filter>Source\03. Manager\13.ClientMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="CButton.cpp">
+      <Filter>Source\06. Component\9.UI\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="CImage.cpp">
+      <Filter>Source\06. Component\9.UI\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="CText.cpp">
+      <Filter>Source\06. Component\9.UI\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="CCanvas.cpp">
+      <Filter>Source\06. Component\8.Canvas</Filter>
+    </ClCompile>
+    <ClCompile Include="CUI.cpp">
+      <Filter>Source\06. Component\9.UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -682,6 +712,21 @@
     </Filter>
     <Filter Include="Source\03. Manager\13.ClientMgr">
       <UniqueIdentifier>{e47e1664-2ab1-4ad9-826d-d8f5309548b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\8.Canvas">
+      <UniqueIdentifier>{47d5a495-8be1-4b58-b979-fa538b186c8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\9.UI">
+      <UniqueIdentifier>{f534cf43-eb13-4809-badd-fccf08f897a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\9.UI\Button">
+      <UniqueIdentifier>{24a29b66-d0ec-472f-a8ab-3a51fcf38e59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\9.UI\Image">
+      <UniqueIdentifier>{d76c040b-8d2d-41b5-8d2d-de2e1ab1f15b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\9.UI\Text">
+      <UniqueIdentifier>{ae408d8a-d843-4f6b-858b-639d62d96876}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

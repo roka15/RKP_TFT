@@ -10,7 +10,6 @@ protected:
 
     Matrix          m_matCollider3D;
     bool            m_bTrigger;
-    bool            m_bActive;
     bool            m_bView;
 public:
     virtual void finaltick()override;
@@ -19,8 +18,6 @@ public:
     void SetAbsolute(bool _bSet) { m_bAbsolute = _bSet; }
     void SetTrigger(bool _bFlag) { m_bTrigger = _bFlag; }
     bool GetTrigger() { return m_bTrigger; }
-    void SetActive(bool _bFlag) { m_bActive = _bFlag; }
-    bool GetActive() { return m_bActive; }
     void ActiveView(bool _bFlag) { m_bView = _bFlag; }
     const Matrix& GetColliderWorldMat() { return m_matCollider3D; }
 public:

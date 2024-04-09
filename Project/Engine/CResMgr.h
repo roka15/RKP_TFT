@@ -34,6 +34,7 @@ public:
 
 private:
     void InitSound();
+    void InitObjectPrefab();
     void CreateDefaultMesh();
     void CreateDefaultGraphicsShader();
     void CreateDefaultComputeShader();

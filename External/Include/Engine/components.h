@@ -19,4 +19,9 @@
 #include "CDecal.h"
 #include "CLandscape.h"
 
+#include "CUI.h"
+#include "CImage.h"
+#include "CText.h"
+#include "CButton.h"
+
 //#include "CCollider3D.h"

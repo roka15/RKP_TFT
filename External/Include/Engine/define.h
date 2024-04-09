@@ -44,7 +44,14 @@ enum class COMPONENT_TYPE
 	LANDSCAPE,			// 3차원 지형
 	SKYBOX,				// SkyBox
 	DECAL,				// 내부 렌더링
+	CANVASRENDER,       // ui 렌더링
 	
+	// ui
+	CANVAS,
+	UI,
+	TEXT,
+	IMAGE,
+	BUTTON,
 
 	END,
 
@@ -324,4 +331,11 @@ enum class ANI_NODE_RETURN
 	EXIT,
 	RESET,
 	CHANGE,
+};
+
+enum class CANVAS_RENDER_MODE
+{
+	ScreenSpace_Overlay,
+	ScreenSpace_Camera,
+	WorldSpace
 };

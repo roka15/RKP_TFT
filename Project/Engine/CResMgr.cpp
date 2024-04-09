@@ -2,6 +2,8 @@
 #include "CResMgr.h"
 
 #include "CPathMgr.h"
+#include "CGameObject.h"
+#include "components.h"
 
 CResMgr::CResMgr()
 	: m_Changed(false)
@@ -36,6 +38,27 @@ void CResMgr::InitSound()
 
 	// 32개 채널 생성
 	CSound::g_pFMOD->init(32, FMOD_DEFAULT, nullptr);
+}
+
+void CResMgr::InitObjectPrefab()
+{
+	CGameObject* pObj = nullptr;
+#pragma region Text
+	pObj = new CGameObject();
+	pObj->SetName(L"Text");
+	pObj->AddComponent(new CTransform());
+	pObj->AddComponent(new CText());
+
+
+#pragma endregion
+
+#pragma region Image
+
+#pragma endregion
+
+#pragma region Button
+
+#pragma endregion
 }
 
 

@@ -4,7 +4,7 @@
 #include <Engine\CResMgr.h>
 
 #include "CBaseCharacterScript.h"
-
+#include "CChMinionScript.h"
 #include "CPlayerScript.h"
 #include "CTileMgr.h"
 int CGame::CanEnter()
@@ -252,7 +252,7 @@ void CGame::CreateMinion()
 		for (int i = 0; i < MinionCnt; ++i)
 		{
 			CGameObject* obj = prefab->Instantiate();
-			CBaseCharacterScript* pChScript = obj->GetScript<CBaseCharacterScript>();
+			CChMinionScript* pChScript = obj->GetScript<CChMinionScript>();
 			pChScript->SetPlayer(m_pAIPlayer);
 			CPlayerScript* pPlayer = m_pAIPlayer->GetScript<CPlayerScript>();
 			pPlayer->AddItem(obj);

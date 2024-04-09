@@ -554,6 +554,10 @@ void CCamera::render_deferred()
 			pMtrl->SetBoneCount(pObj->Animator3D()->GetBoneCount());
 		}
 
+		if (pObj->MeshRender() && pObj->MeshRender()->GetActive() == false)
+		{
+			continue;
+		}
 		pMtrl->UpdateData_Inst();
 		pMesh->render_instancing(pair.second[0].iMtrlIdx);
 
@@ -666,6 +670,10 @@ void CCamera::render_forward()
 			pMtrl->SetBoneCount(pObj->Animator3D()->GetBoneCount());
 		}
 
+		if (pObj->MeshRender() && pObj->MeshRender()->GetActive() == false)
+		{
+			continue;
+		}
 		pMtrl->UpdateData_Inst();
 		pMesh->render_instancing(pair.second[0].iMtrlIdx);
 
