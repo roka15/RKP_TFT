@@ -407,11 +407,6 @@ void CGameMgr::CreateCharacterPrefabs()
 		t1->RegisterCondition(L"ULT", 1, COMPARISON_TYPE::EQUAL);
 		t1 = pAniController->CreateTransition(L"ULT_Attack_Idle", UIdleNode, pInNode, false);
 		t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
-
-
-	
-
-		
 		//t1->RegisterCondition(L"End", true, COMPARISON_TYPE::EQUAL);
 
 		pAniController->Save(strPath);
@@ -423,6 +418,31 @@ void CGameMgr::CreateCharacterPrefabs()
 	CH_Attrox->RegisterProtoObject(pObj);
 	CResMgr::GetInst()->AddRes<CPrefab>(L"Ch_Attrox", CH_Attrox);
 #pragma endregion
+
+
+
+}
+
+void CGameMgr::CreateUI(int _iGameID)
+{
+	Ptr<CPrefab> pPrefab = nullptr;
+	CGameObject* pRoundUIObj = new CGameObject();
+	SpawnGameObject(pRoundUIObj, Vec3(0.f, 0.f, 0.f), 31);
+	CGameObject* pImageObj = new CGameObject();
+	pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Image");
+	pImageObj = pPrefab->Instantiate();
+	pImageObj->SetName(L"UI_RoundBackGround");
+	pRoundUIObj->AddChild(pImageObj);
+	m_vecGames[_iGameID]->RegisterGameUI(pImageObj->GetName(), pImageObj);
+
+	CGameObject* pTextObj = new CGameObject();
+	pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Text");
+	pTextObj = pPrefab->Instantiate();
+	pTextObj->SetName(L"UI_RoundText");
+	pRoundUIObj->AddChild(pTextObj);
+	m_vecGames[_iGameID]->RegisterGameUI(pTextObj->GetName(), pTextObj);
+
+
 }
 
 bool CGameMgr::IsSamePlayer(CGameObject* _pObj)

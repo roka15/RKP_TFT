@@ -17,12 +17,14 @@ CResMgr::~CResMgr()
 void CResMgr::init()
 {
 	InitSound();
-
+	
 	CreateDefaultMesh();
 	CreateDefaultGraphicsShader();
 	CreateDefaultComputeShader();
 	CreateDefaultMaterial();	
 	CreateDefaultTexture();
+
+	InitObjectPrefab();
 }
 
 
@@ -43,17 +45,31 @@ void CResMgr::InitSound()
 void CResMgr::InitObjectPrefab()
 {
 	CGameObject* pObj = nullptr;
+	CPrefab* pPrefab = nullptr;
 #pragma region Text
 	pObj = new CGameObject();
 	pObj->SetName(L"Text");
 	pObj->AddComponent(new CTransform());
+	pObj->AddComponent(new CMeshRender);
 	pObj->AddComponent(new CText());
-
-
+	pObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
+	pPrefab = new CPrefab();
+	pPrefab->RegisterProtoObject(pObj);
+	CResMgr::GetInst()->AddRes<CPrefab>(L"UI_Text", pPrefab);
 #pragma endregion
 
 #pragma region Image
-
+	pObj = new CGameObject();
+	pObj->SetName(L"Image");
+	pObj->AddComponent(new CTransform());
+	pObj->AddComponent(new CMeshRender());
+	pObj->AddComponent(new CImage());
+	pObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
+	pPrefab = new CPrefab();
+	pPrefab->RegisterProtoObject(pObj);
+	CResMgr::GetInst()->AddRes<CPrefab>(L"UI_Image", pPrefab);
 #pragma endregion
 
 #pragma region Button

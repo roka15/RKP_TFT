@@ -158,6 +158,11 @@ void CGame::RegisterUser(int _iGameID, int _iIdx, CGameObject* _pObj)
 	player->SetGameID(_iGameID);
 }
 
+void CGame::RegisterGameUI(wstring _strKey, CGameObject* _pObj)
+{
+	
+}
+
 bool CGame::BuyItem(CHARACTER_TYPE _eType, CGameObject* _pPlayer)
 {
 	bool bEmpty = m_mapShop[_eType].empty();
@@ -328,6 +333,46 @@ void CGame::DespawnMinion(CGameObject* _pObj)
 	pMinionContainer->AddChild(_pObj);
 }
 
+void CGame::CreateUI()
+{
+	int firstNum = (m_iRoundCnt / m_iRoundMax) + 1;
+	int secondNum = (m_iRoundCnt + 1 % m_iRoundMax);
+
+	CGameObject* pTextObj = new CGameObject();
+	Ptr<CPrefab> pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Text");
+	pTextObj = pPrefab->Instantiate();
+	pTextObj->Text()->SetText(std::to_wstring(firstNum)+L"-"+std::to_wstring(secondNum));
+	pTextObj->Text()->SetSize(20.f);
+	pTextObj->Text()->SetColor(Vec4(0.f, 0.f, 255.f, 255.f));
+	SpawnGameObject(pTextObj, Vec3(0.f, 0.f, 0.f), 0);
+
+	CGameObject* pImageObj = new CGameObject();
+	pImageObj->SetName(L"Image1");
+	pImageObj->AddComponent(new CTransform());
+	pImageObj->AddComponent(new CMeshRender());
+	pImageObj->AddComponent(new CImage());
+	pImageObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pImageObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
+	pImageObj->Image()->SetTextureKey(L"texture\\Character.png");
+	pImageObj->Image()->SetColor(Vec4(0.f, 0.f, 1.f, 1.f));
+	pImageObj->Transform()->SetRelativePos(500.f, 500.f, 0.f);
+	pImageObj->Transform()->SetRelativeScale(100.f, 100.f, 0.f);
+	SpawnGameObject(pImageObj, Vec3(0.f, 0.f, 0.f), 31);
+
+	pImageObj = new CGameObject();
+	pImageObj->SetName(L"Image2");
+	pImageObj->AddComponent(new CTransform());
+	pImageObj->AddComponent(new CMeshRender());
+	pImageObj->AddComponent(new CImage());
+	pImageObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pImageObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
+	pImageObj->Image()->SetTextureKey(L"texture\\Fighter.bmp");
+	pImageObj->Image()->SetColor(Vec4(0.f, 0.f, 1.f, 1.f));
+	pImageObj->Transform()->SetRelativePos(300.f, 300.f, 0.f);
+	pImageObj->Transform()->SetRelativeScale(100.f, 100.f, 0.f);
+	SpawnGameObject(pImageObj, Vec3(0.f, 0.f, 0.f), 31);
+}
+
 CGame::CGame()
 	:m_iUserCnt(8),
 	m_eGameState(GAME_STATE::LOADING),
@@ -338,7 +383,8 @@ CGame::CGame()
 	m_fBettleTime(30.f),
 	m_fItemTime(30.f),
 	m_fLoadingTime(10.f),
-	m_bFirstLoading(false)
+	m_bFirstLoading(false),
+	m_iRoundMax(3)
 {
 }
 

@@ -27,6 +27,8 @@ private:
     map<int, t_RoundInfo>                        m_RoundInfo;
     bool                                         m_bFirstLoading;
     CGameObject*                                 m_pAIPlayer;
+    const int                                    m_iRoundMax;
+    map<wstring, CGameObject*>                   m_mapUIObjs;
 private:
     void SendGameState(UINT _iState);
     int  Buy(CItem* _pItem, CPlayerScript* _pPlayer);
@@ -34,6 +36,7 @@ private:
     bool SpawnMinion(int _iRound);
     void DespawnMinion();
     void DespawnMinion(CGameObject* _pObj);
+    void CreateUI();
 public:
     void SetGameID(int _iID) { m_GameID = _iID; }
     const int& GetGameID() { return m_GameID; }
@@ -43,6 +46,7 @@ public:
     void init();
     void tick();
     void RegisterUser(int _iGameID,int _iIdx,CGameObject* _pObj);
+    void RegisterGameUI(wstring _strKey, CGameObject* _pObj);
     bool BuyItem(CHARACTER_TYPE _eType, CGameObject* _pPlayer);
     void DeathMinion(CGameObject* _pObj);
 public:

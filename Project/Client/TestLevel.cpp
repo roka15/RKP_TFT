@@ -857,17 +857,7 @@ void CreateTestLevel()
 
 
 	//UI Test
-	CGameObject* pTextObj = new CGameObject();
-	pTextObj->SetName(L"Text");
-	pTextObj->AddComponent(new CTransform());
-	pTextObj->AddComponent(new CMeshRender);
-	pTextObj->AddComponent(new CText());
-	pTextObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	pTextObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
-	pTextObj->Text()->SetText(L"Hello World!");
-	pTextObj->Text()->SetSize(20.f);
-	pTextObj->Text()->SetColor(Vec4(0.f, 0.f, 255.f, 255.f));
-	SpawnGameObject(pTextObj, Vec3(0.f, 0.f, 0.f), 0);
+	Ptr<CPrefab> pPrefab = nullptr;
 
 	CGameObject* pImageObj = new CGameObject();
 	pImageObj->SetName(L"Image1");
@@ -876,11 +866,11 @@ void CreateTestLevel()
 	pImageObj->AddComponent(new CImage());
 	pImageObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	pImageObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"),0);
-	pImageObj->Image()->SetTextureKey(L"texture\\Character.png");
+	pImageObj->Image()->SetTextureKey(L"texture\\UI\\Hud\\UI_RoundBackGround.png");
 	pImageObj->Image()->SetColor(Vec4(0.f, 0.f, 1.f, 1.f));
 	pImageObj->Transform()->SetRelativePos(500.f, 500.f, 0.f);
-	pImageObj->Transform()->SetRelativeScale(100.f, 100.f, 0.f);
-	SpawnGameObject(pImageObj, Vec3(0.f, 0.f, 0.f), 31);
+	pImageObj->Transform()->SetRelativeScale(550.f, 100.f, 0.f);
+	SpawnGameObject(pImageObj, Vec3(3.f, 340.f, 0.f), 31);
 
 	pImageObj = new CGameObject();
 	pImageObj->SetName(L"Image2");
@@ -894,5 +884,17 @@ void CreateTestLevel()
 	pImageObj->Transform()->SetRelativePos(300.f, 300.f, 0.f);
 	pImageObj->Transform()->SetRelativeScale(100.f, 100.f, 0.f);
 	SpawnGameObject(pImageObj, Vec3(0.f, 0.f, 0.f), 31);
+
+	CGameObject* pTextObj = new CGameObject();
+	pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Text");
+	pTextObj = pPrefab->Instantiate();
+	pTextObj->SetName(L"Text");
+	pTextObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pTextObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
+	pTextObj->Text()->SetText(L"1 - 1");
+	pTextObj->Text()->SetSize(20.f);
+	pTextObj->Text()->SetColor(Vec4(143.f, 115.f, 58.f, 255.f));
+	SpawnGameObject(pTextObj, Vec3(450.f, 29.f, 0.f), 31);
+
 	
 }

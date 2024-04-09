@@ -134,6 +134,8 @@ int CTexture::Load(const wstring& _strFilePath, int _iMipLevel)
 		MessageBox(nullptr, strBuff, L"텍스쳐 로딩 실패", MB_OK);
 		return hRet;
 	}
+	if (_strFilePath.compare(L"C:\\Users\\skagu\\OneDrive\\Desktop\\Yeram\\[P]RK_TFT\\OutputFile\\bin\\content\\texture\\UI\\Hud\\tft_hud_texture_atlas.png") == 0)
+		int a = 0;
 
 	// Texture2D 생성
 	m_Desc.Format = m_Image.GetMetadata().format;
