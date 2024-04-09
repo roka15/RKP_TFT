@@ -866,8 +866,8 @@ void CreateTestLevel()
 	pTextObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
 	pTextObj->Text()->SetText(L"Hello World!");
 	pTextObj->Text()->SetSize(20.f);
-	pTextObj->Text()->SetColor(Vec4(0, 0, 255, 255));
-	SpawnGameObject(pTextObj, Vec3(0.f, 0.f, 0.f), 31);
+	pTextObj->Text()->SetColor(Vec4(0.f, 0.f, 255.f, 255.f));
+	SpawnGameObject(pTextObj, Vec3(0.f, 0.f, 0.f), 0);
 
 	CGameObject* pImageObj = new CGameObject();
 	pImageObj->SetName(L"Image1");

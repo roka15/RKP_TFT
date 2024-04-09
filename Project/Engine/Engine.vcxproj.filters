@@ -241,9 +241,6 @@
     <ClInclude Include="CText.h">
       <Filter>Source\06. Component\9.UI\Text</Filter>
     </ClInclude>
-    <ClInclude Include="CCanvas.h">
-      <Filter>Source\06. Component\8.Canvas</Filter>
-    </ClInclude>
     <ClInclude Include="CUI.h">
       <Filter>Source\06. Component\9.UI</Filter>
     </ClInclude>
@@ -477,9 +474,6 @@
     <ClCompile Include="CText.cpp">
       <Filter>Source\06. Component\9.UI\Text</Filter>
     </ClCompile>
-    <ClCompile Include="CCanvas.cpp">
-      <Filter>Source\06. Component\8.Canvas</Filter>
-    </ClCompile>
     <ClCompile Include="CUI.cpp">
       <Filter>Source\06. Component\9.UI</Filter>
     </ClCompile>
@@ -712,9 +706,6 @@
     </Filter>
     <Filter Include="Source\03. Manager\13.ClientMgr">
       <UniqueIdentifier>{e47e1664-2ab1-4ad9-826d-d8f5309548b5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\06. Component\8.Canvas">
-      <UniqueIdentifier>{47d5a495-8be1-4b58-b979-fa538b186c8b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\06. Component\9.UI">
       <UniqueIdentifier>{f534cf43-eb13-4809-badd-fccf08f897a7}</UniqueIdentifier>

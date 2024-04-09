@@ -1,13 +1,15 @@
 #include "pch.h"
 #include "CText.h"
 #include "CFontMgr.h"
+#include "CTransform.h"
 void CText::finaltick()
 {
 }
 
 void CText::UpdateData()
 {
-	CFontMgr::GetInst()->DrawFont(m_Text.c_str(), m_v2Pos.x, m_v2Pos.y, m_fSize, FONT_RGBA(m_v4Color.x, m_v4Color.y, m_v4Color.z, m_v4Color.w));
+	Vec3 pos = Transform()->GetRelativePos();
+	CFontMgr::GetInst()->DrawFont(m_Text.c_str(), pos.x, pos.y, m_fSize, FONT_RGBA(m_v4Color.x, m_v4Color.y, m_v4Color.z, m_v4Color.w));
 }
 
 UINT CText::GetColor()
