@@ -94,6 +94,29 @@ float4 PS_Std2D(VS_OUT _in) : SV_Target
 	return vOutColor;
 }
 
+float4 PS_Std2D_GaugeUI(VS_OUT _in) : SV_Target
+{
+	float4 vOutColor = g_vec4_0;
+	float CurTime = g_float_0;
+	float GoalTime = g_float_1;
+
+	float Ratio = (1 - (CurTime / GoalTime));
+
+	if (_in.vUV.x <= Ratio)
+		discard;
+
+
+	if (g_btex_0)
+	{
+		vOutColor = g_tex_0.Sample(g_sam_0, _in.vUV);
+	}
+	else
+	{
+		vOutColor = g_vec4_0;
+	}
+
+	return vOutColor;
+}
 
 
 

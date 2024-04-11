@@ -23,7 +23,7 @@ public:
     void DeathMinion(int _iGameID, CGameObject* _pMinion);
     void SetClientOwner(CGameObject* _pObj) { m_ClientOwner = _pObj; }
     void CreateCharacterPrefabs();
-    void CreateUI(int _iGameID);
+    void RegisterUImap(int _iGameID, wstring _Key, CGameObject* _pObj);
     bool IsSamePlayer(CGameObject* _pObj); //client 와 일치하는지 체크
 };
 

@@ -39,7 +39,7 @@ void CGame::init()
 	m_mapShop.insert(std::make_pair(CHARACTER_TYPE::ATTROX, queue<CGameObject*>()));
 	eType = CHARACTER_TYPE::ATTROX;
 	prefab = CResMgr::GetInst()->FindRes<CPrefab>(L"Ch_Attrox");
-	
+
 	for (int i = 0; i < AttroxCnt; ++i)
 	{
 		//game 객체를 재활용 하는 경우 이미 멤버변수들은 생성되어 있기 때문에  초기화를 진행한다.
@@ -62,7 +62,7 @@ void CGame::init()
 	{//game 객체를 재활용 하는 경우 이미 멤버변수들은 생성되어 있기 때문에  초기화를 진행한다.
 		if (m_mapShop[eType].size() == ZedCnt)
 		{
-		
+
 		}
 		else
 		{
@@ -116,17 +116,17 @@ void CGame::tick()
 		switch (GameMode)
 		{
 		case GAME_STATE::SELECT:
-			
-		    break;
+			break;
 		case GAME_STATE::BATTLE:
-			++m_iRoundCnt;
+
 			break;
 		case GAME_STATE::LOADING:
+			++m_iRoundCnt;
 			DespawnMinion();
 			SpawnMinion(m_iRoundCnt);
 			break;
 		}
-	
+
 		m_fStartTime = m_fCurTime;
 
 		/*if (m_iRoundCnt % 4 == 0)
@@ -146,6 +146,21 @@ void CGame::tick()
 		}
 		SendGameState((UINT)m_eGameState);
 	}
+
+	CGameObject* PTimeObj = m_mapUIObjs[L"TIMER_TEXT"];
+	CText* pTimeText = (CText*)PTimeObj->GetComponent(COMPONENT_TYPE::TEXT);
+	CGameObject* pRoundObj = m_mapUIObjs[L"ROUND_TEXT"];
+	CText* pRoundText = (CText*)pRoundObj->GetComponent(COMPONENT_TYPE::TEXT);
+	float fTime = CompareTime - (m_fCurTime - m_fStartTime);
+	int iTime = (int)fTime + 1;
+	int firstNum = (m_iRoundCnt / m_iRoundMax) + 1;
+	int secondNum = (m_iRoundCnt % m_iRoundMax) + 1;
+	pTimeText->SetText(std::to_wstring(iTime));
+	pRoundText->SetText(std::to_wstring(firstNum) + L" - " + std::to_wstring(secondNum));
+
+	CGameObject* pTimeGaugeObj = m_mapUIObjs[L"TIMER_IMAGE"];
+	pTimeGaugeObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::FLOAT_0, &fTime);
+	pTimeGaugeObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::FLOAT_1, &CompareTime);
 }
 
 void CGame::RegisterUser(int _iGameID, int _iIdx, CGameObject* _pObj)
@@ -160,7 +175,12 @@ void CGame::RegisterUser(int _iGameID, int _iIdx, CGameObject* _pObj)
 
 void CGame::RegisterGameUI(wstring _strKey, CGameObject* _pObj)
 {
-	
+	auto itr = m_mapUIObjs.find(_strKey);
+	if (itr != m_mapUIObjs.end())
+	{
+		return;
+	}
+	m_mapUIObjs.insert(std::make_pair(_strKey, _pObj));
 }
 
 bool CGame::BuyItem(CHARACTER_TYPE _eType, CGameObject* _pPlayer)
@@ -222,7 +242,7 @@ void CGame::SendGameState(UINT _iState)
 		player->SetGameStateInfo();
 	}
 
-	CPlayerScript* pPlayer =  m_pAIPlayer->GetScript<CPlayerScript>();
+	CPlayerScript* pPlayer = m_pAIPlayer->GetScript<CPlayerScript>();
 	pPlayer->SetGameState(_iState);
 	pPlayer->SetGameStateInfo();
 }
@@ -235,7 +255,7 @@ int CGame::Buy(CItem* _pItem, CPlayerScript* _pPlayer)
 
 void CGame::CreateMinion()
 {
-	CGameObject* pMinionContainer = CLevelMgr::GetInst()->GetCurLevel()->FindObjectByName(L"MinionContainer"); 
+	CGameObject* pMinionContainer = CLevelMgr::GetInst()->GetCurLevel()->FindObjectByName(L"MinionContainer");
 	//game 객체를 재활용 하는 경우 이미 필요한 객체들은 생성되어 있기 때문에  초기화를 진행한다.
 	if (pMinionContainer)
 	{
@@ -341,7 +361,7 @@ void CGame::CreateUI()
 	CGameObject* pTextObj = new CGameObject();
 	Ptr<CPrefab> pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Text");
 	pTextObj = pPrefab->Instantiate();
-	pTextObj->Text()->SetText(std::to_wstring(firstNum)+L"-"+std::to_wstring(secondNum));
+	pTextObj->Text()->SetText(std::to_wstring(firstNum) + L"-" + std::to_wstring(secondNum));
 	pTextObj->Text()->SetSize(20.f);
 	pTextObj->Text()->SetColor(Vec4(0.f, 0.f, 255.f, 255.f));
 	SpawnGameObject(pTextObj, Vec3(0.f, 0.f, 0.f), 0);
@@ -379,8 +399,8 @@ CGame::CGame()
 	m_iRoundCnt(0),
 	m_fStartTime(0.f),
 	m_fCurTime(0.f),
-	m_fSelectTime(20.f),
-	m_fBettleTime(30.f),
+	m_fSelectTime(10.f),
+	m_fBettleTime(10.f),
 	m_fItemTime(30.f),
 	m_fLoadingTime(10.f),
 	m_bFirstLoading(false),

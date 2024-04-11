@@ -423,26 +423,9 @@ void CGameMgr::CreateCharacterPrefabs()
 
 }
 
-void CGameMgr::CreateUI(int _iGameID)
+void CGameMgr::RegisterUImap(int _iGameID, wstring _Key, CGameObject* _pObj)
 {
-	Ptr<CPrefab> pPrefab = nullptr;
-	CGameObject* pRoundUIObj = new CGameObject();
-	SpawnGameObject(pRoundUIObj, Vec3(0.f, 0.f, 0.f), 31);
-	CGameObject* pImageObj = new CGameObject();
-	pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Image");
-	pImageObj = pPrefab->Instantiate();
-	pImageObj->SetName(L"UI_RoundBackGround");
-	pRoundUIObj->AddChild(pImageObj);
-	m_vecGames[_iGameID]->RegisterGameUI(pImageObj->GetName(), pImageObj);
-
-	CGameObject* pTextObj = new CGameObject();
-	pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Text");
-	pTextObj = pPrefab->Instantiate();
-	pTextObj->SetName(L"UI_RoundText");
-	pRoundUIObj->AddChild(pTextObj);
-	m_vecGames[_iGameID]->RegisterGameUI(pTextObj->GetName(), pTextObj);
-
-
+	m_vecGames[_iGameID]->RegisterGameUI(_Key, _pObj);
 }
 
 bool CGameMgr::IsSamePlayer(CGameObject* _pObj)
