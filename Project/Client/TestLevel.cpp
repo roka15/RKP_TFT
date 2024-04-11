@@ -871,7 +871,7 @@ void CreateTestLevel()
 	pImageObj->AddComponent(new CImage());
 	pImageObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	pImageObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"),0);
-	pImageObj->Image()->SetTextureKey(L"texture\\UI\\Hud\\UI_RoundBackGround.png");
+	pImageObj->Image()->SetNormalTexKey(L"texture\\UI\\Hud\\UI_RoundBackGround.png");
 	pImageObj->Image()->SetColor(Vec4(0.f, 0.f, 1.f, 1.f));
 	pImageObj->Transform()->SetRelativePos(3.f, 340.f, 0.f);
 	pImageObj->Transform()->SetRelativeScale(550.f, 100.f, 0.f);
@@ -917,14 +917,74 @@ void CreateTestLevel()
 		pMaterial->Save(MtrlName);
 	}
 	pImageObj2->MeshRender()->SetMaterial(pMaterial, 0);
-	pImageObj2->Image()->SetTextureKey(L"texture\\UI\\Hud\\UI_RoundTimeGauge.png");
+	pImageObj2->Image()->SetNormalTexKey(L"texture\\UI\\Hud\\UI_RoundTimeGauge.png");
 	pImageObj2->Image()->SetColor(Vec4(0.f, 0.f, 1.f, 1.f));
 	pImageObj2->Transform()->SetRelativePos(-1.f, 310.f, 0.f);
 	pImageObj2->Transform()->SetRelativeScale(405.f, 21.f, 0.f);
 	pRoundUI->AddChild(pImageObj2);
 
+	CGameObject* pImageObj6 = new CGameObject();
+	pImageObj6->SetName(L"Image");
+	pImageObj6->AddComponent(new CTransform());
+	pImageObj6->AddComponent(new CMeshRender());
+	pImageObj6->AddComponent(new CImage());
+	pImageObj6->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pImageObj6->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
+	pImageObj6->Image()->SetNormalTexKey(L"texture\\UI\\Hud\\UI_CurRoundBackGround.png");
+	pImageObj6->Image()->SetColor(Vec4(0.25f, 0.25f, 0.25f, 1.f));
+	pImageObj6->Transform()->SetRelativePos(-71.f, 341.f, 0.f);
+	pImageObj6->Transform()->SetRelativeScale(50.f, 50.f, 0.f);
+	pRoundUI->AddChild(pImageObj6);
+
+	CGameObject* pImageObj3 = new CGameObject();
+	pImageObj3->SetName(L"Image3");
+	pImageObj3->AddComponent(new CTransform());
+	pImageObj3->AddComponent(new CMeshRender());
+	pImageObj3->AddComponent(new CImage());
+	pImageObj3->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pImageObj3->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
+	pImageObj3->Image()->SetNormalTexKey(L"texture\\UI\\Icon\\announce_icon_combat_white.png");
+	pImageObj3->Image()->SetEnableTexKey(L"texture\\UI\\Icon\\announce_icon_combat.png");
+	pImageObj3->Image()->SetColor(Vec4(0.25f, 0.25f, 0.25f, 1.f));
+	pImageObj3->Transform()->SetRelativePos(-71.f, 345.f, 0.f);
+	pImageObj3->Transform()->SetRelativeScale(25.f, 25.f, 0.f);
+	pRoundUI->AddChild(pImageObj3);
+
+	CGameObject* pImageObj4 = new CGameObject();
+	pImageObj4->SetName(L"Image4");
+	pImageObj4->AddComponent(new CTransform());
+	pImageObj4->AddComponent(new CMeshRender());
+	pImageObj4->AddComponent(new CImage());
+	pImageObj4->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pImageObj4->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
+	pImageObj4->Image()->SetNormalTexKey(L"texture\\UI\\Icon\\announce_icon_combat_white.png");
+	pImageObj4->Image()->SetEnableTexKey(L"texture\\UI\\Icon\\announce_icon_combat.png");
+	pImageObj4->Image()->SetColor(Vec4(0.25f, 0.25f, 0.25f, 1.f));
+	pImageObj4->Transform()->SetRelativePos(3.f, 345.f, 0.f);
+	pImageObj4->Transform()->SetRelativeScale(25.f, 25.f, 0.f);
+	pRoundUI->AddChild(pImageObj4);
+
+	CGameObject* pImageObj5 = new CGameObject();
+	pImageObj5->SetName(L"Image5");
+	pImageObj5->AddComponent(new CTransform());
+	pImageObj5->AddComponent(new CMeshRender());
+	pImageObj5->AddComponent(new CImage());
+	pImageObj5->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pImageObj5->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
+	pImageObj5->Image()->SetNormalTexKey(L"texture\\UI\\Icon\\announce_icon_combat_white.png");
+	pImageObj5->Image()->SetEnableTexKey(L"texture\\UI\\Icon\\announce_icon_combat.png");
+	pImageObj5->Image()->SetColor(Vec4(0.25f, 0.25f, 0.25f, 1.f));
+	pImageObj5->Transform()->SetRelativePos(76.f, 345.f, 0.f);
+	pImageObj5->Transform()->SetRelativeScale(25.f, 25.f, 0.f);
+	pRoundUI->AddChild(pImageObj5);
+
+
 	CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"ROUND_TEXT", pTextObj);
 	CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"TIMER_TEXT", pTextObj2);
 	CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"TIMER_IMAGE", pImageObj2);
+	CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"ROUND_IMAGE1", pImageObj3);
+	CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"ROUND_IMAGE2", pImageObj4);
+	CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"ROUND_IMAGE3", pImageObj5);
+	CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"CUR_ROUND_IMAGE", pImageObj6);
 	
 }

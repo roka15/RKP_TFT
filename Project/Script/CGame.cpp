@@ -146,21 +146,7 @@ void CGame::tick()
 		}
 		SendGameState((UINT)m_eGameState);
 	}
-
-	CGameObject* PTimeObj = m_mapUIObjs[L"TIMER_TEXT"];
-	CText* pTimeText = (CText*)PTimeObj->GetComponent(COMPONENT_TYPE::TEXT);
-	CGameObject* pRoundObj = m_mapUIObjs[L"ROUND_TEXT"];
-	CText* pRoundText = (CText*)pRoundObj->GetComponent(COMPONENT_TYPE::TEXT);
-	float fTime = CompareTime - (m_fCurTime - m_fStartTime);
-	int iTime = (int)fTime + 1;
-	int firstNum = (m_iRoundCnt / m_iRoundMax) + 1;
-	int secondNum = (m_iRoundCnt % m_iRoundMax) + 1;
-	pTimeText->SetText(std::to_wstring(iTime));
-	pRoundText->SetText(std::to_wstring(firstNum) + L" - " + std::to_wstring(secondNum));
-
-	CGameObject* pTimeGaugeObj = m_mapUIObjs[L"TIMER_IMAGE"];
-	pTimeGaugeObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::FLOAT_0, &fTime);
-	pTimeGaugeObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::FLOAT_1, &CompareTime);
+	UpdateRoundUI(CompareTime);
 }
 
 void CGame::RegisterUser(int _iGameID, int _iIdx, CGameObject* _pObj)
@@ -353,45 +339,39 @@ void CGame::DespawnMinion(CGameObject* _pObj)
 	pMinionContainer->AddChild(_pObj);
 }
 
-void CGame::CreateUI()
+void CGame::UpdateRoundUI(float _fCompare)
 {
+	CGameObject* PTimeObj = m_mapUIObjs[L"TIMER_TEXT"];
+	CText* pTimeText = (CText*)PTimeObj->GetComponent(COMPONENT_TYPE::TEXT);
+	CGameObject* pRoundObj = m_mapUIObjs[L"ROUND_TEXT"];
+	CText* pRoundText = (CText*)pRoundObj->GetComponent(COMPONENT_TYPE::TEXT);
+	float fTime = _fCompare - (m_fCurTime - m_fStartTime);
+	int iTime = (int)fTime + 1;
 	int firstNum = (m_iRoundCnt / m_iRoundMax) + 1;
-	int secondNum = (m_iRoundCnt + 1 % m_iRoundMax);
+	int secondNum = (m_iRoundCnt % m_iRoundMax) + 1;
+	pTimeText->SetText(std::to_wstring(iTime));
+	pRoundText->SetText(std::to_wstring(firstNum) + L" - " + std::to_wstring(secondNum));
 
-	CGameObject* pTextObj = new CGameObject();
-	Ptr<CPrefab> pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Text");
-	pTextObj = pPrefab->Instantiate();
-	pTextObj->Text()->SetText(std::to_wstring(firstNum) + L"-" + std::to_wstring(secondNum));
-	pTextObj->Text()->SetSize(20.f);
-	pTextObj->Text()->SetColor(Vec4(0.f, 0.f, 255.f, 255.f));
-	SpawnGameObject(pTextObj, Vec3(0.f, 0.f, 0.f), 0);
+	CGameObject* pTimeGaugeObj = m_mapUIObjs[L"TIMER_IMAGE"];
+	pTimeGaugeObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::FLOAT_0, &fTime);
+	pTimeGaugeObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::FLOAT_1, &_fCompare);
 
-	CGameObject* pImageObj = new CGameObject();
-	pImageObj->SetName(L"Image1");
-	pImageObj->AddComponent(new CTransform());
-	pImageObj->AddComponent(new CMeshRender());
-	pImageObj->AddComponent(new CImage());
-	pImageObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	pImageObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
-	pImageObj->Image()->SetTextureKey(L"texture\\Character.png");
-	pImageObj->Image()->SetColor(Vec4(0.f, 0.f, 1.f, 1.f));
-	pImageObj->Transform()->SetRelativePos(500.f, 500.f, 0.f);
-	pImageObj->Transform()->SetRelativeScale(100.f, 100.f, 0.f);
-	SpawnGameObject(pImageObj, Vec3(0.f, 0.f, 0.f), 31);
-
-	pImageObj = new CGameObject();
-	pImageObj->SetName(L"Image2");
-	pImageObj->AddComponent(new CTransform());
-	pImageObj->AddComponent(new CMeshRender());
-	pImageObj->AddComponent(new CImage());
-	pImageObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	pImageObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
-	pImageObj->Image()->SetTextureKey(L"texture\\Fighter.bmp");
-	pImageObj->Image()->SetColor(Vec4(0.f, 0.f, 1.f, 1.f));
-	pImageObj->Transform()->SetRelativePos(300.f, 300.f, 0.f);
-	pImageObj->Transform()->SetRelativeScale(100.f, 100.f, 0.f);
-	SpawnGameObject(pImageObj, Vec3(0.f, 0.f, 0.f), 31);
+	int beforRoundNum = secondNum == 1 ? 3 : secondNum - 1;
+	CGameObject* pRoundCursor = m_mapUIObjs[L"CUR_ROUND_IMAGE"];
+	wstring RoundName = L"ROUND_IMAGE";
+	wstring CurRoundName = RoundName + to_wstring(secondNum);
+	wstring BeforRoundName = RoundName + to_wstring(beforRoundNum);
+	CGameObject* pCurRound = m_mapUIObjs[CurRoundName];
+	CGameObject* pBeforRound = m_mapUIObjs[BeforRoundName];
+	Vec3 v3RoundPos = pCurRound->Transform()->GetRelativePos();
+	Vec3 v3CursorPos = pRoundCursor->Transform()->GetRelativePos();
+	v3CursorPos.x = v3RoundPos.x;
+	pRoundCursor->Transform()->SetRelativePos(v3CursorPos);
+	
+	pCurRound->Image()->SetActiveImage(true);
+	pBeforRound->Image()->SetActiveImage(false);
 }
+
 
 CGame::CGame()
 	:m_iUserCnt(8),

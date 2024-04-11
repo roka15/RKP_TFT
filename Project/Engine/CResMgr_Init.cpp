@@ -543,6 +543,7 @@ void CResMgr::CreateDefaultGraphicsShader()
 
 	AddRes(pShader->GetKey(), pShader);
 
+
 	// ============================
 	// Std2DGaugeUIShader
 	// RasterizerState      : None
@@ -1054,7 +1055,10 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std2DUIShader"));
 	AddRes(L"Std2DUIMtrl", pMtrl);
-
+	// Std2DUIOneOneShader Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std2DUIOneOneShader"));
+	AddRes(L"Std2DUIOneOneMtrl", pMtrl);
 	// Std2DGaugeUIShader Material
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std2DGaugeUIShader"));

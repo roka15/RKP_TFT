@@ -97,6 +97,9 @@
     <Filter Include="Script\Item\Character\Champ">
       <UniqueIdentifier>{dad18712-a419-45ca-aaf6-837efc79a2d9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\UI">
+      <UniqueIdentifier>{3357607d-0428-4b08-b622-1378ffeef2df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CCameraMoveScript.h">

@@ -36,7 +36,7 @@ private:
     bool SpawnMinion(int _iRound);
     void DespawnMinion();
     void DespawnMinion(CGameObject* _pObj);
-    void CreateUI();
+    void UpdateRoundUI(float _fCompare);
 public:
     void SetGameID(int _iID) { m_GameID = _iID; }
     const int& GetGameID() { return m_GameID; }
