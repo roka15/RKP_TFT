@@ -26,7 +26,7 @@ void CTransform::finaltick()
 		int a = 0;
 	m_matWorldScale = XMMatrixIdentity();
 	m_matWorldScale = XMMatrixScaling(m_vRelativeScale.x, m_vRelativeScale.y, m_vRelativeScale.z);
-
+	
 	Matrix matRot = XMMatrixIdentity();
 	matRot = XMMatrixRotationX(m_vRelativeRot.x);
 	matRot *= XMMatrixRotationY(m_vRelativeRot.y);

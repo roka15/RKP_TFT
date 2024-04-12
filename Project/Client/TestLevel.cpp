@@ -1043,14 +1043,9 @@ void CreateTestLevel()
 		pTextObj->Transform()->SetRelativePos(654.f, 602.f, 0.f);
 		pShopUI->AddChild(pTextObj);
 
-
-		CGameObject* pImageObj8 = new CGameObject();
+		pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Button");
+		CGameObject* pImageObj8 = pPrefab->Instantiate();
 		pImageObj8->SetName(L"Image8");
-		pImageObj8->AddComponent(new CTransform());
-		pImageObj8->AddComponent(new CMeshRender());
-		pImageObj8->AddComponent(new CImage());
-		pImageObj8->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-		pImageObj8->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
 		pImageObj8->Image()->SetNormalTexKey(L"texture\\UI\\Hud\\UI_LevelUp.png");
 		pImageObj8->Transform()->SetRelativePos(-453.f, -283.f, 0.f);
 		pImageObj8->Transform()->SetRelativeScale(160.f, 60.f, 0.f);

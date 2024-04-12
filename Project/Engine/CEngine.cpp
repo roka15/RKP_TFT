@@ -54,11 +54,23 @@ int CEngine::init(HWND _hWnd, UINT _iWidth, UINT _iHeight)
 	CKeyMgr::GetInst()->init();
 
 	CGameObject* Cursor = new CGameObject();
+	Cursor->SetName(L"3DCursor");
 	Cursor->AddComponent(new CTransform);
 	Cursor->AddComponent(new CBoxCollider);
 	Cursor->AddComponent(new CMeshRender);
 	Cursor->AddComponent((CComponent*)CScriptMgr::GetScript((UINT)SCRIPT_TYPE::CURSOR));
-	CMouseMgr::GetInst()->RegisterCursor(Cursor);
+	CMouseMgr::GetInst()->RegisterCursor(CURSOR_TYPE::CURSOR_3D,Cursor);
+	Cursor = new CGameObject();
+	Cursor->SetName(L"2DCursor");
+	Cursor->AddComponent(new CTransform);
+	Cursor->AddComponent(new CCollider2D);
+	Cursor->AddComponent(new CMeshRender);
+	Cursor->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
+	Cursor->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 0.f));
+	Cursor->Collider2D()->SetOffsetPos(Vec2(-1.f, 3.0f));
+	Cursor->AddComponent((CComponent*)CScriptMgr::GetScript((UINT)SCRIPT_TYPE::CURSOR));
+	CMouseMgr::GetInst()->RegisterCursor(CURSOR_TYPE::CURSOR_2D, Cursor);
+
 	CMouseMgr::GetInst()->init();
 
 	CTimeMgr::GetInst()->init();

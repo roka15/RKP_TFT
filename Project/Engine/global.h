@@ -48,6 +48,7 @@ using namespace DirectX::SimpleMath;
 typedef Vector2 Vec2;
 typedef Vector3 Vec3;
 typedef Vector4 Vec4;
+#define IDENTITY_MAT XMMatrixIdentity()
 
 
 // Fbx Loader

@@ -339,3 +339,16 @@ enum class CANVAS_RENDER_MODE
 	ScreenSpace_Camera,
 	WorldSpace
 };
+
+enum class MOUSE_INPUT_TYPE
+{
+	LEFT = 0,
+	RIGHT,
+	MIDDLE,
+};
+enum class CURSOR_TYPE
+{
+	CURSOR_2D,
+	CURSOR_3D,
+	END,
+};

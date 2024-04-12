@@ -69,6 +69,7 @@ public:
 
 
     CCamera* GetMainCam();   
+    CCamera* GetCam(int _index);
 
     void CopyRenderTarget();
 

@@ -23,18 +23,23 @@ CCollisionMgr::~CCollisionMgr()
 
 }
 
-vector<CGameObject*> CCollisionMgr::CursorCollisionTick()
+vector<CGameObject*> CCollisionMgr::CursorCollisionTick(int _icursorType)
 {
 	CLevel* pLevel = CLevelMgr::GetInst()->GetCurLevel();
 	vector<CGameObject*> resultObjs;
 	for (UINT iRow = 0; iRow < MAX_LAYER; ++iRow)
 	{
 		// iRow 레이어와 iCol 레이어는 서로 충돌검사를 진행한다.
-		vector<CGameObject*> layerObjs = CollisionBtwLayerCursor(pLevel->GetLayer(iRow), CMouseMgr::GetInst()->GetCursor());
-		for (int i = 0; i < layerObjs.size(); ++i)
+
+		CGameObject* pCursor = nullptr;
+
+		pCursor = CMouseMgr::GetInst()->GetCursor((CURSOR_TYPE)_icursorType);
+		vector<CGameObject*> layerObjs = CollisionBtwLayerCursor(pLevel->GetLayer(iRow), pCursor);
+		for (int j = 0; j < layerObjs.size(); ++j)
 		{
-			resultObjs.push_back(layerObjs[i]);
+			resultObjs.push_back(layerObjs[j]);
 		}
+
 	}
 	return resultObjs;
 }
@@ -78,13 +83,13 @@ void CCollisionMgr::ColliderRenderActive(bool _bflag)
 		}
 	}
 	//cursor의 collider view = on/off
-	CCollider3D* collider = CMouseMgr::GetInst()->GetCursor()->Collider3D();
+	CCollider3D* collider = CMouseMgr::GetInst()->GetCursor(CURSOR_TYPE::CURSOR_3D)->Collider3D();
 	if (collider == nullptr)
 		return;
 	collider->ActiveView(_bflag);
 }
 
-void CCollisionMgr::Collision2D(CGameObject* _LeftObject, CGameObject* _RightObject)
+bool CCollisionMgr::Collision2D(CGameObject* _LeftObject, CGameObject* _RightObject)
 {
 	// 충돌체 ID 생성
 	CollisionID id = {};
@@ -131,6 +136,7 @@ void CCollisionMgr::Collision2D(CGameObject* _LeftObject, CGameObject* _RightObj
 				iter->second = true;
 			}
 		}
+		return true;
 	}
 
 	else
@@ -142,6 +148,7 @@ void CCollisionMgr::Collision2D(CGameObject* _LeftObject, CGameObject* _RightObj
 			_RightObject->Collider2D()->EndOverlap(_LeftObject->Collider2D());
 			iter->second = false;
 		}
+		return false;
 	}
 }
 
@@ -216,15 +223,31 @@ vector<CGameObject*> CCollisionMgr::CollisionBtwLayerCursor(CLayer* _Layer, CGam
 	const vector<CGameObject*> objs = _Layer->GetObjects();
 	for (int i = 0; i < objs.size(); ++i)
 	{
-		if (objs[i]->Collider3D() && objs[i]->Collider3D()->GetTrigger())
+		if (_Cursor->Collider3D())
 		{
-			bool flag = Collision3D(objs[i], _Cursor);
-
-			if (flag)
+			if (objs[i]->Collider3D() && objs[i]->Collider3D()->GetTrigger())
 			{
-				colObjs.push_back(objs[i]);
+				bool flag = Collision3D(objs[i], _Cursor);
+
+				if (flag)
+				{
+					colObjs.push_back(objs[i]);
+				}
 			}
 		}
+		else if (_Cursor->Collider2D())
+		{
+			if (objs[i]->Collider2D())
+			{
+				bool flag = Collision2D(objs[i], _Cursor);
+
+				if (flag)
+				{
+					colObjs.push_back(objs[i]);
+				}
+			}
+		}
+		
 	}
 	return colObjs;
 }

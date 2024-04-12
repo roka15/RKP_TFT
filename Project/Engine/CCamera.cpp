@@ -224,12 +224,15 @@ void CCamera::SortObject()
 	if (m_iCamIdx <= 0)
 	{
 		//Cursor Object
-		CGameObject* cursor = CMouseMgr::GetInst()->GetCursor();
-		if (cursor == nullptr)
-			return;
+		int CursorCnt = CMouseMgr::GetInst()->GetCursorCnt();
+		for (int i = 0; i < CursorCnt; ++i)
+		{
+			CGameObject* cursor = CMouseMgr::GetInst()->GetCursor((CURSOR_TYPE)i);
+			if (cursor == nullptr)
+				return;
 
-		CursorSortObject(cursor);
-		
+			CursorSortObject(cursor);
+		}
 	}
 
 }

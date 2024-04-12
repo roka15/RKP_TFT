@@ -12,9 +12,9 @@
 
 void CMouseMgr::init()
 {
-	CBoxCollider* collider = (CBoxCollider*)m_pCursor->GetComponent(COMPONENT_TYPE::COLLIDER3D);
+	CBoxCollider* collider = (CBoxCollider*)GetCursor(CURSOR_TYPE::CURSOR_3D)->GetComponent(COMPONENT_TYPE::COLLIDER3D);
 	collider->SetOffsetScale(Vec3{ 100.f,100.f,100.f });
-	m_pCursor->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-90.f),0.f,0.f });
+	GetCursor(CURSOR_TYPE::CURSOR_3D)->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(-90.f),0.f,0.f });
 }
 
 void CMouseMgr::tick()
@@ -23,32 +23,77 @@ void CMouseMgr::tick()
 	vector<CGameObject*> objs;
 	PointerEventData curEventInfo = {};
 
+	for (int i = 0; i < (UINT)CURSOR_TYPE::END; ++i)
+	{
+		CGameObject* pCursor = m_CursorList[i];
+		if (CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::TAP ||
+			CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::PRESSED)
+		{
+			CalcuMousePos((CURSOR_TYPE)i);
+		}
+		pCursor->tick();
+		pCursor->finaltick_module();
+		objs = CCollisionMgr::GetInst()->CursorCollisionTick(i);
 
-	if (CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::TAP ||
-		CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::PRESSED)
-	{
-		ClickPlane();
-	}
-	m_pCursor->tick();
-	m_pCursor->finaltick_module();
-	objs = CCollisionMgr::GetInst()->CursorCollisionTick();
-
-	if (CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::TAP ||
-		CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::PRESSED)
-	{
-		MouseDownEvent(objs, curEventInfo);
-		MouseDragEvent(objs, curEventInfo);
-	}
-	else if (CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::RELEASE)
-	{
-		MouseUpEvent(objs, curEventInfo);
-		m_pCursor->Transform()->SetRelativePos(Vec3{ -50000.f,0.f,0.f });
+		if (CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::TAP ||
+			CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::PRESSED)
+		{
+			MouseDownEvent(objs, curEventInfo, (CURSOR_TYPE)i);
+			MouseDragEvent(objs, curEventInfo, (CURSOR_TYPE)i);
+		}
+		else if (CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::RELEASE)
+		{
+			MouseUpEvent(objs, curEventInfo, (CURSOR_TYPE)i);
+			pCursor->Transform()->SetRelativePos(Vec3{ -50000.f,0.f,0.f });
+		}
 	}
 }
 
 void CMouseMgr::render()
 {
-	m_pCursor->render();
+	for (int i = 0; i < (UINT)CURSOR_TYPE::END; ++i)
+	{
+		CGameObject* pCursor = m_CursorList[i];
+		pCursor->render();
+	}
+}
+
+void CMouseMgr::CalcuMousePos(CURSOR_TYPE _eType)
+{
+	switch (_eType)
+	{
+	case CURSOR_TYPE::CURSOR_2D:
+	{
+		CalcuMousePos2D(); // UI Cursor의 위치 설정
+		break;
+	}
+	case CURSOR_TYPE::CURSOR_3D:
+		CalcuMousePos3D(); // Game Cursor의 위치 설정
+		break;
+	}
+}
+
+void CMouseMgr::CalcuMousePos2D()
+{
+	CCamera* pUICam = CRenderMgr::GetInst()->GetCam(1);
+	POINT cursorPos = {};
+	GetCursorPos(&cursorPos);
+	Vec3 Pos = { (float)cursorPos.x,(float)cursorPos.y,0.0f };
+	Viewport view;
+
+	view.width = GlobalData.Resolution.x;
+	view.height = GlobalData.Resolution.y;
+	view.x = 0;
+	view.y = 0;
+	view.minDepth = 0.0f;
+	view.maxDepth = 1.0f;
+	Pos = view.Unproject(Pos, pUICam->GetProjMat(), pUICam->GetViewMat(), IDENTITY_MAT);
+	GetCursor(CURSOR_TYPE::CURSOR_2D)->Transform()->SetRelativePos(Pos);
+}
+
+void CMouseMgr::CalcuMousePos3D()
+{
+	ClickPlane();
 }
 
 void CMouseMgr::ClickPlane()
@@ -67,7 +112,7 @@ void CMouseMgr::ClickPlane()
 	spawnPos.x = Start.x + Dir.x * t;
 	spawnPos.y = Start.y + Dir.y * t;
 	spawnPos.z = Start.z + Dir.z * t;
-	m_pCursor->Transform()->SetRelativePos(spawnPos);
+	GetCursor(CURSOR_TYPE::CURSOR_3D)->Transform()->SetRelativePos(spawnPos);
 	return;
 }
 
@@ -82,10 +127,10 @@ Vec3 CMouseMgr::GetMousePos()
 	return Ray;
 }
 
-void CMouseMgr::CursorDownEvent(PointerEventData& _data)
+void CMouseMgr::CursorDownEvent(PointerEventData& _data, CURSOR_TYPE _eType)
 {
 	//cursor
-	vector<CScript*> vecScript = m_pCursor->GetScripts();
+	vector<CScript*> vecScript = GetCursor(_eType)->GetScripts();
 	for (int i = 0; i < vecScript.size(); ++i)
 	{
 		CScript* script = vecScript[i];
@@ -95,10 +140,10 @@ void CMouseMgr::CursorDownEvent(PointerEventData& _data)
 	}
 }
 
-void CMouseMgr::CursorUpEvent(PointerEventData& _data)
+void CMouseMgr::CursorUpEvent(PointerEventData& _data, CURSOR_TYPE _eType)
 {
 	//cursor
-	vector<CScript*> vecScript = m_pCursor->GetScripts();
+	vector<CScript*> vecScript = GetCursor(_eType)->GetScripts();
 	for (int i = 0; i < vecScript.size(); ++i)
 	{
 		CScript* script = vecScript[i];
@@ -108,14 +153,14 @@ void CMouseMgr::CursorUpEvent(PointerEventData& _data)
 	}
 }
 
-void CMouseMgr::MouseDownEvent(vector<CGameObject*>& _pObjs, PointerEventData& _data)
+void CMouseMgr::MouseDownEvent(vector<CGameObject*>& _pObjs, PointerEventData& _data, CURSOR_TYPE _eType)
 {
 
 	if (CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::TAP)
 	{
 		_data.button = MOUSE_INPUT_TYPE::LEFT;
-		if (m_fCurTime - m_BeforEventInfo.clickTime < 1.f)
-			_data.clickCount = m_BeforEventInfo.clickCount + 1;
+		if (m_fCurTime - m_BeforEventInfo[(UINT)_eType].clickTime < 1.f)
+			_data.clickCount = m_BeforEventInfo[(UINT)_eType].clickCount + 1;
 		else
 			_data.clickCount = 1;
 		_data.clickTime = m_fCurTime;
@@ -124,14 +169,14 @@ void CMouseMgr::MouseDownEvent(vector<CGameObject*>& _pObjs, PointerEventData& _
 		{
 			_data.pointerPress = nullptr;
 			_data.lastPress = _data.pointerPress;
-			CursorDownEvent(_data);
+			CursorDownEvent(_data, _eType);
 		}
 		else //클릭한 곳에 Object가 있다면.
 		{
 			_data.pointerPress = _pObjs[0];
 			_data.lastPress = _data.pointerPress;
 
-			CursorDownEvent(_data);
+			CursorDownEvent(_data, _eType);
 
 			vector<CScript*> vecScript = _pObjs[0]->GetScripts();
 			for (int i = 0; i < vecScript.size(); ++i)
@@ -141,16 +186,23 @@ void CMouseMgr::MouseDownEvent(vector<CGameObject*>& _pObjs, PointerEventData& _
 				if (pEvent)
 					pEvent->DownEvent(_data);
 			}
+			for (int i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
+			{
+				CComponent* pComponent = _pObjs[0]->GetComponent((COMPONENT_TYPE)i);
+				IMouseDownEvent* pEvent = dynamic_cast<IMouseDownEvent*>(pComponent);
+				if (pEvent)
+					pEvent->DownEvent(_data);
+			}
 		}
 
-		
 
-		m_BeforEventInfo = _data;
+
+		m_BeforEventInfo[(UINT)_eType] = _data;
 	}
 	return;
 }
 
-void CMouseMgr::MouseDragEvent(vector<CGameObject*>& _pObjs, PointerEventData& _data)
+void CMouseMgr::MouseDragEvent(vector<CGameObject*>& _pObjs, PointerEventData& _data, CURSOR_TYPE _eType)
 {
 	if (CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::PRESSED)
 	{
@@ -159,21 +211,21 @@ void CMouseMgr::MouseDragEvent(vector<CGameObject*>& _pObjs, PointerEventData& _
 	return;
 }
 
-void CMouseMgr::MouseUpEvent(vector<CGameObject*>& _pObjs, PointerEventData& _data)
+void CMouseMgr::MouseUpEvent(vector<CGameObject*>& _pObjs, PointerEventData& _data, CURSOR_TYPE _eType)
 {
-	_data.lastPress = m_BeforEventInfo.lastPress;
+	_data.lastPress = m_BeforEventInfo[(UINT)_eType].lastPress;
 
 	if (CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::RELEASE)
 	{
 		if (_pObjs.size() == 0)
 		{
 			_data.pointerPress = nullptr;
-			CursorUpEvent(_data);
+			CursorUpEvent(_data, _eType);
 		}
 		else
 		{
 			_data.pointerPress = _pObjs[0];
-			CursorUpEvent(_data);
+			CursorUpEvent(_data, _eType);
 			vector<CScript*> vecScript = _pObjs[0]->GetScripts();
 			for (int i = 0; i < vecScript.size(); ++i)
 			{
@@ -184,9 +236,9 @@ void CMouseMgr::MouseUpEvent(vector<CGameObject*>& _pObjs, PointerEventData& _da
 			}
 		}
 	}
-	
-	m_BeforEventInfo = {};
-	
+
+	m_BeforEventInfo[(UINT)_eType] = {};
+
 	return;
 }
 
@@ -196,5 +248,8 @@ CMouseMgr::CMouseMgr()
 
 CMouseMgr::~CMouseMgr()
 {
-	delete m_pCursor;
+	for (int i = 0; i < (UINT)CURSOR_TYPE::END; ++i)
+	{
+		delete m_CursorList[i];
+	}
 }

@@ -22,7 +22,7 @@ void CTileScript::tick()
 
 void CTileScript::BeginOverlap(CCollider* _Other)
 {
-	if (CMouseMgr::GetInst()->GetCursor()->Collider3D() == _Other)
+	if (CMouseMgr::GetInst()->GetCursor(CURSOR_TYPE::CURSOR_3D)->Collider3D() == _Other)
 	{
 		HighlightColor(true);
 	}
@@ -34,7 +34,7 @@ void CTileScript::OnOverlap(CCollider* _Other)
 
 void CTileScript::EndOverlap(CCollider* _Other)
 {
-	if (CMouseMgr::GetInst()->GetCursor()->Collider3D() == _Other)
+	if (CMouseMgr::GetInst()->GetCursor(CURSOR_TYPE::CURSOR_3D)->Collider3D() == _Other)
 	{
 		HighlightColor(false);
 	}
@@ -46,7 +46,7 @@ void CTileScript::DownEvent(PointerEventData _data)
 	if (objs.size() != 0)
 	{
 		CGameObject* child = objs[0];
-		CCursor* cursor = (CCursor*)CMouseMgr::GetInst()->GetCursor()->GetScript<CCursor>();
+		CCursor* cursor = (CCursor*)CMouseMgr::GetInst()->GetCursor(CURSOR_TYPE::CURSOR_3D)->GetScript<CCursor>();
 		cursor->RegisterDragItem(child);
 		//Tile Mgr 호출해서 Tile 외각선 표시 ON
 		CTileMgr::GetInst()->TileRender(true);

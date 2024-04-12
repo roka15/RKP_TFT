@@ -185,3 +185,8 @@ CCamera* CRenderMgr::GetMainCam()
         return m_pEditorCam;
     }
 }
+
+CCamera* CRenderMgr::GetCam(int _index)
+{
+    return m_vecCam[_index];
+}

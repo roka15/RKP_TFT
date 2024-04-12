@@ -73,7 +73,18 @@ void CResMgr::InitObjectPrefab()
 #pragma endregion
 
 #pragma region Button
-
+	pObj = new CGameObject();
+	pObj->SetName(L"Button");
+	pObj->AddComponent(new CTransform());
+	pObj->AddComponent(new CMeshRender());
+	pObj->AddComponent(new CCollider2D());
+	pObj->AddComponent(new CImage());
+	pObj->AddComponent(new CButton());
+	pObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
+	pPrefab = new CPrefab();
+	pPrefab->RegisterProtoObject(pObj);
+	CResMgr::GetInst()->AddRes<CPrefab>(L"UI_Button", pPrefab);
 #pragma endregion
 }
 
