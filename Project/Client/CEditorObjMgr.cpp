@@ -76,8 +76,8 @@ void CEditorObjMgr::progress()
 {
 	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
 
-	/*if (pCurLevel->GetState() == LEVEL_STATE::PLAY)
-		return;*/
+	if (pCurLevel->GetState() == LEVEL_STATE::PLAY)
+		return;
 	// DebugShape 정보 가져오기
 	vector<tDebugShapeInfo>& vecInfo = CRenderMgr::GetInst()->GetDebugShapeInfo();
 	m_DebugShapeInfo.insert(m_DebugShapeInfo.end(), vecInfo.begin(), vecInfo.end());
@@ -127,19 +127,9 @@ void CEditorObjMgr::render()
 			pShapeObj = m_DebugShape[(UINT)SHAPE_TYPE::CIRCLE];
 			break;
 		case SHAPE_TYPE::CUBE:
-			if (pCurLevel->GetState() == LEVEL_STATE::PLAY)
-			{
-				++iter;
-				continue;
-			}
 			pShapeObj = m_DebugShape[(UINT)SHAPE_TYPE::CUBE];
 			break;
 		case SHAPE_TYPE::SPHERE:
-			if (pCurLevel->GetState() == LEVEL_STATE::PLAY)
-			{
-				++iter;
-				continue;
-			}
 			pShapeObj = m_DebugShape[(UINT)SHAPE_TYPE::SPHERE];
 			break;		
 		}
