@@ -12,6 +12,7 @@ private:
     CGameObject*        m_CursorList[(UINT)CURSOR_TYPE::END];
     PointerEventData    m_BeforEventInfo[(UINT)CURSOR_TYPE::END];
     float               m_fCurTime;
+    CGameObject*        m_EnterObj[(UINT)CURSOR_TYPE::END];
 public:
     void init();
     void tick();
@@ -32,5 +33,7 @@ public:
     void MouseDownEvent(vector<CGameObject*>& _pObjs,PointerEventData& _data, CURSOR_TYPE _eType);
     void MouseDragEvent(vector<CGameObject*>& _pObjs, PointerEventData& _data, CURSOR_TYPE _eType);
     void MouseUpEvent(vector<CGameObject*>& _pObjs, PointerEventData& _data, CURSOR_TYPE _eType);
+    void MouseEnterEvent(vector<CGameObject*>& _pObjs, PointerEventData& _data, CURSOR_TYPE _eType);
+    void MouseExitEvent(vector<CGameObject*>& _pObjs, PointerEventData& _data, CURSOR_TYPE _eType);
 };
 

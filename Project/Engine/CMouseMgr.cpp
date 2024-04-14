@@ -26,15 +26,15 @@ void CMouseMgr::tick()
 	for (int i = 0; i < (UINT)CURSOR_TYPE::END; ++i)
 	{
 		CGameObject* pCursor = m_CursorList[i];
-		if (CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::TAP ||
-			CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::PRESSED)
-		{
-			CalcuMousePos((CURSOR_TYPE)i);
-		}
+
+		CalcuMousePos((CURSOR_TYPE)i);
+
 		pCursor->tick();
 		pCursor->finaltick_module();
 		objs = CCollisionMgr::GetInst()->CursorCollisionTick(i);
 
+		if (CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::PRESSED)
+			int a = 0;
 		if (CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::TAP ||
 			CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::PRESSED)
 		{
@@ -44,7 +44,13 @@ void CMouseMgr::tick()
 		else if (CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::RELEASE)
 		{
 			MouseUpEvent(objs, curEventInfo, (CURSOR_TYPE)i);
-			pCursor->Transform()->SetRelativePos(Vec3{ -50000.f,0.f,0.f });
+			if (CURSOR_TYPE::CURSOR_3D == (CURSOR_TYPE)i)
+				pCursor->Transform()->SetRelativePos(Vec3{ -50000.f,0.f,0.f });
+		}
+		else if (CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::NONE)
+		{
+			MouseExitEvent(objs, curEventInfo, (CURSOR_TYPE)i);
+			MouseEnterEvent(objs, curEventInfo, (CURSOR_TYPE)i);
 		}
 	}
 }
@@ -68,7 +74,11 @@ void CMouseMgr::CalcuMousePos(CURSOR_TYPE _eType)
 		break;
 	}
 	case CURSOR_TYPE::CURSOR_3D:
-		CalcuMousePos3D(); // Game Cursor의 위치 설정
+		if (CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::TAP ||
+			CKeyMgr::GetInst()->GetKeyState(KEY::LBTN) == KEY_STATE::PRESSED)
+		{
+			CalcuMousePos3D(); // Game Cursor의 위치 설정
+		}
 		break;
 	}
 }
@@ -95,6 +105,8 @@ void CMouseMgr::CalcuMousePos3D()
 {
 	ClickPlane();
 }
+
+
 
 void CMouseMgr::ClickPlane()
 {
@@ -242,7 +254,61 @@ void CMouseMgr::MouseUpEvent(vector<CGameObject*>& _pObjs, PointerEventData& _da
 	return;
 }
 
-CMouseMgr::CMouseMgr()
+void CMouseMgr::MouseEnterEvent(vector<CGameObject*>& _pObjs, PointerEventData& _data, CURSOR_TYPE _eType)
+{
+	if (_pObjs.size() == 0)
+		return;
+
+	vector<CScript*> vecScript = _pObjs[0]->GetScripts();
+	for (int i = 0; i < vecScript.size(); ++i)
+	{
+		CScript* script = vecScript[i];
+		IMouseEnterEvent* pEvent = dynamic_cast<IMouseEnterEvent*>(script);
+		if (pEvent)
+			pEvent->EnterEvent(_data);
+	}
+	for (int i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
+	{
+		CComponent* pComponent = _pObjs[0]->GetComponent((COMPONENT_TYPE)i);
+		IMouseEnterEvent* pEvent = dynamic_cast<IMouseEnterEvent*>(pComponent);
+		if (pEvent)
+			pEvent->EnterEvent(_data);
+	}
+
+	m_EnterObj[(UINT)_eType] = _pObjs[0];
+}
+
+void CMouseMgr::MouseExitEvent(vector<CGameObject*>& _pObjs, PointerEventData& _data, CURSOR_TYPE _eType)
+{
+	if (m_EnterObj[(UINT)_eType] == nullptr)
+		return;
+	if (_pObjs.size() != 0)
+	{
+		if (m_EnterObj[(UINT)_eType] == _pObjs[0])
+			return;
+	}
+	
+	vector<CScript*> vecScript = m_EnterObj[(UINT)_eType]->GetScripts();
+	for (int i = 0; i < vecScript.size(); ++i)
+	{
+		CScript* script = vecScript[i];
+		IMouseExitEvent* pEvent = dynamic_cast<IMouseExitEvent*>(script);
+		if (pEvent)
+			pEvent->ExitEvent(_data);
+	}
+	for (int i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
+	{
+		CComponent* pComponent = m_EnterObj[(UINT)_eType]->GetComponent((COMPONENT_TYPE)i);
+		IMouseExitEvent* pEvent = dynamic_cast<IMouseExitEvent*>(pComponent);
+		if (pEvent)
+			pEvent->ExitEvent(_data);
+	}
+
+	m_EnterObj[(UINT)_eType] = nullptr;
+}
+
+CMouseMgr::CMouseMgr():
+	m_EnterObj{}
 {
 }
 

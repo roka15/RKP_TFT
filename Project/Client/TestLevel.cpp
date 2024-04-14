@@ -1049,7 +1049,11 @@ void CreateTestLevel()
 		pImageObj8->Image()->SetNormalTexKey(L"texture\\UI\\Hud\\UI_LevelUp.png");
 		pImageObj8->Transform()->SetRelativePos(-453.f, -283.f, 0.f);
 		pImageObj8->Transform()->SetRelativeScale(160.f, 60.f, 0.f);
-		pShopUI->AddChild(pImageObj8);
+		pImageObj8->Button()->SetEnterTexKey(L"texture\\UI\\Hud\\UI_EnterLevelUp.png");
+		pImageObj8->Button()->SetExitTexKey(L"texture\\UI\\Hud\\UI_LevelUp.png");
+		pImageObj8->Button()->SetClickTexKey(L"texture\\UI\\Hud\\UI_ClickLevelUp.png");
+	    pShopUI->AddChild(pImageObj8);
+		
 
 		pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Text");
 		pTextObj = pPrefab->Instantiate();
@@ -1073,16 +1077,15 @@ void CreateTestLevel()
 		pTextObj->Transform()->SetRelativePos(143.f, 672.f, 0.f);
 		pImageObj8->AddChild(pTextObj);
 
-		CGameObject* pImageObj9 = new CGameObject();
+		pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Button");
+		CGameObject* pImageObj9 = pPrefab->Instantiate();
 		pImageObj9->SetName(L"Image9");
-		pImageObj9->AddComponent(new CTransform());
-		pImageObj9->AddComponent(new CMeshRender());
-		pImageObj9->AddComponent(new CImage());
-		pImageObj9->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-		pImageObj9->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
 		pImageObj9->Image()->SetNormalTexKey(L"texture\\UI\\Hud\\UI_ReFresh.png");
 		pImageObj9->Transform()->SetRelativePos(-453.f, -347.f, 0.f);
 		pImageObj9->Transform()->SetRelativeScale(160.f, 60.f, 0.f);
+		pImageObj9->Button()->SetEnterTexKey(L"texture\\UI\\Hud\\UI_EnterRefresh.png");
+		pImageObj9->Button()->SetExitTexKey(L"texture\\UI\\Hud\\UI_ReFresh.png");
+		pImageObj9->Button()->SetClickTexKey(L"texture\\UI\\Hud\\UI_ClickRefresh.png");
 		pShopUI->AddChild(pImageObj9);
 
 		pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Text");
