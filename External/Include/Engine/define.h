@@ -13,7 +13,7 @@
 
 #define DT CTimeMgr::GetInst()->GetDeltaTime()
 
-#define MAX_LAYER	32
+#define MAX_LAYER	33
 #define MAX_MIP		8
 
 #define SINGLE(type) private: type(); ~type(); friend class CSingleton<type>;
@@ -313,6 +313,9 @@ enum class PARAM_TYPE
 	FLOAT,
 	BOOL,
 	TRIGGER,
+	VOID_TYPE,
+	STRING,
+	OBJECT,
 	END
 };
 

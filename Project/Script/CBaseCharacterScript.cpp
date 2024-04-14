@@ -62,12 +62,7 @@ CBaseCharacterScript::~CBaseCharacterScript()
 
 void CBaseCharacterScript::start()
 {
-	CAnimator3D* pAnimator3D = GetOwner()->Animator3D();
-	if (pAnimator3D != nullptr)
-	{
-		pAnimator3D->RegisterAniEventInfoVOID(L"SendDamage", std::bind(&CBaseCharacterScript::SendDamage, this));
-		pAnimator3D->RegisterAniEventInfoINT(L"SetAtkNumber", std::bind(&CBaseCharacterScript::SetAtkNumber, this, std::placeholders::_1));
-	}
+	RegisterFuncPtr();
 
 	m_ChStatus.iHp = 40;
 	m_ChStatus.dCurUltGauge = 0;
@@ -120,6 +115,15 @@ void CBaseCharacterScript::OnOverlap(CCollider* _Other)
 void CBaseCharacterScript::EndOverlap(CCollider* _Other)
 {
 	//m_pTarget = nullptr;
+}
+
+void CBaseCharacterScript::RegisterFuncPtr()
+{
+	CGameObject* pOwner = GetOwner();
+	{
+		pOwner->RegisterFucnPtrVOID(L"SendDamage", std::bind(&CBaseCharacterScript::SendDamage, this));
+		pOwner->RegisterFucnPtrINT(L"SetAtkNumber", std::bind(&CBaseCharacterScript::SetAtkNumber, this, std::placeholders::_1));
+	}
 }
 
 bool CBaseCharacterScript::IsWithinAttackRange()

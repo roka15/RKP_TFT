@@ -254,7 +254,7 @@ void CGame::CreateMinion()
 
 
 		pMinionContainer->SetName(L"MinionContainer");
-		SpawnGameObject(pMinionContainer, Vec3{ 0.f,-1000.f,0.f }, 0);
+		SpawnGameObject(pMinionContainer, Vec3{ 0.f,-1000.f,0.f }, 30);
 
 		Ptr<CPrefab> prefab;
 		CHARACTER_TYPE eType;

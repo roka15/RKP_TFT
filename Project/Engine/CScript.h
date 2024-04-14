@@ -50,7 +50,7 @@ public:
     virtual void BeginOverlap(CCollider* _Other) {}
     virtual void OnOverlap(CCollider* _Other) {}
     virtual void EndOverlap(CCollider* _Other) {}
-
+    virtual void RegisterFuncPtr() {}
 public:
     virtual void SaveToLevelFile(FILE* _File) override {}
     virtual void LoadFromLevelFile(FILE* _FILE) override {}

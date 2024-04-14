@@ -6,11 +6,8 @@
 void CChMinionScript::start()
 {
 	CBaseCharacterScript::start();
-	CAnimator3D* pAnimator3D = GetOwner()->Animator3D();
-	if (pAnimator3D != nullptr)
-	{
-		pAnimator3D->RegisterAniEventInfoVOID(L"Death", std::bind(&CBaseCharacterScript::Death, this));
-	}
+	CGameObject* pOwner = GetOwner();
+	pOwner->RegisterFucnPtrVOID(L"Death", std::bind(&CBaseCharacterScript::Death, this));
 }
 
 void CChMinionScript::Death()

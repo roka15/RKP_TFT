@@ -156,6 +156,7 @@
     <ClInclude Include="AniControllerUI.h" />
     <ClInclude Include="Animator2DUI.h" />
     <ClInclude Include="Animator3DUI.h" />
+    <ClInclude Include="ButtonUI.h" />
     <ClInclude Include="CameraUI.h" />
     <ClInclude Include="CEditorObjMgr.h" />
     <ClInclude Include="CGameObjectEx.h" />
@@ -213,6 +214,7 @@
     <ClCompile Include="AniControllerUI.cpp" />
     <ClCompile Include="Animator2DUI.cpp" />
     <ClCompile Include="Animator3DUI.cpp" />
+    <ClCompile Include="ButtonUI.cpp" />
     <ClCompile Include="CameraUI.cpp" />
     <ClCompile Include="CEditorObjMgr.cpp" />
     <ClCompile Include="CGameObjectEx.cpp" />

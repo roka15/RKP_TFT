@@ -54,7 +54,11 @@ CPlayerScript::CPlayerScript()
 
 CPlayerScript::~CPlayerScript()
 {
+}
 
+void CPlayerScript::start()
+{
+	RegisterFuncPtr();
 }
 
 void CPlayerScript::begin()
@@ -77,6 +81,47 @@ void CPlayerScript::BeginOverlap(CCollider* _Other)
 	{
 		DestroyObject(pOtherObject);
 	}
+}
+
+void CPlayerScript::RegisterFuncPtr()
+{
+	CGameObject* pOwner = GetOwner();
+	pOwner->RegisterFucnPtrVOID(L"BuyExp", std::bind(&CPlayerScript::BuyExp, this));
+	pOwner->RegisterFucnPtrVOID(L"VoidTest", std::bind(&CPlayerScript::VoidTest, this));
+	pOwner->RegisterFucnPtrINT(L"IntTest", std::bind(&CPlayerScript::IntTest, this, std::placeholders::_1));
+	pOwner->RegisterFucnPtrFLOAT(L"FloatTest", std::bind(&CPlayerScript::FloatTest, this, std::placeholders::_1));
+	pOwner->RegisterFucnPtrSTRING(L"StringTest", std::bind(&CPlayerScript::StringTest, this, std::placeholders::_1));
+	pOwner->RegisterFucnPtrOBJ(L"ObjTest", std::bind(&CPlayerScript::ObjTest, this, std::placeholders::_1));
+}
+
+void CPlayerScript::BuyExp()
+{
+	int a = 0;
+}
+
+void CPlayerScript::VoidTest()
+{
+	int a = 0;
+}
+
+void CPlayerScript::IntTest(int _int)
+{
+	int a = 0;
+}
+
+void CPlayerScript::FloatTest(float _float)
+{
+	int a = 0;
+}
+
+void CPlayerScript::StringTest(string _str)
+{
+	int a = 0;
+}
+
+void CPlayerScript::ObjTest(CGameObject* _pObj)
+{
+	int a = 0;
 }
 
 

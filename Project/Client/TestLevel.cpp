@@ -53,7 +53,7 @@ void CreateTestLevel()
 	pCurLevel->GetLayer(4)->SetName(L"PlayerProjectile");
 	pCurLevel->GetLayer(5)->SetName(L"MonsterProjectile");
 	pCurLevel->GetLayer(31)->SetName(L"ViewPort UI");
-
+	pCurLevel->GetLayer(32)->SetName(L"Object Container");
 
 	// Main Camera Object »ý¼º
 	CGameObject* pMainCam = new CGameObject;

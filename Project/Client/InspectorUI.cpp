@@ -26,6 +26,7 @@
 #include "ScriptUI.h"
 #include "AniClipUI.h"
 #include "AniControllerUI.h"
+#include "ButtonUI.h"
 
 
 
@@ -69,6 +70,10 @@ InspectorUI::InspectorUI()
 	m_arrComUI[(UINT)COMPONENT_TYPE::ANIMATOR3D] = new Animator3DUI;
 	m_arrComUI[(UINT)COMPONENT_TYPE::ANIMATOR3D]->SetSize(0.f, 150.f);
 	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::ANIMATOR3D]);
+
+	m_arrComUI[(UINT)COMPONENT_TYPE::BUTTON] = new ButtonUI;
+	m_arrComUI[(UINT)COMPONENT_TYPE::BUTTON]->SetSize(0.f, 150.f);
+	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::BUTTON]);
 
 	// ResUI
 	m_arrResUI[(UINT)RES_TYPE::MESHDATA] = new MeshDataUI;

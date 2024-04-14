@@ -13,11 +13,19 @@ private:
     vector<CGameObject*>            m_vecItem;
     PLAYER_TYPE                     m_ePlayerType;
 public:
+    virtual void start()override;
     virtual void begin() override;
     virtual void tick() override;
     virtual void BeginOverlap(CCollider* _Other) override;
+    virtual void RegisterFuncPtr()override;
 private:
-   
+    void BuyExp();
+
+    void VoidTest();
+    void IntTest(int _int);
+    void FloatTest(float _float);
+    void StringTest(string _str);
+    void ObjTest(CGameObject* _pObj);
 
 public:
     virtual void SaveToLevelFile(FILE* _File) override;

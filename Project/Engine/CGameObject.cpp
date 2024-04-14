@@ -225,6 +225,180 @@ bool CGameObject::IsAncestor(CGameObject* _Target)
 	return false;
 }
 
+void CGameObject::RegisterFucnPtrVOID(wstring _strFunc, std::function<void()> _pFunc)
+{
+	auto itr = m_FuncPtr.m_mapVoid.find(_strFunc);
+	if (itr != m_FuncPtr.m_mapVoid.end())
+		return;
+	m_FuncPtr.m_mapVoid.insert(std::make_pair(_strFunc, _pFunc));
+}
+
+void CGameObject::RegisterFucnPtrINT(wstring _strFunc, std::function<void(int)> _pFunc)
+{
+	auto itr = m_FuncPtr.m_mapInt.find(_strFunc);
+	if (itr != m_FuncPtr.m_mapInt.end())
+		return;
+	m_FuncPtr.m_mapInt.insert(std::make_pair(_strFunc, _pFunc));
+}
+
+void CGameObject::RegisterFucnPtrFLOAT(wstring _strFunc, std::function<void(float)> _pFunc)
+{
+	auto itr = m_FuncPtr.m_mapFloat.find(_strFunc);
+	if (itr != m_FuncPtr.m_mapFloat.end())
+		return;
+	m_FuncPtr.m_mapFloat.insert(std::make_pair(_strFunc, _pFunc));
+}
+
+void CGameObject::RegisterFucnPtrSTRING(wstring _strFunc, std::function<void(string)> _pFunc)
+{
+	auto itr = m_FuncPtr.m_mapString.find(_strFunc);
+	if (itr != m_FuncPtr.m_mapString.end())
+		return;
+	m_FuncPtr.m_mapString.insert(std::make_pair(_strFunc, _pFunc));
+}
+
+void CGameObject::RegisterFucnPtrOBJ(wstring _strFunc, std::function<void(CGameObject*)> _pFunc)
+{
+	auto itr = m_FuncPtr.m_mapObj.find(_strFunc);
+	if (itr != m_FuncPtr.m_mapObj.end())
+		return;
+	m_FuncPtr.m_mapObj.insert(std::make_pair(_strFunc, _pFunc));
+}
+
+std::optional<std::reference_wrapper<std::function<void()>>> CGameObject::GetFuncPtrVOID(wstring _strFunc)
+{
+	map<wstring, std::function<void()>>& mapEventFunc = m_FuncPtr.m_mapVoid;
+	auto itr = mapEventFunc.find(_strFunc);
+	if (itr == mapEventFunc.end())
+		return std::nullopt;
+	return std::ref(mapEventFunc[_strFunc]);
+}
+
+std::optional<std::reference_wrapper<std::function<void(int)>>> CGameObject::GetFuncPtrINT(wstring _strFunc)
+{
+	map<wstring, std::function<void(int)>>& mapEventFunc = m_FuncPtr.m_mapInt;
+	auto itr = mapEventFunc.find(_strFunc);
+	if (itr == mapEventFunc.end())
+		return std::nullopt;
+	return std::ref(mapEventFunc[_strFunc]);
+}
+
+std::optional<std::reference_wrapper<std::function<void(float)>>> CGameObject::GetFuncPtrFLOAT(wstring _strFunc)
+{
+	map<wstring, std::function<void(float)>>& mapEventFunc = m_FuncPtr.m_mapFloat;
+	auto itr = mapEventFunc.find(_strFunc);
+	if (itr == mapEventFunc.end())
+		return std::nullopt;
+	return std::ref(mapEventFunc[_strFunc]);
+}
+
+std::optional<std::reference_wrapper<std::function<void(string)>>> CGameObject::GetFuncPtrSTRING(wstring _strFunc)
+{
+	map<wstring, std::function<void(string)>>& mapEventFunc = m_FuncPtr.m_mapString;
+	auto itr = mapEventFunc.find(_strFunc);
+	if (itr == mapEventFunc.end())
+		return std::nullopt;
+	return std::ref(mapEventFunc[_strFunc]);
+}
+
+std::optional<std::reference_wrapper<std::function<void(CGameObject*)>>> CGameObject::GetFuncPtrOBJ(wstring _strFunc)
+{
+	map<wstring, std::function<void(CGameObject*)>>& mapEventFunc = m_FuncPtr.m_mapObj;
+	auto itr = mapEventFunc.find(_strFunc);
+	if (itr == mapEventFunc.end())
+		return std::nullopt;
+	return std::ref(mapEventFunc[_strFunc]);
+}
+
+
+vector<wstring> CGameObject::GetFuncPtrListName()
+{
+	vector<wstring> KeyList;
+	{
+		auto itr = m_FuncPtr.m_mapVoid.begin();
+		for (; itr != m_FuncPtr.m_mapVoid.end(); ++itr)
+		{
+			wstring Key = itr->first;
+			KeyList.push_back(Key);
+		}
+	}
+	{
+		auto itr = m_FuncPtr.m_mapInt.begin();
+		for (; itr != m_FuncPtr.m_mapInt.end(); ++itr)
+		{
+			wstring Key = itr->first;
+			KeyList.push_back(Key);
+		}
+	}
+	{
+		auto itr = m_FuncPtr.m_mapFloat.begin();
+		for (; itr != m_FuncPtr.m_mapFloat.end(); ++itr)
+		{
+			wstring Key = itr->first;
+			KeyList.push_back(Key);
+		}
+	}
+	{
+		auto itr = m_FuncPtr.m_mapString.begin();
+		for (; itr != m_FuncPtr.m_mapString.end(); ++itr)
+		{
+			wstring Key = itr->first;
+			KeyList.push_back(Key);
+		}
+	}
+	{
+		auto itr = m_FuncPtr.m_mapObj.begin();
+		for (; itr != m_FuncPtr.m_mapObj.end(); ++itr)
+		{
+			wstring Key = itr->first;
+			KeyList.push_back(Key);
+		}
+	}
+
+	return KeyList;
+}
+
+PARAM_TYPE CGameObject::GetFindFuncType(wstring _strFunc)
+{
+	{
+		auto itr = m_FuncPtr.m_mapVoid.find(_strFunc);
+		if (itr != m_FuncPtr.m_mapVoid.end())
+		{
+			return PARAM_TYPE::VOID_TYPE;
+		}
+	}
+	{
+		auto itr = m_FuncPtr.m_mapInt.find(_strFunc);
+		if (itr != m_FuncPtr.m_mapInt.end())
+		{
+			return PARAM_TYPE::INT;
+		}
+	}
+	{
+		auto itr = m_FuncPtr.m_mapFloat.find(_strFunc);
+		if (itr != m_FuncPtr.m_mapFloat.end())
+		{
+			return PARAM_TYPE::FLOAT;
+		}
+	}
+	{
+		auto itr = m_FuncPtr.m_mapString.find(_strFunc);
+		if (itr != m_FuncPtr.m_mapString.end())
+		{
+			return PARAM_TYPE::STRING;
+		}
+	}
+	{
+		auto itr = m_FuncPtr.m_mapObj.find(_strFunc);
+		if (itr != m_FuncPtr.m_mapObj.end())
+		{
+			return PARAM_TYPE::OBJECT;
+		}
+	}
+
+	return PARAM_TYPE::END;
+}
+
 
 
 void CGameObject::DisconnectFromParent()

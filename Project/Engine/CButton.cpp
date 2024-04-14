@@ -7,7 +7,11 @@ void CButton::finaltick()
 }
 void CButton::DownEvent(PointerEventData _data)
 {
-	int a = 0;
+	m_FuncPtr();
+}
+void CButton::RegisterLinkFuncPtr(std::function<void()> _FuncPtr)
+{
+	m_FuncPtr = _FuncPtr;
 }
 CButton::CButton():CUI(COMPONENT_TYPE::BUTTON)
 {

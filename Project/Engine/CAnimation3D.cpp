@@ -106,33 +106,32 @@ void CAnimation3D::finaltick()
 	string strKey = point->UIFunction;
 	wstring wstrKey;
 	wstrKey.assign(strKey.begin(), strKey.end());
-	CAnimator3D* pAnimator3D = m_pOwner;
-	
-	auto voidFunc = pAnimator3D->GetVOID_EventFunc(wstrKey);
+	CGameObject* pOwner = m_pOwner->GetOwner();
+	auto voidFunc = pOwner->GetFuncPtrVOID(wstrKey); 
 	if (voidFunc.has_value())
 	{
 		std::function<void()>& FuncRef = voidFunc.value().get();
 		FuncRef();
 	}
-	auto floatFunc = pAnimator3D->GetFLOAT_EventFunc(wstrKey);
+	auto floatFunc = pOwner->GetFuncPtrFLOAT(wstrKey);
 	if (floatFunc.has_value())
 	{
 		std::function<void(float)>& FuncRef = floatFunc.value().get();
 		FuncRef(point->Float);
 	}
-	auto intFunc = pAnimator3D->GetINT_EventFunc(wstrKey);
+	auto intFunc = pOwner->GetFuncPtrINT(wstrKey);
 	if (intFunc.has_value())
 	{
 		std::function<void(int)>& FuncRef = intFunc.value().get();
 		FuncRef(point->Int);
 	}
-	auto stringFunc = pAnimator3D->GetSTRING_EventFunc(wstrKey);
+	auto stringFunc = pOwner->GetFuncPtrSTRING(wstrKey);
 	if (stringFunc.has_value())
 	{
 		std::function<void(string)>& FuncRef = stringFunc.value().get();
 		FuncRef(point->String);
 	}
-	auto objFunc = pAnimator3D->GetOBJ_EventFunc(wstrKey);
+	auto objFunc = pOwner->GetFuncPtrOBJ(wstrKey);
 	if (objFunc.has_value())
 	{
 		std::function<void(CGameObject*)>& FuncRef = objFunc.value().get();

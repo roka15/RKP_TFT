@@ -348,4 +348,13 @@ struct PointerEventData
 	bool                bDrag;          //드래그 중인지.
 };
 
+struct t_FuncPtrList
+{
+	map<wstring, std::function<void()>>                  m_mapVoid;
+	map<wstring, std::function<void(float)>>             m_mapFloat;
+	map<wstring, std::function<void(int)>>               m_mapInt;
+	map<wstring, std::function<void(string)>>            m_mapString;
+	map<wstring, std::function<void(CGameObject*)>>      m_mapObj;
+};
+
 
