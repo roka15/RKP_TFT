@@ -16,6 +16,9 @@
 #include <Engine/CSetColorShader.h>
 #include <Engine\AnimatorController.h>
 #include <Engine\Transition.h>
+#include <Engine\CRenderMgr.h>
+
+
 
 #include <Script\CScriptMgr.h>
 #include <Script\CAStarMgr.h>
@@ -1148,7 +1151,6 @@ void CreateTestLevel()
 
 	}
 #pragma endregion
-
 
 #pragma endregion	
 }

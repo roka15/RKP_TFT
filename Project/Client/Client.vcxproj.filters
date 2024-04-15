@@ -128,6 +128,9 @@
     <Filter Include="UI\InspectorUI\ComponentUI\11.ButtonUI">
       <UniqueIdentifier>{6bbc4322-0872-4b9e-823e-e81c6c94eede}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\InspectorUI\ComponentUI\12.BillboardUI">
+      <UniqueIdentifier>{66929119-e8a9-497c-9304-2a69555f3bb4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -296,6 +299,9 @@
     <ClInclude Include="ButtonUI.h">
       <Filter>UI\InspectorUI\ComponentUI\11.ButtonUI</Filter>
     </ClInclude>
+    <ClInclude Include="BillbardUI.h">
+      <Filter>UI\InspectorUI\ComponentUI\12.BillboardUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -456,6 +462,9 @@
     </ClCompile>
     <ClCompile Include="ButtonUI.cpp">
       <Filter>UI\InspectorUI\ComponentUI\11.ButtonUI</Filter>
+    </ClCompile>
+    <ClCompile Include="BillbardUI.cpp">
+      <Filter>UI\InspectorUI\ComponentUI\12.BillboardUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

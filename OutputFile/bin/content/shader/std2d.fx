@@ -71,9 +71,74 @@ VS_OUT VS_Std2D_Inst(VTX_IN_INST _in)
 	return output;
 }
 
+struct GS_OUT
+{
+	float4  vPosition : SV_Position;
+	float2  vUV : TEXCOORD;
+};
+
+[maxvertexcount(6)]
+void GS_Billboard_Render(point VS_OUT _in[1], inout TriangleStream<GS_OUT> _outstream)
+{
+	float3 vViewPos = mul(_in[0].vPosition, g_matProjInv).xyz;
+	float4 Scale = g_vec4_0;
+
+	float3 NewPos[4] =
+	{
+		 float3(-Scale.x / 2.f, +Scale.y / 2.f, 0.f),
+		 float3(+Scale.x / 2.f, +Scale.y / 2.f, 0.f),
+		 float3(+Scale.x / 2.f, -Scale.y / 2.f, 0.f),
+		 float3(-Scale.x / 2.f, -Scale.y / 2.f, 0.f)
+	};
+
+	GS_OUT output[4] = { (GS_OUT)0.f, (GS_OUT)0.f, (GS_OUT)0.f, (GS_OUT)0.f };
+
+	output[0].vPosition = mul(float4(NewPos[0] + vViewPos, 1.f), g_matProj);
+	output[0].vUV = float2(0.f, 0.f);
+	
+	output[1].vPosition = mul(float4(NewPos[1] + vViewPos, 1.f), g_matProj);
+	output[1].vUV = float2(1.f, 0.f);
+	
+	output[2].vPosition = mul(float4(NewPos[2] + vViewPos, 1.f), g_matProj);
+	output[2].vUV = float2(1.f, 1.f);
+
+	output[3].vPosition = mul(float4(NewPos[3] + vViewPos, 1.f), g_matProj);
+	output[3].vUV = float2(0.f, 1.f);
+
+	_outstream.Append(output[0]);
+	_outstream.Append(output[1]);
+	_outstream.Append(output[2]);
+	_outstream.RestartStrip();
+
+	_outstream.Append(output[0]);
+	_outstream.Append(output[2]);
+	_outstream.Append(output[3]);
+	_outstream.RestartStrip();
+}
 
 // 레스터라이저 스테이트
 float4 PS_Std2D(VS_OUT _in) : SV_Target
+{
+	float4 vOutColor = g_vec4_0;
+
+	if (g_btex_0)
+	{
+		vOutColor = g_tex_0.Sample(g_sam_0, _in.vUV);
+	}
+	else
+	{
+		vOutColor = g_vec4_0;
+	}
+	//if (0.f == vOutColor.a)
+	//    discard; // 픽셀 쉐이더 중단
+
+	if (g_int_2 == 1)
+		vOutColor = float4(1.f, 0.f, 0.f, 1.f);
+
+	return vOutColor;
+}
+
+float4 PS_BillboardRender(GS_OUT _in) : SV_Target
 {
 	float4 vOutColor = g_vec4_0;
 

@@ -244,6 +244,9 @@
     <ClInclude Include="CUI.h">
       <Filter>Source\06. Component\9.UI</Filter>
     </ClInclude>
+    <ClInclude Include="CBillboard.h">
+      <Filter>Source\06. Component\RenderComponent\7.BillBoard</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -476,6 +479,9 @@
     </ClCompile>
     <ClCompile Include="CUI.cpp">
       <Filter>Source\06. Component\9.UI</Filter>
+    </ClCompile>
+    <ClCompile Include="CBillboard.cpp">
+      <Filter>Source\06. Component\RenderComponent\7.BillBoard</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -718,6 +724,9 @@
     </Filter>
     <Filter Include="Source\06. Component\9.UI\Text">
       <UniqueIdentifier>{ae408d8a-d843-4f6b-858b-639d62d96876}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\RenderComponent\7.BillBoard">
+      <UniqueIdentifier>{3df3228c-673f-4660-8799-1164f39267ae}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

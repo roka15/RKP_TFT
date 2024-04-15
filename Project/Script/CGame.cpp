@@ -2,7 +2,7 @@
 #include "CGame.h"
 #include <Engine\CTimeMgr.h>
 #include <Engine\CResMgr.h>
-
+#include <Engine\CRenderMgr.h>
 #include "CBaseCharacterScript.h"
 #include "CChMinionScript.h"
 #include "CPlayerScript.h"
@@ -150,6 +150,7 @@ void CGame::tick()
 	}
 	UpdateRoundUI(CompareTime);
 	UpdateShopUI();
+	UpdateCharacterUI();
 }
 
 void CGame::RegisterUser(int _iGameID, int _iIdx, CGameObject* _pObj)
@@ -416,6 +417,10 @@ void CGame::UpdateShopUI()
 	pImageObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::INT_0, &eGuageType);
 	pImageObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::FLOAT_0, &fCurExp);
 	pImageObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::FLOAT_1, &fMaxExp);
+}
+
+void CGame::UpdateCharacterUI()
+{
 }
 
 

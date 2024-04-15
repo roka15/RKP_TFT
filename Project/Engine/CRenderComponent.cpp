@@ -12,6 +12,15 @@ CRenderComponent::CRenderComponent(COMPONENT_TYPE _type)
 {
 }
 
+CRenderComponent::CRenderComponent(const CRenderComponent& _ref) : CComponent(_ref),
+m_pMesh(_ref.m_pMesh),
+m_vecMtrls(_ref.m_vecMtrls),
+m_fBounding(_ref.m_fBounding),
+m_bFrustumCheck(_ref.m_bFrustumCheck),
+m_bDynamicShadow(_ref.m_bDynamicShadow)
+{
+}
+
 CRenderComponent::~CRenderComponent()
 {
 }

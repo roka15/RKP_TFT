@@ -8,6 +8,7 @@
 
 #include "TransformUI.h"
 #include "MeshRenderUI.h"
+#include "BillbardUI.h"
 #include "Collider2DUI.h"
 #include "CameraUI.h"
 #include "Animator2DUI.h"
@@ -46,6 +47,10 @@ InspectorUI::InspectorUI()
 	m_arrComUI[(UINT)COMPONENT_TYPE::MESHRENDER] = new MeshRenderUI;
 	m_arrComUI[(UINT)COMPONENT_TYPE::MESHRENDER]->SetSize(0.f, 150.f);
 	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::MESHRENDER]);
+
+	m_arrComUI[(UINT)COMPONENT_TYPE::BILLBOARD] = new BillbardUI;
+	m_arrComUI[(UINT)COMPONENT_TYPE::BILLBOARD]->SetSize(0.f, 150.f);
+	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::BILLBOARD]);
 
 	m_arrComUI[(UINT)COMPONENT_TYPE::CAMERA] = new CameraUI;
 	m_arrComUI[(UINT)COMPONENT_TYPE::CAMERA]->SetSize(0.f, 150.f);

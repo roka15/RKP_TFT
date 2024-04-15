@@ -18,6 +18,7 @@
 #include "CSkyBox.h"
 #include "CDecal.h"
 #include "CLandscape.h"
+#include "CBillboard.h"
 
 #include "CUI.h"
 #include "CImage.h"

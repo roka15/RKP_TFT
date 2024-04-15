@@ -45,6 +45,7 @@ enum class COMPONENT_TYPE
 	SKYBOX,				// SkyBox
 	DECAL,				// ³»ºÎ ·»´õ¸µ
 	CANVASRENDER,       // ui ·»´õ¸µ
+	BILLBOARD,
 	
 	// ui
 	CANVAS,

@@ -15,6 +15,7 @@ class CLight3D;
 class CCamera;
 class CRenderComponent;
 class CSkyBox;
+class CBillboard;
 class CTileMap;
 class CDecal;
 class CLandScape;
@@ -76,6 +77,7 @@ public:
 	GET_COMPONENT(Animator2D, ANIMATOR2D);
 	GET_COMPONENT(Light3D, LIGHT3D);
 	GET_COMPONENT(SkyBox, SKYBOX);
+	GET_COMPONENT(Billboard, BILLBOARD);
 	GET_COMPONENT(Decal, DECAL);
 	GET_COMPONENT(LandScape, LANDSCAPE);
 	GET_COMPONENT(Text, TEXT);

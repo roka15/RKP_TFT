@@ -45,6 +45,10 @@ public:
 	void SetGameStateInfo();
     const int& GetLevel() { return m_Level; }
     const int& GetExp() { return m_CurExp; }
+
+    //temp 
+    CGameObject* GetItem(int _index) { return m_vecItem[_index]; }
+   
 public:
     CPlayerScript();
     ~CPlayerScript();

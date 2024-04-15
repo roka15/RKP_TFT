@@ -640,6 +640,33 @@ void CResMgr::CreateDefaultGraphicsShader()
 
 	AddRes(pShader->GetKey(), pShader);
 
+	// ============================
+	// Billboard Render
+	// 
+	// RS_TYPE : CULL_NONE
+	// DS_TYPE : NO_WRITE
+	// BS_TYPE : ALPHA_BLEND
+
+	// Parameter
+	// g_int_0 : Particle Index
+	// 
+	// Domain : TRANSPARENT
+	// ============================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"BillboardRenderShader");
+	pShader->CreateVertexShader(L"shader\\std2d.fx", "VS_Std2D");
+	pShader->CreateGeometryShader(L"shader\\std2d.fx", "GS_Billboard_Render");
+	pShader->CreatePixelShader(L"shader\\std2d.fx", "PS_BillboardRender");
+
+	pShader->SetRSType(RS_TYPE::CULL_NONE);
+	//pShader->SetRSType(RS_TYPE::WIRE_FRAME);
+	pShader->SetDSType(DS_TYPE::NO_WRITE);
+	pShader->SetBSType(BS_TYPE::ALPHA_BLEND);
+	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_TRANSPARENT);
+
+	AddRes(pShader->GetKey(), pShader);
 
 	// ============================
 	// ParticleRender
@@ -1078,7 +1105,11 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"TileMapShader"));
 	AddRes(L"TileMapMtrl", pMtrl);
-
+	
+	//Billboard Render Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"BillboardRenderShader"));
+	AddRes(L"BillboardRenderMtrl", pMtrl);
 	// Particle Render Material
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"ParticleRenderShader"));
