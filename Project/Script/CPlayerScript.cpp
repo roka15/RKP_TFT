@@ -5,6 +5,7 @@
 #include <Engine\CMaterial.h>
 #include <Engine\CMouseMgr.h>
 #include "CTileMgr.h"
+#include "CGameMgr.h"
 
 #include "CMissileScript.h"
 #include "CBaseCharacterScript.h"
@@ -47,7 +48,8 @@ void CPlayerScript::SetGameStateInfo()
 CPlayerScript::CPlayerScript()
 	: CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT)
 	, m_fSpeed(500.f)
-	, m_Money(100)
+	, m_Money(50)
+	, m_Level(1)
 {
 	AddScriptParam(SCRIPT_PARAM::FLOAT, &m_fSpeed, "Player Speed");
 }
@@ -96,7 +98,7 @@ void CPlayerScript::RegisterFuncPtr()
 
 void CPlayerScript::BuyExp()
 {
-	int a = 0;
+	CGameMgr::GetInst()->BuyExp(m_CurExp, m_Level,m_Money);
 }
 
 void CPlayerScript::VoidTest()

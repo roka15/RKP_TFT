@@ -355,3 +355,9 @@ enum class CURSOR_TYPE
 	CURSOR_3D,
 	END,
 };
+
+enum class GUAGE_TYPE
+{
+	LEFT, // Left 부터 discard
+	RIGHT,// Right 부터 discard
+};

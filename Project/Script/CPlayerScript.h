@@ -12,6 +12,8 @@ private:
     int                             m_Money;
     vector<CGameObject*>            m_vecItem;
     PLAYER_TYPE                     m_ePlayerType;
+    int                             m_CurExp;
+    int                             m_Level;
 public:
     virtual void start()override;
     virtual void begin() override;
@@ -41,6 +43,8 @@ public:
     void SetPlayerType(PLAYER_TYPE _eType) { m_ePlayerType = _eType; }
     PLAYER_TYPE GetPlayerType() { return m_ePlayerType; }
 	void SetGameStateInfo();
+    const int& GetLevel() { return m_Level; }
+    const int& GetExp() { return m_CurExp; }
 public:
     CPlayerScript();
     ~CPlayerScript();

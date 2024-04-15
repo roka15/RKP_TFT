@@ -25,8 +25,18 @@ CGameMgr::~CGameMgr()
 		m_vecGames[i] = nullptr;
 	}
 }
+void CGameMgr::LoadGameInfo()
+{
+	m_SharedGameInfo.mapLevelMaxExp.insert(std::make_pair(1,1));
+	m_SharedGameInfo.mapLevelMaxExp.insert(std::make_pair(2, 3));
+	m_SharedGameInfo.mapLevelMaxExp.insert(std::make_pair(3, 6));
+
+	m_SharedGameInfo.ExpUpCost = 4;
+	m_SharedGameInfo.RefreshCost = 2;
+}
 void CGameMgr::init()
 {
+	LoadGameInfo();
 	CreateCharacterPrefabs();
 	for (int i = 0; i < m_vecGames.size(); ++i)
 	{
@@ -90,6 +100,23 @@ int CGameMgr::GetState()
 bool CGameMgr::BuyItem(int _iGameID, CHARACTER_TYPE _eType, CGameObject* _pPlayer)
 {
 	return m_vecGames[_iGameID]->BuyItem(_eType,_pPlayer);
+}
+
+bool CGameMgr::BuyExp(int& _iCurExp, int& _iLevel, int& _iMoney)
+{
+	auto itr= m_SharedGameInfo.mapLevelMaxExp.find(_iLevel);
+	if (itr == m_SharedGameInfo.mapLevelMaxExp.end())
+		return false;
+	int iMaxExp = m_SharedGameInfo.mapLevelMaxExp[_iLevel];
+	++_iCurExp;
+	_iMoney -= m_SharedGameInfo.ExpUpCost;
+	if (_iCurExp >= iMaxExp)
+	{
+		_iCurExp -= iMaxExp;
+		++_iLevel;
+		return true;
+	}
+	return false;
 }
 
 void CGameMgr::DeathMinion(int _iGameID, CGameObject* _pMinion)

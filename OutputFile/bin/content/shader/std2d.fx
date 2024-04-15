@@ -96,14 +96,26 @@ float4 PS_Std2D(VS_OUT _in) : SV_Target
 
 float4 PS_Std2D_GaugeUI(VS_OUT _in) : SV_Target
 {
+	int   Mode = g_int_0;
 	float4 vOutColor = g_vec4_0;
-	float CurTime = g_float_0;
-	float GoalTime = g_float_1;
+	float CurValue = g_float_0;
+	float GoalValue = g_float_1;
 
-	float Ratio = (1 - (CurTime / GoalTime));
+	
+	float Ratio = 0.f;
 
-	if (_in.vUV.x <= Ratio)
-		discard;
+	if (Mode == 0)
+	{
+		Ratio = (1 - (CurValue / GoalValue));
+		if (_in.vUV.x <= Ratio)
+			discard;
+	}
+	else if(Mode == 1)
+	{
+		Ratio = (CurValue / GoalValue);
+		if (_in.vUV.x >= Ratio)
+			discard;
+	}
 
 
 	if (g_btex_0)

@@ -1019,6 +1019,7 @@ void CreateTestLevel()
 		pTextObj->Text()->SetColor(Vec4(255.f, 255.f, 255.f, 255.f));
 		pTextObj->Transform()->SetRelativePos(98.f, 595.f, 0.f);
 		pShopUI->AddChild(pTextObj);
+		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"LEVEL_TEXT", pTextObj);
 
 		pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Text");
 		pTextObj = pPrefab->Instantiate();
@@ -1030,7 +1031,7 @@ void CreateTestLevel()
 		pTextObj->Text()->SetColor(Vec4(255.f, 255.f, 255.f, 255.f));
 		pTextObj->Transform()->SetRelativePos(237.f, 606.f, 0.f);
 		pShopUI->AddChild(pTextObj);
-
+		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"EXP_TEXT", pTextObj);
 
 		pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Text");
 		pTextObj = pPrefab->Instantiate();
@@ -1042,6 +1043,7 @@ void CreateTestLevel()
 		pTextObj->Text()->SetColor(Vec4(255.f, 255.f, 255.f, 255.f));
 		pTextObj->Transform()->SetRelativePos(654.f, 602.f, 0.f);
 		pShopUI->AddChild(pTextObj);
+		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"GOLD_TEXT", pTextObj);
 
 		pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Button");
 		CGameObject* pImageObj8 = pPrefab->Instantiate();
@@ -1076,6 +1078,7 @@ void CreateTestLevel()
 		pTextObj->Text()->SetColor(Vec4(255.f, 255.f, 255.f, 255.f));
 		pTextObj->Transform()->SetRelativePos(143.f, 672.f, 0.f);
 		pImageObj8->AddChild(pTextObj);
+		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"EXP_COST_TEXT", pTextObj);
 
 		pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Button");
 		CGameObject* pImageObj9 = pPrefab->Instantiate();
@@ -1109,6 +1112,7 @@ void CreateTestLevel()
 		pTextObj->Text()->SetColor(Vec4(255.f, 255.f, 255.f, 255.f));
 		pTextObj->Transform()->SetRelativePos(143.f, 735.f, 0.f);
 		pImageObj9->AddChild(pTextObj);
+		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"REFRESH_COST_TEXT", pTextObj);
 
 		CGameObject* pImageObj10= new CGameObject();
 		pImageObj10->SetName(L"Image10");
@@ -1121,6 +1125,27 @@ void CreateTestLevel()
 		pImageObj10->Transform()->SetRelativePos(541.f, -224.f, 0.f);
 		pImageObj10->Transform()->SetRelativeScale(70.f, 40.f, 0.f);
 		pShopUI->AddChild(pImageObj10);
+
+
+		wstring MtrlName = L"material\\UI_ShopExpGauge.mtrl";
+		Ptr<CMaterial> pMaterial = CResMgr::GetInst()->FindRes<CMaterial>(MtrlName);
+		if (pMaterial == nullptr)
+		{
+			pMaterial = new CMaterial();
+			pMaterial->SetShader(CResMgr::GetInst()->FindRes<CGraphicsShader>(L"Std2DGaugeUIShader"));
+			CResMgr::GetInst()->AddRes<CMaterial>(MtrlName, pMaterial);
+			pMaterial->Save(MtrlName);
+		}
+		pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Image");
+		CGameObject* pImageObj11 = pPrefab->Instantiate();
+		pImageObj11->SetName(L"Image10");
+		pImageObj11->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(MtrlName), 0);
+		pImageObj11->Image()->SetNormalTexKey(L"texture\\UI\\Hud\\UI_ExpGauge.png");
+		pImageObj11->Transform()->SetRelativePos(-459.f, -243.f, 0.f);
+		pImageObj11->Transform()->SetRelativeScale(164.f, 4.f, 0.f);
+		pShopUI->AddChild(pImageObj11);
+		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"EXP_GAUGE_IMAGE", pImageObj11);
+
 	}
 #pragma endregion
 

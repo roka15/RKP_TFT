@@ -7,6 +7,8 @@
 #include "CChMinionScript.h"
 #include "CPlayerScript.h"
 #include "CTileMgr.h"
+#include "CGameMgr.h"
+
 int CGame::CanEnter()
 {
 	for (int i = 0; i < m_vecUsers.size(); ++i)
@@ -147,6 +149,7 @@ void CGame::tick()
 		SendGameState((UINT)m_eGameState);
 	}
 	UpdateRoundUI(CompareTime);
+	UpdateShopUI();
 }
 
 void CGame::RegisterUser(int _iGameID, int _iIdx, CGameObject* _pObj)
@@ -353,6 +356,8 @@ void CGame::UpdateRoundUI(float _fCompare)
 	pRoundText->SetText(std::to_wstring(firstNum) + L" - " + std::to_wstring(secondNum));
 
 	CGameObject* pTimeGaugeObj = m_mapUIObjs[L"TIMER_IMAGE"];
+	GUAGE_TYPE eGuageType = GUAGE_TYPE::LEFT;
+	pTimeGaugeObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::INT_0, &eGuageType);
 	pTimeGaugeObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::FLOAT_0, &fTime);
 	pTimeGaugeObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::FLOAT_1, &_fCompare);
 
@@ -370,6 +375,47 @@ void CGame::UpdateRoundUI(float _fCompare)
 	
 	pCurRound->Image()->SetActiveImage(true);
 	pBeforRound->Image()->SetActiveImage(false);
+}
+
+void CGame::UpdateShopUI()
+{
+	CGameObject* pClientPlayer = CGameMgr::GetInst()->GetClient();
+	CPlayerScript* pPlayerScript = pClientPlayer->GetScript<CPlayerScript>();
+	if (pPlayerScript == nullptr)
+		return;
+	CGameObject* pGoldObj = m_mapUIObjs[L"GOLD_TEXT"]; 
+	int iGold = pPlayerScript->GetMoney();
+	CText* pGoldText = pGoldObj->Text();
+	pGoldText->SetText(std::to_wstring(iGold));
+
+	const int& iExpCost = CGameMgr::GetInst()->GetExpCost();
+	CGameObject* pTextObj = m_mapUIObjs[L"EXP_COST_TEXT"];
+	CText* pText = pTextObj->Text();
+	pText->SetText(std::to_wstring(iExpCost));
+
+	const int& iRefreshCost = CGameMgr::GetInst()->GetRefreshCost();
+	pTextObj = m_mapUIObjs[L"REFRESH_COST_TEXT"];
+	pText = pTextObj->Text();
+	pText->SetText(std::to_wstring(iRefreshCost));
+
+	const int& iLevel = pPlayerScript->GetLevel();
+	pTextObj = m_mapUIObjs[L"LEVEL_TEXT"];
+	pText = pTextObj->Text();
+	pText->SetText(std::to_wstring(iLevel) + L"Level");
+
+	const int& iMaxExp = CGameMgr::GetInst()->GetCurMaxExp(iLevel);
+	const int& iCurExp = pPlayerScript->GetExp();
+	pTextObj = m_mapUIObjs[L"EXP_TEXT"];
+	pText = pTextObj->Text();
+	pText->SetText(std::to_wstring(iCurExp)+ L"/"+std::to_wstring(iMaxExp));
+
+	float fMaxExp = (float)iMaxExp;
+	float fCurExp = (float)iCurExp;
+	GUAGE_TYPE eGuageType = GUAGE_TYPE::RIGHT;
+	CGameObject* pImageObj = m_mapUIObjs[L"EXP_GAUGE_IMAGE"]; 
+	pImageObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::INT_0, &eGuageType);
+	pImageObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::FLOAT_0, &fCurExp);
+	pImageObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::FLOAT_1, &fMaxExp);
 }
 
 
