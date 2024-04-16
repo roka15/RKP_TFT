@@ -38,7 +38,6 @@ private:
     void DespawnMinion(CGameObject* _pObj);
     void UpdateRoundUI(float _fCompare);
     void UpdateShopUI();
-    void UpdateCharacterUI();
 public:
     void SetGameID(int _iID) { m_GameID = _iID; }
     const int& GetGameID() { return m_GameID; }

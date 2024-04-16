@@ -20,6 +20,7 @@ CBaseCharacterScript::CBaseCharacterScript() :
 {
 	m_ChStatus.fAttackRange = 1;
 	m_ChStatus.iHp = 40;
+	m_ChStatus.iMaxHp = 40;
 	m_ChStatus.dCurUltGauge = 0;
 	m_ChStatus.dAddUltGauge = 10;
 	m_ChStatus.dMinusUltGauge = 10;
@@ -33,6 +34,7 @@ CBaseCharacterScript::CBaseCharacterScript(SCRIPT_TYPE _eType) :
 {
 	m_ChStatus.fAttackRange = 1;
 	m_ChStatus.iHp = 40;
+	m_ChStatus.iMaxHp = 40;
 	m_ChStatus.dCurUltGauge = 0;
 	m_ChStatus.dAddUltGauge = 10;
 	m_ChStatus.dMinusUltGauge = 10;
@@ -48,6 +50,7 @@ CBaseCharacterScript::CBaseCharacterScript(const CBaseCharacterScript& _ref)
 {
 	m_ChStatus.fAttackRange = 1;
 	m_ChStatus.iHp = 40;
+	m_ChStatus.iMaxHp = 40;
 	m_ChStatus.dCurUltGauge = 0;
 	m_ChStatus.dAddUltGauge = 10;
 	m_ChStatus.dMinusUltGauge = 10;
@@ -64,7 +67,7 @@ void CBaseCharacterScript::start()
 {
 	RegisterFuncPtr();
 
-	m_ChStatus.iHp = 40;
+	m_ChStatus.iHp = m_ChStatus.iMaxHp;
 	m_ChStatus.dCurUltGauge = 0;
 	BattleStateReset();
 }
@@ -99,6 +102,7 @@ void CBaseCharacterScript::tick()
 		break;
 	}
 
+	UpdateCharacterUI();
 }
 
 void CBaseCharacterScript::BeginOverlap(CCollider* _Other)
@@ -344,6 +348,31 @@ void CBaseCharacterScript::ChangeTransInfo()
 	}
 }
 
+void CBaseCharacterScript::UpdateCharacterUI()
+{
+	CGameObject* pHPGauge = GetOwner()->GetChild(L"HPBar");
+	if (pHPGauge)
+	{
+		GAUGE_TYPE eGaugeType = GAUGE_TYPE::RIGHT;
+		float fCur = (float)m_ChStatus.iHp;
+		float fMax = (float)m_ChStatus.iMaxHp;
+		pHPGauge->GetRenderComponent()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::INT_0, &eGaugeType);
+		pHPGauge->GetRenderComponent()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::FLOAT_0, &fCur);
+		pHPGauge->GetRenderComponent()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::FLOAT_1, &fMax);
+	}
+	CGameObject* pMPGauge = GetOwner()->GetChild(L"MPBar");
+	if (pMPGauge)
+	{
+		GAUGE_TYPE eGaugeType = GAUGE_TYPE::RIGHT;
+		float fCur = (float)m_ChStatus.dCurUltGauge;
+		float fMax = (float)m_ChStatus.dMaxUltGauge;
+		pMPGauge->GetRenderComponent()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::INT_0, &eGaugeType);
+		pMPGauge->GetRenderComponent()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::FLOAT_0, &fCur);
+		pMPGauge->GetRenderComponent()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::FLOAT_1, &fMax);
+	}
+
+}
+
 void CBaseCharacterScript::Battle(CGameObject* _pTileObj)
 {
 	CTileScript* pTileScript = _pTileObj->GetScript<CTileScript>();
@@ -384,7 +413,7 @@ void CBaseCharacterScript::Battle(CGameObject* _pTileObj)
 		//test를 위해 항상 검사 - 경로 타일 색깔 바뀌게 하기 위함
 		vector<int> Route = CAStarMgr::GetInst()->GetNextNodeAStar(startNumber, endNumber);
 		//if (bClientFlag)
-			CTileMgr::GetInst()->BattleRouteRender(m_iMoveTargetNum - BattleOffset);
+		CTileMgr::GetInst()->BattleRouteRender(m_iMoveTargetNum - BattleOffset);
 		//move
 		//방향은 다음 타일을 바라보고 움직이기.
 		//목표 지점까지 이동이 완료 될 때까지는 검사 X

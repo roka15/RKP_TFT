@@ -52,6 +52,17 @@ void CGame::init()
 		else
 		{
 			CGameObject* obj = prefab->Instantiate();
+			CGameObject* MPBarGauge = obj->GetChild(L"MPBar");
+			wstring MtrlName = L"material\\UI_AttroxMP" + std::to_wstring(i) + L".mtrl";
+			Ptr<CMaterial> pMaterial = CResMgr::GetInst()->FindRes<CMaterial>(MtrlName);
+			if (pMaterial == nullptr)
+			{
+				pMaterial = new CMaterial();
+				pMaterial->SetShader(CResMgr::GetInst()->FindRes<CGraphicsShader>(L"BillboardRenderShader"));
+				CResMgr::GetInst()->AddRes<CMaterial>(MtrlName, pMaterial);
+				pMaterial->Save(MtrlName);
+			}
+			MPBarGauge->GetRenderComponent()->SetMaterial(pMaterial, 0);
 			m_mapShop[eType].push(obj);
 		}
 	}
@@ -150,7 +161,6 @@ void CGame::tick()
 	}
 	UpdateRoundUI(CompareTime);
 	UpdateShopUI();
-	UpdateCharacterUI();
 }
 
 void CGame::RegisterUser(int _iGameID, int _iIdx, CGameObject* _pObj)
@@ -274,17 +284,47 @@ void CGame::CreateMinion()
 			m_DespawnMinion.push(obj);
 			pMinionContainer->AddChild(obj);
 
-			vector<CGameObject*> vecChild = obj->GetChild();
-			for (int j = 0; j < vecChild.size(); ++j)
+			CGameObject* HPBarGauge = obj->GetChild(L"HPBar");
+			if (HPBarGauge)
 			{
-				if (vecChild[j]->GetName().compare(L"HPBarBG") == 0)
+				HPBarGauge->Image()->SetActiveImage(true);
+				Vec3 v3Pos = HPBarGauge->Transform()->GetRelativePos();
+				v3Pos.x *= -1;
+				HPBarGauge->Transform()->SetRelativePos(v3Pos);
+				wstring MtrlName = L"material\\UI_ZedHP" + std::to_wstring(i) + L".mtrl";
+				Ptr<CMaterial> pMaterial = CResMgr::GetInst()->FindRes<CMaterial>(MtrlName);
+				if (pMaterial == nullptr)
 				{
-					CGameObject* HPBarGauge = vecChild[j]->GetChild()[0];
-					Vec3 v3Pos = HPBarGauge->Transform()->GetRelativePos();
-					v3Pos.x *= -1;
-					HPBarGauge->Transform()->SetRelativePos(v3Pos);
+					pMaterial = new CMaterial();
+					pMaterial->SetShader(CResMgr::GetInst()->FindRes<CGraphicsShader>(L"BillboardRenderShader"));
+					CResMgr::GetInst()->AddRes<CMaterial>(MtrlName, pMaterial);
+					pMaterial->Save(MtrlName);
 				}
+				HPBarGauge->GetRenderComponent()->SetMaterial(pMaterial, 0);
 			}
+			CGameObject* MPBarBG = obj->GetChild(L"MPBarBG");
+			if (MPBarBG)
+			{
+				Vec3 v3Pos = MPBarBG->Transform()->GetRelativePos();
+				v3Pos.x *= -1;
+				v3Pos.z *= -1;
+				MPBarBG->Transform()->SetRelativePos(v3Pos);
+			}
+			CGameObject* MPBarGauge = obj->GetChild(L"MPBar");
+			if (MPBarGauge)
+			{
+				wstring MtrlName = L"material\\UI_ZedMP" + std::to_wstring(i) + L".mtrl";
+				Ptr<CMaterial> pMaterial = CResMgr::GetInst()->FindRes<CMaterial>(MtrlName);
+				if (pMaterial == nullptr)
+				{
+					pMaterial = new CMaterial();
+					pMaterial->SetShader(CResMgr::GetInst()->FindRes<CGraphicsShader>(L"BillboardRenderShader"));
+					CResMgr::GetInst()->AddRes<CMaterial>(MtrlName, pMaterial);
+					pMaterial->Save(MtrlName);
+				}
+				MPBarGauge->GetRenderComponent()->SetMaterial(pMaterial, 0);
+			}
+
 		}
 
 		const int iMinionRoundCnt = 3;
@@ -385,7 +425,7 @@ void CGame::UpdateRoundUI(float _fCompare)
 	Vec3 v3CursorPos = pRoundCursor->Transform()->GetRelativePos();
 	v3CursorPos.x = v3RoundPos.x;
 	pRoundCursor->Transform()->SetRelativePos(v3CursorPos);
-	
+
 	pCurRound->Image()->SetActiveImage(true);
 	pBeforRound->Image()->SetActiveImage(false);
 }
@@ -396,7 +436,7 @@ void CGame::UpdateShopUI()
 	CPlayerScript* pPlayerScript = pClientPlayer->GetScript<CPlayerScript>();
 	if (pPlayerScript == nullptr)
 		return;
-	CGameObject* pGoldObj = m_mapUIObjs[L"GOLD_TEXT"]; 
+	CGameObject* pGoldObj = m_mapUIObjs[L"GOLD_TEXT"];
 	int iGold = pPlayerScript->GetMoney();
 	CText* pGoldText = pGoldObj->Text();
 	pGoldText->SetText(std::to_wstring(iGold));
@@ -420,20 +460,17 @@ void CGame::UpdateShopUI()
 	const int& iCurExp = pPlayerScript->GetExp();
 	pTextObj = m_mapUIObjs[L"EXP_TEXT"];
 	pText = pTextObj->Text();
-	pText->SetText(std::to_wstring(iCurExp)+ L"/"+std::to_wstring(iMaxExp));
+	pText->SetText(std::to_wstring(iCurExp) + L"/" + std::to_wstring(iMaxExp));
 
 	float fMaxExp = (float)iMaxExp;
 	float fCurExp = (float)iCurExp;
 	GAUGE_TYPE eGuageType = GAUGE_TYPE::RIGHT;
-	CGameObject* pImageObj = m_mapUIObjs[L"EXP_GAUGE_IMAGE"]; 
+	CGameObject* pImageObj = m_mapUIObjs[L"EXP_GAUGE_IMAGE"];
 	pImageObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::INT_0, &eGuageType);
 	pImageObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::FLOAT_0, &fCurExp);
 	pImageObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::FLOAT_1, &fMaxExp);
 }
 
-void CGame::UpdateCharacterUI()
-{
-}
 
 
 CGame::CGame()

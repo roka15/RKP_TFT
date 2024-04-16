@@ -146,6 +146,7 @@ void CGameMgr::CreateCharacterPrefabs()
 	HPBar->AddComponent(new CImage());
 	HPBar->Billboard()->SetGaugeOption(GAUGE_TYPE::RIGHT);
 	HPBar->Image()->SetNormalTexKey(L"texture\\UI\\Hud\\UI_ClientHPBar.png");
+	HPBar->Image()->SetEnableTexKey(L"texture\\UI\\Hud\\UI_EnemyHPbar.png");
 	HPBar->Transform()->SetRelativeScale(270.f, 17.f, 0.f);
 	HPBar->Transform()->SetRelativePos(Vec3(-0.065f, 0.f, 0.f));
 	HPBarBackGround->AddChild(HPBar);
@@ -153,6 +154,31 @@ void CGameMgr::CreateCharacterPrefabs()
 	pHPBarBG->RegisterProtoObject(HPBarBackGround);
 	CResMgr::GetInst()->AddRes<CPrefab>(L"Billboard_HPBar", pHPBarBG);
 #pragma endregion
+#pragma region MPBar Prefab
+	CGameObject* MPBarBackGround = new CGameObject();
+	MPBarBackGround->AddComponent(new CTransform());
+	MPBarBackGround->AddComponent(new CBillboard());
+	MPBarBackGround->AddComponent(new CImage());
+
+	MPBarBackGround->SetName(L"MPBarBG");
+	MPBarBackGround->Image()->SetNormalTexKey(L"texture\\UI\\Hud\\UI_MPBackGround.png");
+	MPBarBackGround->Transform()->SetRelativeScale(256.f, 20.f, 0.f);
+	MPBarBackGround->Transform()->SetRelativePos(Vec3(-24.f, 250.f, 18.f));
+	CGameObject* MPBar = new CGameObject();
+	MPBar->SetName(L"MPBar");
+	MPBar->AddComponent(new CTransform());
+	MPBar->AddComponent(new CBillboard());
+	MPBar->AddComponent(new CImage());
+	MPBar->Billboard()->SetGaugeOption(GAUGE_TYPE::RIGHT);
+	MPBar->Image()->SetNormalTexKey(L"texture\\UI\\Hud\\UI_MPbar.png");
+	MPBar->Transform()->SetRelativeScale(245.f, 17.f, 0.f);
+	MPBar->Transform()->SetRelativePos(Vec3(0.0f, 0.f, 0.f));
+	MPBarBackGround->AddChild(MPBar);
+	Ptr<CPrefab> pMPBarBG = new CPrefab();
+	pMPBarBG->RegisterProtoObject(MPBarBackGround);
+	CResMgr::GetInst()->AddRes<CPrefab>(L"Billboard_MPBar", pMPBarBG);
+#pragma endregion
+
 #pragma region Zed Prefab
 	pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Zed.fbx");
 	pObj = nullptr;
@@ -251,7 +277,9 @@ void CGameMgr::CreateCharacterPrefabs()
 #pragma endregion
 
 	CGameObject* pZedHPBG = pHPBarBG->Instantiate();
+	CGameObject* pZedMPBG = pMPBarBG->Instantiate();
 	pObj->AddChild(pZedHPBG);
+	pObj->AddChild(pZedMPBG);
 
 	CPrefab* CH_Zed = new CPrefab();
 	CH_Zed->RegisterProtoObject(pObj);
@@ -470,7 +498,9 @@ void CGameMgr::CreateCharacterPrefabs()
 	pObj->Animator3D()->SetController(pAniController);
 
 	CGameObject* pAttroxHPBG = pHPBarBG->Instantiate();
+	CGameObject* pAttroxMPBG = pMPBarBG->Instantiate();
 	pObj->AddChild(pAttroxHPBG);
+	pObj->AddChild(pAttroxMPBG);
 
 	CPrefab* CH_Attrox = new CPrefab();
 	CH_Attrox->RegisterProtoObject(pObj);

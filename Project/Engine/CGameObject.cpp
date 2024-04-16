@@ -217,6 +217,20 @@ void CGameObject::AddChild(CGameObject* _Object)
 	m_vecChild.push_back(_Object);
 }
 
+CGameObject* CGameObject::GetChild(wstring _strName)
+{
+	for (int i = 0; i < m_vecChild.size(); ++i)
+	{
+		if (m_vecChild[i]->GetName().compare(_strName) == 0)
+			return m_vecChild[i];
+		CGameObject* pObj = m_vecChild[i]->GetChild(_strName);
+		if (pObj != nullptr)
+			return pObj;
+	}
+
+	return nullptr;
+}
+
 
 bool CGameObject::IsAncestor(CGameObject* _Target)
 {

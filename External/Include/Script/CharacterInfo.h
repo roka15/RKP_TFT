@@ -36,4 +36,5 @@ struct tCharacterStatus
 	float	 fAttackRange;		//사거리
 	float	 fMoveSpeed;		//이동 속도
 	int	     iHp;
+	int		 iMaxHp;
 };

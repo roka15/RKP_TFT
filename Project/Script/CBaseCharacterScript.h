@@ -18,7 +18,7 @@ private:
 	Vec2                m_v2Dir;
 private:
 	void ChangeTransInfo();
-
+	void UpdateCharacterUI();
 	void AddULTGauge();
 public:
 	virtual void start()override;
