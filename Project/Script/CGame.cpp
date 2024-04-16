@@ -30,7 +30,7 @@ void CGame::init()
 		CPlayerScript* pPlayerScript = m_pAIPlayer->GetScript<CPlayerScript>();
 		pPlayerScript->SetPlayerType(PLAYER_TYPE::AI);
 		pPlayerScript->SetGameID(m_GameID);
-		SpawnGameObject(m_pAIPlayer, Vec3(0.f, 0.f, 0.f), 0);
+		SpawnGameObject(m_pAIPlayer, Vec3(0.f, 0.f, 0.f), 2);
 	}
 	m_vecUsers.resize(m_iUserCnt);
 	Ptr<CPrefab> prefab;
@@ -258,7 +258,7 @@ void CGame::CreateMinion()
 
 
 		pMinionContainer->SetName(L"MinionContainer");
-		SpawnGameObject(pMinionContainer, Vec3{ 0.f,-1000.f,0.f }, 30);
+		SpawnGameObject(pMinionContainer, Vec3{ 0.f,-1000.f,0.f }, 1);
 
 		Ptr<CPrefab> prefab;
 		CHARACTER_TYPE eType;
@@ -273,6 +273,18 @@ void CGame::CreateMinion()
 			pPlayer->AddItem(obj);
 			m_DespawnMinion.push(obj);
 			pMinionContainer->AddChild(obj);
+
+			vector<CGameObject*> vecChild = obj->GetChild();
+			for (int j = 0; j < vecChild.size(); ++j)
+			{
+				if (vecChild[j]->GetName().compare(L"HPBarBG") == 0)
+				{
+					CGameObject* HPBarGauge = vecChild[j]->GetChild()[0];
+					Vec3 v3Pos = HPBarGauge->Transform()->GetRelativePos();
+					v3Pos.x *= -1;
+					HPBarGauge->Transform()->SetRelativePos(v3Pos);
+				}
+			}
 		}
 
 		const int iMinionRoundCnt = 3;
@@ -357,7 +369,7 @@ void CGame::UpdateRoundUI(float _fCompare)
 	pRoundText->SetText(std::to_wstring(firstNum) + L" - " + std::to_wstring(secondNum));
 
 	CGameObject* pTimeGaugeObj = m_mapUIObjs[L"TIMER_IMAGE"];
-	GUAGE_TYPE eGuageType = GUAGE_TYPE::LEFT;
+	GAUGE_TYPE eGuageType = GAUGE_TYPE::LEFT;
 	pTimeGaugeObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::INT_0, &eGuageType);
 	pTimeGaugeObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::FLOAT_0, &fTime);
 	pTimeGaugeObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::FLOAT_1, &_fCompare);
@@ -412,7 +424,7 @@ void CGame::UpdateShopUI()
 
 	float fMaxExp = (float)iMaxExp;
 	float fCurExp = (float)iCurExp;
-	GUAGE_TYPE eGuageType = GUAGE_TYPE::RIGHT;
+	GAUGE_TYPE eGuageType = GAUGE_TYPE::RIGHT;
 	CGameObject* pImageObj = m_mapUIObjs[L"EXP_GAUGE_IMAGE"]; 
 	pImageObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::INT_0, &eGuageType);
 	pImageObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::FLOAT_0, &fCurExp);
@@ -431,9 +443,9 @@ CGame::CGame()
 	m_fStartTime(0.f),
 	m_fCurTime(0.f),
 	m_fSelectTime(10.f),
-	m_fBettleTime(10.f),
+	m_fBettleTime(60.f),
 	m_fItemTime(30.f),
-	m_fLoadingTime(10.f),
+	m_fLoadingTime(5.f),
 	m_bFirstLoading(false),
 	m_iRoundMax(3)
 {

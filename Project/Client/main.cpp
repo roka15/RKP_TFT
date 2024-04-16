@@ -61,7 +61,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     ClientMgrInit();
     // 테스트 용 레벨 생성
     CreateTestLevel();
-
+    CEngine::GetInst()->init();
+    ImGuiMgr::GetInst()->progress();
     // 메세지 루프
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));
     MSG msg;

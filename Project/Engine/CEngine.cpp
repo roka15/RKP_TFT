@@ -87,6 +87,12 @@ int CEngine::init(HWND _hWnd, UINT _iWidth, UINT _iHeight)
 	return S_OK;
 }
 
+void CEngine::init()
+{
+	CEventMgr::GetInst()->tick();
+	return;
+}
+
 void CEngine::progress()
 {
 	// 엔진 매니저 및 레벨, 오브젝트 논리구조 실행

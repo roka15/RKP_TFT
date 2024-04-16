@@ -26,6 +26,7 @@ class ButtonUI :
 private:
     int     m_iCurObjIdx;
     int     m_iCurFuncIdx;
+    wstring m_wstrCurObject;
 
     int     m_iObjParamIdx;
     int     m_iIntParam;

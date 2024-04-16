@@ -139,6 +139,16 @@ void CGameMgr::CreateCharacterPrefabs()
 	HPBarBackGround->Image()->SetNormalTexKey(L"texture\\UI\\Hud\\UI_ClientHPBackGround.png");
 	HPBarBackGround->Transform()->SetRelativeScale(380.f, 50.f, 0.f);
 	HPBarBackGround->Transform()->SetRelativePos(Vec3(0.f, 250.f, 0.f));
+	CGameObject* HPBar = new CGameObject();
+	HPBar->SetName(L"HPBar");
+	HPBar->AddComponent(new CTransform());
+	HPBar->AddComponent(new CBillboard());
+	HPBar->AddComponent(new CImage());
+	HPBar->Billboard()->SetGaugeOption(GAUGE_TYPE::RIGHT);
+	HPBar->Image()->SetNormalTexKey(L"texture\\UI\\Hud\\UI_ClientHPBar.png");
+	HPBar->Transform()->SetRelativeScale(270.f, 17.f, 0.f);
+	HPBar->Transform()->SetRelativePos(Vec3(-0.065f, 0.f, 0.f));
+	HPBarBackGround->AddChild(HPBar);
 	Ptr<CPrefab> pHPBarBG = new CPrefab();
 	pHPBarBG->RegisterProtoObject(HPBarBackGround);
 	CResMgr::GetInst()->AddRes<CPrefab>(L"Billboard_HPBar", pHPBarBG);

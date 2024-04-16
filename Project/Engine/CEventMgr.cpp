@@ -80,9 +80,13 @@ void CEventMgr::tick()
 
 			m_LevelChanged = true;
 		}
-			
+			break;
 
-		
+		case EVENT_TYPE::CHANGE_ADD_CHILD:
+		{
+			m_LevelChanged = true;
+		}
+
 			break;
 		case EVENT_TYPE::DELETE_RESOURCE:
 			// wParam : RES_TYPE, lParam : Resource Adress

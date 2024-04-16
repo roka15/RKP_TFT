@@ -12,6 +12,7 @@
 
 #include "CRenderComponent.h"
 #include "CKeyMgr.h"
+#include "CEventMgr.h"
 
 CGameObject::CGameObject()
 	: m_arrCom{}
@@ -196,6 +197,10 @@ void CGameObject::AddChild(CGameObject* _Object)
 	{
 		// 기존 부모가 있으면 연결 해제 후 연결
 		_Object->DisconnectFromParent();
+		tEvent evn = {};
+
+		evn.Type = EVENT_TYPE::CHANGE_ADD_CHILD;
+		CEventMgr::GetInst()->AddEvent(evn);
 	}
 
 	else
@@ -206,6 +211,9 @@ void CGameObject::AddChild(CGameObject* _Object)
 
 	// 부모 자식 연결
 	_Object->m_Parent = this;
+
+	//_Object->ChangeLayerIdx(m_iLayerIdx);
+
 	m_vecChild.push_back(_Object);
 }
 
@@ -435,6 +443,15 @@ void CGameObject::AddParentList()
 {
 	CLayer* pLayer = CLevelMgr::GetInst()->GetCurLevel()->GetLayer(m_iLayerIdx);
 	pLayer->AddParentList(this);
+}
+
+void CGameObject::ChangeLayerIdx(int _iIdx)
+{
+	m_iLayerIdx = _iIdx;
+	for (int i = 0; i < m_vecChild.size(); ++i)
+	{
+		m_vecChild[i]->ChangeLayerIdx(_iIdx);
+	}
 }
 
 CAnimator3D* CGameObject::Animator3D()

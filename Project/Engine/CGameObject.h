@@ -126,6 +126,7 @@ private:
 	void DisconnectFromParent();
 	void ChangeToChildType();
 	void AddParentList();
+	void ChangeLayerIdx(int _iIdx);
 
 
 	CLONE(CGameObject)

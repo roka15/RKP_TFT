@@ -228,6 +228,7 @@ enum class EVENT_TYPE
 	DELETE_OBJECT,  // wParam : GameObject
 
 	ADD_CHILD,
+	CHANGE_ADD_CHILD,
 
 	DELETE_RESOURCE,	// wParam : RES_TYPE, lParam : Resource Adress
 
@@ -357,8 +358,9 @@ enum class CURSOR_TYPE
 	END,
 };
 
-enum class GUAGE_TYPE
+enum class GAUGE_TYPE
 {
 	LEFT, // Left 부터 discard
 	RIGHT,// Right 부터 discard
+	END,
 };

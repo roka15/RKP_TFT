@@ -41,7 +41,7 @@ void CreateTestLevel()
 	pPlayer->AddComponent(new CPlayerScript());
 	pPlayer->GetScript<CPlayerScript>()->SetPlayerType(PLAYER_TYPE::CLIENT);
 
-	SpawnGameObject(pPlayer, Vec3{ 0.f,0.f,0.f }, 0);
+	SpawnGameObject(pPlayer, Vec3{ 0.f,0.f,0.f },2);
 	CGameMgr::GetInst()->EnterGame(0, pPlayer);
 	CGameMgr::GetInst()->SetClientOwner(pPlayer);
 
@@ -50,13 +50,13 @@ void CreateTestLevel()
 
 	// Layer 이름설정
 	pCurLevel->GetLayer(0)->SetName(L"Default");
-	pCurLevel->GetLayer(1)->SetName(L"Tile");
+	pCurLevel->GetLayer(1)->SetName(L"Object Container");
 	pCurLevel->GetLayer(2)->SetName(L"Player");
-	pCurLevel->GetLayer(3)->SetName(L"Monster");
-	pCurLevel->GetLayer(4)->SetName(L"PlayerProjectile");
-	pCurLevel->GetLayer(5)->SetName(L"MonsterProjectile");
+	pCurLevel->GetLayer(3)->SetName(L"MapObject");
+	
+	
 	pCurLevel->GetLayer(31)->SetName(L"ViewPort UI");
-	pCurLevel->GetLayer(32)->SetName(L"Object Container");
+
 
 	// Main Camera Object 생성
 	CGameObject* pMainCam = new CGameObject;
@@ -758,7 +758,7 @@ void CreateTestLevel()
 		pObj->AddChild(TileSet);
 		pMap->AddChild(pObj);
 	}
-	SpawnGameObject(pMap, Vec3{ 0.f,0.f,0.f }, 0);
+	SpawnGameObject(pMap, Vec3{ 0.f,0.f,0.f }, 3);
 #pragma endregion
 
 
@@ -854,9 +854,6 @@ void CreateTestLevel()
 	/*CCharacterTrigger trigger;
 	trigger.SetEvtType(TRIGGER_TYPE::);
 	script->notify(&trigger);*/
-
-	// 충돌 시킬 레이어 짝 지정
-	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");
 
 
 #pragma region UI

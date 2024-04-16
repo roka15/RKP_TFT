@@ -140,7 +140,27 @@ float4 PS_Std2D(VS_OUT _in) : SV_Target
 
 float4 PS_BillboardRender(GS_OUT _in) : SV_Target
 {
+	int   Mode = g_int_0;
 	float4 vOutColor = g_vec4_0;
+	float CurValue = g_float_0;
+	float GoalValue = g_float_1;
+
+
+	float Ratio = 0.f;
+
+	if (Mode == 0)
+	{
+		Ratio = (1 - (CurValue / GoalValue));
+		if (_in.vUV.x <= Ratio)
+			discard;
+	}
+	else if (Mode == 1)
+	{
+		Ratio = (CurValue / GoalValue);
+		if (_in.vUV.x >= Ratio)
+			discard;
+	}
+
 
 	if (g_btex_0)
 	{
@@ -150,15 +170,9 @@ float4 PS_BillboardRender(GS_OUT _in) : SV_Target
 	{
 		vOutColor = g_vec4_0;
 	}
-	//if (0.f == vOutColor.a)
-	//    discard; // «»ºø Ω¶¿Ã¥ı ¡ﬂ¥‹
-
-	if (g_int_2 == 1)
-		vOutColor = float4(1.f, 0.f, 0.f, 1.f);
 
 	return vOutColor;
 }
-
 float4 PS_Std2D_GaugeUI(VS_OUT _in) : SV_Target
 {
 	int   Mode = g_int_0;

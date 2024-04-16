@@ -75,7 +75,7 @@ void ButtonUI::LinkFuncPtrString(CGameObject* _pLinkObj, wstring _strFunc)
 	CButton* pButton = pButtonObj->Button();
 	char strParam[MAX_PATH] = {};
 	if (m_strStringParam.size() != 0)
-		strcpy_s(strParam, m_strStringParam.size()+1, m_strStringParam.c_str());
+		strcpy_s(strParam, m_strStringParam.size() + 1, m_strStringParam.c_str());
 	ImGui::Text("string");
 	ImGui::SameLine();
 	ImGui::InputText("##Func String Param", strParam, MAX_PATH);
@@ -125,8 +125,21 @@ int ButtonUI::render_update()
 
 
 	vector<CGameObject*> vecAllObj = GetObjectList();
+	//이전 선택된 Object와 현재 인덱스의 Object 이름이 다른 경우 Object의 index가 변화했기 때문에 다시 index 검색.
+	if (m_wstrCurObject.size() != 0 && vecAllObj[m_iCurObjIdx]->GetName().compare(m_wstrCurObject) != 0)
+	{
+		for (int i = 0; i < vecAllObj.size(); ++i)
+		{
+			if (vecAllObj[i]->GetName().compare(m_wstrCurObject) == 0)
+			{
+				m_iCurObjIdx = i;
+			}
+		}
+	}
 	ImGui::Combo("GameObject", &m_iCurObjIdx, &ButtonUIFunc::ObjGetter, vecAllObj.data(), vecAllObj.size());
 	CGameObject* pLinkObj = vecAllObj[m_iCurObjIdx];
+	wstring wstrLink = pLinkObj->GetName();
+	m_wstrCurObject = wstrLink;
 	vector<wstring> FuncPtrList = pLinkObj->GetFuncPtrListName();
 	vector<string> strList;
 	for (int i = 0; i < FuncPtrList.size(); ++i)
@@ -144,7 +157,7 @@ int ButtonUI::render_update()
 
 	if (m_iCurFuncIdx > m_iCurFuncIdx)
 		return TRUE;
-	
+
 	string strCurFunc = strList[m_iCurFuncIdx];
 	PARAM_TYPE eParamType = pLinkObj->GetFindFuncType(FuncPtrList[m_iCurFuncIdx]);
 	switch (eParamType)
