@@ -23,6 +23,7 @@ CGameObject::CGameObject()
 	, m_LifeTime(0.f)
 	, m_CurLifeTime(0.f)
 	, m_bLifeSpan(false)
+	, m_bActive(true)
 {
 }
 
@@ -36,6 +37,7 @@ CGameObject::CGameObject(const CGameObject& _Other)
 	, m_LifeTime(0.f)
 	, m_CurLifeTime(0.f)
 	, m_bLifeSpan(false)
+	, m_bActive(true)
 {
 	// Component 복사
 	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
@@ -87,6 +89,8 @@ void CGameObject::begin()
 
 void CGameObject::tick()
 {
+	if (m_bActive == false)
+		return;
 	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
 	{
 		if (nullptr != m_arrCom[i])
@@ -108,6 +112,9 @@ void CGameObject::tick()
 
 void CGameObject::finaltick()
 {
+	if (m_bActive == false)
+		return;
+
 	if (m_bLifeSpan)
 	{
 		m_CurLifeTime += DT;
@@ -138,6 +145,8 @@ void CGameObject::finaltick()
 
 void CGameObject::finaltick_module()
 {
+	if (m_bActive == false)
+		return;
 	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::SCRIPT; ++i)
 	{
 		if (nullptr != m_arrCom[i])
@@ -191,7 +200,7 @@ void CGameObject::AddComponent(CComponent* _Component)
 	}
 }
 
-void CGameObject::AddChild(CGameObject* _Object)
+void CGameObject::AddChild(CGameObject* _Object, bool _bChangeLayer)
 {
 	if (_Object->m_Parent)
 	{
@@ -212,9 +221,25 @@ void CGameObject::AddChild(CGameObject* _Object)
 	// 부모 자식 연결
 	_Object->m_Parent = this;
 
-	//_Object->ChangeLayerIdx(m_iLayerIdx);
+	if (_bChangeLayer)
+		_Object->ChangeLayerIdx(m_iLayerIdx);
 
 	m_vecChild.push_back(_Object);
+}
+
+void CGameObject::SetActive(bool _flag)
+{
+	m_bActive = _flag;
+	for (int i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
+	{
+		if (m_arrCom[i])
+			m_arrCom[i]->SetActive(_flag);
+	}
+	for (int i = 0; i < m_vecScript.size(); ++i)
+	{
+		if (m_vecScript[i])
+			m_vecScript[i]->SetActive(_flag);
+	}
 }
 
 CGameObject* CGameObject::GetChild(wstring _strName)

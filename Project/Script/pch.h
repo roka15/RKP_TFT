@@ -14,6 +14,7 @@
 
 #include "CScriptMgr.h"
 #include "define.h"
+#include "struct.h"
 
 
 #endif //PCH_H

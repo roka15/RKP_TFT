@@ -44,6 +44,7 @@ private:
 	float                   m_LifeTime;
 	float                   m_CurLifeTime;
 	bool                    m_bLifeSpan;
+	bool					m_bActive;
 
 	t_FuncPtrList           m_FuncPtr;
 public:
@@ -59,7 +60,8 @@ public:
 
 public:
 	void AddComponent(CComponent* _Component);
-	void AddChild(CGameObject* _Object);
+	void AddChild(CGameObject* _Object,bool _bChangeLayer = false);
+	void SetActive(bool _flag);
 
 	CComponent* GetComponent(COMPONENT_TYPE _ComType) { return m_arrCom[(UINT)_ComType]; }
 	const vector<CGameObject*>& GetChild() { return m_vecChild; }
@@ -91,7 +93,7 @@ public:
 
 
 	int GetLayerIndex() { return m_iLayerIdx; }
-
+	
 	template<typename T>
 	T* GetScript();
 
@@ -122,6 +124,7 @@ public:
 	std::optional<std::reference_wrapper<std::function<void(CGameObject*)>>> GetFuncPtrOBJ(wstring _strFunc);
 	vector<wstring> GetFuncPtrListName();
 	PARAM_TYPE GetFindFuncType(wstring _strFunc);
+	
 private:
 	void DisconnectFromParent();
 	void ChangeToChildType();

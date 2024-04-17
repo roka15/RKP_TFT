@@ -6,12 +6,11 @@ class CItem:
 private:
 	int		m_Cost;
 	CGameObject* m_pPlayer;          //item을 관리하는 player 정보. 주의할 점은 캐릭터 Obj는 Tile의 자식이다. Player의 자식이 아님을 주의.
-protected:
-	void SetCost(int _iCost) { m_Cost = _iCost; }
 public:
-	virtual int Buy(const int& _iMoney);
+	void SetCost(int _iCost) { m_Cost = _iCost; }
 	void SetPlayer(CGameObject* _pObj) { m_pPlayer = _pObj; }
 	CGameObject* GetPlayer() { return m_pPlayer; }
+	const int& GetCost() { return m_Cost; }
 public:
 	CItem();
 	CItem(SCRIPT_TYPE _eType);

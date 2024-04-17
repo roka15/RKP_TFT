@@ -3,7 +3,13 @@ enum class CHARACTER_TYPE
 {
 	ATTROX,
     ZED,
-    SLOT_ITEM,
+    Ahri,
+    Ashe,
+    Azir,
+    Azirsoldier,
+    BlitzCrank,
+    Gwen,
+   
 	END,
 };
 enum class GAME_STATE
@@ -20,4 +26,13 @@ enum class PLAYER_TYPE
     ANOTHER,
     AI,
     END,
+};
+enum class ITEM_CARD_TYPE
+{
+    LEVEL1,
+    LEVEL2,
+    LEVEL3,
+    LEVEL4,
+    LEVEL5,
+    END
 };

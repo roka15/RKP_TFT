@@ -22,6 +22,7 @@ public:
     virtual void RegisterFuncPtr()override;
 private:
     void BuyExp();
+    void RefreshShop();
 
     void VoidTest();
     void IntTest(int _int);
@@ -38,6 +39,7 @@ public:
     void SetGameID(UINT _iID) { m_GameKey = _iID; }
     int GetGameID() { return m_GameKey; }
     const int& GetMoney() { return m_Money; }
+    void PayMoney(int _iMoney) { m_Money -= _iMoney; }
     void AddItem(CGameObject* _pObj) { m_vecItem.push_back(_pObj); }
     vector<Vec3> GetItemPos();
     void SetPlayerType(PLAYER_TYPE _eType) { m_ePlayerType = _eType; }
@@ -45,7 +47,9 @@ public:
 	void SetGameStateInfo();
     const int& GetLevel() { return m_Level; }
     const int& GetExp() { return m_CurExp; }
-
+    void LevelUp() { ++m_Level; }
+    void ExpUp() { ++m_CurExp; }
+    void ExpZero() { m_CurExp = 0; }
     //temp 
     CGameObject* GetItem(int _index) { return m_vecItem[_index]; }
    

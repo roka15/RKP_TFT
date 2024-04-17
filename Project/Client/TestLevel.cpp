@@ -30,6 +30,7 @@
 #include <Script\CTileMgr.h>
 #include <Script\CTileScript.h>
 #include <Script\CPlayerScript.h>
+#include <Script\CCard.h>
 
 
 void CreateTestLevel()
@@ -849,8 +850,6 @@ void CreateTestLevel()
 
 	//SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 0);
 	CPlayerScript* pPlayerScript = pPlayer->GetScript<CPlayerScript>();
-	CGameMgr::GetInst()->BuyItem(pPlayerScript->GetGameID(), CHARACTER_TYPE::ATTROX, pPlayer);
-	CGameMgr::GetInst()->BuyItem(pPlayerScript->GetGameID(), CHARACTER_TYPE::ATTROX, pPlayer);
 	/*CCharacterTrigger trigger;
 	trigger.SetEvtType(TRIGGER_TYPE::);
 	script->notify(&trigger);*/
@@ -881,25 +880,25 @@ void CreateTestLevel()
 		CGameObject* pTextObj = new CGameObject();
 		pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Text");
 		pTextObj = pPrefab->Instantiate();
-		pTextObj->SetName(L"Text");
+		pTextObj->SetName(L"RoundText");
 		pTextObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		pTextObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
 		pTextObj->Text()->SetText(L"1 - 1");
 		pTextObj->Text()->SetSize(20.f);
 		pTextObj->Text()->SetColor(Vec4(143.f, 115.f, 58.f, 255.f));
-		pTextObj->Transform()->SetRelativePos(465.f, 29.f, 0.f);
+		pTextObj->Transform()->SetRelativePos(-180.f,355.f, 0.f);
 		pRoundUI->AddChild(pTextObj);
 
 		CGameObject* pTextObj2 = new CGameObject();
 		pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Text");
 		pTextObj2 = pPrefab->Instantiate();
-		pTextObj2->SetName(L"Text");
+		pTextObj2->SetName(L"TimerText");
 		pTextObj2->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		pTextObj2->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
 		pTextObj2->Text()->SetText(L"30");
 		pTextObj2->Text()->SetSize(20.f);
 		pTextObj2->Text()->SetColor(Vec4(143.f, 115.f, 58.f, 255.f));
-		pTextObj2->Transform()->SetRelativePos(815.f, 29.f, 0.f);
+		pTextObj2->Transform()->SetRelativePos(176.f, 355.f, 0.f);
 		pRoundUI->AddChild(pTextObj2);
 
 		CGameObject* pImageObj2 = new CGameObject();
@@ -1017,7 +1016,7 @@ void CreateTestLevel()
 		pTextObj->Text()->SetText(L"1Level");
 		pTextObj->Text()->SetSize(25.f);
 		pTextObj->Text()->SetColor(Vec4(255.f, 255.f, 255.f, 255.f));
-		pTextObj->Transform()->SetRelativePos(98.f, 595.f, 0.f);
+		pTextObj->Transform()->SetRelativePos(-544.f, -211.f, 0.f);
 		pShopUI->AddChild(pTextObj);
 		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"LEVEL_TEXT", pTextObj);
 
@@ -1029,7 +1028,7 @@ void CreateTestLevel()
 		pTextObj->Text()->SetText(L"1/2");
 		pTextObj->Text()->SetSize(13.f);
 		pTextObj->Text()->SetColor(Vec4(255.f, 255.f, 255.f, 255.f));
-		pTextObj->Transform()->SetRelativePos(237.f, 606.f, 0.f);
+		pTextObj->Transform()->SetRelativePos(-402.f, -224.f, 0.f);
 		pShopUI->AddChild(pTextObj);
 		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"EXP_TEXT", pTextObj);
 
@@ -1041,13 +1040,13 @@ void CreateTestLevel()
 		pTextObj->Text()->SetText(L"100");
 		pTextObj->Text()->SetSize(20.f);
 		pTextObj->Text()->SetColor(Vec4(255.f, 255.f, 255.f, 255.f));
-		pTextObj->Transform()->SetRelativePos(654.f, 602.f, 0.f);
+		pTextObj->Transform()->SetRelativePos(19.f,-218.f, 0.f);
 		pShopUI->AddChild(pTextObj);
 		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"GOLD_TEXT", pTextObj);
 
 		pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Button");
 		CGameObject* pImageObj8 = pPrefab->Instantiate();
-		pImageObj8->SetName(L"Image8");
+		pImageObj8->SetName(L"ExpUpButton");
 		pImageObj8->Image()->SetNormalTexKey(L"texture\\UI\\Hud\\UI_LevelUp.png");
 		pImageObj8->Transform()->SetRelativePos(-453.f, -283.f, 0.f);
 		pImageObj8->Transform()->SetRelativeScale(160.f, 60.f, 0.f);
@@ -1065,7 +1064,7 @@ void CreateTestLevel()
 		pTextObj->Text()->SetText(L"BUY EXP");
 		pTextObj->Text()->SetSize(15.f);
 		pTextObj->Text()->SetColor(Vec4(255.f, 255.f, 255.f, 255.f));
-		pTextObj->Transform()->SetRelativePos(118.f, 648.f, 0.f);
+		pTextObj->Transform()->SetRelativePos(-0.45f, 0.3f, 0.f);
 		pImageObj8->AddChild(pTextObj);
 
 		pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Text");
@@ -1076,13 +1075,13 @@ void CreateTestLevel()
 		pTextObj->Text()->SetText(L"4");
 		pTextObj->Text()->SetSize(15.f);
 		pTextObj->Text()->SetColor(Vec4(255.f, 255.f, 255.f, 255.f));
-		pTextObj->Transform()->SetRelativePos(143.f, 672.f, 0.f);
+		pTextObj->Transform()->SetRelativePos(-0.28f, -0.08f, 0.f);
 		pImageObj8->AddChild(pTextObj);
 		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"EXP_COST_TEXT", pTextObj);
 
 		pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Button");
 		CGameObject* pImageObj9 = pPrefab->Instantiate();
-		pImageObj9->SetName(L"Image9");
+		pImageObj9->SetName(L"RefreshButton");
 		pImageObj9->Image()->SetNormalTexKey(L"texture\\UI\\Hud\\UI_ReFresh.png");
 		pImageObj9->Transform()->SetRelativePos(-453.f, -347.f, 0.f);
 		pImageObj9->Transform()->SetRelativeScale(160.f, 60.f, 0.f);
@@ -1099,7 +1098,7 @@ void CreateTestLevel()
 		pTextObj->Text()->SetText(L"REFRESH");
 		pTextObj->Text()->SetSize(15.f);
 		pTextObj->Text()->SetColor(Vec4(255.f, 255.f, 255.f, 255.f));
-		pTextObj->Transform()->SetRelativePos(113.f, 714.f, 0.f);
+		pTextObj->Transform()->SetRelativePos(-0.45f, 0.3f, 0.f);
 		pImageObj9->AddChild(pTextObj);
 
 		pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Text");
@@ -1110,7 +1109,7 @@ void CreateTestLevel()
 		pTextObj->Text()->SetText(L"2");
 		pTextObj->Text()->SetSize(15.f);
 		pTextObj->Text()->SetColor(Vec4(255.f, 255.f, 255.f, 255.f));
-		pTextObj->Transform()->SetRelativePos(143.f, 735.f, 0.f);
+		pTextObj->Transform()->SetRelativePos(-0.28f, -0.08f, 0.f);
 		pImageObj9->AddChild(pTextObj);
 		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"REFRESH_COST_TEXT", pTextObj);
 
@@ -1138,7 +1137,7 @@ void CreateTestLevel()
 		}
 		pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Image");
 		CGameObject* pImageObj11 = pPrefab->Instantiate();
-		pImageObj11->SetName(L"Image10");
+		pImageObj11->SetName(L"ExpGauge");
 		pImageObj11->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(MtrlName), 0);
 		pImageObj11->Image()->SetNormalTexKey(L"texture\\UI\\Hud\\UI_ExpGauge.png");
 		pImageObj11->Transform()->SetRelativePos(-459.f, -243.f, 0.f);
@@ -1146,6 +1145,65 @@ void CreateTestLevel()
 		pShopUI->AddChild(pImageObj11);
 		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"EXP_GAUGE_IMAGE", pImageObj11);
 
+
+		pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Button");
+		pObj = pPrefab->Instantiate();
+		pObj->SetName(L"ShopItemBtn");
+		pObj->Transform()->SetRelativeScale(Vec3(187.f,132.f,0.f));
+		pObj->AddComponent(new CCard());
+		{
+			pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Image");
+			CGameObject* CImageObj = pPrefab->Instantiate();
+			CImageObj->SetName(L"Image");
+			pObj->AddChild(CImageObj);
+
+			pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Text");
+			CGameObject* CTextObj = pPrefab->Instantiate();
+			CTextObj->SetName(L"Name");
+			CTextObj->Text()->SetSize(15);
+			CTextObj->Text()->SetColor(Vec4(255.f, 255.f, 255.f, 255.f));
+			CTextObj->Transform()->SetRelativePos(Vec3(-0.45f,-0.3f,0.f));
+			pObj->AddChild(CTextObj);
+			CTextObj= pPrefab->Instantiate();
+			CTextObj->SetName(L"Cost");
+			CTextObj->Text()->SetSize(15);
+			CTextObj->Text()->SetColor(Vec4(255.f, 255.f, 255.f, 255.f));
+			CTextObj->Transform()->SetRelativePos(Vec3(0.35f, -0.3f, 0.f));
+			pObj->AddChild(CTextObj);
+		}
+		pPrefab = new CPrefab();
+		pPrefab->RegisterProtoObject(pObj);
+		CResMgr::GetInst()->AddRes<CPrefab>(L"UI_ShopItem_Card", pPrefab);
+
+		pObj = pPrefab->Instantiate();
+		pObj->SetName(L"ShopItemBtn1");
+		pObj->Transform()->SetRelativePos(Vec3(-265.f, -316.f,0.f));
+		pShopUI->AddChild(pObj);
+		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"SHOP_ITEM_BTN", pObj);
+
+		pObj = pPrefab->Instantiate();
+		pObj->SetName(L"ShopItemBtn2");
+		pObj->Transform()->SetRelativePos(Vec3(-79.f, -316.f,0.f));
+		pShopUI->AddChild(pObj);
+		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"SHOP_ITEM_BTN", pObj);
+
+		pObj = pPrefab->Instantiate();
+		pObj->SetName(L"ShopItemBtn3");
+		pObj->Transform()->SetRelativePos(Vec3(107.f, -316.f,0.f));
+		pShopUI->AddChild(pObj);
+		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"SHOP_ITEM_BTN", pObj);
+
+		pObj = pPrefab->Instantiate();
+		pObj->SetName(L"ShopItemBtn4");
+		pObj->Transform()->SetRelativePos(Vec3(293.f, -316.f,0.f));
+		pShopUI->AddChild(pObj);
+		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"SHOP_ITEM_BTN", pObj);
+
+		pObj = pPrefab->Instantiate();
+		pObj->SetName(L"ShopItemBtn5");
+		pObj->Transform()->SetRelativePos(Vec3(479.f, -316.f,0.f));
+		pShopUI->AddChild(pObj);
+		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"SHOP_ITEM_BTN", pObj);
 	}
 #pragma endregion
 

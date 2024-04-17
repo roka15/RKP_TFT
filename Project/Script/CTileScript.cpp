@@ -74,7 +74,7 @@ void CTileScript::UpEvent(PointerEventData _data)
 
 void CTileScript::AddItem(CGameObject* _obj)
 {
-	GetOwner()->AddChild(_obj);
+	GetOwner()->AddChild(_obj,true);
 }
 
 

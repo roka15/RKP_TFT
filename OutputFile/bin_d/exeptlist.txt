@@ -25,3 +25,4 @@ CZedIdle.h
 CZedAttack.h
 CZedMove.h
 CZedDeath.h
+struct.h

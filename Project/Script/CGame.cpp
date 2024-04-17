@@ -8,6 +8,7 @@
 #include "CPlayerScript.h"
 #include "CTileMgr.h"
 #include "CGameMgr.h"
+#include "CCard.h"
 
 int CGame::CanEnter()
 {
@@ -37,7 +38,7 @@ void CGame::init()
 	CHARACTER_TYPE eType;
 	CreateMinion();
 
-	const int AttroxCnt = 3;
+	const int AttroxCnt = 15;
 	m_mapShop.insert(std::make_pair(CHARACTER_TYPE::ATTROX, queue<CGameObject*>()));
 	eType = CHARACTER_TYPE::ATTROX;
 	prefab = CResMgr::GetInst()->FindRes<CPrefab>(L"Ch_Attrox");
@@ -66,8 +67,68 @@ void CGame::init()
 			m_mapShop[eType].push(obj);
 		}
 	}
+	const int AhriCnt = 15;
+	m_mapShop.insert(std::make_pair(CHARACTER_TYPE::Ahri, queue<CGameObject*>()));
+	eType = CHARACTER_TYPE::Ahri;
+	for (int i = 0; i < AhriCnt; ++i)
+	{
+		CGameObject* pEmpty = new CGameObject();
+		pEmpty->SetName(L"EmptyCh");
+		pEmpty->AddComponent(new CTransform());
+		m_mapShop[eType].push(pEmpty);
+	}
+	const int AsheCnt = 15;
+	m_mapShop.insert(std::make_pair(CHARACTER_TYPE::Ashe, queue<CGameObject*>()));
+	eType = CHARACTER_TYPE::Ashe;
+	for (int i = 0; i < AsheCnt; ++i)
+	{
+		CGameObject* pEmpty = new CGameObject();
+		pEmpty->SetName(L"EmptyCh");
+		pEmpty->AddComponent(new CTransform());
+		m_mapShop[eType].push(pEmpty);
+	}
+	const int AzirCnt = 15;
+	m_mapShop.insert(std::make_pair(CHARACTER_TYPE::Azir, queue<CGameObject*>()));
+	eType = CHARACTER_TYPE::Azir;
+	for (int i = 0; i < AzirCnt; ++i)
+	{
+		CGameObject* pEmpty = new CGameObject();
+		pEmpty->SetName(L"EmptyCh");
+		pEmpty->AddComponent(new CTransform());
+		m_mapShop[eType].push(pEmpty);
+	}
+	const int AzirsoldierCnt = 15;
+	m_mapShop.insert(std::make_pair(CHARACTER_TYPE::Azirsoldier, queue<CGameObject*>()));
+	eType = CHARACTER_TYPE::Azirsoldier;
+	for (int i = 0; i < AzirsoldierCnt; ++i)
+	{
+		CGameObject* pEmpty = new CGameObject();
+		pEmpty->SetName(L"EmptyCh");
+		pEmpty->AddComponent(new CTransform());
+		m_mapShop[eType].push(pEmpty);
+	}
+	const int BlitzCrankCnt = 15;
+	m_mapShop.insert(std::make_pair(CHARACTER_TYPE::BlitzCrank, queue<CGameObject*>()));
+	eType = CHARACTER_TYPE::BlitzCrank;
+	for (int i = 0; i < BlitzCrankCnt; ++i)
+	{
+		CGameObject* pEmpty = new CGameObject();
+		pEmpty->SetName(L"EmptyCh");
+		pEmpty->AddComponent(new CTransform());
+		m_mapShop[eType].push(pEmpty);
+	}
+	const int GwenCnt = 15;
+	m_mapShop.insert(std::make_pair(CHARACTER_TYPE::Gwen, queue<CGameObject*>()));
+	eType = CHARACTER_TYPE::Gwen;
+	for (int i = 0; i < GwenCnt; ++i)
+	{
+		CGameObject* pEmpty = new CGameObject();
+		pEmpty->SetName(L"EmptyCh");
+		pEmpty->AddComponent(new CTransform());
+		m_mapShop[eType].push(pEmpty);
+	}
 
-	const int ZedCnt = 1;
+	const int ZedCnt = 15;
 	m_mapShop.insert(std::make_pair(CHARACTER_TYPE::ZED, queue<CGameObject*>()));
 	eType = CHARACTER_TYPE::ZED;
 	prefab = CResMgr::GetInst()->FindRes<CPrefab>(L"Ch_Zed");
@@ -83,6 +144,8 @@ void CGame::init()
 			m_mapShop[eType].push(obj);
 		}
 	}
+
+
 	m_bFirstLoading = false;
 }
 
@@ -118,6 +181,8 @@ void CGame::tick()
 		if (m_bFirstLoading == false)
 		{
 			SpawnMinion(m_iRoundCnt);
+			RefreshShop();
+
 			m_bFirstLoading = true;
 		}
 		bBattleTile = true;
@@ -137,6 +202,7 @@ void CGame::tick()
 			++m_iRoundCnt;
 			DespawnMinion();
 			SpawnMinion(m_iRoundCnt);
+			RefreshShop();
 			break;
 		}
 
@@ -180,6 +246,12 @@ void CGame::RegisterGameUI(wstring _strKey, CGameObject* _pObj)
 	{
 		return;
 	}
+	if (_strKey == L"SHOP_ITEM_BTN")
+	{
+		int index = m_vecShopItem.size();
+		_strKey += std::to_wstring(index);
+		m_vecShopItem.push_back(_pObj);
+	}
 	m_mapUIObjs.insert(std::make_pair(_strKey, _pObj));
 }
 
@@ -193,9 +265,9 @@ bool CGame::BuyItem(CHARACTER_TYPE _eType, CGameObject* _pPlayer)
 	CPlayerScript* pPlayerScript = _pPlayer->GetScript<CPlayerScript>();
 	CItem* pItemScript = pItem->GetScript<CItem>();
 	//플레이어 돈에서 cost 빼기. 자금이 충분하지 않다면 return false
-	int iChange = Buy(pItemScript, pPlayerScript);
+	bool bFlag = Buy(_eType, pPlayerScript);
 	int tileNumber = CTileMgr::GetInst()->FindEmptyWaitTile();
-	if (iChange >= 0 && tileNumber >= 0)
+	if (bFlag && tileNumber >= 0)
 	{
 		m_mapShop[_eType].pop();
 		//player script와 item script는 서로 포인터를 참조용으로만 들고 있는다.
@@ -210,6 +282,21 @@ bool CGame::BuyItem(CHARACTER_TYPE _eType, CGameObject* _pPlayer)
 	{
 		return false;
 	}
+}
+
+bool CGame::RefreshShopBtn(CGameObject* _pPlayer)
+{
+	CPlayerScript* pPlayerScript = _pPlayer->GetScript<CPlayerScript>();
+	if (pPlayerScript == nullptr)
+		return false;
+	int Cost = CGameMgr::GetInst()->GetRefreshCost();
+	if (pPlayerScript->GetMoney() >= Cost)
+	{
+		pPlayerScript->PayMoney(Cost);
+		RefreshShop();
+		return true;
+	}
+	return false;
 }
 
 void CGame::DeathMinion(CGameObject* _pObj)
@@ -247,10 +334,28 @@ void CGame::SendGameState(UINT _iState)
 	pPlayer->SetGameStateInfo();
 }
 
-int CGame::Buy(CItem* _pItem, CPlayerScript* _pPlayer)
+bool CGame::Buy(CItem* _pItem, CPlayerScript* _pPlayer)
 {
 	const int& Money = _pPlayer->GetMoney();
-	return _pItem->Buy(Money);
+	const int& Cost = _pItem->GetCost();
+	if (Money < Cost)
+	{
+		return false;
+	}
+	_pPlayer->PayMoney(Cost);
+	return true;
+}
+
+bool CGame::Buy(CHARACTER_TYPE _eType, CPlayerScript* _pPlayer)
+{
+	const int& Money = _pPlayer->GetMoney();
+	const int& Cost = CGameMgr::GetInst()->GetChInfo(_eType).iCost;
+	if (Money < Cost)
+	{
+		return false;
+	}
+	_pPlayer->PayMoney(Cost);
+	return true;
 }
 
 void CGame::CreateMinion()
@@ -353,6 +458,7 @@ void CGame::CreateMinion()
 		}
 	}
 }
+
 
 bool CGame::SpawnMinion(int _iRound)
 {
@@ -471,7 +577,44 @@ void CGame::UpdateShopUI()
 	pImageObj->MeshRender()->GetMaterial(0)->SetScalarParam(SCALAR_PARAM::FLOAT_1, &fMaxExp);
 }
 
+void CGame::RandomItemCard(CCard* _pCard)
+{
+	UINT iChMax = (UINT)CHARACTER_TYPE::END;
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<int> chRandom(0, iChMax -1);
 
+
+	
+	int iChType = 0;
+	CHARACTER_TYPE eChType;
+	while (1)
+	{
+		iChType = chRandom(gen);
+		eChType = (CHARACTER_TYPE)iChType;
+		if (m_mapShop[eChType].size() != 0)
+			break;
+	}
+	
+	ITEM_CARD_TYPE eCardType = CGameMgr::GetInst()->GetItemCardLevel(eChType);
+	_pCard->SetInfo(eChType,eCardType);
+
+	CButton* pButton = _pCard->GetOwner()->Button();
+	CGameObject* pClient = CGameMgr::GetInst()->GetClient();
+	CGameObject* pCardObj = _pCard->GetOwner();
+	pButton->RegisterLinkFuncPtr(std::bind([this, eChType, pClient, pCardObj]()->void {bool flag = this->BuyItem(eChType, pClient); if (flag) pCardObj->SetActive(false); }));
+}
+
+void CGame::RefreshShop()
+{
+	for (int i = 0; i < m_vecShopItem.size(); ++i)
+	{
+		CGameObject* pItem = m_vecShopItem[i];
+		pItem->SetActive(true);
+		CCard* pCard = pItem->GetScript<CCard>();
+		RandomItemCard(pCard);
+	}
+}
 
 CGame::CGame()
 	:m_iUserCnt(8),

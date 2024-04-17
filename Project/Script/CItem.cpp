@@ -1,11 +1,6 @@
 #include "pch.h"
 #include "CItem.h"
 
-int CItem::Buy(const int& _iMoney)
-{
-	return _iMoney - m_Cost;
-}
-
 CItem::CItem() :
 	CScript((UINT)SCRIPT_TYPE::ITEM)
 {

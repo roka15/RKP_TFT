@@ -89,6 +89,7 @@ void CPlayerScript::RegisterFuncPtr()
 {
 	CGameObject* pOwner = GetOwner();
 	pOwner->RegisterFucnPtrVOID(L"BuyExp", std::bind(&CPlayerScript::BuyExp, this));
+	pOwner->RegisterFucnPtrVOID(L"RefreshShop", std::bind(&CPlayerScript::RefreshShop, this));
 	pOwner->RegisterFucnPtrVOID(L"VoidTest", std::bind(&CPlayerScript::VoidTest, this));
 	pOwner->RegisterFucnPtrINT(L"IntTest", std::bind(&CPlayerScript::IntTest, this, std::placeholders::_1));
 	pOwner->RegisterFucnPtrFLOAT(L"FloatTest", std::bind(&CPlayerScript::FloatTest, this, std::placeholders::_1));
@@ -98,7 +99,12 @@ void CPlayerScript::RegisterFuncPtr()
 
 void CPlayerScript::BuyExp()
 {
-	CGameMgr::GetInst()->BuyExp(m_CurExp, m_Level,m_Money);
+	CGameMgr::GetInst()->BuyExp(GetOwner());
+}
+
+void CPlayerScript::RefreshShop()
+{
+	CGameMgr::GetInst()->RefreshShop(m_GameKey,GetOwner());
 }
 
 void CPlayerScript::VoidTest()

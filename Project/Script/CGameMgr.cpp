@@ -27,12 +27,121 @@ CGameMgr::~CGameMgr()
 }
 void CGameMgr::LoadGameInfo()
 {
-	m_SharedGameInfo.mapLevelMaxExp.insert(std::make_pair(1,1));
+	m_SharedGameInfo.mapLevelMaxExp.insert(std::make_pair(1, 1));
 	m_SharedGameInfo.mapLevelMaxExp.insert(std::make_pair(2, 3));
 	m_SharedGameInfo.mapLevelMaxExp.insert(std::make_pair(3, 6));
 
 	m_SharedGameInfo.ExpUpCost = 4;
 	m_SharedGameInfo.RefreshCost = 2;
+
+	m_SharedGameInfo.mapChInfo.insert(std::make_pair(CHARACTER_TYPE::ATTROX, t_CharacterInfo{}));
+	m_SharedGameInfo.mapChInfo.insert(std::make_pair(CHARACTER_TYPE::Ahri, t_CharacterInfo{}));
+	m_SharedGameInfo.mapChInfo.insert(std::make_pair(CHARACTER_TYPE::Ashe, t_CharacterInfo{}));
+	m_SharedGameInfo.mapChInfo.insert(std::make_pair(CHARACTER_TYPE::Azir, t_CharacterInfo{}));
+	m_SharedGameInfo.mapChInfo.insert(std::make_pair(CHARACTER_TYPE::Azirsoldier, t_CharacterInfo{}));
+	m_SharedGameInfo.mapChInfo.insert(std::make_pair(CHARACTER_TYPE::BlitzCrank, t_CharacterInfo{}));
+	m_SharedGameInfo.mapChInfo.insert(std::make_pair(CHARACTER_TYPE::Gwen, t_CharacterInfo{}));
+	m_SharedGameInfo.mapChInfo.insert(std::make_pair(CHARACTER_TYPE::ZED, t_CharacterInfo{}));
+
+	m_SharedGameInfo.mapCardInfo.insert(std::make_pair(ITEM_CARD_TYPE::LEVEL1, t_ItemCardInfo{}));
+	m_SharedGameInfo.mapCardInfo.insert(std::make_pair(ITEM_CARD_TYPE::LEVEL2, t_ItemCardInfo{}));
+	m_SharedGameInfo.mapCardInfo.insert(std::make_pair(ITEM_CARD_TYPE::LEVEL3, t_ItemCardInfo{}));
+	m_SharedGameInfo.mapCardInfo.insert(std::make_pair(ITEM_CARD_TYPE::LEVEL4, t_ItemCardInfo{}));
+	m_SharedGameInfo.mapCardInfo.insert(std::make_pair(ITEM_CARD_TYPE::LEVEL5, t_ItemCardInfo{}));
+
+
+	CHARACTER_TYPE eType = CHARACTER_TYPE::ATTROX;
+	m_SharedGameInfo.mapChInfo[eType].eCardType = ITEM_CARD_TYPE::LEVEL4;
+	m_SharedGameInfo.mapChInfo[eType].eChType = eType;
+	m_SharedGameInfo.mapChInfo[eType].strBaseImage = L"texture\\UI\\CharacterBanner\\tft9_aatrox.png";
+	m_SharedGameInfo.mapChInfo[eType].iCost = 4;
+	m_SharedGameInfo.mapChInfo[eType].strNameText = L"¾ÆÆ®·Ï½º";
+
+
+	eType = CHARACTER_TYPE::Ahri;
+	m_SharedGameInfo.mapChInfo[eType].eCardType = ITEM_CARD_TYPE::LEVEL4;
+	m_SharedGameInfo.mapChInfo[eType].eChType = eType;
+	m_SharedGameInfo.mapChInfo[eType].strBaseImage = L"texture\\UI\\CharacterBanner\\tft9_ahri.png";
+	m_SharedGameInfo.mapChInfo[eType].iCost = 4;
+	m_SharedGameInfo.mapChInfo[eType].strNameText = L"¾Æ¸®";
+
+	eType = CHARACTER_TYPE::Ashe;
+	m_SharedGameInfo.mapChInfo[eType].eCardType = ITEM_CARD_TYPE::LEVEL2;
+	m_SharedGameInfo.mapChInfo[eType].eChType = eType;
+	m_SharedGameInfo.mapChInfo[eType].strBaseImage = L"texture\\UI\\CharacterBanner\\tft9_ashe.png";
+	m_SharedGameInfo.mapChInfo[eType].iCost = 2;
+	m_SharedGameInfo.mapChInfo[eType].strNameText = L"¾Ö½¬";
+
+
+	eType = CHARACTER_TYPE::Azir;
+	m_SharedGameInfo.mapChInfo[eType].eCardType = ITEM_CARD_TYPE::LEVEL3;
+	m_SharedGameInfo.mapChInfo[eType].eChType = eType;
+	m_SharedGameInfo.mapChInfo[eType].strBaseImage = L"texture\\UI\\CharacterBanner\\tft9_azir.png";
+	m_SharedGameInfo.mapChInfo[eType].iCost = 3;
+	m_SharedGameInfo.mapChInfo[eType].strNameText = L"¾ÆÁö¸£";
+
+
+	eType = CHARACTER_TYPE::Azirsoldier;
+	m_SharedGameInfo.mapChInfo[eType].eCardType = ITEM_CARD_TYPE::LEVEL3;
+	m_SharedGameInfo.mapChInfo[eType].eChType = eType;
+	m_SharedGameInfo.mapChInfo[eType].strBaseImage = L"texture\\UI\\CharacterBanner\\tft9_azirsoldier.png";
+	m_SharedGameInfo.mapChInfo[eType].iCost = 3;
+	m_SharedGameInfo.mapChInfo[eType].strNameText = L"°¡·»";
+
+
+	eType = CHARACTER_TYPE::Azirsoldier;
+	m_SharedGameInfo.mapChInfo[eType].eCardType = ITEM_CARD_TYPE::LEVEL3;
+	m_SharedGameInfo.mapChInfo[eType].eChType = eType;
+	m_SharedGameInfo.mapChInfo[eType].strBaseImage = L"texture\\UI\\CharacterBanner\\tft9_azirsoldier.png";
+	m_SharedGameInfo.mapChInfo[eType].iCost = 3;
+	m_SharedGameInfo.mapChInfo[eType].strNameText = L"°¡·»";
+
+
+	eType = CHARACTER_TYPE::BlitzCrank;
+	m_SharedGameInfo.mapChInfo[eType].eCardType = ITEM_CARD_TYPE::LEVEL1;
+	m_SharedGameInfo.mapChInfo[eType].eChType = eType;
+	m_SharedGameInfo.mapChInfo[eType].strBaseImage = L"texture\\UI\\CharacterBanner\\tft9_blitzcrank.png";
+	m_SharedGameInfo.mapChInfo[eType].iCost = 1;
+	m_SharedGameInfo.mapChInfo[eType].strNameText = L"ºí¸®Ã÷Å©·©Å©";
+
+
+	eType = CHARACTER_TYPE::Gwen;
+	m_SharedGameInfo.mapChInfo[eType].eCardType = ITEM_CARD_TYPE::LEVEL5;
+	m_SharedGameInfo.mapChInfo[eType].eChType = eType;
+	m_SharedGameInfo.mapChInfo[eType].strBaseImage = L"texture\\UI\\CharacterBanner\\tft9_gwen.png";
+	m_SharedGameInfo.mapChInfo[eType].iCost = 5;
+	m_SharedGameInfo.mapChInfo[eType].strNameText = L"±×À¢";
+
+
+	eType = CHARACTER_TYPE::ZED;
+	m_SharedGameInfo.mapChInfo[eType].eCardType = ITEM_CARD_TYPE::LEVEL1;
+	m_SharedGameInfo.mapChInfo[eType].eChType = eType;
+	m_SharedGameInfo.mapChInfo[eType].strBaseImage = L"texture\\UI\\CharacterBanner\\tft9_zed.png";
+	m_SharedGameInfo.mapChInfo[eType].iCost = 1;
+	m_SharedGameInfo.mapChInfo[eType].strNameText = L"Á¦µå";
+
+
+
+	ITEM_CARD_TYPE eItemType = ITEM_CARD_TYPE::LEVEL1;
+	m_SharedGameInfo.mapCardInfo[eItemType].strEnterImage = L"texture\\UI\\CharacterBanner\\Level1_On.png";
+	m_SharedGameInfo.mapCardInfo[eItemType].strExitImage = L"texture\\UI\\CharacterBanner\\Level1_Off.png";
+
+	eItemType = ITEM_CARD_TYPE::LEVEL2;
+	m_SharedGameInfo.mapCardInfo[eItemType].strEnterImage = L"texture\\UI\\CharacterBanner\\Level2_On.png";
+	m_SharedGameInfo.mapCardInfo[eItemType].strExitImage = L"texture\\UI\\CharacterBanner\\Level2_Off.png";
+
+	eItemType = ITEM_CARD_TYPE::LEVEL3;
+	m_SharedGameInfo.mapCardInfo[eItemType].strEnterImage = L"texture\\UI\\CharacterBanner\\Level3_On.png";
+	m_SharedGameInfo.mapCardInfo[eItemType].strExitImage = L"texture\\UI\\CharacterBanner\\Level3_Off.png";
+
+	eItemType = ITEM_CARD_TYPE::LEVEL4;
+	m_SharedGameInfo.mapCardInfo[eItemType].strEnterImage = L"texture\\UI\\CharacterBanner\\Level4_On.png";
+	m_SharedGameInfo.mapCardInfo[eItemType].strExitImage = L"texture\\UI\\CharacterBanner\\Level4_Off.png";
+
+	eItemType = ITEM_CARD_TYPE::LEVEL5;
+	m_SharedGameInfo.mapCardInfo[eItemType].strEnterImage = L"texture\\UI\\CharacterBanner\\Level5_On.png";
+	m_SharedGameInfo.mapCardInfo[eItemType].strExitImage = L"texture\\UI\\CharacterBanner\\Level5_Off.png";
+
 }
 void CGameMgr::init()
 {
@@ -82,7 +191,7 @@ int CGameMgr::GetState(CGameObject* _pObj)
 		return -1;
 	UINT iGameID = player->GetGameID();
 	CGame* pGame = m_vecGames[iGameID];
-	
+
 	return pGame->GetGameState();;
 }
 
@@ -97,25 +206,50 @@ int CGameMgr::GetState()
 	return pGame->GetGameState();;
 }
 
-bool CGameMgr::BuyItem(int _iGameID, CHARACTER_TYPE _eType, CGameObject* _pPlayer)
+const ITEM_CARD_TYPE CGameMgr::GetItemCardLevel(CHARACTER_TYPE _eType)
 {
-	return m_vecGames[_iGameID]->BuyItem(_eType,_pPlayer);
+	return m_SharedGameInfo.mapChInfo[_eType].eCardType; 
 }
 
-bool CGameMgr::BuyExp(int& _iCurExp, int& _iLevel, int& _iMoney)
+const t_CharacterInfo& CGameMgr::GetChInfo(CHARACTER_TYPE _eType)
 {
-	auto itr= m_SharedGameInfo.mapLevelMaxExp.find(_iLevel);
+	return m_SharedGameInfo.mapChInfo[_eType];
+}
+const t_ItemCardInfo& CGameMgr::GetCardInfo(ITEM_CARD_TYPE _eType)
+{
+	return m_SharedGameInfo.mapCardInfo[_eType];
+}
+bool CGameMgr::BuyItem(int _iGameID, CHARACTER_TYPE _eType, CGameObject* _pPlayer)
+{
+	return m_vecGames[_iGameID]->BuyItem(_eType, _pPlayer);
+}
+
+bool CGameMgr::BuyExp(CGameObject* _pObj)
+{
+	CPlayerScript* pPlayer = _pObj->GetScript<CPlayerScript>();
+	const int& iMoney = pPlayer->GetMoney();
+	if (iMoney < m_SharedGameInfo.ExpUpCost)
+		return false;
+	pPlayer->PayMoney(m_SharedGameInfo.ExpUpCost);
+	const int& iLevel = pPlayer->GetLevel();
+	auto itr = m_SharedGameInfo.mapLevelMaxExp.find(iLevel);
 	if (itr == m_SharedGameInfo.mapLevelMaxExp.end())
 		return false;
-	int iMaxExp = m_SharedGameInfo.mapLevelMaxExp[_iLevel];
-	++_iCurExp;
-	_iMoney -= m_SharedGameInfo.ExpUpCost;
-	if (_iCurExp >= iMaxExp)
+	int iMaxExp = m_SharedGameInfo.mapLevelMaxExp[iLevel];
+
+	pPlayer->ExpUp();
+	const int& iExp = pPlayer->GetExp();
+	if (iExp >= iMaxExp)
 	{
-		_iCurExp -= iMaxExp;
-		++_iLevel;
-		return true;
+		pPlayer->ExpZero();
+		pPlayer->LevelUp();
 	}
+	return true;
+}
+
+bool CGameMgr::RefreshShop(int _iGameID, CGameObject* _pPlayer)
+{
+	m_vecGames[_iGameID]->RefreshShopBtn(_pPlayer);
 	return false;
 }
 
@@ -192,7 +326,7 @@ void CGameMgr::CreateCharacterPrefabs()
 	pObj->AddComponent(ZedFsmScript);
 	pObj->AddComponent(chScript);
 #pragma region Animator - Animation Register
-	CAnimator3D* pAnimator = pObj->Animator3D(); 
+	CAnimator3D* pAnimator = pObj->Animator3D();
 	pAnimator->RegisterAnimation(L"anim3D\\Zed\\Spawn_Skeleton.anm");
 	pAnimator->RegisterAnimation(L"anim3D\\Zed\\Zed_idle1.anm_Skeleton.anm");
 	pAnimator->RegisterAnimation(L"anim3D\\Zed\\Zed_idle_LeadIn1.anm_Skeleton.anm");
@@ -204,7 +338,7 @@ void CGameMgr::CreateCharacterPrefabs()
 
 	Ptr<CAnimatorController> pAniController = nullptr;
 	wstring strPath = L"controller\\Zed.controller";
-	Ptr<CAniClip> pClip ;
+	Ptr<CAniClip> pClip;
 	pAniController = CResMgr::GetInst()->FindRes<CAnimatorController>(strPath);
 #pragma region Zed_Controller
 	if (pAniController == nullptr)
@@ -337,7 +471,7 @@ void CGameMgr::CreateCharacterPrefabs()
 		pClip->Save(L"anim3D\\Attrox\\Aatrox_ULT_Idle.anm");
 		pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Attrox\\Idle1.anm");
 		pClip->SetLoop(true);
-		
+
 		//pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Dance_Windup.anm");
 		//pClip->SetLoop(true);
 		pClip->Save(L"anim3D\\Attrox\\Idle1.anm");
@@ -451,8 +585,8 @@ void CGameMgr::CreateCharacterPrefabs()
 		t1->RegisterCondition(L"Attack_Number", 0, COMPARISON_TYPE::EQUAL);
 		t1->RegisterCondition(L"ULT", 0, COMPARISON_TYPE::EQUAL);
 		t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", BIdleNode, pInNode, false);
-		t1->RegisterCondition(L"Attack", false,false, COMPARISON_TYPE::EQUAL);
-		
+		t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
+
 		pOutNode = pAnyNode;
 		pInNode = pAniController->CreateNode(L"Battle_Attack2", L"anim3D\\Attrox\\Attack2.anm");
 		t1 = pAniController->CreateTransition(L"AnyState_Battle_Attack2", pInNode, pOutNode, false);

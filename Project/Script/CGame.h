@@ -2,11 +2,8 @@
 
 class CPlayerScript;
 class CItem;
-struct t_RoundInfo
-{
-    int                     iMinionCnt;
-    vector<int>             vecMinionTileNum;
-};
+class CCard;
+struct t_RoundInfo;
 class CGame
 {
 private:
@@ -29,15 +26,20 @@ private:
     CGameObject*                                 m_pAIPlayer;
     const int                                    m_iRoundMax;
     map<wstring, CGameObject*>                   m_mapUIObjs;
+    vector<CGameObject*>                         m_vecShopItem;
+
 private:
     void SendGameState(UINT _iState);
-    int  Buy(CItem* _pItem, CPlayerScript* _pPlayer);
+    bool Buy(CItem* _pItem, CPlayerScript* _pPlayer);
+    bool Buy(CHARACTER_TYPE _eType, CPlayerScript* _pPlayer);
     void CreateMinion();
     bool SpawnMinion(int _iRound);
     void DespawnMinion();
     void DespawnMinion(CGameObject* _pObj);
     void UpdateRoundUI(float _fCompare);
     void UpdateShopUI();
+    void RandomItemCard(CCard* _pCard);
+    void RefreshShop();
 public:
     void SetGameID(int _iID) { m_GameID = _iID; }
     const int& GetGameID() { return m_GameID; }
@@ -49,6 +51,7 @@ public:
     void RegisterUser(int _iGameID,int _iIdx,CGameObject* _pObj);
     void RegisterGameUI(wstring _strKey, CGameObject* _pObj);
     bool BuyItem(CHARACTER_TYPE _eType, CGameObject* _pPlayer);
+    bool RefreshShopBtn(CGameObject* _pPlayer);
     void DeathMinion(CGameObject* _pObj);
 public:
     CGame();
