@@ -6,7 +6,8 @@
 #include "CAnimator3D.h"
 
 CTransition::CTransition():
-	m_bHasExitTime(false)
+	m_bHasExitTime(false),
+	m_fBlendTime(0.5f)
 {
 }
 
@@ -22,6 +23,7 @@ int CTransition::Save(FILE* _pFile)
 	fwrite(strName.c_str(), strLen, 1, _pFile);
 
 	fwrite(&m_bHasExitTime, sizeof(bool), 1, _pFile);
+	fwrite(&m_fBlendTime, sizeof(float), 1, _pFile);
 	int loopSize = m_mapIntConditions.size();
 	fwrite(&loopSize, sizeof(int), 1, _pFile);
 	for (auto itr = m_mapIntConditions.begin(); itr != m_mapIntConditions.end(); ++itr)
@@ -99,6 +101,7 @@ int CTransition::Load(FILE* _pFile)
 	SetName(strBuff);
 	ZeroMemory(strBuff, MAXLEN);
 	fread(&m_bHasExitTime, sizeof(bool), 1, _pFile);
+	fread(&m_fBlendTime, sizeof(float), 1, _pFile);
 	int loopSize = 0;
 	fread(&loopSize, sizeof(int), 1, _pFile);
 
@@ -294,7 +297,7 @@ void CTransition::RegisterCondition(wstring _Key, bool _bValue, bool _bTrigger, 
 
 bool CTransition::RegisterCurNode(CAnimator3D* _pAnimator)
 {
-	return _pAnimator->ChangeAnimation(m_pConnectNode->GetAnimationKey());
+	return _pAnimator->ChangeAnimation(m_pConnectNode->GetAnimationKey(),m_fBlendTime);
 }
 
 void CTransition::SetConnectNode(CAniNode* _pConnectNode)

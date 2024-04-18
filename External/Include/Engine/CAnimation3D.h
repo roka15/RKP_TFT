@@ -10,7 +10,7 @@ class CAnimation3D :
 private:
     Ptr<CAniClip>   m_pClip;
 
-    CAnimator3D*       m_pOwner;
+    CAnimator3D*    m_pOwner;
     double          m_dCurTime;
     double          m_dUpdateTime;
     int             m_iFrameIdx;
@@ -24,7 +24,7 @@ private:
     void check_bone(CStructuredBuffer*& _finalMat);
 public:
     void finaltick();
-    void UpdateData(CStructuredBuffer*& _bonMat);
+    void UpdateData(CStructuredBuffer*& _bonMat,wstring _strNextClip);
     void Reset();
     void SetClip(const std::wstring& _strKey);
     Ptr<CAniClip> GetClip() { return m_pClip; }

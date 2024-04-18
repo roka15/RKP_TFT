@@ -16,6 +16,7 @@ private:
     map<wstring, COMPARISON_TYPE>    m_mapComparisonConditions;
     CAniNode*                        m_pConnectNode;
     CAniNode*                        m_pOwner;
+    float                            m_fBlendTime;
     //Load때 사용되는 변수.
     wstring                          m_strConnectNode;
     wstring                          m_strOwnerNode;
@@ -31,6 +32,7 @@ public:
     void RegisterCondition(wstring _Key, int _iValue,COMPARISON_TYPE _tComparison);
     void RegisterCondition(wstring _Key, float _fValue, COMPARISON_TYPE _tComparison);
     void RegisterCondition(wstring _Key, bool _bValue,bool _bTrigger, COMPARISON_TYPE _tComparison);
+    void SetBlendTime(float _fTime) { m_fBlendTime = _fTime; }
     void SetOwner(CAniNode* _pOwnerNode) { m_pOwner = _pOwnerNode; }
     CAniNode* GetOwner() { return m_pOwner; }
     

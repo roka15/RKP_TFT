@@ -7,8 +7,9 @@ class CAnimation3DShader :
 	public CComputeShader
 {
 private:
-	CStructuredBuffer* m_pFrameDataBuffer;			// t13
-	CStructuredBuffer* m_pOffsetMatBuffer;			// t14 
+	CStructuredBuffer* m_pFrameDataBuffer;			// t16
+	CStructuredBuffer* m_pOffsetMatBuffer;			// t17
+	CStructuredBuffer* m_pNextFrameDataBuffer;		// t18
 	CStructuredBuffer* m_pOutputBuffer;				// u0
 
 public:
@@ -20,6 +21,7 @@ public:
 	void SetFrameRatio(float _fFrameRatio) { m_Const.arrFloat[0] = _fFrameRatio; }
 	void SetFrameDataBuffer(CStructuredBuffer* _buffer) { m_pFrameDataBuffer = _buffer; }
 	void SetOffsetMatBuffer(CStructuredBuffer* _buffer) { m_pOffsetMatBuffer = _buffer; }
+	void SetNextFrameDataBuffer(CStructuredBuffer* _buffer) { m_pNextFrameDataBuffer = _buffer; }
 	void SetOutputBuffer(CStructuredBuffer* _buffer) { m_pOutputBuffer = _buffer; }
 
 public:

@@ -232,7 +232,15 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
 
     if (bBlending)
     {
+        uint iFrameDataIndex = BoneCount * CurFrame + _iThreadIdx.x;
+        uint iNextFrameDataIdx = BoneCount * 0 + _iThreadIdx.x;;
 
+        float4 vScale = lerp(g_arrFrameTrans1[iFrameDataIndex].vScale, g_arrFrameTrans2[iNextFrameDataIdx].vScale, Ratio);
+        float4 vTrans = lerp(g_arrFrameTrans1[iFrameDataIndex].vTranslate, g_arrFrameTrans2[iNextFrameDataIdx].vTranslate, Ratio);
+        float4 qRot = QuternionLerp(g_arrFrameTrans1[iFrameDataIndex].qRot, g_arrFrameTrans2[iNextFrameDataIdx].qRot, Ratio);
+
+        // 최종 본행렬 연산
+        MatrixAffineTransformation(vScale, vQZero, qRot, vTrans, matBone);
     }
     else
     {

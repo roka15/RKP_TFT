@@ -26,8 +26,8 @@ void CCard::SetInfo(CHARACTER_TYPE _eChType, ITEM_CARD_TYPE _eCardType)
 	ExitKey = cardInfo.strExitImage;
 
 	pObj = GetOwner()->GetChild(L"Image");
-	pObj->Image()->SetNormalTexKey(EnterKey);
-	pObj->Image()->SetEnableTexKey(ExitKey);
+	pObj->Image()->SetNormalTexKey(ExitKey);
+	pObj->Image()->SetEnableTexKey(EnterKey);
 }
 
 void CCard::EnterEvent(PointerEventData)

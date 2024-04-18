@@ -23,14 +23,18 @@ class CAnimator3D :
 private:
     int                                         m_iCurIdx;
     bool                                        m_bBlending;
+    float                                       m_fBlendingTime;
+    float                                       m_fCurTime;
+  
     CStructuredBuffer*                          m_pBoneFinalMatBuffer;  // 특정 프레임의 최종 행렬
     Ptr<CAnimatorController>                    m_pController;
     map<wstring, CAnimation3D*>                 m_mapAnimation;
     CAnimation3D*                               m_pCurAnimation;
+    CAnimation3D*                               m_pNextAnimation;
     t_AniParams                                 m_AniParams;
 
 private:
-    bool ChangeAnimation(wstring _AniKey);
+    bool ChangeAnimation(wstring _AniKey,float _fBlendTime);
 public:
     virtual void finaltick() override;
     void UpdateData();
@@ -53,8 +57,12 @@ public:
 
     UINT GetBoneCount();
     CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMatBuffer; }
+    bool IsBlending() { return m_bBlending; }
+    float GetBlendRatio() { return m_fCurTime / m_fBlendingTime; }
     void ClearData();
     bool IsActiveAni() { return m_pCurAnimation != nullptr; }
+
+    void BlendingEnd();
 public:
     virtual void SaveToLevelFile(FILE* _pFile) override;
     virtual void LoadFromLevelFile(FILE* _pFile) override;

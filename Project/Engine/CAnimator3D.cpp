@@ -17,6 +17,7 @@ CAnimator3D::CAnimator3D()
 	:m_pBoneFinalMatBuffer(nullptr)
 	, m_iCurIdx(0)
 	, m_bBlending(false)
+	, m_fBlendingTime(0.f)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
 {
 	m_pBoneFinalMatBuffer = new CStructuredBuffer;
@@ -26,6 +27,7 @@ CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
 	: m_pBoneFinalMatBuffer(nullptr)
 	, m_iCurIdx(0)
 	, m_bBlending(false)
+	, m_fBlendingTime(0.f)
 	, m_pController(_origin.m_pController)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
 	, m_pCurAnimation(nullptr)
@@ -49,14 +51,17 @@ CAnimator3D::~CAnimator3D()
 }
 
 
-bool CAnimator3D::ChangeAnimation(wstring _AniKey)
+bool CAnimator3D::ChangeAnimation(wstring _AniKey, float _fBlendTime)
 {
 	CAnimation3D* pAnimation3D = m_mapAnimation[_AniKey];
 	if (pAnimation3D == nullptr)
 		return false;
 	if (pAnimation3D == m_pCurAnimation)
 		return false;
-	m_pCurAnimation = pAnimation3D;
+	if (pAnimation3D == m_pNextAnimation)
+		return false;
+	m_pNextAnimation = pAnimation3D;
+	m_fBlendingTime = _fBlendTime;
 	return true;
 }
 
@@ -68,44 +73,54 @@ void CAnimator3D::finaltick()
 	bool bFinish = false;
 	bool bLoop = false;
 	ANI_NODE_RETURN eType;
-	if (m_pCurAnimation)
+	if (m_bBlending)
 	{
-		bFinish = m_pCurAnimation->IsFinish();
-		bLoop = m_pCurAnimation->IsLoop();
-
-		wstring CurAniName = m_pCurAnimation->GetClip()->GetKey();
-		ANI_NODE_RETURN eType = m_pController->NextNode(bFinish, bLoop, CurAniName, this);
-
-		while (eType == ANI_NODE_RETURN::ENTRY || eType == ANI_NODE_RETURN::EXIT)
-		{
-			switch (eType)
-			{
-			case ANI_NODE_RETURN::ENTRY:
-				eType = m_pController->NextNode(bFinish, bLoop, L"Entry", this);
-				break;
-			case ANI_NODE_RETURN::EXIT:
-				eType = m_pController->NextNode(bFinish, bLoop, L"Exit", this);
-				break;
-			}
-
-		}
-
-		switch (eType)
-		{
-		case ANI_NODE_RETURN::RESET:
-		case ANI_NODE_RETURN::CHANGE:
-			if (m_pCurAnimation)
-				m_pCurAnimation->Reset();
-			break;
-		}
-	}//현재 설정된 Ani가 없다면 Entry.
+		m_fCurTime += DT;
+	}
 	else
 	{
-		eType = m_pController->NextNode(bFinish, bLoop, L"Entry", this);
-	}
+		if (m_pCurAnimation)
+		{
+			bFinish = m_pCurAnimation->IsFinish();
+			bLoop = m_pCurAnimation->IsLoop();
 
-	if (m_pCurAnimation)
-		m_pCurAnimation->finaltick();
+			wstring CurAniName = m_pCurAnimation->GetClip()->GetKey();
+			ANI_NODE_RETURN eType = m_pController->NextNode(bFinish, bLoop, CurAniName, this);
+
+			while (eType == ANI_NODE_RETURN::ENTRY || eType == ANI_NODE_RETURN::EXIT)
+			{
+				switch (eType)
+				{
+				case ANI_NODE_RETURN::ENTRY:
+					eType = m_pController->NextNode(bFinish, bLoop, L"Entry", this);
+					break;
+				case ANI_NODE_RETURN::EXIT:
+					eType = m_pController->NextNode(bFinish, bLoop, L"Exit", this);
+					break;
+				}
+
+			}
+
+			switch (eType)
+			{
+			case ANI_NODE_RETURN::CHANGE:
+				m_bBlending = true;
+				break;
+			case ANI_NODE_RETURN::RESET:
+				if (m_pCurAnimation)
+					m_pCurAnimation->Reset();
+				break;
+			}
+		}//현재 설정된 Ani가 없다면 Entry.
+		else
+		{
+			eType = m_pController->NextNode(bFinish, bLoop, L"Entry", this);
+			m_pCurAnimation = m_pNextAnimation;
+		}
+
+		if (m_pCurAnimation)
+			m_pCurAnimation->finaltick();
+	}
 }
 
 void CAnimator3D::UpdateData()
@@ -115,7 +130,10 @@ void CAnimator3D::UpdateData()
 
 	if (m_pCurAnimation)
 	{
-		m_pCurAnimation->UpdateData(m_pBoneFinalMatBuffer);
+		wstring strNextClip;
+		if (m_pNextAnimation)
+			strNextClip = m_pNextAnimation->GetClip()->GetKey();
+		m_pCurAnimation->UpdateData(m_pBoneFinalMatBuffer, strNextClip);
 
 		// t30 레지스터에 최종행렬 데이터(구조버퍼) 바인딩		
 		m_pBoneFinalMatBuffer->UpdateData(30, PIPELINE_STAGE::PS_VERTEX);
@@ -210,6 +228,15 @@ void CAnimator3D::ClearData()
 		pMtrl->SetAnim3D(false); // Animation Mesh 알리기
 		pMtrl->SetBoneCount(0);
 	}
+}
+
+void CAnimator3D::BlendingEnd()
+{
+	m_bBlending = false;
+	m_fCurTime = 0.f;
+	m_pCurAnimation->Reset();
+	m_pCurAnimation = m_pNextAnimation;
+	m_pNextAnimation = nullptr;
 }
 
 void CAnimator3D::SaveToLevelFile(FILE* _pFile)

@@ -16,12 +16,12 @@ CAnimation3D::CAnimation3D() :
 	, m_fRatio(0.f)
 {
 }
-CAnimation3D::CAnimation3D(const CAnimation3D& _ref):
-	  m_dCurTime(0.)
+CAnimation3D::CAnimation3D(const CAnimation3D& _ref) :
+	m_dCurTime(0.)
 	, m_iFrameCount(_ref.m_iFrameCount)
 	, m_bFinalMatUpdate(false)
 	, m_bFinish(false)
-	, m_iFrameIdx(0) 
+	, m_iFrameIdx(0)
 	, m_iNextFrameIdx(0)
 	, m_fRatio(0.f)
 	, m_pClip(_ref.m_pClip)
@@ -56,7 +56,7 @@ CAnimation3D::~CAnimation3D()
 }
 void CAnimation3D::check_bone(CStructuredBuffer*& _finalMat)
 {
-	UINT iBoneCount =m_pClip->GetBoneCount();
+	UINT iBoneCount = m_pClip->GetBoneCount();
 	if (_finalMat->GetElementCount() != iBoneCount)
 	{
 		_finalMat->Create(sizeof(Matrix), iBoneCount, SB_TYPE::READ_WRITE, false, nullptr);
@@ -66,12 +66,12 @@ void CAnimation3D::finaltick()
 {
 	if (m_bFinish)
 		return;
+
 	m_dCurTime = 0.f;
 	m_dUpdateTime += DT;
 
 	if (m_dUpdateTime >= m_pClip->m_tInfo.dTimeLength)
 	{
-		m_dUpdateTime = 0.f;
 		m_bFinish = true;
 	}
 
@@ -107,7 +107,7 @@ void CAnimation3D::finaltick()
 	wstring wstrKey;
 	wstrKey.assign(strKey.begin(), strKey.end());
 	CGameObject* pOwner = m_pOwner->GetOwner();
-	auto voidFunc = pOwner->GetFuncPtrVOID(wstrKey); 
+	auto voidFunc = pOwner->GetFuncPtrVOID(wstrKey);
 	if (voidFunc.has_value())
 	{
 		std::function<void()>& FuncRef = voidFunc.value().get();
@@ -140,26 +140,50 @@ void CAnimation3D::finaltick()
 	m_bEvents[m_iFrameIdx] = true;
 
 }
-void CAnimation3D::UpdateData(CStructuredBuffer*& _bonMat)
+void CAnimation3D::UpdateData(CStructuredBuffer*& _bonMat, wstring _strNextClip)
 {
-	if (m_bFinalMatUpdate == false)
+	bool bBlending = m_pOwner->IsBlending();
+	if (m_bFinalMatUpdate == false || bBlending)
 	{
 		// Animation3D Update Compute Shader
 		CAnimation3DShader* pUpdateShader = (CAnimation3DShader*)CResMgr::GetInst()->FindRes<CComputeShader>(L"Animation3DUpdateCS").Get();
 		check_bone(_bonMat);
 		pUpdateShader->SetFrameDataBuffer(m_pClip->GetBoneFrameBuffer());
 		pUpdateShader->SetOffsetMatBuffer(m_pClip->GetBoneOffsetBuffer());
+
+
 		pUpdateShader->SetOutputBuffer(_bonMat);
 
 		UINT iBoneCount = m_pClip->GetBoneCount();
 		pUpdateShader->SetBoneCount(iBoneCount);
 		pUpdateShader->SetFrameIndex(m_iFrameIdx);
 		pUpdateShader->SetNextFrameIdx(m_iNextFrameIdx);
-		//pUpdateShader->SetBlendingFlag(m_bBlending);
-		pUpdateShader->SetFrameRatio(m_fRatio);
+
+		bool bBlending = m_pOwner->IsBlending();
+		pUpdateShader->SetBlendingFlag(bBlending);
+		float fBlendRatio = m_pOwner->GetBlendRatio();
+		if (bBlending)
+		{
+			if (_strNextClip.size() != 0)
+			{
+				Ptr<CAniClip> pNextClip = CResMgr::GetInst()->FindRes<CAniClip>(_strNextClip);
+				pUpdateShader->SetNextFrameDataBuffer(pNextClip->GetBoneFrameBuffer());
+			}
+			
+			pUpdateShader->SetFrameRatio(fBlendRatio);
+		}
+		else
+		{
+			pUpdateShader->SetFrameRatio(m_fRatio);
+		}
+
+
 
 		// 업데이트 쉐이더 실행
 		pUpdateShader->Execute();
+
+		if (fBlendRatio >= 1.f)
+			m_pOwner->BlendingEnd();
 
 		m_bFinalMatUpdate = true;
 	}
