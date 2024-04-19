@@ -80,29 +80,16 @@ void CBaseCharacterScript::tick()
 	CTileScript* tileScript = tile->GetScript<CTileScript>();
 	if (tileScript == nullptr)
 		return;
-	if (tileScript->GetType() != TILE_TYPE::BATTLE)
-		return;
-
-	CGameObject* pPlayer = GetPlayer();
-	if (pPlayer == nullptr)
-		return;
-	UINT iGameState = CGameMgr::GetInst()->GetState(pPlayer);
-
-	switch (iGameState)
+	TILE_TYPE eType = tileScript->GetType();
+	switch (eType)
 	{
-	case 0://select
-		m_iStartTileNum = tileScript->GetNumber();
-		SetAtk(false);
-		SetMove(false);
+	case TILE_TYPE::WAIT:
+		WaitTileTick();
 		break;
-	case 1://battle
-		Battle(tile);
-		break;
-	case 2://item
+	case TILE_TYPE::BATTLE:
+		BattleTileTick();
 		break;
 	}
-
-	UpdateCharacterUI();
 }
 
 void CBaseCharacterScript::BeginOverlap(CCollider* _Other)
@@ -130,13 +117,44 @@ void CBaseCharacterScript::RegisterFuncPtr()
 	}
 }
 
-bool CBaseCharacterScript::IsWithinAttackRange()
-{
-	//if (m_pTarget == nullptr)
-	//	return false;
-	//Vec3 position = m_pTarget->GetRelativePos();
 
-	return false;
+
+void CBaseCharacterScript::WaitTileTick()
+{
+	CTileScript* pTileScript = GetOwner()->GetParent()->GetScript<CTileScript>();
+
+	const TILE_TYPE& eType = pTileScript->GetType();
+	if (eType != TILE_TYPE::WAIT)
+		return;	
+	const int& iNumber = pTileScript->GetNumber();
+	SetStartTileNum(iNumber);
+}
+
+void CBaseCharacterScript::BattleTileTick()
+{
+	CTileScript* pTileScript = GetOwner()->GetParent()->GetScript<CTileScript>();
+
+	const TILE_TYPE& eType = pTileScript->GetType();
+	if (eType != TILE_TYPE::BATTLE)
+		return;
+
+	CGameObject* pPlayer = GetPlayer();
+	if (pPlayer == nullptr)
+		return;
+	UINT iGameState = CGameMgr::GetInst()->GetState(pPlayer);
+
+	switch (iGameState)
+	{
+	case 0://select
+		break;
+	case 1://battle
+		Battle(pTileScript->GetOwner());
+		break;
+	case 2://item
+		break;
+	}
+
+	UpdateCharacterUI();
 }
 
 void CBaseCharacterScript::UltGaugeUp()
@@ -149,65 +167,7 @@ void CBaseCharacterScript::UltGaugeDown()
 	m_ChStatus.dCurUltGauge -= m_ChStatus.dAddUltGauge;
 }
 
-void CBaseCharacterScript::Search()
-{
-}
 
-void CBaseCharacterScript::Wait()
-{
-	if (m_ChState.bAttack == false && m_ChState.bDance == false && m_ChState.bMove == false && m_ChState.bUlt == false)
-	{
-		m_ChState.bWaiting = !m_ChState.bWaiting;
-		m_ChState.bUlt = false;
-		m_ChState.bMove = false;
-		m_ChState.bAttack = false;
-		m_ChState.bDance = false;
-		m_ChState.bEnd = false;
-	}
-	else
-	{
-		return;
-	}
-}
-
-void CBaseCharacterScript::Move()
-{
-	m_ChState.bMove = !m_ChState.bMove;
-	m_ChState.bWaiting = false;
-	m_ChState.bAttack = false;
-}
-
-void CBaseCharacterScript::Attack()
-{
-	if (m_ChState.bAttack == false)
-		return;
-	m_ChState.bWaiting = false;
-	m_ChState.bMove = false;
-
-	if (m_ChState.bUlt)
-		UltAttack();
-	else
-		NormalAttack();
-}
-
-void CBaseCharacterScript::NormalAttack()
-{
-
-}
-
-void CBaseCharacterScript::UltAttack()
-{
-}
-
-void CBaseCharacterScript::Dance()
-{
-	if (m_ChState.bDance == false)
-		return;
-	m_ChState.bAttack = false;
-	m_ChState.bMove = false;
-	m_ChState.bUlt = false;
-	m_ChState.bWaiting = false;
-}
 
 void CBaseCharacterScript::SetTarget(CCollider* _Other)
 {
@@ -295,13 +255,13 @@ void CBaseCharacterScript::CurStartTile()
 	if (pTileScript == nullptr)
 		return;
 	int iNumber = pTileScript->GetNumber();
-	m_iStartTileNum = iNumber;
+	SetStartTileNum(iNumber);
 }
 
 void CBaseCharacterScript::Reset()
 {
 	CGameObject* pOwner = GetOwner();
-	CTileMgr::GetInst()->RegisterItem(m_iStartTileNum, pOwner);
+	CTileMgr::GetInst()->RegisterItem(GetStartTileNum(), pOwner);
 	GetOwner()->Transform()->SetRelativeRot(DEGREE2RADIAN(90.f), 0.f, DEGREE2RADIAN(180));
 	GetOwner()->Transform()->SetRelativePos(0.f, 0.f, 0.f);
 }

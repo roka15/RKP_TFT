@@ -12,7 +12,6 @@ private:
 	tItemInfo           m_Items[MAX_ITEM];
 	Vec3                m_v3TargetPos;
 	int                 m_iMoveTargetNum;
-	int					m_iStartTileNum;
 	int					m_iAtkTargetNum;
 	bool                m_bMove;
 	Vec2                m_v2Dir;
@@ -37,18 +36,14 @@ public:
 	bool IsEnd() { return m_ChState.bEnd; }
 	int  GetAtkNumber() { return m_ChState.iAtkNum; }
 	
-	virtual bool IsWithinAttackRange();
+
 	void SetWaitingSeat(bool _flag) { m_ChState.bWaiting = _flag; }
+	virtual void WaitTileTick();
+	virtual void BattleTileTick();
 	virtual void UltGaugeUp();
 	virtual void UltGaugeDown();
 	virtual void AttackOFF() { m_ChState.bAttack = false; }
-	virtual void Search();
-	virtual void Wait();
-	virtual void Move();
-	virtual void Attack();
-	virtual void NormalAttack();
-	virtual void UltAttack();
-	virtual void Dance();
+
 	virtual void SetTarget(CCollider* _Other);
 	virtual void SendDamage();
 	virtual void RecvDamage(float _damage);
