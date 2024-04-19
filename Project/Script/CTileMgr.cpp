@@ -249,8 +249,6 @@ CTileScript* CTileMgr::GetTile(int _iid)
 void CTileMgr::RegisterItem(int _iTileNum, CGameObject* _pObj)
 {
 	CTileScript* script = GetTile(_iTileNum);
-	CItem* pItem = _pObj->GetScript<CItem>();
-	pItem->SetStartTileNum(_iTileNum);
 	script->AddItem(_pObj);
 }
 

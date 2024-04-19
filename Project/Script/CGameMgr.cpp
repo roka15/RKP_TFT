@@ -513,6 +513,7 @@ void CGameMgr::CreateCharacterPrefabs()
 
 		pInNode = pAniController->CreateNode(L"Battle_Idle", L"anim3D\\Attrox\\Idle1.anm");
 		t1 = pAniController->CreateTransition(L"Normal_Battle_Idle", pInNode, BIdleIntroNode, true);
+		t1->SetBlendTime(0.f);
 
 		t1 = pAniController->CreateTransition(L"Battle_Idle_Exit", pExitNode, pInNode, false);
 		t1->RegisterCondition(L"Battle", 0, COMPARISON_TYPE::EQUAL);

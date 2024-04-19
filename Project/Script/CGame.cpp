@@ -275,6 +275,8 @@ bool CGame::BuyItem(CHARACTER_TYPE _eType, CGameObject* _pPlayer)
 		//만약 Item을 판매한다면 이 객체는 다시 Game 의 m_mapShop에서 관리.
 		pPlayerScript->AddItem(pItem);
 		pItemScript->SetPlayer(_pPlayer);
+		pItemScript->SetStartTileNum(tileNumber);
+
 		CTileMgr::GetInst()->RegisterItem(tileNumber, pItem);
 		return true;
 	}//구매 실패
