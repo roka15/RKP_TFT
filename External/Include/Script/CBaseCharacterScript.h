@@ -15,10 +15,12 @@ private:
 	int					m_iAtkTargetNum;
 	bool                m_bMove;
 	Vec2                m_v2Dir;
+	CGameObject*		m_pTargetObj;
 private:
 	void ChangeTransInfo();
 	void UpdateCharacterUI();
 	void AddULTGauge();
+	void LookAtTarget(CGameObject* _pTarget);
 public:
 	virtual void start()override;
 	virtual void tick()override;

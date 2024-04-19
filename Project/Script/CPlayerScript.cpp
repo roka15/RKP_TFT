@@ -31,13 +31,12 @@ void CPlayerScript::SetGameStateInfo()
 		{
 		case GAME_STATE::BATTLE:
 			//select때 설정한 캐릭터 초기 위치 저장
-			if (m_ePlayerType != PLAYER_TYPE::AI)
-				pCharacterScript->CurStartTile();
+			pCharacterScript->CurStartTile();
+			break;
 		case GAME_STATE::LOADING:
 			//select때 설정한 초기 위치로 이동.
 			//상태에 대한 것들도 초기화(atk,move 등)
-			if (m_ePlayerType != PLAYER_TYPE::AI)
-				pCharacterScript->Reset();
+			pCharacterScript->Reset();
 			pCharacterScript->BattleStateReset();
 			break;
 		}
@@ -104,7 +103,7 @@ void CPlayerScript::BuyExp()
 
 void CPlayerScript::RefreshShop()
 {
-	CGameMgr::GetInst()->RefreshShop(m_GameKey,GetOwner());
+	CGameMgr::GetInst()->RefreshShop(m_GameKey, GetOwner());
 }
 
 void CPlayerScript::VoidTest()

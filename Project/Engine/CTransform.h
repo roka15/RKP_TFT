@@ -19,6 +19,11 @@ private:
     Matrix  m_matWorld; // 크기, 회전, 이동 정보를 합쳐놓음
     Matrix  m_matWorldInv;
 
+    Vec3   m_v3OriginRot;
+    Vec3   m_v3LerpGoalRot;
+    float  m_fLerpRatio;
+    bool   m_bLerpFlag;
+
 public:
     void SetRelativePos(Vec3 _vPos) { m_vRelativePos = _vPos; }
     void SetRelativeScale(Vec3 _vScale) { m_vRelativeScale = _vScale; }
@@ -44,7 +49,9 @@ public:
     const Matrix& GetWorldInvMat() const { return m_matWorldInv; }
 
     void SetWorldMat(const Matrix& _mat) { m_matWorld = _mat; }
-
+    void RequestLerpRot(Vec3 _Rot);
+    void CancelLerpRot();
+    bool GetLerpFlag() { return m_bLerpFlag; }
 public:
     virtual void finaltick() override;    
     void UpdateData();

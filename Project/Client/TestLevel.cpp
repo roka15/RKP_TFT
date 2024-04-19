@@ -404,7 +404,7 @@ void CreateTestLevel()
 		pObj->SetName(L"Tree1");
 		pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-90), 0.f, 0.f));
 		pObj->Transform()->SetRelativeScale(Vec3(1.0f, 1.0f, 1.0f));
-		const vector<CGameObject*> treeChilds = pObj->GetChild();
+		const vector<CGameObject*> treeChilds = pObj->GetChild(L"MeshParent")->GetChild();
 		treeChilds[1]->Transform()->SetRelativePos(Vec3{ 128,-70,540 });
 		treeChilds[1]->Transform()->SetRelativeScale(Vec3{ 3,3,3 });
 		treeChilds[1]->Transform()->SetRelativeRot(Vec3{ DEGREE2RADIAN(24),0,0 });
@@ -460,7 +460,7 @@ void CreateTestLevel()
 
 		CGameObject* CopyGrass = pObj->Clone();
 
-		vector<CGameObject*>pChilds = pObj->GetChild();
+		vector<CGameObject*>pChilds = pObj->GetChild(L"MeshParent")->GetChild();
 		pChilds[0]->Transform()->SetRelativePos(Vec3{ -607.f,-185.f,-112.f });
 		pChilds[0]->Transform()->SetRelativeRot(Vec3{ 0.f,DEGREE2RADIAN(35.f),0.f });
 
@@ -486,7 +486,7 @@ void CreateTestLevel()
 		pObj = CopyGrass;
 		Ptr<CMaterial> GrassType1Mtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"material\\tree leaf.mtrl");
 		pObj->SetName(L"Grass2");
-		pChilds = pObj->GetChild();
+		pChilds = pObj->GetChild(L"MeshParent")->GetChild();
 		for (int i = 0; i < pChilds.size(); ++i)
 		{
 			pChilds[i]->MeshRender()->SetMaterial(GrassType1Mtrl, 0);
@@ -523,7 +523,7 @@ void CreateTestLevel()
 		pObj->SetName(L"Grass3");
 		GrassList->AddChild(pObj);
 
-		pChilds = pObj->GetChild();
+		pChilds = pObj->GetChild(L"MeshParent")->GetChild();
 
 		pChilds[0]->Transform()->SetRelativePos(Vec3{ -739.f,-1697.f,-200.f });
 		pChilds[0]->Transform()->SetRelativeScale(Vec3{ 2.f,2.f,2.f });
@@ -554,7 +554,7 @@ void CreateTestLevel()
 		GrassList->AddChild(pObj);
 		pChilds.clear();
 
-		pChilds = pObj->GetChild();
+		pChilds = pObj->GetChild(L"MeshParent")->GetChild();
 
 		pChilds[0]->Transform()->SetRelativePos(Vec3{ -42.f,684.f,-125.f });
 		pChilds[0]->Transform()->SetRelativeScale(Vec3{ 2.f,2.f,2.f });
@@ -585,7 +585,7 @@ void CreateTestLevel()
 		GrassList->AddChild(pObj);
 		pChilds.clear();
 
-		pChilds = pObj->GetChild();
+		pChilds = pObj->GetChild(L"MeshParent")->GetChild();
 
 		pChilds[0]->Transform()->SetRelativePos(Vec3{ 415.f,868.f,-125.f });
 		pChilds[0]->Transform()->SetRelativeScale(Vec3{ 2.f,2.f,2.f });
@@ -616,7 +616,7 @@ void CreateTestLevel()
 		GrassList->AddChild(pObj);
 		pChilds.clear();
 
-		pChilds = pObj->GetChild();
+		pChilds = pObj->GetChild(L"MeshParent")->GetChild();
 
 		pChilds[0]->Transform()->SetRelativePos(Vec3{ 1458.f,667.f,-165.f });
 		pChilds[0]->Transform()->SetRelativeScale(Vec3{ 4.f,4.f,4.f });
@@ -647,7 +647,7 @@ void CreateTestLevel()
 		GrassList->AddChild(pObj);
 		pChilds.clear();
 
-		pChilds = pObj->GetChild();
+		pChilds = pObj->GetChild(L"MeshParent")->GetChild();
 
 		pChilds[0]->Transform()->SetRelativePos(Vec3{ 2694.f,365.f,-180.f });
 		pChilds[0]->Transform()->SetRelativeScale(Vec3{ 4.f,4.f,4.f });
@@ -679,7 +679,7 @@ void CreateTestLevel()
 		GrassList->AddChild(pObj);
 		pChilds.clear();
 
-		pChilds = pObj->GetChild();
+		pChilds = pObj->GetChild(L"MeshParent")->GetChild();
 
 		pChilds[0]->Transform()->SetRelativePos(Vec3{ 2320.f,-1002.f,-202.f });
 		pChilds[0]->Transform()->SetRelativeScale(Vec3{ 2.f,2.f,2.f });
@@ -710,7 +710,7 @@ void CreateTestLevel()
 		GrassList->AddChild(pObj);
 		pChilds.clear();
 
-		pChilds = pObj->GetChild();
+		pChilds = pObj->GetChild(L"MeshParent")->GetChild();
 
 		pChilds[0]->Transform()->SetRelativePos(Vec3{ 244.f,-2754.f,-202.f });
 		pChilds[0]->Transform()->SetRelativeScale(Vec3{ 3.f,3.f,3.f });
@@ -1208,4 +1208,5 @@ void CreateTestLevel()
 #pragma endregion
 
 #pragma endregion	
+	CGameMgr::GetInst()->BuyItem(pPlayerScript->GetGameID(), CHARACTER_TYPE::ATTROX, pPlayer);
 }

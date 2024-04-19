@@ -16,7 +16,8 @@
 CBaseCharacterScript::CBaseCharacterScript() :
 	CItem(SCRIPT_TYPE::BASECHARACTERSCRIPT),
 	m_ChState{ true,false,false,false,false,false },
-	m_bMove(false)
+	m_bMove(false),
+	m_pTargetObj(nullptr)
 {
 	m_ChStatus.fAttackRange = 1;
 	m_ChStatus.iHp = 40;
@@ -30,7 +31,8 @@ CBaseCharacterScript::CBaseCharacterScript() :
 }
 
 CBaseCharacterScript::CBaseCharacterScript(SCRIPT_TYPE _eType) :
-	CItem(_eType)
+	CItem(_eType),
+	m_pTargetObj(nullptr)
 {
 	m_ChStatus.fAttackRange = 1;
 	m_ChStatus.iHp = 40;
@@ -46,7 +48,8 @@ CBaseCharacterScript::CBaseCharacterScript(SCRIPT_TYPE _eType) :
 CBaseCharacterScript::CBaseCharacterScript(const CBaseCharacterScript& _ref)
 	:CItem(_ref),
 	m_ChState{ true,false,false,false,false,false },
-	m_bMove(false)
+	m_bMove(false),
+	m_pTargetObj(nullptr)
 {
 	m_ChStatus.fAttackRange = 1;
 	m_ChStatus.iHp = 40;
@@ -125,7 +128,7 @@ void CBaseCharacterScript::WaitTileTick()
 
 	const TILE_TYPE& eType = pTileScript->GetType();
 	if (eType != TILE_TYPE::WAIT)
-		return;	
+		return;
 	const int& iNumber = pTileScript->GetNumber();
 	SetStartTileNum(iNumber);
 }
@@ -254,6 +257,9 @@ void CBaseCharacterScript::CurStartTile()
 	CTileScript* pTileScript = GetOwner()->GetParent()->GetScript<CTileScript>();
 	if (pTileScript == nullptr)
 		return;
+	CPlayerScript* pPlayerScript = GetPlayer()->GetScript<CPlayerScript>();
+	if (pPlayerScript->GetPlayerType() == PLAYER_TYPE::AI)
+		return;
 	int iNumber = pTileScript->GetNumber();
 	SetStartTileNum(iNumber);
 }
@@ -261,7 +267,9 @@ void CBaseCharacterScript::CurStartTile()
 void CBaseCharacterScript::Reset()
 {
 	CGameObject* pOwner = GetOwner();
-	CTileMgr::GetInst()->RegisterItem(GetStartTileNum(), pOwner);
+	CPlayerScript* pPlayerScript = GetPlayer()->GetScript<CPlayerScript>();
+	if (pPlayerScript->GetPlayerType() != PLAYER_TYPE::AI)
+		CTileMgr::GetInst()->RegisterItem(GetStartTileNum(), pOwner);
 	GetOwner()->Transform()->SetRelativeRot(DEGREE2RADIAN(90.f), 0.f, DEGREE2RADIAN(180));
 	GetOwner()->Transform()->SetRelativePos(0.f, 0.f, 0.f);
 }
@@ -272,6 +280,14 @@ void CBaseCharacterScript::BattleStateReset()
 	SetAtk(false);
 	SetMove(false);
 	SetUlt(false);
+	CGameObject* pMeshParentObj = GetOwner()->GetChild(L"MeshParent");
+	if (pMeshParentObj)
+	{
+		pMeshParentObj->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
+		pMeshParentObj->Transform()->CancelLerpRot();
+	}
+	m_iAtkTargetNum = 0;
+
 }
 
 
@@ -333,6 +349,40 @@ void CBaseCharacterScript::UpdateCharacterUI()
 
 }
 
+void CBaseCharacterScript::LookAtTarget(CGameObject* _pTarget)
+{
+	CGameObject* pMeshParentObj = GetOwner()->GetChild(L"MeshParent");
+	if (pMeshParentObj->Transform()->GetLerpFlag())
+		return;
+	CGameObject* pPlayer = GetPlayer();
+	bool bClientFlag = CGameMgr::GetInst()->IsSamePlayer(pPlayer);
+	int BattleOffset = CTileMgr::GetInst()->GetWaitCount().x;
+	int iCurNumber = GetOwner()->GetParent()->GetScript<CTileScript>()->GetNumber() - BattleOffset;
+	int iTargetNumber = m_iAtkTargetNum - BattleOffset;
+	if (iTargetNumber < 0)
+		return;
+	Vec3 TargetPos = _pTarget->Transform()->GetWorldPos();//CTileMgr::GetInst()->GetBattleTileWorldPos(iTargetNumber);
+	Vec3 CurPos = Transform()->GetWorldPos();
+
+	Vec3 v3Dir = {};
+	v3Dir.x = TargetPos.x - CurPos.x;
+	v3Dir.z = -(TargetPos.z - CurPos.z);
+	v3Dir.x *= bClientFlag == true ? 1 : -1;
+	v3Dir.Normalize();
+
+	Vec3 PrevDir = Transform()->GetRelativeDir(DIR_TYPE::RIGHT);//Vec3(Transform()->GetRelativeDir(DIR_TYPE::RIGHT).x, 0.f, Transform()->GetRelativeDir(DIR_TYPE::FRONT).z);
+	Vec3 NextDir = Vec3(v3Dir.x, 0.f, v3Dir.z);
+	float fRadian = TransformFunc::RotationGetRadian(PrevDir, NextDir);
+	bool bSign = PrevDir.Cross(NextDir).y < 0 ? true : false;
+	if (bClientFlag && bSign)
+		fRadian *= -1.f;
+	else if (bClientFlag == false && bSign == false)
+		fRadian *= -1.f;
+	Vec3 v3Rotation = pMeshParentObj->Transform()->GetRelativeRot();
+	v3Rotation.y = fRadian;
+	pMeshParentObj->Transform()->RequestLerpRot(v3Rotation);
+}
+
 void CBaseCharacterScript::Battle(CGameObject* _pTileObj)
 {
 	CTileScript* pTileScript = _pTileObj->GetScript<CTileScript>();
@@ -357,9 +407,12 @@ void CBaseCharacterScript::Battle(CGameObject* _pTileObj)
 		return;
 	}
 	m_iAtkTargetNum = endNumber;
+	m_pTargetObj = CTileMgr::GetInst()->GetItem(m_iAtkTargetNum);
+	bool bRotLerpFlag = GetOwner()->GetChild(L"MeshParent")->Transform()->GetLerpFlag();
 	//적이 있고 사거리내에 도착했다면 Atk 상태로 변경
 	if (m_ChStatus.fAttackRange >= distance && m_bMove == false)
 	{
+		LookAtTarget(m_pTargetObj);
 		//attack
 		//방향은 end 방향을 바라보기
 		SetMove(false);
@@ -433,6 +486,8 @@ void CBaseCharacterScript::Battle(CGameObject* _pTileObj)
 			m_v2Dir.Normalize();
 			m_bMove = true;
 			SetMove(true);
+			CGameObject* pNextTile = CTileMgr::GetInst()->GetTile(nextTile + BattleOffset)->GetOwner();
+			LookAtTarget(pNextTile);
 		}
 	}
 }

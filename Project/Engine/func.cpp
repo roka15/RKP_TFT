@@ -396,3 +396,35 @@ int GetSizeofFormat(DXGI_FORMAT _eFormat)
 
 	return iRetByte / 8;
 }
+
+Vec3 TransformFunc::GetDir(DIR_TYPE _eType)
+{
+	Vec3 Dir;
+	switch (_eType)
+	{
+	case DIR_TYPE::FRONT:
+		Dir = Vec3(0.f, 0.f, 1.f);
+		break;
+	case DIR_TYPE::RIGHT:
+		Dir = Vec3(1.f, 0.f, 0.f);
+		break;
+	case DIR_TYPE::UP:
+		Dir = Vec3(0.f, 1.f, 0.f);
+		break;
+	}
+
+	return Dir;
+}
+
+float TransformFunc::RotationGetRadian(Vec3 _dr1, Vec3 _dir2)
+{
+	Vec3 Dir1 = _dr1;
+
+	Vec3 Dir2 = _dir2;
+
+	 float CosTheta = Dir1.Dot(Dir2);
+	 float Radian = acosf(CosTheta);
+	 return Radian;
+}
+
+

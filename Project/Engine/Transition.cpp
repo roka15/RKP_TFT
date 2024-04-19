@@ -7,7 +7,7 @@
 
 CTransition::CTransition():
 	m_bHasExitTime(false),
-	m_fBlendTime(0.5f)
+	m_fBlendTime(0.25f)
 {
 }
 

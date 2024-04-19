@@ -37,9 +37,10 @@ public:
     virtual void init()override;
     virtual void tick()override;
 private:
-    CTileScript* GetTile(int _iid);
+   
 public:
     //get set
+    CTileScript* GetTile(int _iid);
     Vec3 GetBattleTileWorldPos(int _itile);
     const TILE_OWNER_TYPE& GetTileOwnerType(int _iTileNum);
     void RegisterItem(int _tileNum, CGameObject* _pObj);

@@ -28,6 +28,10 @@ CGameObject* CMeshData::Instantiate()
 	CGameObject* parrentObj = new CGameObject();
 	parrentObj->AddComponent(new CTransform);
 	
+	CGameObject* meshParentObj = new CGameObject();
+	meshParentObj->AddComponent(new CTransform());
+	meshParentObj->SetName(L"MeshParent");
+	parrentObj->AddChild(meshParentObj);
 
 	wstring strTBoneClip = {};
 	bool bAni = false;
@@ -40,7 +44,7 @@ CGameObject* CMeshData::Instantiate()
 			bAni = m_vecDataNode[i]->m_bAni;
 		}
 		CGameObject* pNewObj = new CGameObject;
-		parrentObj->AddChild(pNewObj);
+		meshParentObj->AddChild(pNewObj);
 
 		pNewObj->SetName(pMesh->GetName());
 		pNewObj->AddComponent(new CTransform);

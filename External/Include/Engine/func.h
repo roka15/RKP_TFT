@@ -125,4 +125,8 @@ void Safe_Del_Map(map<T1, T2>& _map)
 }
 
 
-
+namespace TransformFunc
+{
+	Vec3  GetDir(DIR_TYPE _eType);
+	float RotationGetRadian(Vec3 _dir1, Vec3 _dir2);
+}

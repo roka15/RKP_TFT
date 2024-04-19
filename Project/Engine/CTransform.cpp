@@ -3,6 +3,7 @@
 
 #include "CDevice.h"
 #include "CConstBuffer.h"
+#include "CTimeMgr.h"
 
 CTransform::CTransform()
 	: CComponent(COMPONENT_TYPE::TRANSFORM)
@@ -12,6 +13,7 @@ CTransform::CTransform()
 		  Vec3(1.f, 0.f, 0.f)
 		, Vec3(0.f, 1.f, 0.f)
 		, Vec3(0.f, 0.f, 1.f) }
+	, m_bLerpFlag(false)
 {
 	SetName(L"Transform");
 }
@@ -20,13 +22,46 @@ CTransform::~CTransform()
 {
 }
 
+void CTransform::RequestLerpRot(Vec3 _Rot)
+{
+	if (_Rot == m_vRelativeRot)
+		return;
+	m_v3LerpGoalRot = _Rot;
+	m_bLerpFlag = true;
+	m_fLerpRatio = 0.f;
+	m_v3OriginRot = m_vRelativeRot;
+}
+
+void CTransform::CancelLerpRot()
+{
+	m_bLerpFlag = false;
+	m_fLerpRatio = 0.f;
+}
+
 void CTransform::finaltick()
 {
 	if (GetOwner()->GetName().compare(L"Attrox") == 0)
 		int a = 0;
+
+	if (m_bLerpFlag)
+	{
+		if (m_fLerpRatio >= 1.f)
+		{
+			CancelLerpRot();
+		}
+		else if (m_v3LerpGoalRot == m_vRelativeRot)
+		{
+			CancelLerpRot();
+		}
+		else
+		{
+			m_vRelativeRot = XMVectorLerp(m_v3OriginRot, m_v3LerpGoalRot, m_fLerpRatio);
+			m_fLerpRatio += DT;
+		}
+	}
 	m_matWorldScale = XMMatrixIdentity();
 	m_matWorldScale = XMMatrixScaling(m_vRelativeScale.x, m_vRelativeScale.y, m_vRelativeScale.z);
-	
+
 	Matrix matRot = XMMatrixIdentity();
 	matRot = XMMatrixRotationX(m_vRelativeRot.x);
 	matRot *= XMMatrixRotationY(m_vRelativeRot.y);
