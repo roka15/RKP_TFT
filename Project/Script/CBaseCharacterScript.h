@@ -15,6 +15,7 @@ private:
 	int					m_iAtkTargetNum;
 	bool                m_bMove;
 	Vec2                m_v2Dir;
+	Vec3				m_v3PrevDir;
 	CGameObject*		m_pTargetObj;
 private:
 	void ChangeTransInfo();
@@ -58,7 +59,7 @@ public:
 	void SetAtkNumber(int _iNumber) { m_ChState.iAtkNum = _iNumber; }
 	void CurStartTile();
 	void Reset(); 
-	void BattleStateReset();
+	void BattleStateReset(); 
 
 protected:
 	void Battle(CGameObject* _pTileObj);

@@ -143,7 +143,7 @@ void CreateTestLevel()
 	CGameObject* pMap = new CGameObject();
 	pMap->AddComponent(new CTransform());
 	pMap->Transform()->SetRelativePos(Vec3(1.0f, 1.0f, -33.000));
-	pMap->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(-2), 0.f, 0.f));
+	pMap->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
 
 #pragma region Map Object 
 	{

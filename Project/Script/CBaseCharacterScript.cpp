@@ -27,6 +27,7 @@ CBaseCharacterScript::CBaseCharacterScript() :
 	m_ChStatus.dMinusUltGauge = 10;
 	m_ChStatus.dMaxUltGauge = 50;
 
+	
 	SetCost(10);
 }
 
@@ -41,7 +42,6 @@ CBaseCharacterScript::CBaseCharacterScript(SCRIPT_TYPE _eType) :
 	m_ChStatus.dAddUltGauge = 10;
 	m_ChStatus.dMinusUltGauge = 10;
 	m_ChStatus.dMaxUltGauge = 50;
-
 	SetCost(10);
 }
 
@@ -69,7 +69,7 @@ CBaseCharacterScript::~CBaseCharacterScript()
 void CBaseCharacterScript::start()
 {
 	RegisterFuncPtr();
-
+	m_v3PrevDir = GetOwner()->Transform()->GetWorldDir(DIR_TYPE::UP);
 	m_ChStatus.iHp = m_ChStatus.iMaxHp;
 	m_ChStatus.dCurUltGauge = 0;
 	BattleStateReset();
@@ -366,12 +366,12 @@ void CBaseCharacterScript::LookAtTarget(CGameObject* _pTarget)
 
 	Vec3 v3Dir = {};
 	v3Dir.x = TargetPos.x - CurPos.x;
-	v3Dir.z = -(TargetPos.z - CurPos.z);
-	v3Dir.x *= bClientFlag == true ? 1 : -1;
+	v3Dir.z = (TargetPos.z - CurPos.z);
+	v3Dir.z *= bClientFlag == true ? 1 : -1;
 	v3Dir.Normalize();
 
-	Vec3 PrevDir = Transform()->GetRelativeDir(DIR_TYPE::RIGHT);//Vec3(Transform()->GetRelativeDir(DIR_TYPE::RIGHT).x, 0.f, Transform()->GetRelativeDir(DIR_TYPE::FRONT).z);
-	Vec3 NextDir = Vec3(v3Dir.x, 0.f, v3Dir.z);
+	Vec3 PrevDir = Transform()->GetRelativeDir(DIR_TYPE::UP);//Vec3(Transform()->GetRelativeDir(DIR_TYPE::RIGHT).x, 0.f, Transform()->GetRelativeDir(DIR_TYPE::FRONT).z);
+	Vec3 NextDir = Vec3(v3Dir.x,0.f, v3Dir.z);
 	float fRadian = TransformFunc::RotationGetRadian(PrevDir, NextDir);
 	bool bSign = PrevDir.Cross(NextDir).y < 0 ? true : false;
 	if (bClientFlag && bSign)
@@ -381,6 +381,8 @@ void CBaseCharacterScript::LookAtTarget(CGameObject* _pTarget)
 	Vec3 v3Rotation = pMeshParentObj->Transform()->GetRelativeRot();
 	v3Rotation.y = fRadian;
 	pMeshParentObj->Transform()->RequestLerpRot(v3Rotation);
+
+	m_v3PrevDir = v3Dir;
 }
 
 void CBaseCharacterScript::Battle(CGameObject* _pTileObj)
@@ -426,7 +428,7 @@ void CBaseCharacterScript::Battle(CGameObject* _pTileObj)
 		//test를 위해 항상 검사 - 경로 타일 색깔 바뀌게 하기 위함
 		vector<int> Route = CAStarMgr::GetInst()->GetNextNodeAStar(startNumber, endNumber);
 		//if (bClientFlag)
-		CTileMgr::GetInst()->BattleRouteRender(m_iMoveTargetNum - BattleOffset);
+		//CTileMgr::GetInst()->BattleRouteRender(m_iMoveTargetNum - BattleOffset);
 		//move
 		//방향은 다음 타일을 바라보고 움직이기.
 		//목표 지점까지 이동이 완료 될 때까지는 검사 X

@@ -424,6 +424,7 @@ float TransformFunc::RotationGetRadian(Vec3 _dr1, Vec3 _dir2)
 
 	 float CosTheta = Dir1.Dot(Dir2);
 	 float Radian = acosf(CosTheta);
+	 float cos = cosf(CosTheta);
 	 return Radian;
 }
 
