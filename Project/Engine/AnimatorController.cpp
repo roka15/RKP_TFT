@@ -273,10 +273,16 @@ void CAnimatorController::RegisterParam(wstring _strName, float _fValue)
 void CAnimatorController::RegisterParam(wstring _strName, bool _bValue, bool _bTrigger)
 {
 	if (_bTrigger)
+	{
 		m_mapTriggerParams.insert(std::make_pair(_strName, _bValue));
+	}
 	else
+	{
 		m_mapBoolParams.insert(std::make_pair(_strName, _bValue));
+	}
 }
+
+
 
 ANI_NODE_RETURN CAnimatorController::NextNode(bool _bFinish, bool _bLoop, wstring _strCurName, CAnimator3D* _pAnimator)
 {

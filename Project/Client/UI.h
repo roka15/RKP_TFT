@@ -17,6 +17,8 @@ private:
 	bool			m_Modal;		// 모달 or 모달리스
 	bool			m_Active;		// UI 활성화 체크
 
+	string			m_strLinkKey;      // 특정 정보를 출력해야 하는 경우.
+	wstring			m_wstrLinkKey;
 public:
 	virtual void init() {}
 	virtual void tick() {}
@@ -47,6 +49,10 @@ public:
 		m_vecChildUI.push_back(_UI);
 	}
 
+	void SetLinkKey(string _key) { m_strLinkKey = _key; }
+	const string& GetLinkKey() { return m_strLinkKey; }
+	void SetLinkKey(wstring _key) { m_wstrLinkKey = _key; }
+	const wstring& GetWstrLinkKey() { return m_wstrLinkKey; }
 
 public:
 	UI(const string& _Name);

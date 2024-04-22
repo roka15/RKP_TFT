@@ -10,26 +10,10 @@
 
 void CAttroxNormalIdle::OnEntry(CStateMachineScript* _pSMachine, CState* _pState)
 {
-	CCharacterState* pState = dynamic_cast<CCharacterState*>(_pState);
-	if (pState == nullptr)
-		return;
-
-	CAnimator3D* pAni = _pSMachine->Animator3D();
-	if (pAni == nullptr)
-		return;
-	Ptr<CAnimatorController> pController = pAni->GetController();
-	if (pController == nullptr)
-		return;
 }
 
 void CAttroxNormalIdle::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
 {
-	CAnimator3D* pAni = _pSMachine->Animator3D();
-	if (pAni == nullptr)
-		return;
-	Ptr<CAnimatorController> pController = pAni->GetController();
-	if (pController == nullptr)
-		return;
 }
 
 void CAttroxNormalIdle::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)

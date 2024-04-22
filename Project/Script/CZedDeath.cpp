@@ -5,27 +5,10 @@
 #include "CBaseCharacterScript.h"
 void CZedDeath::OnEntry(CStateMachineScript* _pSMachine, CState* _pState)
 {
-	CCharacterState* pState = dynamic_cast<CCharacterState*>(_pState);
-	if (pState == nullptr)
-		return;
-
-	CAnimator3D* pAni = _pSMachine->Animator3D();
-	if (pAni == nullptr)
-		return;
-
-	pAni->SetBoolParam(L"Death", true);
 }
 
 void CZedDeath::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
 {
-	CCharacterState* pState = dynamic_cast<CCharacterState*>(_pState);
-	if (pState == nullptr)
-		return;
-
-	CAnimator3D* pAni = _pSMachine->Animator3D();
-	if (pAni == nullptr)
-		return;
-	pAni->SetBoolParam(L"Death", false);
 }
 
 void CZedDeath::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)

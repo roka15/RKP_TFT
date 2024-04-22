@@ -321,10 +321,7 @@ void CGameMgr::CreateCharacterPrefabs()
 	pObj->Transform()->SetRelativeScale(Vec3{ 1.5f,1.5f,1.5f });
 	pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(90.f), 0.f, DEGREE2RADIAN(180.f)));
 
-	CZedMachineScript* ZedFsmScript = (CZedMachineScript*)CScriptMgr::GetScript(SCRIPT_TYPE::ZEDMACHINESCRIPT);
-	CBaseCharacterScript* chScript = (CBaseCharacterScript*)CScriptMgr::GetScript(SCRIPT_TYPE::CHMINIONSCRIPT);
-	pObj->AddComponent(ZedFsmScript);
-	pObj->AddComponent(chScript);
+	
 #pragma region Animator - Animation Register
 	CAnimator3D* pAnimator = pObj->Animator3D();
 	pAnimator->RegisterAnimation(L"anim3D\\Zed\\Spawn_Skeleton.anm");
@@ -349,13 +346,13 @@ void CGameMgr::CreateCharacterPrefabs()
 
 		pAniController = new CAnimatorController();
 		CResMgr::GetInst()->AddRes<CAnimatorController>(strPath, pAniController);
-		pAniController->RegisterParam(L"Battle", 0);
-		pAniController->RegisterParam(L"ULT", 0);
-		pAniController->RegisterParam(L"Move", 0);
+		pAniController->RegisterParam(L"Attack_Number", 0);
+		pAniController->RegisterParam(L"Battle", false,false);
+		pAniController->RegisterParam(L"ULT", false,false);
+		pAniController->RegisterParam(L"Move", false,false);
 		pAniController->RegisterParam(L"Attack", false, false);
 		pAniController->RegisterParam(L"Dance", false, true);
 		pAniController->RegisterParam(L"End", false, true);
-		pAniController->RegisterParam(L"Attack_Number", 0);
 		pAniController->RegisterParam(L"Death", false, false);
 
 		pAniController->Init();
@@ -377,16 +374,16 @@ void CGameMgr::CreateCharacterPrefabs()
 		pOutNode = pInNode;
 		pInNode = pAniController->CreateNode(L"Battle_Move", L"anim3D\\Zed\\Zed_run.anm_Skeleton.anm");
 		t1 = pAniController->CreateTransition(L"Battle_Idle_Move", pInNode, pOutNode, false);
-		t1->RegisterCondition(L"Move", 1, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Move", true,false, COMPARISON_TYPE::EQUAL);
 		t1 = pAniController->CreateTransition(L"Battle_Move_Idle", pOutNode, pInNode, false);
-		t1->RegisterCondition(L"Move", 0, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Move", false,false, COMPARISON_TYPE::EQUAL);
 
 		pOutNode = pAnyNode;
 		pInNode = pAniController->CreateNode(L"Battle_Attack1", L"anim3D\\Zed\\Zed_attack1.anm_Skeleton.anm");
 		t1 = pAniController->CreateTransition(L"AnyState_Battle_Attack", pInNode, pOutNode, false);
 		t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
 		t1->RegisterCondition(L"Attack_Number", 0, COMPARISON_TYPE::EQUAL);
-		t1->RegisterCondition(L"ULT", 0, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"ULT", false,false, COMPARISON_TYPE::EQUAL);
 		t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", IdleNode, pInNode, false);
 		t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
 
@@ -395,7 +392,7 @@ void CGameMgr::CreateCharacterPrefabs()
 		t1 = pAniController->CreateTransition(L"AnyState_Battle_Attack2", pInNode, pOutNode, false);
 		t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
 		t1->RegisterCondition(L"Attack_Number", 1, COMPARISON_TYPE::EQUAL);
-		t1->RegisterCondition(L"ULT", 0, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"ULT", false,false, COMPARISON_TYPE::EQUAL);
 		t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", IdleNode, pInNode, false);
 		t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
 
@@ -408,7 +405,13 @@ void CGameMgr::CreateCharacterPrefabs()
 
 	}
 	pObj->Animator3D()->SetController(pAniController);
+	pAniController->Save(strPath);
 #pragma endregion
+
+	CZedMachineScript* ZedFsmScript = (CZedMachineScript*)CScriptMgr::GetScript(SCRIPT_TYPE::ZEDMACHINESCRIPT);
+	CBaseCharacterScript* chScript = (CBaseCharacterScript*)CScriptMgr::GetScript(SCRIPT_TYPE::CHMINIONSCRIPT);
+	pObj->AddComponent(ZedFsmScript);
+	pObj->AddComponent(chScript);
 
 	CGameObject* pZedHPBG = pHPBarBG->Instantiate();
 	CGameObject* pZedMPBG = pMPBarBG->Instantiate();
@@ -427,12 +430,7 @@ void CGameMgr::CreateCharacterPrefabs()
 	pObj->Transform()->SetRelativeScale(Vec3{ 1.5f,1.5f,1.5f });
 	pObj->Transform()->SetRelativeRot(Vec3(DEGREE2RADIAN(90.f), 0.f, DEGREE2RADIAN(180.f)));
 	pObj->AddComponent(new CBoxCollider);
-	CAttroxMachineScript* AttroxFsmScript = (CAttroxMachineScript*)CScriptMgr::GetScript(SCRIPT_TYPE::ATTROXMACHINESCRIPT);
-	AttroxFsmScript = (CAttroxMachineScript*)CScriptMgr::GetScript(SCRIPT_TYPE::ATTROXMACHINESCRIPT);
-	chScript = (CBaseCharacterScript*)CScriptMgr::GetScript(SCRIPT_TYPE::BASECHARACTERSCRIPT);
-	pObj->AddComponent(AttroxFsmScript);
-	pObj->AddComponent(chScript);
-
+	
 #pragma region Animator - Animation Register
 	pAnimator = pObj->Animator3D();
 	pAnimator->RegisterAnimation(L"anim3D\\Attrox\\Aatrox_ReSheath_fullbody.anm");
@@ -478,10 +476,11 @@ void CGameMgr::CreateCharacterPrefabs()
 
 		pAniController = new CAnimatorController();
 		CResMgr::GetInst()->AddRes<CAnimatorController>(strPath, pAniController);
-		pAniController->RegisterParam(L"Battle", 0);
-		pAniController->RegisterParam(L"ULT", 0);
-		pAniController->RegisterParam(L"Move", 0);
+		pAniController->RegisterParam(L"Battle", false, false);
+		pAniController->RegisterParam(L"ULT", false, false);
+		pAniController->RegisterParam(L"Move", false, false);
 		pAniController->RegisterParam(L"Attack", false, false);
+		pAniController->RegisterParam(L"Death", false, false);
 		pAniController->RegisterParam(L"Dance", false, true);
 		pAniController->RegisterParam(L"End", false, true);
 		pAniController->RegisterParam(L"Attack_Number", 0);
@@ -509,23 +508,23 @@ void CGameMgr::CreateCharacterPrefabs()
 		CAniNode* BIdleIntroNode = pAniController->CreateNode(L"Battle_Idle_Intro", L"anim3D\\Attrox\\Aatrox_unsheath.anm");
 		pOutNode = pInNode;
 		t1 = pAniController->CreateTransition(L"Normal_Battle_Intro", BIdleIntroNode, pOutNode, false);
-		t1->RegisterCondition(L"Battle", 1, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Battle", true,false, COMPARISON_TYPE::EQUAL);
 
 		pInNode = pAniController->CreateNode(L"Battle_Idle", L"anim3D\\Attrox\\Idle1.anm");
 		t1 = pAniController->CreateTransition(L"Normal_Battle_Idle", pInNode, BIdleIntroNode, true);
 		t1->SetBlendTime(0.f);
 
 		t1 = pAniController->CreateTransition(L"Battle_Idle_Exit", pExitNode, pInNode, false);
-		t1->RegisterCondition(L"Battle", 0, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Battle", false,false, COMPARISON_TYPE::EQUAL);
 
 		CAniNode* BIdleNode = pInNode;
 
 		pOutNode = BIdleNode;
 		pInNode = pAniController->CreateNode(L"Battle_Move", L"anim3D\\Attrox\\Unsheath_run01.anm");
 		t1 = pAniController->CreateTransition(L"Battle_Idle_Move", pInNode, pOutNode, false);
-		t1->RegisterCondition(L"Move", 1, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Move", true,false, COMPARISON_TYPE::EQUAL);
 		t1 = pAniController->CreateTransition(L"Battle_Move_Idle", pOutNode, pInNode, false);
-		t1->RegisterCondition(L"Move", 0, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Move", false,false, COMPARISON_TYPE::EQUAL);
 
 		CAniNode* BMoveNode = pInNode;
 
@@ -545,16 +544,16 @@ void CGameMgr::CreateCharacterPrefabs()
 
 		t1 = pAniController->CreateTransition(L"ULT_In_Idle", pOutNode, pInNode, true);
 		t1 = pAniController->CreateTransition(L"Battle_Ult_In", pInNode, BIdleNode, false);
-		t1->RegisterCondition(L"ULT", 1, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"ULT", true,false, COMPARISON_TYPE::EQUAL);
 		t1 = pAniController->CreateTransition(L"Ult_Idle_In_Move", UInMoveNode, pOutNode, false);
-		t1->RegisterCondition(L"Move", 1, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Move", true,false, COMPARISON_TYPE::EQUAL);
 		UInNode = pInNode;
 
 		CAniNode* UOutNode;
 		pOutNode = UIdleNode;
 		pInNode = pAniController->CreateNode(L"ULT_Out", L"anim3D\\Attrox\\ULT_out.anm");
 		t1 = pAniController->CreateTransition(L"ULT_Idle_Out", pInNode, pOutNode, false);
-		t1->RegisterCondition(L"ULT", 0, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"ULT", false,false, COMPARISON_TYPE::EQUAL);
 		t1 = pAniController->CreateTransition(L"ULT_Out_Battle_Idle", BIdleNode, pInNode, true);
 		UOutNode = pInNode;
 
@@ -564,7 +563,7 @@ void CGameMgr::CreateCharacterPrefabs()
 
 		t1 = pAniController->CreateTransition(L"ULT_In_Move", pInNode, UInMoveNode, true);
 		t1 = pAniController->CreateTransition(L"ULT_Move_Idle_In", UInNode, pInNode, false);
-		t1->RegisterCondition(L"Move", 0, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Move", false,false, COMPARISON_TYPE::EQUAL);
 
 		UMoveNode = pInNode;
 
@@ -585,7 +584,7 @@ void CGameMgr::CreateCharacterPrefabs()
 		t1 = pAniController->CreateTransition(L"AnyState_Battle_Attack", pInNode, pOutNode, false);
 		t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
 		t1->RegisterCondition(L"Attack_Number", 0, COMPARISON_TYPE::EQUAL);
-		t1->RegisterCondition(L"ULT", 0, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"ULT", false,false, COMPARISON_TYPE::EQUAL);
 		t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", BIdleNode, pInNode, false);
 		t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
 
@@ -594,7 +593,7 @@ void CGameMgr::CreateCharacterPrefabs()
 		t1 = pAniController->CreateTransition(L"AnyState_Battle_Attack2", pInNode, pOutNode, false);
 		t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
 		t1->RegisterCondition(L"Attack_Number", 1, COMPARISON_TYPE::EQUAL);
-		t1->RegisterCondition(L"ULT", 0, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"ULT", false,false, COMPARISON_TYPE::EQUAL);
 		t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", BIdleNode, pInNode, false);
 		t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
 
@@ -603,7 +602,7 @@ void CGameMgr::CreateCharacterPrefabs()
 		t1 = pAniController->CreateTransition(L"AnyState_Battle_Attac3", pInNode, pOutNode, false);
 		t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
 		t1->RegisterCondition(L"Attack_Number", 2, COMPARISON_TYPE::EQUAL);
-		t1->RegisterCondition(L"ULT", 0, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"ULT", false,false, COMPARISON_TYPE::EQUAL);
 		t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", BIdleNode, pInNode, false);
 		t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
 
@@ -613,7 +612,7 @@ void CGameMgr::CreateCharacterPrefabs()
 		t1 = pAniController->CreateTransition(L"AnyState_ULT_Attack1", pInNode, pOutNode, false);
 		t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
 		t1->RegisterCondition(L"Attack_Number", 0, COMPARISON_TYPE::EQUAL);
-		t1->RegisterCondition(L"ULT", 1, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"ULT", true,false, COMPARISON_TYPE::EQUAL);
 		t1 = pAniController->CreateTransition(L"ULT_Attack_Idle", UIdleNode, pInNode, false);
 		t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
 
@@ -622,7 +621,7 @@ void CGameMgr::CreateCharacterPrefabs()
 		t1 = pAniController->CreateTransition(L"AnyState_ULT_Attack2", pInNode, pOutNode, false);
 		t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
 		t1->RegisterCondition(L"Attack_Number", 1, COMPARISON_TYPE::EQUAL);
-		t1->RegisterCondition(L"ULT", 1, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"ULT", true,false, COMPARISON_TYPE::EQUAL);
 		t1 = pAniController->CreateTransition(L"ULT_Attack_Idle", UIdleNode, pInNode, false);
 		t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
 		//t1->RegisterCondition(L"End", true, COMPARISON_TYPE::EQUAL);
@@ -632,6 +631,13 @@ void CGameMgr::CreateCharacterPrefabs()
 #pragma endregion
 
 	pObj->Animator3D()->SetController(pAniController);
+
+	CAttroxMachineScript* AttroxFsmScript = (CAttroxMachineScript*)CScriptMgr::GetScript(SCRIPT_TYPE::ATTROXMACHINESCRIPT);
+	AttroxFsmScript = (CAttroxMachineScript*)CScriptMgr::GetScript(SCRIPT_TYPE::ATTROXMACHINESCRIPT);
+	chScript = (CBaseCharacterScript*)CScriptMgr::GetScript(SCRIPT_TYPE::BASECHARACTERSCRIPT);
+	pObj->AddComponent(AttroxFsmScript);
+	pObj->AddComponent(chScript);
+
 
 	CGameObject* pAttroxHPBG = pHPBarBG->Instantiate();
 	CGameObject* pAttroxMPBG = pMPBarBG->Instantiate();

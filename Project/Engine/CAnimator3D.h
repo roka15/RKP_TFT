@@ -35,6 +35,7 @@ private:
 
 private:
     bool ChangeAnimation(wstring _AniKey,float _fBlendTime);
+  
 public:
     virtual void finaltick() override;
     void UpdateData();
@@ -54,6 +55,12 @@ public:
     bool SetFloatParam(wstring _strName, float _fValue);
     bool SetTriggerParam(wstring _strName, bool _bValue);
     bool SetBoolParam(wstring _strName, bool _bValue);
+    const t_AniParams& GetAniParamInfo() { return m_AniParams; }
+    
+    const int& GetIntParam(wstring _strName);
+    const float& GetFloatParam(wstring _strName);
+    const bool& GetBoolParam(wstring _strName);
+    const bool& GetTriggerParam(wstring _strName);
 
     UINT GetBoneCount();
     CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMatBuffer; }

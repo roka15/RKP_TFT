@@ -16,7 +16,7 @@ private:
 	bool                m_bMove;
 	Vec2                m_v2Dir;
 	Vec3				m_v3PrevDir;
-	CGameObject*		m_pTargetObj;
+	CGameObject* m_pTargetObj;
 private:
 	void ChangeTransInfo();
 	void UpdateCharacterUI();
@@ -30,15 +30,15 @@ public:
 	virtual void EndOverlap(CCollider* _Other)override;
 	virtual void RegisterFuncPtr()override;
 public:
-	bool IsWait() { return m_ChState.bWaiting; }
-	bool IsUlt() { return m_ChState.bUlt; }
-	bool IsMove() { return m_ChState.bMove; }
-	bool IsAttack() { return m_ChState.bAttack; }
-	bool IsDance() { return m_ChState.bDance; }
-	bool IsDeath() { return m_ChState.bDeath; }
-	bool IsEnd() { return m_ChState.bEnd; }
-	int  GetAtkNumber() { return m_ChState.iAtkNum; }
-	
+	const bool& IsWait();
+	const bool& IsUlt();
+	const bool& IsMove();
+	const bool& IsAttack();
+	const bool& IsDance();
+	const bool& IsDeath();
+	const bool& IsEnd();
+	int  GetAtkNumber();
+
 
 	void SetWaitingSeat(bool _flag) { m_ChState.bWaiting = _flag; }
 	virtual void WaitTileTick();
@@ -52,14 +52,15 @@ public:
 	virtual void RecvDamage(float _damage);
 	virtual void Death();
 public:
-	void SetMove(bool _flag) { m_ChState.bMove = _flag; }
-	void SetWait(bool _flag) { m_ChState.bWaiting = _flag; }
-	void SetAtk(bool _flag) { m_ChState.bAttack = _flag; }
-	void SetUlt(bool _flag) { m_ChState.bUlt = _flag; }
-	void SetAtkNumber(int _iNumber) { m_ChState.iAtkNum = _iNumber; }
+	void SetMove(bool _flag);
+	void SetWait(bool _flag);
+	void SetAtk(bool _flag);
+	void SetUlt(bool _flag);
+	void SetAtkNumber(int _iNumber);
+	void SetDeath(bool _flag);
 	void CurStartTile();
-	void Reset(); 
-	void BattleStateReset(); 
+	void Reset();
+	void BattleStateReset();
 
 protected:
 	void Battle(CGameObject* _pTileObj);

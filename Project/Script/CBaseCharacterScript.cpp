@@ -27,7 +27,7 @@ CBaseCharacterScript::CBaseCharacterScript() :
 	m_ChStatus.dMinusUltGauge = 10;
 	m_ChStatus.dMaxUltGauge = 50;
 
-	
+
 	SetCost(10);
 }
 
@@ -120,6 +120,60 @@ void CBaseCharacterScript::RegisterFuncPtr()
 	}
 }
 
+const bool& CBaseCharacterScript::IsWait()
+{
+	CAnimator3D* pAnimator = GetOwner()->Animator3D();
+	const bool& flag = pAnimator->GetBoolParam(L"Battle");
+	return !flag;
+}
+
+const bool& CBaseCharacterScript::IsUlt()
+{
+	CAnimator3D* pAnimator = GetOwner()->Animator3D();
+	const bool& flag = pAnimator->GetBoolParam(L"ULT");
+	return flag;
+}
+
+const bool& CBaseCharacterScript::IsMove()
+{
+	CAnimator3D* pAnimator = GetOwner()->Animator3D();
+	const bool& flag = pAnimator->GetBoolParam(L"Move");
+	return flag;
+}
+
+const bool& CBaseCharacterScript::IsAttack()
+{
+	CAnimator3D* pAnimator = GetOwner()->Animator3D();
+	const bool& flag = pAnimator->GetBoolParam(L"Attack");
+	return flag;
+}
+
+const bool& CBaseCharacterScript::IsDance()
+{
+	CAnimator3D* pAnimator = GetOwner()->Animator3D();
+	const bool& flag = pAnimator->GetTriggerParam(L"Dance");
+	return flag;
+}
+
+const bool& CBaseCharacterScript::IsDeath()
+{
+	CAnimator3D* pAnimator = GetOwner()->Animator3D();
+	const bool& flag = pAnimator->GetBoolParam(L"Death");
+	return flag;
+}
+
+const bool& CBaseCharacterScript::IsEnd()
+{
+	CAnimator3D* pAnimator = GetOwner()->Animator3D();
+	const bool& flag = pAnimator->GetBoolParam(L"End");
+	return flag;
+}
+
+int CBaseCharacterScript::GetAtkNumber()
+{
+	return 0;
+}
+
 
 
 void CBaseCharacterScript::WaitTileTick()
@@ -203,6 +257,8 @@ void CBaseCharacterScript::SetTarget(CCollider* _Other)
 
 void CBaseCharacterScript::SendDamage()
 {
+	if (m_iAtkTargetNum < 0)
+		return;
 	CGameObject* Target = CTileMgr::GetInst()->GetItem(m_iAtkTargetNum);
 	if (Target == nullptr)
 		return;
@@ -210,14 +266,13 @@ void CBaseCharacterScript::SendDamage()
 	if (pCharacterScript == nullptr)
 		return;
 	pCharacterScript->RecvDamage(10);
-	if (m_ChState.bUlt)
+	if (IsUlt())
 	{
 		m_ChStatus.dCurUltGauge -= m_ChStatus.dMinusUltGauge;
 		if (m_ChStatus.dCurUltGauge <= 0)
 		{
 			m_ChStatus.dCurUltGauge = 0;
-			m_ChState.bUlt = false;
-			m_ChState.bWaiting = false;
+			SetUlt(false);
 		}
 	}
 	else
@@ -226,8 +281,7 @@ void CBaseCharacterScript::SendDamage()
 		if (m_ChStatus.dCurUltGauge >= m_ChStatus.dMaxUltGauge)
 		{
 			m_ChStatus.dCurUltGauge = m_ChStatus.dMaxUltGauge;
-			m_ChState.bUlt = true;
-			m_ChState.bWaiting = false;
+			SetUlt(true);
 		}
 	}
 
@@ -239,17 +293,60 @@ void CBaseCharacterScript::RecvDamage(float _damage)
 	if (m_ChStatus.iHp <= 0)
 	{
 		//죽음 처리
-		m_ChState.bDeath = true;
+		SetDeath(true);
+		SetAtk(false);
 	}
 }
 
 void CBaseCharacterScript::Death()
 {
-	m_ChState.bDeath = false;
-	m_ChState.bMove = false;
-	m_ChState.bAttack = false;
-	m_ChState.bUlt = false;
-	m_ChState.iAtkNum = 0;
+	SetDeath(false);
+	SetMove(false);
+	SetAtk(false);
+	SetUlt(false);
+	SetAtkNumber(0);
+}
+
+void CBaseCharacterScript::SetMove(bool _flag)
+{
+	CAnimator3D* pAnimator = GetOwner()->Animator3D();
+	pAnimator->SetBoolParam(L"Move", _flag);
+	return;
+}
+
+void CBaseCharacterScript::SetWait(bool _flag)
+{
+	CAnimator3D* pAnimator = GetOwner()->Animator3D();
+	pAnimator->SetBoolParam(L"Battle", !_flag);
+	return;
+}
+
+void CBaseCharacterScript::SetAtk(bool _flag)
+{
+	CAnimator3D* pAnimator = GetOwner()->Animator3D();
+	pAnimator->SetBoolParam(L"Attack", _flag);
+	return;
+}
+
+void CBaseCharacterScript::SetUlt(bool _flag)
+{
+	CAnimator3D* pAnimator = GetOwner()->Animator3D();
+	pAnimator->SetBoolParam(L"ULT", _flag);
+	return;
+}
+
+void CBaseCharacterScript::SetAtkNumber(int _iNumber)
+{
+	CAnimator3D* pAnimator = GetOwner()->Animator3D();
+	pAnimator->SetIntParam(L"Attack_Number", _iNumber);
+	return;
+}
+
+void CBaseCharacterScript::SetDeath(bool _flag)
+{
+	CAnimator3D* pAnimator = GetOwner()->Animator3D();
+	pAnimator->SetBoolParam(L"Death", _flag);
+	return;
 }
 
 void CBaseCharacterScript::CurStartTile()
@@ -286,7 +383,7 @@ void CBaseCharacterScript::BattleStateReset()
 		pMeshParentObj->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
 		pMeshParentObj->Transform()->CancelLerpRot();
 	}
-	m_iAtkTargetNum = 0;
+	m_iAtkTargetNum = -1;
 
 }
 
@@ -371,7 +468,7 @@ void CBaseCharacterScript::LookAtTarget(CGameObject* _pTarget)
 	v3Dir.Normalize();
 
 	Vec3 PrevDir = Transform()->GetRelativeDir(DIR_TYPE::UP);//Vec3(Transform()->GetRelativeDir(DIR_TYPE::RIGHT).x, 0.f, Transform()->GetRelativeDir(DIR_TYPE::FRONT).z);
-	Vec3 NextDir = Vec3(v3Dir.x,0.f, v3Dir.z);
+	Vec3 NextDir = Vec3(v3Dir.x, 0.f, v3Dir.z);
 	float fRadian = TransformFunc::RotationGetRadian(PrevDir, NextDir);
 	bool bSign = PrevDir.Cross(NextDir).y < 0 ? true : false;
 	if (bClientFlag && bSign)
@@ -417,8 +514,11 @@ void CBaseCharacterScript::Battle(CGameObject* _pTileObj)
 		LookAtTarget(m_pTargetObj);
 		//attack
 		//방향은 end 방향을 바라보기
-		SetMove(false);
-		SetAtk(true);
+		if (IsDeath() == false && IsAttack() == false)
+		{
+			SetAtk(true);
+			SetMove(false);
+		}
 	}
 	else
 	{

@@ -17,7 +17,7 @@ void CAttroxBattleAttack::OnEntry(CStateMachineScript* _pSMachine, CState* _pSta
 	if (pAni == nullptr)
 		return;
 
-	pAni->SetIntParam(L"Battle", 1);
+	pAni->SetBoolParam(L"Battle", true);
 	pAni->SetBoolParam(L"Attack", true);
 
 	//CBaseCharacterScript* pChScript = _pSMachine->GetOwner()->GetScript<CBaseCharacterScript>();
@@ -69,15 +69,6 @@ void CAttroxBattleAttack::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pT
 	case TRIGGER_TYPE::DANCE:
 		pMachine->transition((UINT)STATE_TYPE::DANCE);
 		break;
-	case TRIGGER_TYPE::BATTACK:
-		pAni->SetIntParam(L"Attack_Number", 0);
-		break;
-	case TRIGGER_TYPE::BATTACK2:
-		pAni->SetIntParam(L"Attack_Number", 1);
-		break;
-	case TRIGGER_TYPE::BATTACK3:
-		pAni->SetIntParam(L"Attack_Number", 2);
-		break;
 	}
 }
 
@@ -123,23 +114,6 @@ void CAttroxBattleAttack::tick(CStateMachineScript* _pSMachine)
 		if (bMove)
 		{
 			trigger.SetEvtType(TRIGGER_TYPE::BMOVE);
-			bChange = true;
-		}
-		else if (bAttack)
-		{
-			trigger.SetEvtType(TRIGGER_TYPE::BATTACK);
-			switch (bAtkNum)
-			{
-			case 0:
-				trigger.SetEvtType(TRIGGER_TYPE::BATTACK);
-				break;
-			case 1:
-				trigger.SetEvtType(TRIGGER_TYPE::BATTACK2);
-				break;
-			case 2:
-				trigger.SetEvtType(TRIGGER_TYPE::BATTACK3);
-				break;
-			}
 			bChange = true;
 		}
 	    else if (bAttack == false && bWait == false)

@@ -29,7 +29,7 @@ public:
     void RegisterParam(wstring _strName, int _iValue);
     void RegisterParam(wstring _strName, float _fValue);
     void RegisterParam(wstring _strName, bool _bValue , bool _bTrigger);
-
+    
     CAniNode* GetNode(const wstring _strName) { return m_mapNode[_strName]; }
 
     ANI_NODE_RETURN NextNode(bool _bFinish,bool _bLoop,wstring _strCurName, CAnimator3D* _pAnimator);

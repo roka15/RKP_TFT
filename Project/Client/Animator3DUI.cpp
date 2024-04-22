@@ -7,6 +7,8 @@
 #include "AniClipUI.h"
 #include "ListUI.h"
 #include "TreeUI.h"
+#include "AniControllerEditUI.h"
+#include "AniControllerEditParamUI.h"
 Animator3DUI::Animator3DUI() 
 	: ComponentUI("##Animator3D", COMPONENT_TYPE::ANIMATOR3D)
 {
@@ -28,15 +30,18 @@ int Animator3DUI::render_update()
 		return FALSE;
 
 	char szBuff[MAXLEN] = {};
+	CAnimator3D* pAnimator = GetTarget()->Animator3D();
+	if (pAnimator == nullptr)
+		return FALSE;
 	if (GetTarget()->Animator3D()->IsActiveAni() == false)
 		return FALSE;
-
+	
 	wstring wstrControllerName = GetTarget()->Animator3D()->GetCurControllerName();
 	string strControllerName = {};
 	strControllerName.assign(wstrControllerName.begin(), wstrControllerName.end());
 	strcpy_s(szBuff, strControllerName.size()+1, strControllerName.c_str());
 
-	ImGui::Text("Controller    ");
+	ImGui::Text("Controller");
 	ImGui::SameLine();
 	ImGui::InputText("##Controller", szBuff, MAXLEN, ImGuiInputTextFlags_ReadOnly);
 
@@ -72,5 +77,27 @@ int Animator3DUI::render_update()
 		// 항목 선택시 호출받을 델리게이트 등록
 		pListUI->AddDynamic_Select(this, (UI_DELEGATE_1)&Animator3DUI::SelectClip);
 	}
+
+
+	Ptr<CAnimatorController> pController = pAnimator->GetController();
+	wstring wstrKey = pController->GetKey();
+	string strKey = string(pController->GetKey().begin(), pController->GetKey().end());
+
+
+	if (ImGui::Button("Edit##AniControllerEditBtn", ImVec2(40, 30)))
+	{
+		UI* EditUI = ImGuiMgr::GetInst()->FindUI("##AniControllerEditUI");
+		UI* ParamUI = ImGuiMgr::GetInst()->FindUI("##AniParameters");
+		AniControllerEditParamUI* pParam = dynamic_cast<AniControllerEditParamUI*>(ParamUI);
+		EditUI->SetActive(true);
+		ParamUI->SetActive(true);
+		EditUI->SetLinkKey(strKey);
+		ParamUI->SetLinkKey(strKey);
+		EditUI->SetLinkKey(wstrKey);
+		ParamUI->SetLinkKey(wstrKey);
+		pParam->SetLink(pAnimator);
+	}
+
+
 	return TRUE;
 }

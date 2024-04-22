@@ -7,24 +7,10 @@
 
 void CAttroxBattleIdle::OnEntry(CStateMachineScript* _pSMachine, CState* _pState)
 {
-	CCharacterState* pState = dynamic_cast<CCharacterState*>(_pState);
-	if (pState == nullptr)
-		return;
-
-	CAnimator3D* pAni = _pSMachine->Animator3D();
-	if (pAni == nullptr)
-		return;
-	pAni->SetIntParam(L"Battle", 1);
 }
 
 void CAttroxBattleIdle::OnExit(CStateMachineScript* _pSMachine, CState* _pState)
 {
-	CAnimator3D* pAni = _pSMachine->Animator3D();
-	if (pAni == nullptr)
-		return;
-
-	//모든 param들 condition 비활성화.
-	pAni->SetIntParam(L"Battle", 0);
 }
 
 void CAttroxBattleIdle::OnEvent(CStateMachineScript* _pSMachine, CTrigger* _pTrigger)

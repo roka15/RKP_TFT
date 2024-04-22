@@ -154,7 +154,7 @@ void CAnimator3D::SetController(wstring _strName)
 }
 const wstring& CAnimator3D::GetCurControllerName()
 {
-	return m_pController->GetName();
+	return m_pController->GetKey();
 }
 
 void CAnimator3D::RegisterAnimation(wstring _AniClipName)
@@ -204,8 +204,47 @@ bool CAnimator3D::SetBoolParam(wstring _strName, bool _bValue)
 	{
 		return false;
 	}
+	if (_strName == L"Death")
+		int a = 0;
 	itr->second = _bValue;
 	return true;
+}
+const int& CAnimator3D::GetIntParam(wstring _strName)
+{
+	auto itr = m_AniParams.mapIntParams.find(_strName);
+	if (itr == m_AniParams.mapIntParams.end())
+	{
+		assert(nullptr);
+	}
+	return m_AniParams.mapIntParams[_strName];
+}
+const float& CAnimator3D::GetFloatParam(wstring _strName)
+{
+	auto itr = m_AniParams.mapFloatParams.find(_strName);
+	if (itr == m_AniParams.mapFloatParams.end())
+	{
+		assert(nullptr);
+	}
+	return m_AniParams.mapFloatParams[_strName];
+}
+
+const bool& CAnimator3D::GetBoolParam(wstring _strName)
+{
+	auto itr = m_AniParams.mapBoolParams.find(_strName);
+	if (itr == m_AniParams.mapBoolParams.end())
+	{
+		assert(nullptr);
+	}
+	return m_AniParams.mapBoolParams[_strName];
+}
+const bool& CAnimator3D::GetTriggerParam(wstring _strName)
+{
+	auto itr = m_AniParams.mapTriggerParams.find(_strName);
+	if (itr == m_AniParams.mapTriggerParams.end())
+	{
+		assert(nullptr);
+	}
+	return m_AniParams.mapTriggerParams[_strName];
 }
 UINT CAnimator3D::GetBoneCount()
 {
