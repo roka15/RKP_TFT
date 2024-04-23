@@ -25,8 +25,10 @@
 #define IMGUI_VERSION               "1.89.1 WIP"
 #define IMGUI_VERSION_NUM           18902
 #define IMGUI_HAS_TABLE
+//#define IMGUI_HAS_STACK_LAYOUT      1 // Stack-Layout PR #846
 #define IMGUI_HAS_VIEWPORT          // Viewport WIP branch
 #define IMGUI_HAS_DOCK              // Docking WIP branch
+
 
 /*
 

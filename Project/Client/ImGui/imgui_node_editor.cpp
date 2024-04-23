@@ -1645,7 +1645,7 @@ void ed::EditorContext::SetNodePosition(NodeId nodeId, const ImVec2& position)
         node = CreateNode(nodeId);
         node->m_IsLive = false;
     }
-
+    
     if (node->m_Bounds.Min != position)
     {
         node->m_Bounds.Translate(position - node->m_Bounds.Min);
@@ -3315,6 +3315,7 @@ ed::NavigateAction::NavigateAction(EditorContext* editor, ImGuiEx::Canvas& canva
     m_ZoomLevels(editor->GetConfig().CustomZoomLevels.Size > 0 ? editor->GetConfig().CustomZoomLevels.Data : s_DefaultZoomLevels),
     m_ZoomLevelCount(editor->GetConfig().CustomZoomLevels.Size > 0 ? editor->GetConfig().CustomZoomLevels.Size : s_DefaultZoomLevelCount)
 {
+    int a = 0;
 }
 
 ed::EditorAction::AcceptResult ed::NavigateAction::Accept(const Control& control)

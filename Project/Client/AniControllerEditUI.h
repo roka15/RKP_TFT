@@ -1,7 +1,38 @@
 #pragma once
 #include "UI.h"
 #include "ImGui\imgui_node_editor.h"
-namespace imguiNodeEdit = ax::NodeEditor;
+#include "ImGui\imgui_internal.h"
+#include "builders.h"
+#include "widgets.h"
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <utility>
+static inline ImRect ImGui_GetItemRect()
+{
+    return ImRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax());
+}
+
+static inline ImRect ImRect_Expanded(const ImRect& rect, float x, float y)
+{
+    auto result = rect;
+    result.Min.x -= x;
+    result.Min.y -= y;
+    result.Max.x += x;
+    result.Max.y += y;
+    return result;
+}
+
+namespace client_ed = ax::NodeEditor;
+namespace client_util = ax::NodeEditor::Utilities;
+
+using namespace ax;
+
+using ax::Widgets::IconType;
+
+static client_ed::EditorContext* m_Editor = nullptr;
+
 enum class PinType
 {
     Flow,
@@ -29,29 +60,29 @@ enum class NodeType
     Houdini
 };
 
+struct ClientNode;
 
-struct Node;
-
-struct Pin
+struct ClientPin
 {
-    imguiNodeEdit::PinId   ID;
-    ::Node* Node;
+    client_ed::PinId   ID;
+    ::ClientNode* Node;
     std::string Name;
     PinType     Type;
     PinKind     Kind;
 
-    Pin(int id, const char* name, PinType type) :
+    ClientPin(int id, const char* name, PinType type) :
         ID(id), Node(nullptr), Name(name), Type(type), Kind(PinKind::Input)
     {
     }
 };
 
-struct Node
+struct ClientNode
 {
-    imguiNodeEdit::NodeId ID;
+    client_ed::NodeId ID;
     std::string Name;
-    std::vector<Pin> Inputs;
-    std::vector<Pin> Outputs;
+    std::vector<ClientPin> Inputs;
+    std::vector<ClientPin> Outputs;
+    ImVec2                 Pos;
     ImColor Color;
     NodeType Type;
     ImVec2 Size;
@@ -59,22 +90,26 @@ struct Node
     std::string State;
     std::string SavedState;
 
-    Node(int id, const char* name, ImColor color = ImColor(255, 255, 255)) :
+    ClientNode(int id, const char* name,ImColor color = ImColor(255, 255, 255)) :
         ID(id), Name(name), Color(color), Type(NodeType::Blueprint), Size(0, 0)
     {
+    }
+    void SetPos(ImVec2 _pos)
+    {
+        Pos = _pos;
     }
 };
 
 struct Link
 {
-    imguiNodeEdit::LinkId ID;
+    client_ed::LinkId ID;
 
-    imguiNodeEdit::PinId StartPinID;
-    imguiNodeEdit::PinId EndPinID;
+    client_ed::PinId StartPinID;
+    client_ed::PinId EndPinID;
 
     ImColor Color;
 
-    Link(imguiNodeEdit::LinkId id, imguiNodeEdit::PinId startPinId, imguiNodeEdit::PinId endPinId) :
+    Link(client_ed::LinkId id, client_ed::PinId startPinId, client_ed::PinId endPinId) :
         ID(id), StartPinID(startPinId), EndPinID(endPinId), Color(255, 255, 255)
     {
     }
@@ -82,36 +117,133 @@ struct Link
 
 struct NodeIdLess
 {
-    bool operator()(const imguiNodeEdit::NodeId& lhs, const imguiNodeEdit::NodeId& rhs) const
+    bool operator()(const client_ed::NodeId& lhs, const client_ed::NodeId& rhs) const
     {
         return lhs.AsPointer() < rhs.AsPointer();
     }
 };
+
+static bool Splitter(bool split_vertically, float thickness, float* size1, float* size2, float min_size1, float min_size2, float splitter_long_axis_size = -1.0f)
+{
+    using namespace ImGui;
+    ImGuiContext& g = *GImGui;
+    ImGuiWindow* window = g.CurrentWindow;
+    ImGuiID id = window->GetID("##Splitter");
+    ImRect bb;
+    bb.Min = window->DC.CursorPos + (split_vertically ? ImVec2(*size1, 0.0f) : ImVec2(0.0f, *size1));
+    bb.Max = bb.Min + CalcItemSize(split_vertically ? ImVec2(thickness, splitter_long_axis_size) : ImVec2(splitter_long_axis_size, thickness), 0.0f, 0.0f);
+    return SplitterBehavior(bb, id, split_vertically ? ImGuiAxis_X : ImGuiAxis_Y, size1, size2, min_size1, min_size2, 0.0f);
+}
+
 class AniControllerEditUI
 	:public UI
 {
-private:
-	imguiNodeEdit::EditorContext* m_Context = nullptr;
+    int GetNextId()
+    {
+        return m_NextId++;
+    }
+
+    //client_ed::NodeId GetNextNodeId()
+    //{
+    //    return client_ed::NodeId(GetNextId());
+    //}
+
+    client_ed::LinkId GetNextLinkId();
+    void TouchNode(client_ed::NodeId id);
+    float GetTouchProgress(client_ed::NodeId id);
+
+    void UpdateTouch();
+   
+
+    ClientNode* FindNode(client_ed::NodeId id);
+    
+
+    Link* FindLink(client_ed::LinkId id);
+   
+
+    ClientPin* FindPin(client_ed::PinId id);
+    
+
+    bool IsPinLinked(client_ed::PinId id);
+  
+
+    bool CanCreateLink(ClientPin* a, ClientPin* b);
+    
+
+
+    void BuildNode(ClientNode* node);
+
+    ClientNode* SpawnTreeSequenceNode()
+    {
+        m_Nodes.emplace_back(GetNextId(), "Sequence");
+        m_Nodes.back().Type = NodeType::Tree;
+        m_Nodes.back().Inputs.emplace_back(GetNextId(), "", PinType::Flow);
+        m_Nodes.back().Outputs.emplace_back(GetNextId(), "", PinType::Flow);
+
+        BuildNode(&m_Nodes.back());
+
+        return &m_Nodes.back();
+    }
+
+    ClientNode* SpawnTreeTaskNode()
+    {
+        m_Nodes.emplace_back(GetNextId(), "Move To");
+        m_Nodes.back().Type = NodeType::Tree;
+        m_Nodes.back().Inputs.emplace_back(GetNextId(), "", PinType::Flow);
+
+        BuildNode(&m_Nodes.back());
+
+        return &m_Nodes.back();
+    }
+
+    ClientNode* SpawnTreeTask2Node()
+    {
+        m_Nodes.emplace_back(GetNextId(), "Random Wait");
+        m_Nodes.back().Type = NodeType::Tree;
+        m_Nodes.back().Inputs.emplace_back(GetNextId(), "", PinType::Flow);
+
+        BuildNode(&m_Nodes.back());
+
+        return &m_Nodes.back();
+    }
+
+    ClientNode* SpawnComment()
+    {
+        m_Nodes.emplace_back(GetNextId(), "Test Comment");
+        m_Nodes.back().Type = NodeType::Comment;
+        m_Nodes.back().Size = ImVec2(300, 200);
+
+        return &m_Nodes.back();
+    }
+    void BuildNodes();
+    void OnStart();
+    void OnStop();
+
+
+    ImColor GetIconColor(PinType type);
+   
+
+    void DrawPinIcon(const ClientPin& pin, bool connected, int alpha);
+    void ShowStyleEditor(bool* show = nullptr);
+    void ShowLeftPane(float paneWidth);
+    void OnFrame(float deltaTime);
     int                  m_NextId = 1;
     const int            m_PinIconSize = 24;
-    std::vector<Node>    m_Nodes;
+    std::vector<ClientNode>    m_Nodes;
     std::vector<Link>    m_Links;
     ImTextureID          m_HeaderBackground = nullptr;
     ImTextureID          m_SaveIcon = nullptr;
     ImTextureID          m_RestoreIcon = nullptr;
     const float          m_TouchTime = 1.0f;
-    std::map<imguiNodeEdit::NodeId, float, NodeIdLess> m_NodeTouchTime;
+    std::map<client_ed::NodeId, float, NodeIdLess> m_NodeTouchTime;
     bool                 m_ShowOrdinals = false;
-private:
-	bool Splitter(bool split_vertically, float thickness, float* size1, float* size2, float min_size1, float min_size2, float splitter_long_axis_size = -1.0f);
-	void ShowLeftPane(float paneWidth);
-    void ShowStyleEditor(bool* show = nullptr);
-    float GetTouchProgress(imguiNodeEdit::NodeId id);
 public:
-	virtual void init();
-	virtual void tick();
-	virtual void finaltick();
+	virtual void init()override;
+	virtual void tick()override;
+	virtual void finaltick()override;
+    virtual void end()override;
 	virtual int render_update();
+
 public:
 public:
 	AniControllerEditUI();

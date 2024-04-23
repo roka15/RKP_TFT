@@ -131,6 +131,12 @@
     <Filter Include="UI\InspectorUI\ComponentUI\12.BillboardUI">
       <UniqueIdentifier>{66929119-e8a9-497c-9304-2a69555f3bb4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ImGui\utilities">
+      <UniqueIdentifier>{89160fb9-f67c-4467-b52c-538b39aa21a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\header">
+      <UniqueIdentifier>{d1f99d79-e3ab-484e-8982-12c5a7360982}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -302,6 +308,18 @@
     <ClInclude Include="BillbardUI.h">
       <Filter>UI\InspectorUI\ComponentUI\12.BillboardUI</Filter>
     </ClInclude>
+    <ClInclude Include="builders.h">
+      <Filter>ImGui\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="drawing.h">
+      <Filter>ImGui\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets.h">
+      <Filter>ImGui\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>ImGui\header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -465,6 +483,15 @@
     </ClCompile>
     <ClCompile Include="BillbardUI.cpp">
       <Filter>UI\InspectorUI\ComponentUI\12.BillboardUI</Filter>
+    </ClCompile>
+    <ClCompile Include="builders.cpp">
+      <Filter>ImGui\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="drawing.cpp">
+      <Filter>ImGui\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets.cpp">
+      <Filter>ImGui\utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

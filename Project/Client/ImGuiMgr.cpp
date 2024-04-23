@@ -13,6 +13,8 @@
 #include "AniControllerEditUI.h"
 #include "AniControllerEditParamUI.h"
 
+
+
 ImGuiMgr::ImGuiMgr()
     : m_hMainHwnd(nullptr)   
     , m_hObserver(nullptr)
@@ -41,6 +43,7 @@ void ImGuiMgr::init(HWND _hWnd)
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     m_pContext = ImGui::CreateContext();
+    ImGui::SetCurrentContext(m_pContext);
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
@@ -70,14 +73,22 @@ void ImGuiMgr::init(HWND _hWnd)
     ImGui_ImplWin32_Init(m_hMainHwnd);
     ImGui_ImplDX11_Init(DEVICE, CONTEXT);
 
-    // Tool 용 UI 생성
-    CreateUI();
-
+  
     // Content 폴더 감시
     wstring strContentPath = CPathMgr::GetInst()->GetContentPath();
     m_hObserver = FindFirstChangeNotification(strContentPath.c_str(), true
         , FILE_NOTIFY_CHANGE_FILE_NAME | FILE_NOTIFY_CHANGE_DIR_NAME
         | FILE_ACTION_REMOVED | FILE_ACTION_ADDED);   
+
+    // Tool 용 UI 생성
+    CreateUI();
+}
+void ImGuiMgr::release()
+{
+    for (auto& item : m_mapUI)
+    {
+        item.second->end();
+    }
 }
 
 void ImGuiMgr::progress()
@@ -94,6 +105,8 @@ void ImGuiMgr::progress()
 
 void ImGuiMgr::begin()
 {
+    auto& io = ImGui::GetIO();
+
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
@@ -148,6 +161,7 @@ void ImGuiMgr::render()
 }
 
 
+
 #include "InspectorUI.h"
 #include "ContentUI.h"
 #include "OutlinerUI.h"
@@ -196,13 +210,12 @@ void ImGuiMgr::CreateUI()
     pUI->SetActive(false);
     m_mapUI.insert(make_pair(pUI->GetID(), pUI));
 
-  
-
 
     for (const auto& pair : m_mapUI)
     {
         pair.second->init();
     }
+
 }
 
 void ImGuiMgr::ObserveContent()
@@ -228,4 +241,39 @@ UI* ImGuiMgr::FindUI(const string& _UIName)
         return nullptr;
 
     return iter->second;
+}
+
+ImTextureID ImGuiMgr::LoadTexture(const char* _path)
+{
+    int width = 0, height = 0, component = 0;
+    if (auto data = ImGui_Stbi_Load(_path, &width, &height, &component, 4))
+    {
+        auto texture = ImGui_CreateTexture(data, width, height);
+        ImGui_Stbi_Free(data);
+        return texture;
+    }
+    else
+        return nullptr;
+}
+
+int ImGuiMgr::GetTextureHeight(ImTextureID _texture)
+{
+   return ImGui_GetTextureHeight(_texture);    
+}
+
+int ImGuiMgr::GetTextureWidth(ImTextureID _texture)
+{
+    return ImGui_GetTextureWidth(_texture);
+}
+
+ImGuiWindowFlags ImGuiMgr::GetWindowFlags() const
+{
+    return
+        ImGuiWindowFlags_NoTitleBar |
+        ImGuiWindowFlags_NoResize |
+        ImGuiWindowFlags_NoMove |
+        ImGuiWindowFlags_NoScrollbar |
+        ImGuiWindowFlags_NoScrollWithMouse |
+        ImGuiWindowFlags_NoSavedSettings |
+        ImGuiWindowFlags_NoBringToFrontOnFocus;
 }

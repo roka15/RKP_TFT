@@ -20,9 +20,10 @@ void UI::finaltick()
 {	
 	if (!m_Active)
 		return;
-
+	
 	string strFullName = m_strName + m_strID;
-
+	if (strFullName == "Debug")
+		int a = 0;
 	// ºÎ¸ð UI
 	if (nullptr == m_ParentUI)
 	{

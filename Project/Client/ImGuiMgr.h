@@ -30,10 +30,14 @@ private:
 public:
     void init(HWND _hWnd);
     void progress();
-
+    void release();
 public:
     UI* FindUI(const string& _UIName);
     HWND GetMainHwnd() { return m_hMainHwnd; }
+    ImTextureID LoadTexture(const char* _path);
+    int GetTextureHeight(ImTextureID _texture);
+    int GetTextureWidth(ImTextureID _texture);
+    ImGuiWindowFlags GetWindowFlags()const;
 private:
     void CreateUI();
     void ObserveContent();
@@ -42,6 +46,7 @@ private:
     void tick();
     void finaltick();
     void render();
+
     ImGuiContext* GetGuiContext() { return m_pContext; }
 
 private:

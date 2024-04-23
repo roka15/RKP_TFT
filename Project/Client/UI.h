@@ -23,6 +23,7 @@ public:
 	virtual void init() {}
 	virtual void tick() {}
 	virtual void finaltick();
+	virtual void end() {};
 	virtual int render_update() = 0;
 
 

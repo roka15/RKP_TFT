@@ -3876,6 +3876,13 @@ void ImGui::SetLastItemData(ImGuiID item_id, ImGuiItemFlags in_flags, ImGuiItemS
     g.LastItemData.Rect = item_rect;
 }
 
+IMGUI_API void ImGui::SetLastItemData(ImGuiWindow* window, ImGuiID item_id, ImGuiItemStatusFlags item_flags, const ImRect& item_rect)
+{
+    window->DC.LastItemId = item_id;
+    window->DC.LastItemStatusFlags = item_flags;
+    window->DC.LastItemRect = item_rect;
+}
+
 float ImGui::CalcWrapWidthForPos(const ImVec2& pos, float wrap_pos_x)
 {
     if (wrap_pos_x < 0.0f)
@@ -7356,6 +7363,7 @@ bool ImGui::Begin(const char* name, bool* p_open, ImGuiWindowFlags flags)
         window->DC.CurrentColumns = NULL;
         window->DC.LayoutType = ImGuiLayoutType_Vertical;
         window->DC.ParentLayoutType = parent_window ? parent_window->DC.LayoutType : ImGuiLayoutType_Vertical;
+        window->DC.FocusCounterRegular = window->DC.FocusCounterTabStop = -1;
 
         window->DC.ItemWidth = window->ItemWidthDefault;
         window->DC.TextWrapPos = -1.0f; // disabled
@@ -7420,6 +7428,7 @@ bool ImGui::Begin(const char* name, bool* p_open, ImGuiWindowFlags flags)
 
         // We fill last item data based on Title Bar/Tab, in order for IsItemHovered() and IsItemActive() to be usable after Begin().
         // This is useful to allow creating context menus on title bar only, etc.
+        SetLastItemData(window, window->MoveId, IsMouseHoveringRect(title_bar_rect.Min, title_bar_rect.Max, false) ? ImGuiItemStatusFlags_HoveredRect : 0, title_bar_rect);
         if (window->DockIsActive)
             SetLastItemData(window->MoveId, g.CurrentItemFlags, window->DockTabItemStatusFlags, window->DockTabItemRect);
         else
@@ -7788,6 +7797,22 @@ void ImGui::PopItemFlag()
     IM_ASSERT(g.ItemFlagsStack.Size > 1); // Too many calls to PopItemFlag() - we always leave a 0 at the bottom of the stack.
     g.ItemFlagsStack.pop_back();
     g.CurrentItemFlags = g.ItemFlagsStack.back();
+}
+
+IMGUI_API void ImGui::PushDisabled()
+{
+    ImGuiContext& g = *GImGui;
+    if ((g.CurrentItemFlags & ImGuiItemFlags_Disabled) == 0)
+        PushStyleVar(ImGuiStyleVar_Alpha, g.Style.Alpha * 0.6f);
+    PushItemFlag(ImGuiItemFlags_Disabled, true);
+}
+
+IMGUI_API void ImGui::PopDisabled()
+{
+    ImGuiContext& g = *GImGui;
+    PopItemFlag();
+    if ((g.CurrentItemFlags & ImGuiItemFlags_Disabled) == 0)
+        PopStyleVar();
 }
 
 // BeginDisabled()/EndDisabled()
@@ -9774,7 +9799,7 @@ void ImGui::SetCursorScreenPos(const ImVec2& pos)
 {
     ImGuiWindow* window = GetCurrentWindow();
     window->DC.CursorPos = pos;
-    //window->DC.CursorMaxPos = ImMax(window->DC.CursorMaxPos, window->DC.CursorPos);
+    window->DC.CursorMaxPos = ImMax(window->DC.CursorMaxPos, window->DC.CursorPos);
     window->DC.IsSetPos = true;
 }
 
