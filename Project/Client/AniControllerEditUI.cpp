@@ -118,6 +118,25 @@ void AniControllerEditUI::BuildNode(ClientNode* node)
 	}
 }
 
+void AniControllerEditUI::ReCreateFontAtlas()
+{
+	ImGuiIO& io = ImGui::GetIO();
+
+	IM_DELETE(io.Fonts);
+
+	io.Fonts = IM_NEW(ImFontAtlas);
+
+	ImFontConfig config;
+	config.OversampleH = 4;
+	config.OversampleV = 4;
+	config.PixelSnapH = false;
+
+	m_DefaultFont = io.Fonts->AddFontFromFileTTF("..\\..\\OutputFile\\bin\\content\\node_editor_data\\Play-Regular.ttf", 18.0f, &config);
+	m_HeaderFont = io.Fonts->AddFontFromFileTTF("..\\..\\OutputFile\\bin\\content\\node_editor_data\\Cuprum-Bold.ttf", 20.0f, &config);
+
+	io.Fonts->Build();
+}
+
 void AniControllerEditUI::BuildNodes()
 {
 	for (auto& node : m_Nodes)
@@ -126,6 +145,7 @@ void AniControllerEditUI::BuildNodes()
 
 void AniControllerEditUI::OnStart()
 {
+	ReCreateFontAtlas();
 	client_ed::Config config;
 
 	config.SettingsFile = "Blueprints.json";

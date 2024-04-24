@@ -215,6 +215,7 @@ class AniControllerEditUI
 
         return &m_Nodes.back();
     }
+    void ReCreateFontAtlas();
     void BuildNodes();
     void OnStart();
     void OnStop();
@@ -237,6 +238,8 @@ class AniControllerEditUI
     const float          m_TouchTime = 1.0f;
     std::map<client_ed::NodeId, float, NodeIdLess> m_NodeTouchTime;
     bool                 m_ShowOrdinals = false;
+    ImFont* m_DefaultFont = nullptr;
+    ImFont* m_HeaderFont = nullptr;
 public:
 	virtual void init()override;
 	virtual void tick()override;
