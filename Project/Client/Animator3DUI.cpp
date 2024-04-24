@@ -9,6 +9,7 @@
 #include "TreeUI.h"
 #include "AniControllerEditUI.h"
 #include "AniControllerEditParamUI.h"
+#include "AniControllerInspector.h"
 Animator3DUI::Animator3DUI() 
 	: ComponentUI("##Animator3D", COMPONENT_TYPE::ANIMATOR3D)
 {
@@ -32,8 +33,6 @@ int Animator3DUI::render_update()
 	char szBuff[MAXLEN] = {};
 	CAnimator3D* pAnimator = GetTarget()->Animator3D();
 	if (pAnimator == nullptr)
-		return FALSE;
-	if (GetTarget()->Animator3D()->IsActiveAni() == false)
 		return FALSE;
 	
 	wstring wstrControllerName = GetTarget()->Animator3D()->GetCurControllerName();
@@ -88,14 +87,21 @@ int Animator3DUI::render_update()
 	{
 		UI* EditUI = ImGuiMgr::GetInst()->FindUI("##AniControllerEditUI");
 		UI* ParamUI = ImGuiMgr::GetInst()->FindUI("##AniParameters");
-		AniControllerEditParamUI* pParam = dynamic_cast<AniControllerEditParamUI*>(ParamUI);
+		UI* InspectorUI = ImGuiMgr::GetInst()->FindUI("##AniControllerInspector");
 		EditUI->SetActive(true);
 		ParamUI->SetActive(true);
+		InspectorUI->SetActive(true);
+
+		AniControllerEditUI* pEdit = dynamic_cast<AniControllerEditUI*>(EditUI);
+		AniControllerEditParamUI* pParam = dynamic_cast<AniControllerEditParamUI*>(ParamUI);
+		AniControllerInspector* pInspector = dynamic_cast<AniControllerInspector*>(InspectorUI);
 		EditUI->SetLinkKey(strKey);
 		ParamUI->SetLinkKey(strKey);
 		EditUI->SetLinkKey(wstrKey);
 		ParamUI->SetLinkKey(wstrKey);
+		pEdit->SetLink(pAnimator);
 		pParam->SetLink(pAnimator);
+		pInspector->SetLink(pAnimator);
 	}
 
 

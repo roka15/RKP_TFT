@@ -1,5 +1,6 @@
 #pragma once
 #include <Engine\CSingleton.h>
+#include <Engine\CGameObject.h>
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "ImGui\imgui.h"
 #include "ImGui\imgui_impl_dx11.h"
@@ -17,6 +18,25 @@ typedef void (UI::* UI_DELEGATE)(void);
 typedef void (UI::* UI_DELEGATE_1)(DWORD_PTR);
 typedef void (UI::* UI_DELEGATE_2)(DWORD_PTR, DWORD_PTR);
 
+struct ComboFunc
+{
+    static bool FuncGetter(void* data, int n, const char** out_str)
+    {
+        std::string* stringArray = static_cast<std::string*>(data);
+
+        *out_str = stringArray[n].c_str();
+        return true;
+    }
+    static bool ObjGetter(void* data, int n, const char** out_str)
+    {
+        wstring wstr = ((CGameObject**)data)[n]->GetName();
+        static string str;
+        str.clear();
+        str.assign(wstr.begin(), wstr.end());
+        *out_str = str.c_str();
+        return true;
+    }
+};
 class ImGuiMgr :
     public CSingleton<ImGuiMgr>
 {

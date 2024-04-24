@@ -19,6 +19,9 @@ CAnimatorController::~CAnimatorController()
 		itr->second = nullptr;
 	}
 	m_mapNode.clear();
+
+	//mapNode에 있는 AniNode* 는 mapIDNode에 있는것과 동일해서 둘 중 하나의 map은 delete 안해줘도 된다.
+	m_mapIDNode.clear();
 }
 
 int CAnimatorController::Load(const wstring& _strFilePath)
@@ -206,11 +209,11 @@ int CAnimatorController::Save(const wstring& _strFilePath)
 
 void CAnimatorController::Init()
 {
-	m_pEntryNode = CreateNode(L"Entry", L"");
+	m_pEntryNode = CreateNode(L"Entry", L"",-1);
 
-	m_pExitNode = CreateNode(L"Exit", L"");
+	m_pExitNode = CreateNode(L"Exit", L"",-1);
 
-	m_pAnyStateNode = CreateNode(L"AnyState", L"");
+	m_pAnyStateNode = CreateNode(L"AnyState", L"",-1);
 
 	m_mapNode.insert(std::make_pair(m_pEntryNode->GetName(), m_pEntryNode));
 	m_mapNode.insert(std::make_pair(m_pExitNode->GetName(), m_pExitNode));
@@ -221,26 +224,50 @@ void CAnimatorController::Init()
 	m_pExitNode->SetController(this);
 	m_pAnyStateNode->SetController(this);
 }
-CAniNode* CAnimatorController::CreateNode(wstring _strName, wstring _strClipName)
+CAniNode* CAnimatorController::CreateNode(wstring _strName, wstring _strClipName, int _iId)
 {
 	auto itr = m_mapNode.find(_strName);
 	if (itr != m_mapNode.end())
 	{
-		assert(nullptr);
 		return nullptr;
 	}
 
 	CAniNode* pNode = new CAniNode(_strClipName);
 	pNode->SetName(_strName);
 	pNode->SetController(this);
+	pNode->SetEditorNodeID(_iId);
 	m_mapNode.insert(std::make_pair(pNode->GetName(), pNode));
+	m_mapIDNode.insert(std::make_pair(_iId, pNode));
 	return pNode;
+}
+
+void CAnimatorController::SetNodeInfo(wstring _strName, wstring _strClipName)
+{
+	CAniNode* pNode = GetNode(_strName);
+	pNode->SetName(_strName);
+	pNode->SetAniKey(_strClipName);
 }
 
 void CAnimatorController::DestroyNode(wstring _strName)
 {
 	CAniNode* pNode = GetNode(_strName);
 	pNode->Destory();
+
+	m_mapIDNode.erase(pNode->GetEditorNodeID());
+	m_mapNode.erase(_strName);
+
+	delete pNode;
+}
+
+void CAnimatorController::DestroyNode(const int& _iID)
+{
+	CAniNode* pNode = GetNode(_iID);
+	pNode->Destory();
+
+	m_mapIDNode.erase(_iID);
+	m_mapNode.erase(pNode->GetName());
+
+	delete pNode;
 }
 
 CTransition* CAnimatorController::CreateTransition(wstring _strName, CAniNode* _pInNode, CAniNode* _pOutNode, bool _bExitTime)
@@ -279,6 +306,69 @@ void CAnimatorController::RegisterParam(wstring _strName, bool _bValue, bool _bT
 	else
 	{
 		m_mapBoolParams.insert(std::make_pair(_strName, _bValue));
+	}
+}
+
+CAniNode* CAnimatorController::GetNode(const wstring _strName)
+{
+	auto itr = m_mapNode.find(_strName);
+	if (itr == m_mapNode.end())
+		return nullptr;
+
+	return m_mapNode[_strName];
+}
+
+CAniNode* CAnimatorController::GetNode(const int& _iID)
+{
+	auto itr = m_mapIDNode.find(_iID);
+	if (itr == m_mapIDNode.end())
+		return nullptr;
+
+	return m_mapIDNode[_iID];
+}
+
+void CAnimatorController::ChangeNode(const wstring _strName, int _iID)
+{
+	CAniNode* pReturnNode = nullptr;
+	for (auto itr = m_mapNode.begin(); itr != m_mapNode.end(); ++itr)
+	{
+		wstring wstrName = itr->first;
+		CAniNode* pNode = itr->second;
+		if (pNode == nullptr)
+			continue;
+		const int& iID = pNode->GetEditorNodeID();
+		if (iID == _iID)
+		{
+			if (_strName != wstrName)
+			{
+				m_mapNode.erase(itr);
+				m_mapNode.insert(std::make_pair(_strName, pNode));
+				return;
+			}
+		}
+	}
+}
+
+bool CAnimatorController::IsChangeNodeName(const wstring _strName, int _iID)
+{
+	for (auto itr = m_mapNode.begin(); itr != m_mapNode.end();)
+	{
+		wstring wstrName = itr->first;
+		CAniNode* pNode = itr->second;
+		if (pNode == nullptr)
+			return false;
+		const int& iID = pNode->GetEditorNodeID();
+		if (iID == _iID)
+		{
+			if (_strName != wstrName)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 	}
 }
 

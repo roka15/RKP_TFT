@@ -269,6 +269,16 @@ void CAnimator3D::ClearData()
 	}
 }
 
+std::vector<wstring> CAnimator3D::GetAniList()
+{
+	std::vector<wstring> result;
+	for (auto itr = m_mapAnimation.begin(); itr != m_mapAnimation.end(); ++itr)
+	{
+		result.push_back(itr->first);
+	}
+	return result;
+}
+
 void CAnimator3D::BlendingEnd()
 {
 	m_bBlending = false;

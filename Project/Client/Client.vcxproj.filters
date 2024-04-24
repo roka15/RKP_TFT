@@ -137,6 +137,12 @@
     <Filter Include="ImGui\header">
       <UniqueIdentifier>{d1f99d79-e3ab-484e-8982-12c5a7360982}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\Module\AniControllerEditUI\ControllerEditUI">
+      <UniqueIdentifier>{b785edaa-99eb-4407-8347-9be4b551cce4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Module\AniControllerEditUI\ControllerInspector">
+      <UniqueIdentifier>{3ecea2af-af3c-4c62-bd6a-19bddb2580ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -269,9 +275,6 @@
     <ClInclude Include="AniControllerUI.h">
       <Filter>UI\InspectorUI\ResUI\AniControllerUI</Filter>
     </ClInclude>
-    <ClInclude Include="AniControllerEditUI.h">
-      <Filter>UI\Module\AniControllerEditUI</Filter>
-    </ClInclude>
     <ClInclude Include="ImGui\imgui_bezier_math.h">
       <Filter>ImGui</Filter>
     </ClInclude>
@@ -320,6 +323,10 @@
     <ClInclude Include="stb_image.h">
       <Filter>ImGui\header</Filter>
     </ClInclude>
+    <ClInclude Include="AniControllerEditUI.h">
+      <Filter>UI\Module\AniControllerEditUI\ControllerEditUI</Filter>
+    </ClInclude>
+    <ClInclude Include="AniControllerInspector.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -460,9 +467,6 @@
     <ClCompile Include="AniControllerUI.cpp">
       <Filter>UI\InspectorUI\ResUI\AniControllerUI</Filter>
     </ClCompile>
-    <ClCompile Include="AniControllerEditUI.cpp">
-      <Filter>UI\Module\AniControllerEditUI</Filter>
-    </ClCompile>
     <ClCompile Include="ImGui\imgui_canvas.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
@@ -493,6 +497,10 @@
     <ClCompile Include="widgets.cpp">
       <Filter>ImGui\utilities</Filter>
     </ClCompile>
+    <ClCompile Include="AniControllerEditUI.cpp">
+      <Filter>UI\Module\AniControllerEditUI\ControllerEditUI</Filter>
+    </ClCompile>
+    <ClCompile Include="AniControllerInspector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ImGui\imgui_bezier_math.inl">

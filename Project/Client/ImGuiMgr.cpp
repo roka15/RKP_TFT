@@ -118,7 +118,14 @@ void ImGuiMgr::tick()
 {
     for (const auto& pair : m_mapUI)
     {
-        pair.second->tick();
+        if (pair.second->IsActive())
+        {
+            pair.second->tick();
+        }
+        else
+        {
+            int a = 0;
+        }
     }    
 }
 
@@ -168,6 +175,7 @@ void ImGuiMgr::render()
 #include "ListUI.h"
 #include "MenuUI.h"
 #include "AniControllerEditUI.h"
+#include "AniControllerInspector.h"
 
 void ImGuiMgr::CreateUI()
 {
@@ -198,6 +206,11 @@ void ImGuiMgr::CreateUI()
     pUI->SetActive(false);
     m_mapUI.insert(make_pair(pUI->GetID(), pUI));
 
+    //Animator Editor Inspector UI
+    pUI = new AniControllerInspector();
+    pUI->SetActive(false);
+    m_mapUI.insert(make_pair(pUI->GetID(), pUI));
+    
     // Menu
     pUI = new MenuUI;
     pUI->SetActive(true);

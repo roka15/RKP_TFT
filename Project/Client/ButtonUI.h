@@ -1,25 +1,7 @@
 #pragma once
 #include "ComponentUI.h"
 class CGameObject;
-struct ButtonUIFunc
-{
-    static bool FuncGetter(void* data, int n, const char** out_str)
-    {
-        std::string* stringArray = static_cast<std::string*>(data);
 
-        *out_str = stringArray[n].c_str();
-        return true;
-    }
-    static bool ObjGetter(void* data, int n, const char** out_str)
-    {
-        wstring wstr = ((CGameObject**)data)[n]->GetName();
-        static string str;
-        str.clear();
-        str.assign(wstr.begin(), wstr.end());
-        *out_str = str.c_str();
-        return true;
-    }
-};
 class ButtonUI :
     public ComponentUI
 {

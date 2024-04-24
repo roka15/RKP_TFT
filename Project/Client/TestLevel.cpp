@@ -35,6 +35,33 @@
 
 void CreateTestLevel()
 {
+	CGameObject* pControllerTestObj = new CGameObject();
+	pControllerTestObj->SetName(L"ControllerTestObj");
+	pControllerTestObj->AddComponent(new CTransform());
+	pControllerTestObj->AddComponent(new CAnimator3D());
+	{
+		CAnimator3D* pAnimator = pControllerTestObj->Animator3D();
+		pAnimator->RegisterAnimation(L"anim3D\\Zed\\Spawn_Skeleton.anm");
+		pAnimator->RegisterAnimation(L"anim3D\\Zed\\Zed_idle1.anm_Skeleton.anm");
+		pAnimator->RegisterAnimation(L"anim3D\\Zed\\Zed_idle_LeadIn1.anm_Skeleton.anm");
+		pAnimator->RegisterAnimation(L"anim3D\\Zed\\Zed_run.anm_Skeleton.anm");
+		pAnimator->RegisterAnimation(L"anim3D\\Zed\\Zed_attack1.anm_Skeleton.anm");
+		pAnimator->RegisterAnimation(L"anim3D\\Zed\\Zed_attack2.anm_Skeleton.anm");
+		pAnimator->RegisterAnimation(L"anim3D\\Zed\\Death_Skeleton.anm");
+		Ptr<CAnimatorController> pAniController = nullptr;
+		wstring strPath = L"controller\\Test.controller";
+		Ptr<CAniClip> pClip;
+		pAniController = CResMgr::GetInst()->FindRes<CAnimatorController>(strPath);
+		if (pAniController == nullptr)
+		{
+			pAniController = new CAnimatorController();
+			CResMgr::GetInst()->AddRes<CAnimatorController>(strPath, pAniController);
+			pAniController->Save(strPath);
+		}
+		pControllerTestObj->Animator3D()->SetController(pAniController);
+		SpawnGameObject(pControllerTestObj, Vec3{ 0.f,0.f,0.f }, 0);
+	}
+
 	CGameObject* pPlayer = new CGameObject();
 	pPlayer->SetName(L"Player01");
 	pPlayer->AddComponent(new CTransform());
@@ -42,7 +69,7 @@ void CreateTestLevel()
 	pPlayer->AddComponent(new CPlayerScript());
 	pPlayer->GetScript<CPlayerScript>()->SetPlayerType(PLAYER_TYPE::CLIENT);
 
-	SpawnGameObject(pPlayer, Vec3{ 0.f,0.f,0.f },2);
+	SpawnGameObject(pPlayer, Vec3{ 0.f,0.f,0.f }, 2);
 	CGameMgr::GetInst()->EnterGame(0, pPlayer);
 	CGameMgr::GetInst()->SetClientOwner(pPlayer);
 
@@ -54,8 +81,8 @@ void CreateTestLevel()
 	pCurLevel->GetLayer(1)->SetName(L"Object Container");
 	pCurLevel->GetLayer(2)->SetName(L"Player");
 	pCurLevel->GetLayer(3)->SetName(L"MapObject");
-	
-	
+
+
 	pCurLevel->GetLayer(31)->SetName(L"ViewPort UI");
 
 
@@ -886,7 +913,7 @@ void CreateTestLevel()
 		pTextObj->Text()->SetText(L"1 - 1");
 		pTextObj->Text()->SetSize(20.f);
 		pTextObj->Text()->SetColor(Vec4(143.f, 115.f, 58.f, 255.f));
-		pTextObj->Transform()->SetRelativePos(-180.f,355.f, 0.f);
+		pTextObj->Transform()->SetRelativePos(-180.f, 355.f, 0.f);
 		pRoundUI->AddChild(pTextObj);
 
 		CGameObject* pTextObj2 = new CGameObject();
@@ -1040,7 +1067,7 @@ void CreateTestLevel()
 		pTextObj->Text()->SetText(L"100");
 		pTextObj->Text()->SetSize(20.f);
 		pTextObj->Text()->SetColor(Vec4(255.f, 255.f, 255.f, 255.f));
-		pTextObj->Transform()->SetRelativePos(19.f,-218.f, 0.f);
+		pTextObj->Transform()->SetRelativePos(19.f, -218.f, 0.f);
 		pShopUI->AddChild(pTextObj);
 		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"GOLD_TEXT", pTextObj);
 
@@ -1053,8 +1080,8 @@ void CreateTestLevel()
 		pImageObj8->Button()->SetEnterTexKey(L"texture\\UI\\Hud\\UI_EnterLevelUp.png");
 		pImageObj8->Button()->SetExitTexKey(L"texture\\UI\\Hud\\UI_LevelUp.png");
 		pImageObj8->Button()->SetClickTexKey(L"texture\\UI\\Hud\\UI_ClickLevelUp.png");
-	    pShopUI->AddChild(pImageObj8);
-		
+		pShopUI->AddChild(pImageObj8);
+
 
 		pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Text");
 		pTextObj = pPrefab->Instantiate();
@@ -1113,7 +1140,7 @@ void CreateTestLevel()
 		pImageObj9->AddChild(pTextObj);
 		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"REFRESH_COST_TEXT", pTextObj);
 
-		CGameObject* pImageObj10= new CGameObject();
+		CGameObject* pImageObj10 = new CGameObject();
 		pImageObj10->SetName(L"Image10");
 		pImageObj10->AddComponent(new CTransform());
 		pImageObj10->AddComponent(new CMeshRender());
@@ -1149,7 +1176,7 @@ void CreateTestLevel()
 		pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Button");
 		pObj = pPrefab->Instantiate();
 		pObj->SetName(L"ShopItemBtn");
-		pObj->Transform()->SetRelativeScale(Vec3(187.f,132.f,0.f));
+		pObj->Transform()->SetRelativeScale(Vec3(187.f, 132.f, 0.f));
 		pObj->AddComponent(new CCard());
 		{
 			pPrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"UI_Image");
@@ -1162,9 +1189,9 @@ void CreateTestLevel()
 			CTextObj->SetName(L"Name");
 			CTextObj->Text()->SetSize(15);
 			CTextObj->Text()->SetColor(Vec4(255.f, 255.f, 255.f, 255.f));
-			CTextObj->Transform()->SetRelativePos(Vec3(-0.45f,-0.3f,0.f));
+			CTextObj->Transform()->SetRelativePos(Vec3(-0.45f, -0.3f, 0.f));
 			pObj->AddChild(CTextObj);
-			CTextObj= pPrefab->Instantiate();
+			CTextObj = pPrefab->Instantiate();
 			CTextObj->SetName(L"Cost");
 			CTextObj->Text()->SetSize(15);
 			CTextObj->Text()->SetColor(Vec4(255.f, 255.f, 255.f, 255.f));
@@ -1177,35 +1204,37 @@ void CreateTestLevel()
 
 		pObj = pPrefab->Instantiate();
 		pObj->SetName(L"ShopItemBtn1");
-		pObj->Transform()->SetRelativePos(Vec3(-265.f, -316.f,0.f));
+		pObj->Transform()->SetRelativePos(Vec3(-265.f, -316.f, 0.f));
 		pShopUI->AddChild(pObj);
 		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"SHOP_ITEM_BTN", pObj);
 
 		pObj = pPrefab->Instantiate();
 		pObj->SetName(L"ShopItemBtn2");
-		pObj->Transform()->SetRelativePos(Vec3(-79.f, -316.f,0.f));
+		pObj->Transform()->SetRelativePos(Vec3(-79.f, -316.f, 0.f));
 		pShopUI->AddChild(pObj);
 		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"SHOP_ITEM_BTN", pObj);
 
 		pObj = pPrefab->Instantiate();
 		pObj->SetName(L"ShopItemBtn3");
-		pObj->Transform()->SetRelativePos(Vec3(107.f, -316.f,0.f));
+		pObj->Transform()->SetRelativePos(Vec3(107.f, -316.f, 0.f));
 		pShopUI->AddChild(pObj);
 		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"SHOP_ITEM_BTN", pObj);
 
 		pObj = pPrefab->Instantiate();
 		pObj->SetName(L"ShopItemBtn4");
-		pObj->Transform()->SetRelativePos(Vec3(293.f, -316.f,0.f));
+		pObj->Transform()->SetRelativePos(Vec3(293.f, -316.f, 0.f));
 		pShopUI->AddChild(pObj);
 		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"SHOP_ITEM_BTN", pObj);
 
 		pObj = pPrefab->Instantiate();
 		pObj->SetName(L"ShopItemBtn5");
-		pObj->Transform()->SetRelativePos(Vec3(479.f, -316.f,0.f));
+		pObj->Transform()->SetRelativePos(Vec3(479.f, -316.f, 0.f));
 		pShopUI->AddChild(pObj);
 		CGameMgr::GetInst()->RegisterUImap(pPlayerScript->GetGameID(), L"SHOP_ITEM_BTN", pObj);
 	}
 #pragma endregion
+
+
 
 #pragma endregion	
 	CGameMgr::GetInst()->BuyItem(pPlayerScript->GetGameID(), CHARACTER_TYPE::ATTROX, pPlayer);

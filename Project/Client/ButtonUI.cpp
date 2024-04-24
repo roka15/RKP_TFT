@@ -94,7 +94,7 @@ void ButtonUI::LinkFuncPtrObject(CGameObject* _pLinkObj, wstring _strFunc)
 	CButton* pButton = pButtonObj->Button();
 
 	vector<CGameObject*> vecAllObj = GetObjectList();
-	ImGui::Combo("Object Param", &m_iObjParamIdx, &ButtonUIFunc::ObjGetter, vecAllObj.data(), vecAllObj.size());
+	ImGui::Combo("Object Param", &m_iObjParamIdx, &ComboFunc::ObjGetter, vecAllObj.data(), vecAllObj.size());
 	CGameObject* objParam = vecAllObj[m_iObjParamIdx];
 
 	pButton->RegisterLinkFuncPtr(std::bind([_pLinkObj, objParam, _strFunc]()->void
@@ -136,7 +136,7 @@ int ButtonUI::render_update()
 			}
 		}
 	}
-	ImGui::Combo("GameObject", &m_iCurObjIdx, &ButtonUIFunc::ObjGetter, vecAllObj.data(), vecAllObj.size());
+	ImGui::Combo("GameObject", &m_iCurObjIdx, &ComboFunc::ObjGetter, vecAllObj.data(), vecAllObj.size());
 	CGameObject* pLinkObj = vecAllObj[m_iCurObjIdx];
 	wstring wstrLink = pLinkObj->GetName();
 	m_wstrCurObject = wstrLink;
@@ -153,7 +153,7 @@ int ButtonUI::render_update()
 
 	if (strList.size() == 0)
 		return TRUE;
-	ImGui::Combo("Function", &m_iCurFuncIdx, &ButtonUIFunc::FuncGetter, strList.data(), strList.size());
+	ImGui::Combo("Function", &m_iCurFuncIdx, &ComboFunc::FuncGetter, strList.data(), strList.size());
 
 	if (m_iCurFuncIdx > m_iCurFuncIdx)
 		return TRUE;

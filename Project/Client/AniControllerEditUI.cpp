@@ -1,8 +1,14 @@
 #include "pch.h"
 #include "AniControllerEditUI.h"
+#include "AniControllerInspector.h"
 #include "ImGuiMgr.h"
 #include "ImGui\imgui_internal.h"
 #include <Engine\CKeyMgr.h>
+#include <Engine\CAnimator3D.h>
+#include <Engine\AnimatorController.h>
+
+int ClientNode::Index = 0;
+
 AniControllerEditUI::AniControllerEditUI() :UI("##AniControllerEditUI")
 {
 	SetName("Animator");
@@ -118,6 +124,33 @@ void AniControllerEditUI::BuildNode(ClientNode* node)
 	}
 }
 
+ClientNode* AniControllerEditUI::SpawnTreeSequenceNode()
+{
+	int iGetNextID = GetNextId();
+	string Name = "New State " + std::to_string(ClientNode::Index);
+	m_Nodes.emplace_back(iGetNextID, Name.c_str());
+	m_Nodes.back().Type = NodeType::Tree;
+	m_Nodes.back().Inputs.emplace_back(GetNextId(), "", PinType::Flow);
+	m_Nodes.back().Outputs.emplace_back(GetNextId(), "", PinType::Flow);
+	m_Nodes.back().iID = iGetNextID;
+
+	BuildNode(&m_Nodes.back());
+	++ClientNode::Index;
+
+	Ptr<CAnimatorController> pController = m_pAnimator->GetController();
+	wstring wName(Name.begin(), Name.end());
+	pController->CreateNode(wName, L"", iGetNextID);
+	return &m_Nodes.back();
+}
+
+void AniControllerEditUI::DeleteSequenceNode(client_ed::NodeId _id)
+{
+	--ClientNode::Index;
+	ClientNode* Node = FindNode(_id);
+	Ptr<CAnimatorController> pController = m_pAnimator->GetController();
+	pController->DestroyNode(Node->iID);
+}
+
 void AniControllerEditUI::ReCreateFontAtlas()
 {
 	ImGuiIO& io = ImGui::GetIO();
@@ -184,13 +217,13 @@ void AniControllerEditUI::OnStart()
 	client_ed::SetCurrentEditor(m_Editor);
 
 	ClientNode* node;
-	
-	node = SpawnTreeSequenceNode(); node->SetPos(ImVec2(1028, 329));     client_ed::SetNodePosition(node->ID, ImVec2(1028, 329));
+
+	/*node = SpawnTreeSequenceNode();     client_ed::SetNodePosition(node->ID, ImVec2(1028, 329));
 	node = SpawnTreeTaskNode();         client_ed::SetNodePosition(node->ID, ImVec2(1204, 458));
 	node = SpawnTreeTask2Node();        client_ed::SetNodePosition(node->ID, ImVec2(868, 538));
 
 	node = SpawnComment();              client_ed::SetNodePosition(node->ID, ImVec2(112, 576)); client_ed::SetGroupSize(node->ID, ImVec2(384, 154));
-	node = SpawnComment();              client_ed::SetNodePosition(node->ID, ImVec2(800, 224)); client_ed::SetGroupSize(node->ID, ImVec2(640, 400));
+	node = SpawnComment();              client_ed::SetNodePosition(node->ID, ImVec2(800, 224)); client_ed::SetGroupSize(node->ID, ImVec2(640, 400));*/
 
 	client_ed::NavigateToContent();
 
@@ -496,7 +529,7 @@ void AniControllerEditUI::ShowLeftPane(float paneWidth)
 			ImGui::Dummy(ImVec2(0, (float)restoreIconHeight));
 
 			ImGui::PopID();
-		}
+			}
 		ImGui::Unindent();
 
 		static int changeCount = 0;
@@ -527,8 +560,8 @@ void AniControllerEditUI::ShowLeftPane(float paneWidth)
 			++changeCount;
 
 		ImGui::EndChild();
+		}
 	}
-}
 
 void AniControllerEditUI::OnFrame(float deltaTime)
 {
@@ -547,7 +580,7 @@ void AniControllerEditUI::OnFrame(float deltaTime)
 			ImGui::GetWindowDrawList()->AddLine(ImVec2(x, 0), ImVec2(x + io.DisplaySize.y, io.DisplaySize.y),
 				IM_COL32(255, 255, 0, 255));
 		}
-	}
+}
 # endif
 
 	static client_ed::NodeId contextNodeId = 0;
@@ -713,6 +746,9 @@ void AniControllerEditUI::OnFrame(float deltaTime)
 			//ImGui::PopStyleVar();
 		}
 
+
+
+
 		for (auto& node : m_Nodes)
 		{
 			if (node.Type != NodeType::Comment)
@@ -774,7 +810,10 @@ void AniControllerEditUI::OnFrame(float deltaTime)
 		}
 
 		for (auto& link : m_Links)
+		{
 			client_ed::Link(link.ID, link.StartPinID, link.EndPinID, link.Color, 2.0f);
+			//link 상태 ( transition 등록 )
+		}
 
 		if (!createNewNode)
 		{
@@ -875,6 +914,8 @@ void AniControllerEditUI::OnFrame(float deltaTime)
 				{
 					if (client_ed::AcceptDeletedItem())
 					{
+						DeleteSequenceNode(nodeId);
+
 						auto id = std::find_if(m_Nodes.begin(), m_Nodes.end(), [nodeId](auto& node) { return node.ID == nodeId; });
 						if (id != m_Nodes.end())
 							m_Nodes.erase(id);
@@ -901,6 +942,7 @@ void AniControllerEditUI::OnFrame(float deltaTime)
 # if 1
 	auto openPopupPosition = ImGui::GetMousePos();
 	client_ed::Suspend();
+
 	if (client_ed::ShowNodeContextMenu(&contextNodeId))
 		ImGui::OpenPopup("Node Context Menu");
 	else if (client_ed::ShowPinContextMenu(&contextPinId))
@@ -987,12 +1029,13 @@ void AniControllerEditUI::OnFrame(float deltaTime)
 		//drawList->AddCircleFilled(ImGui::GetMousePosOnOpeningCurrentPopup(), 10.0f, 0xFFFF00FF);
 
 		ClientNode* node = nullptr;
-		
+
 		if (ImGui::MenuItem("Comment"))
 			node = SpawnComment();
 		ImGui::Separator();
 		if (ImGui::MenuItem("Sequence"))
 			node = SpawnTreeSequenceNode();
+
 		if (ImGui::MenuItem("Move To"))
 			node = SpawnTreeTaskNode();
 		if (ImGui::MenuItem("Random Wait"))
@@ -1103,9 +1146,35 @@ void AniControllerEditUI::OnFrame(float deltaTime)
 		drawList->PopClipRect();
 	}
 
+	UI* InspectorUI = ImGuiMgr::GetInst()->FindUI("##AniControllerInspector");
+	AniControllerInspector* pInspector = dynamic_cast<AniControllerInspector*>(InspectorUI);
+	client_ed::NodeId DoubleClickNodeId = 0;
+	client_ed::LinkId DoubleClickLinkId = 0;
+	DoubleClickNodeId = client_ed::GetDoubleClickedNode();
+	if (DoubleClickNodeId.AsPointer() != nullptr)
+	{
+		auto node = FindNode(DoubleClickNodeId);
+		pInspector->SetTargetNodeID(node->iID);
+	}
+
+	DoubleClickLinkId = client_ed::GetDoubleClickedLink();
+	if (DoubleClickLinkId.AsPointer() != nullptr)
+	{
+		auto link = FindLink(DoubleClickLinkId);
+		pInspector->SetTargetTransition((CTransition*)link);
+	}
+
+
 
 	//ImGui::ShowTestWindow();
 	//ImGui::ShowMetricsWindow();
+}
+
+void AniControllerEditUI::LoadControllerInfo()
+{
+	Ptr<CAnimatorController> pController = m_pAnimator->GetController();
+
+
 }
 
 void AniControllerEditUI::init()
@@ -1115,7 +1184,7 @@ void AniControllerEditUI::init()
 
 void AniControllerEditUI::tick()
 {
-
+	LoadControllerInfo();
 }
 
 void AniControllerEditUI::finaltick()
@@ -1140,10 +1209,21 @@ void AniControllerEditUI::end()
 int AniControllerEditUI::render_update()
 {
 	auto& io = ImGui::GetIO();
-	
+
 	OnFrame(io.DeltaTime);
 
 	return 0;
+}
+
+ClientNode* AniControllerEditUI::GetNode(const int& _iID)
+{
+	for (int i = 0; i < m_Nodes.size(); ++i)
+	{
+		if (m_Nodes[i].iID == _iID)
+			return &m_Nodes[i];
+	}
+
+	return nullptr;
 }
 
 

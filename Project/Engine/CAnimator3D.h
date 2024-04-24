@@ -68,7 +68,7 @@ public:
     float GetBlendRatio() { return m_fCurTime / m_fBlendingTime; }
     void ClearData();
     bool IsActiveAni() { return m_pCurAnimation != nullptr; }
-
+    std::vector<wstring> GetAniList();
     void BlendingEnd();
 public:
     virtual void SaveToLevelFile(FILE* _pFile) override;

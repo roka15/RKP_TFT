@@ -153,6 +153,7 @@
     <ClInclude Include="AniClipUI.h" />
     <ClInclude Include="AniControllerEditParamUI.h" />
     <ClInclude Include="AniControllerEditUI.h" />
+    <ClInclude Include="AniControllerInspector.h" />
     <ClInclude Include="AniControllerUI.h" />
     <ClInclude Include="Animator2DUI.h" />
     <ClInclude Include="Animator3DUI.h" />
@@ -216,6 +217,7 @@
     <ClCompile Include="AniClipUI.cpp" />
     <ClCompile Include="AniControllerEditParamUI.cpp" />
     <ClCompile Include="AniControllerEditUI.cpp" />
+    <ClCompile Include="AniControllerInspector.cpp" />
     <ClCompile Include="AniControllerUI.cpp" />
     <ClCompile Include="Animator2DUI.cpp" />
     <ClCompile Include="Animator3DUI.cpp" />

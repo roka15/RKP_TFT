@@ -13,6 +13,7 @@ private:
     CAnimatorController*        m_pController;
     wstring                     m_strAniKey;
     bool                        m_bBlending;
+    int                         m_EditorNodeID;
 private:
     ANI_NODE_RETURN NextNode(int _iOutSize, bool _bFinish, bool _bCurNullNode, bool _bLoop, CAnimator3D* _pAnimator);
 public:
@@ -30,8 +31,10 @@ public:
     void RemoveAllOutTransition();
     void Destory();
     void SetBlending(bool _flag) { m_bBlending = _flag; }
+    void SetAniKey(wstring _AniKey) { m_strAniKey = _AniKey; }
+    void SetEditorNodeID(const int& _ID) { m_EditorNodeID = _ID; }
     ANI_NODE_RETURN NextNode(bool _bFinish ,bool _bLoop, CAnimator3D* _pAnimator);
-
+    const int& GetEditorNodeID() { return m_EditorNodeID; }
 public:
     CLONE(CAniNode)
 public:
