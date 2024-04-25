@@ -174,11 +174,8 @@ Link* AniControllerEditUI::CreateLinkAndRegister(client_ed::PinId _start, client
 	int StartID = StartNode->iID;
 	ClientNode* EndNode = FindPin(_end)->Node;
 	int EndID = EndNode->iID;
-	
 	CTransition* pTransition = pController->GetTransition(StartID, EndID);
-	
 	pController->RegisterIDTransition(iID, pTransition);
-
 	return &m_Links.back();
 }
 
@@ -1320,6 +1317,7 @@ void AniControllerEditUI::LoadLink(CAniNode* StartNode)
 		ClientPin EndPin = EDEndNode->Inputs[0];
 
 		CreateLinkAndRegister(StartPin.ID, EndPin.ID);
+		LoadLink(EndNode);
 	}
 }
 
