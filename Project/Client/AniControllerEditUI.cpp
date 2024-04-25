@@ -6,6 +6,7 @@
 #include <Engine\CKeyMgr.h>
 #include <Engine\CAnimator3D.h>
 #include <Engine\AnimatorController.h>
+#include <Engine\AniNode.h>
 
 int ClientNode::Index = 0;
 
@@ -143,12 +144,38 @@ ClientNode* AniControllerEditUI::SpawnTreeSequenceNode()
 	return &m_Nodes.back();
 }
 
+ClientNode* AniControllerEditUI::SpawnTreeSequenceEmptyNode()
+{
+	int iGetNextID = GetNextId();
+	string Name = "New State " + std::to_string(ClientNode::Index);
+	m_Nodes.emplace_back(iGetNextID, Name.c_str());
+	m_Nodes.back().Type = NodeType::Tree;
+	m_Nodes.back().Inputs.emplace_back(GetNextId(), "", PinType::Flow);
+	m_Nodes.back().Outputs.emplace_back(GetNextId(), "", PinType::Flow);
+	m_Nodes.back().iID = iGetNextID;
+
+	BuildNode(&m_Nodes.back());
+	++ClientNode::Index;
+
+	return &m_Nodes.back();
+}
+
 void AniControllerEditUI::DeleteSequenceNode(client_ed::NodeId _id)
 {
-	--ClientNode::Index;
 	ClientNode* Node = FindNode(_id);
+	if (Node->Type == NodeType::Tree)
+	{
+		--ClientNode::Index;
+		Ptr<CAnimatorController> pController = m_pAnimator->GetController();
+		pController->DestroyNode(Node->iID);
+	}
+}
+
+void AniControllerEditUI::DeleteLink(client_ed::LinkId _id)
+{
+	Link* pLink = FindLink(_id);
 	Ptr<CAnimatorController> pController = m_pAnimator->GetController();
-	pController->DestroyNode(Node->iID);
+	pController->DestroyTransition(pLink->iID);
 }
 
 void AniControllerEditUI::ReCreateFontAtlas()
@@ -812,7 +839,6 @@ void AniControllerEditUI::OnFrame(float deltaTime)
 		for (auto& link : m_Links)
 		{
 			client_ed::Link(link.ID, link.StartPinID, link.EndPinID, link.Color, 2.0f);
-			//link 상태 ( transition 등록 )
 		}
 
 		if (!createNewNode)
@@ -877,8 +903,15 @@ void AniControllerEditUI::OnFrame(float deltaTime)
 							showLabel("+ Create Link", ImColor(32, 45, 32, 180));
 							if (client_ed::AcceptNewItem(ImColor(128, 255, 128), 4.0f))
 							{
-								m_Links.emplace_back(Link(GetNextId(), startPinId, endPinId));
+								int iID = GetNextId();
+								m_Links.emplace_back(Link(iID, startPinId, endPinId));
 								m_Links.back().Color = GetIconColor(startPin->Type);
+								m_Links.back().iID = iID;
+								//transition 정보 생성
+								Ptr<CAnimatorController> pController = m_pAnimator->GetController();
+								ClientNode* StartNode = FindPin(startPinId)->Node;
+								ClientNode* EndNode = FindPin(endPinId)->Node;
+								pController->CreateTransition(StartNode->iID, EndNode->iID, iID);
 							}
 						}
 					}
@@ -927,6 +960,8 @@ void AniControllerEditUI::OnFrame(float deltaTime)
 				{
 					if (client_ed::AcceptDeletedItem())
 					{
+						DeleteLink(linkId);
+
 						auto id = std::find_if(m_Links.begin(), m_Links.end(), [linkId](auto& link) { return link.ID == linkId; });
 						if (id != m_Links.end())
 							m_Links.erase(id);
@@ -1155,13 +1190,15 @@ void AniControllerEditUI::OnFrame(float deltaTime)
 	{
 		auto node = FindNode(DoubleClickNodeId);
 		pInspector->SetTargetNodeID(node->iID);
+		pInspector->SetTargetLinkID(-1);
 	}
 
 	DoubleClickLinkId = client_ed::GetDoubleClickedLink();
 	if (DoubleClickLinkId.AsPointer() != nullptr)
 	{
 		auto link = FindLink(DoubleClickLinkId);
-		pInspector->SetTargetTransition((CTransition*)link);
+		pInspector->SetTargetLinkID(link->iID);
+		pInspector->SetTargetNodeID(-1);
 	}
 
 
@@ -1175,6 +1212,29 @@ void AniControllerEditUI::LoadControllerInfo()
 	Ptr<CAnimatorController> pController = m_pAnimator->GetController();
 
 
+}
+
+void AniControllerEditUI::DefaultNode()
+{
+	Ptr<CAnimatorController> pController = m_pAnimator->GetController();
+	CAniNode* Entry = pController->GetNode(L"Entry");
+	CAniNode* Exit = pController->GetNode(L"Exit");
+	CAniNode* AnyState = pController->GetNode(L"AnyState");
+
+	ClientNode* EntryNode = SpawnTreeSequenceEmptyNode();
+	EntryNode->Name = "Entry";
+	client_ed::SetNodePosition(EntryNode->ID, ImVec2(0, 0));
+	pController->RegisterIDNode(EntryNode->iID, Entry);
+
+	ClientNode* ExitNode = SpawnTreeSequenceEmptyNode();
+	ExitNode->Name = "Exit";
+	client_ed::SetNodePosition(ExitNode->ID, ImVec2(-100, 100));
+	pController->RegisterIDNode(ExitNode->iID, Exit);
+
+	ClientNode* AnyStateNode = SpawnTreeSequenceEmptyNode();
+	AnyStateNode->Name = "AnyState";
+	client_ed::SetNodePosition(AnyStateNode->ID, ImVec2(100, 100));
+	pController->RegisterIDNode(AnyStateNode->iID, AnyState);
 }
 
 void AniControllerEditUI::init()
@@ -1215,12 +1275,29 @@ int AniControllerEditUI::render_update()
 	return 0;
 }
 
+void AniControllerEditUI::SetLink(CAnimator3D* _pAnimator)
+{
+	m_pAnimator = _pAnimator;
+	DefaultNode();
+}
+
 ClientNode* AniControllerEditUI::GetNode(const int& _iID)
 {
 	for (int i = 0; i < m_Nodes.size(); ++i)
 	{
 		if (m_Nodes[i].iID == _iID)
 			return &m_Nodes[i];
+	}
+
+	return nullptr;
+}
+
+Link* AniControllerEditUI::GetLink(const int& _iID)
+{
+	for (int i = 0; i < m_Links.size(); ++i)
+	{
+		if (m_Links[i].iID == _iID)
+			return &m_Links[i];
 	}
 
 	return nullptr;

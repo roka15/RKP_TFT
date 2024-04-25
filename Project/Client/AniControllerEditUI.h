@@ -107,6 +107,7 @@ struct ClientNode
 struct Link
 {
 	client_ed::LinkId ID;
+	int iID;
 	std::string Name;
 	bool        HasExitTime;
 	float       BlendTime;
@@ -166,7 +167,7 @@ class AniControllerEditUI
 	bool CanCreateLink(ClientPin* a, ClientPin* b);
 	void BuildNode(ClientNode* node);
 	ClientNode* SpawnTreeSequenceNode();
-	
+	ClientNode* SpawnTreeSequenceEmptyNode();
 	ClientNode* SpawnTreeTaskNode()
 	{
 		m_Nodes.emplace_back(GetNextId(), "Move To");
@@ -196,6 +197,7 @@ class AniControllerEditUI
 		return &m_Nodes.back();
 	}
 	void DeleteSequenceNode(client_ed::NodeId _id);
+	void DeleteLink(client_ed::LinkId _id);
 	
 	void ReCreateFontAtlas();
 	void BuildNodes();
@@ -209,6 +211,7 @@ class AniControllerEditUI
 
 private:
 	void LoadControllerInfo();
+	void DefaultNode();
 
 public:
 	virtual void init()override;
@@ -216,8 +219,9 @@ public:
 	virtual void finaltick()override;
 	virtual void end()override;
 	virtual int render_update();
-	void SetLink(CAnimator3D* _pAnimator) { m_pAnimator = _pAnimator; }
+	void SetLink(CAnimator3D* _pAnimator); 
 	ClientNode* GetNode(const int& _iID);
+	Link* GetLink(const int& _iID);
 public:
 	AniControllerEditUI();
 	virtual ~AniControllerEditUI();

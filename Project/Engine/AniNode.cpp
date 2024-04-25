@@ -85,6 +85,7 @@ void CAniNode::AddInTransition(CTransition* _pTransition)
 {
 	m_vecInConditions.push_back(_pTransition);
 }
+
 void CAniNode::RemoveOutTransition(CTransition* _pTransition)
 {
 	for (auto itr = m_vecOutConditions.begin(); itr < m_vecOutConditions.end(); ++itr)
@@ -93,8 +94,6 @@ void CAniNode::RemoveOutTransition(CTransition* _pTransition)
 		if (pOutTransition == _pTransition)
 		{
 			m_vecOutConditions.erase(itr);
-			_pTransition->SetConnectNode(nullptr);
-			delete pOutTransition;
 			pOutTransition = nullptr;
 			return;
 		}
@@ -109,6 +108,7 @@ void CAniNode::RemoveInTransition(CTransition* _pTransition)
 		{
 			m_vecInConditions.erase(itr);
 			pInTransition = nullptr;
+			return;
 		}
 	}
 }
@@ -128,7 +128,6 @@ void CAniNode::RemoveAllOutTransition()
 	{
 		if (m_vecOutConditions[i] == nullptr)
 			continue;
-		delete m_vecOutConditions[i];
 		m_vecOutConditions[i] = nullptr;
 	}
 	m_vecOutConditions.clear();

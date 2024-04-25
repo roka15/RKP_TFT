@@ -18,6 +18,11 @@ private:
     CAniNode*           m_pAnyStateNode;
     map<wstring, CAniNode*> m_mapNode;
     map<int, CAniNode*>     m_mapIDNode;
+    map<int, CTransition*>  m_mapIDTransition;
+private:
+    vector<wstring> GetParamNames();
+    PARAM_TYPE GetParamType(wstring _strName);
+    void RegisterIDNode(const int& _iID, CAniNode* _pNode);
 public:
     virtual int Load(const wstring& _strFilePath)override;
     virtual int Save(const wstring& _strFilePath)override;
@@ -27,18 +32,25 @@ public:
     void SetNodeInfo(wstring _strName, wstring _strClipName);
     void DestroyNode(wstring _strName);
     void DestroyNode(const int& _iID);
+    void CreateTransition(const int& _startID,const int& _endID, const int& _linkID);
     CTransition* CreateTransition(wstring _strName,CAniNode* _pInNode, CAniNode* _pOutNode,bool _bExitTime=false);
     void DestroyTransition(wstring _strName);
+    void DestroyTransition(const int& _iID);
     void RegisterParam(wstring _strName, int _iValue);
     void RegisterParam(wstring _strName, float _fValue);
     void RegisterParam(wstring _strName, bool _bValue , bool _bTrigger);
     
     CAniNode* GetNode(const wstring _strName);
     CAniNode* GetNode(const int& _iID);
+    CTransition* GetTransition(const int& _iID);
     void ChangeNode(const wstring _strName, int _iID);
     bool IsChangeNodeName(const wstring _strName, int _iID);
     ANI_NODE_RETURN NextNode(bool _bFinish,bool _bLoop,wstring _strCurName, CAnimator3D* _pAnimator);
     void CopyParams(CAnimator3D* _pAnimator);
+   
+private:
+    friend class AniControllerInspector;
+    friend class AniControllerEditUI;
 public:
     CAnimatorController();
     virtual ~CAnimatorController();

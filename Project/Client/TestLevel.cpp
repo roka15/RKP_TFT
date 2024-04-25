@@ -58,6 +58,14 @@ void CreateTestLevel()
 			CResMgr::GetInst()->AddRes<CAnimatorController>(strPath, pAniController);
 			pAniController->Save(strPath);
 		}
+		pAniController->RegisterParam(L"Int0", 0);
+		pAniController->RegisterParam(L"Int1", 0);
+		pAniController->RegisterParam(L"Float0", 0.f);
+		pAniController->RegisterParam(L"Float1", 0.f);
+		pAniController->RegisterParam(L"Bool0", false,false);
+		pAniController->RegisterParam(L"Bool1", false,false);
+		pAniController->RegisterParam(L"Trigger0", false, true);
+		pAniController->RegisterParam(L"Trigger1", false, true);
 		pControllerTestObj->Animator3D()->SetController(pAniController);
 		SpawnGameObject(pControllerTestObj, Vec3{ 0.f,0.f,0.f }, 0);
 	}

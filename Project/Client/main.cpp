@@ -100,7 +100,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }       
     }
 
-   // ImGuiMgr::GetInst()->release();
+   ImGuiMgr::GetInst()->release();
    
 
     return (int) msg.wParam;

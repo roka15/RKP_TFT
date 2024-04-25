@@ -5,7 +5,7 @@
 #include "ptr.h"
 #include "CAnimator3D.h"
 
-CTransition::CTransition():
+CTransition::CTransition() :
 	m_bHasExitTime(false),
 	m_fBlendTime(0.25f)
 {
@@ -114,7 +114,7 @@ int CTransition::Load(FILE* _pFile)
 		wstring strKey = strBuff;
 		int iValue = 0;
 		fread(&iValue, sizeof(int), 1, _pFile);
-		m_mapIntConditions.insert(std::make_pair(strKey,iValue));
+		m_mapIntConditions.insert(std::make_pair(strKey, iValue));
 	}
 	fread(&loopSize, sizeof(int), 1, _pFile);
 	for (int i = 0; i < loopSize; ++i)
@@ -196,7 +196,7 @@ bool CTransition::IsActive(Ptr<CAnimatorController> _pController, CAnimator3D* _
 		}
 		int iValue = valueItr->second;
 		COMPARISON_TYPE tComparisonType = m_mapComparisonConditions.find(strKey)->second;
-		
+
 		bActive = ComparisonCalculator(iCondition, iValue, tComparisonType);
 		if (bActive == false)
 			return false;
@@ -295,9 +295,183 @@ void CTransition::RegisterCondition(wstring _Key, bool _bValue, bool _bTrigger, 
 	m_mapComparisonConditions.insert(std::make_pair(_Key, _tComparison));
 }
 
+vector<wstring> CTransition::GetConditionNames()
+{
+	vector<wstring> Result;
+	for (auto itr = m_mapIntConditions.begin(); itr != m_mapIntConditions.end(); ++itr)
+	{
+		wstring Key = itr->first;
+		Result.push_back(Key);
+	}
+	for (auto itr = m_mapFloatConditions.begin(); itr != m_mapFloatConditions.end(); ++itr)
+	{
+		wstring Key = itr->first;
+		Result.push_back(Key);
+	}
+	for (auto itr = m_mapBoolConditions.begin(); itr != m_mapBoolConditions.end(); ++itr)
+	{
+		wstring Key = itr->first;
+		Result.push_back(Key);
+	}
+	for (auto itr = m_mapTriggerConditions.begin(); itr != m_mapTriggerConditions.end(); ++itr)
+	{
+		wstring Key = itr->first;
+		Result.push_back(Key);
+	}
+
+	return Result;
+}
+
+PARAM_TYPE CTransition::GetDataType(wstring _Name)
+{
+	{
+		auto itr = m_mapIntConditions.find(_Name);
+		if (itr != m_mapIntConditions.end())
+			return PARAM_TYPE::INT;
+	}
+	{
+		auto itr = m_mapFloatConditions.find(_Name);
+		if (itr != m_mapFloatConditions.end())
+			return PARAM_TYPE::FLOAT;
+	}
+	{
+		auto itr = m_mapBoolConditions.find(_Name);
+		if (itr != m_mapBoolConditions.end())
+			return PARAM_TYPE::BOOL;
+	}
+	{
+		auto itr = m_mapTriggerConditions.find(_Name);
+		if (itr != m_mapTriggerConditions.end())
+			return PARAM_TYPE::TRIGGER;
+	}
+
+	return PARAM_TYPE::VOID_TYPE;
+}
+
+const int* const CTransition::GetConditionValueInt(wstring _Name)
+{
+	auto itr = m_mapIntConditions.find(_Name);
+	if (itr == m_mapIntConditions.end())
+		return nullptr;
+
+	return &m_mapIntConditions[_Name];
+}
+
+const float* const CTransition::GetConditionValueFloat(wstring _Name)
+{
+	auto itr = m_mapFloatConditions.find(_Name);
+	if (itr == m_mapFloatConditions.end())
+		return nullptr;
+	return &m_mapFloatConditions[_Name];
+}
+
+const bool* const CTransition::GetConditionValueBool(wstring _Name)
+{
+	auto itr = m_mapBoolConditions.find(_Name);
+	if (itr == m_mapBoolConditions.end())
+		return nullptr;
+	return &m_mapBoolConditions[_Name];
+}
+
+const bool* const CTransition::GetConditionValueTrigger(wstring _Name)
+{
+	auto itr = m_mapTriggerConditions.find(_Name);
+	if (itr == m_mapTriggerConditions.end())
+		return nullptr;
+	return &m_mapTriggerConditions[_Name];
+}
+
+void CTransition::SetConditionValueInt(wstring _Name, const int& _iValue)
+{
+	auto itr = m_mapIntConditions.find(_Name);
+	if (itr != m_mapIntConditions.end())
+		m_mapIntConditions[_Name] = _iValue;
+}
+
+void CTransition::SetConditionValueFloat(wstring _Name, const float& _fValue)
+{
+	auto itr = m_mapFloatConditions.find(_Name);
+	if (itr != m_mapFloatConditions.end())
+		m_mapFloatConditions[_Name] = _fValue;
+}
+
+void CTransition::SetConditionValueBool(wstring _Name, const bool& _bValue)
+{
+	auto itr = m_mapBoolConditions.find(_Name);
+	if (itr != m_mapBoolConditions.end())
+		m_mapBoolConditions[_Name] = _bValue;
+}
+
+void CTransition::SetConditionValueTrigger(wstring _Name, const bool& _bValue)
+{
+	auto itr = m_mapTriggerConditions.find(_Name);
+	if (itr != m_mapTriggerConditions.end())
+		m_mapTriggerConditions[_Name] = _bValue;
+}
+
+const COMPARISON_TYPE* const CTransition::GetComparisonType(wstring _Name)
+{
+	auto itr = m_mapComparisonConditions.find(_Name);
+	if (itr == m_mapComparisonConditions.end())
+		return nullptr;
+
+	return &m_mapComparisonConditions[_Name];
+}
+
+void CTransition::SetComparisonType(wstring _Name, int _iType)
+{
+	auto itr = m_mapComparisonConditions.find(_Name);
+	if (itr != m_mapComparisonConditions.end())
+		m_mapComparisonConditions[_Name] = (COMPARISON_TYPE)_iType;
+}
+
+void CTransition::RemoveCondition(wstring _Key)
+{
+	for (auto itr = m_mapIntConditions.begin(); itr != m_mapIntConditions.end(); ++itr)
+	{
+		if (itr->first == _Key)
+		{
+			m_mapIntConditions.erase(itr);
+			break;
+		}
+	}
+	for (auto itr = m_mapFloatConditions.begin(); itr != m_mapFloatConditions.end(); ++itr)
+	{
+		if (itr->first == _Key)
+		{
+			m_mapFloatConditions.erase(itr);
+			break;
+		}
+	}
+	for (auto itr = m_mapBoolConditions.begin(); itr != m_mapBoolConditions.end(); ++itr)
+	{
+		if (itr->first == _Key)
+		{
+			m_mapBoolConditions.erase(itr);
+			break;
+		}
+	}
+	for (auto itr = m_mapTriggerConditions.begin(); itr != m_mapTriggerConditions.end(); ++itr)
+	{
+		if (itr->first == _Key)
+		{
+			m_mapTriggerConditions.erase(itr);
+			break;
+		}
+	}
+	for (auto itr = m_mapComparisonConditions.begin(); itr != m_mapComparisonConditions.end(); ++itr)
+	{
+		if (itr->first == _Key)
+		{
+			m_mapComparisonConditions.erase(itr);
+			return;
+		}
+	}
+}
+
 bool CTransition::RegisterCurNode(CAnimator3D* _pAnimator)
 {
-	return _pAnimator->ChangeAnimation(m_pConnectNode->GetAnimationKey(),m_fBlendTime);
+	return _pAnimator->ChangeAnimation(m_pConnectNode->GetAnimationKey(), m_fBlendTime);
 }
 
 void CTransition::SetConnectNode(CAniNode* _pConnectNode)
