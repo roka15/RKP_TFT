@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "AniControllerEditParamUI.h"
+#include "AniControllerEditUI.h"
 #include <Engine\CKeyMgr.h>
 #include <Engine\CResMgr.h>
 #include <Engine\AnimatorController.h>
@@ -46,6 +47,10 @@ void AniControllerEditParamUI::finaltick()
 
 int AniControllerEditParamUI::render_update()
 {
+	if (ImGui::Button("+ Add Param",ImVec2(100,30)))
+	{
+
+	}
 	wstring wKey = GetWstrLinkKey();
 	if (wKey.size() == 0)
 		return 0;
@@ -113,6 +118,22 @@ int AniControllerEditParamUI::render_update()
 		ImGui::Checkbox(label.c_str(), &bValue);
 		m_pLink->SetTriggerParam(wParamName, bValue);
 	}
+
+	ImGui::PushID(0);
+	ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.96f, 0.6f, 0.58f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0.95f, 0.92f, 0.9f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0.95f, 0.42f, 0.30f));
+	if (ImGui::Button("Save Controller", ImVec2(120, 30)))
+	{
+		UI* pUI = ImGuiMgr::GetInst()->FindUI("##AniControllerEditUI");
+		AniControllerEditUI* pEditUI = dynamic_cast<AniControllerEditUI*>(pUI);
+		pEditUI->SaveNodeInfo();
+		Ptr<CAnimatorController> pController = m_pLink->GetController();
+		wstring Name = pController->GetKey();
+		pController->Save(Name);
+	}
+	ImGui::PopStyleColor(3);
+	ImGui::PopID();
     return S_OK;
 }
 

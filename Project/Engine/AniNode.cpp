@@ -154,6 +154,15 @@ ANI_NODE_RETURN CAniNode::NextNode(bool _bFinish, bool _bLoop, CAnimator3D* _pAn
 	size_t iOutSize = m_vecOutConditions.size();
 	return NextNode(iOutSize, _bFinish, NoClipNode, _bLoop, _pAnimator);
 }
+CTransition* CAniNode::GetTransition(CAniNode* _pNode)
+{
+	for (int i = 0; i < m_vecOutConditions.size(); ++i)
+	{
+		if (m_vecOutConditions[i]->GetConnectNode() == _pNode)
+			return m_vecOutConditions[i];
+	}
+	return nullptr;
+}
 ANI_NODE_RETURN CAniNode::NextNode(int _iOutSize, bool _bFinish, bool _bCurNullNode, bool _bLoop, CAnimator3D* _pAnimator)
 {
 	wstring CurName = GetName();

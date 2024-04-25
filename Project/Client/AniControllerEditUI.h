@@ -142,6 +142,7 @@ static bool Splitter(bool split_vertically, float thickness, float* size1, float
 	return SplitterBehavior(bb, id, split_vertically ? ImGuiAxis_X : ImGuiAxis_Y, size1, size2, min_size1, min_size2, 0.0f);
 }
 class CAnimator3D;
+class CAniNode;
 class AniControllerEditUI
 	:public UI
 {
@@ -196,6 +197,7 @@ class AniControllerEditUI
 
 		return &m_Nodes.back();
 	}
+	
 	void DeleteSequenceNode(client_ed::NodeId _id);
 	void DeleteLink(client_ed::LinkId _id);
 	
@@ -210,7 +212,11 @@ class AniControllerEditUI
 	void OnFrame(float deltaTime);
 
 private:
-	void LoadControllerInfo();
+	void SaveNodeInfo();
+	void LoadNodeInfo();
+	void LoadLink(CAniNode* StartNode);
+	Link* CreateLinkAndRegister(client_ed::PinId _start, client_ed::PinId _end);
+	Link* CreateLinkAndCreate(client_ed::PinId _start, client_ed::PinId _end);
 	void DefaultNode();
 
 public:
@@ -225,6 +231,8 @@ public:
 public:
 	AniControllerEditUI();
 	virtual ~AniControllerEditUI();
+private:
+	friend class AniControllerEditParamUI;
 private:
 	int							 m_NextId = 1;
 	const int					 m_PinIconSize = 24;

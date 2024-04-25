@@ -340,69 +340,68 @@ void CGameMgr::CreateCharacterPrefabs()
 #pragma region Zed_Controller
 	if (pAniController == nullptr)
 	{
-		//pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Zed\\Zed_idle1.anm_Skeleton.anm");
-		//pClip->SetLoop(true);
-		//pClip->Save(pClip->GetRelativePath());
+		pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Zed\\Zed_idle1.anm_Skeleton.anm");
+		pClip->SetLoop(true);
+		pClip->Save(pClip->GetRelativePath());
 
-		//pAniController = new CAnimatorController();
-		//CResMgr::GetInst()->AddRes<CAnimatorController>(strPath, pAniController);
-		//pAniController->RegisterParam(L"Attack_Number", 0);
-		//pAniController->RegisterParam(L"Battle", false,false);
-		//pAniController->RegisterParam(L"ULT", false,false);
-		//pAniController->RegisterParam(L"Move", false,false);
-		//pAniController->RegisterParam(L"Attack", false, false);
-		//pAniController->RegisterParam(L"Dance", false, true);
-		//pAniController->RegisterParam(L"End", false, true);
-		//pAniController->RegisterParam(L"Death", false, false);
+		pAniController = new CAnimatorController();
+		CResMgr::GetInst()->AddRes<CAnimatorController>(strPath, pAniController);
+		pAniController->RegisterParam(L"Attack_Number", 0);
+		pAniController->RegisterParam(L"Battle", false,false);
+		pAniController->RegisterParam(L"ULT", false,false);
+		pAniController->RegisterParam(L"Move", false,false);
+		pAniController->RegisterParam(L"Attack", false, false);
+		pAniController->RegisterParam(L"Dance", false, true);
+		pAniController->RegisterParam(L"End", false, true);
+		pAniController->RegisterParam(L"Death", false, false);
 
-		//pAniController->Init();
-		//pAniController->SetName(strPath);
-		//CAniNode* pAnyNode = pAniController->GetNode(L"AnyState");
-		//CAniNode* pExitNode = pAniController->GetNode(L"Exit");
-		//CAniNode* pOutNode = pAniController->GetNode(L"Entry");
-		////Idle_in_sheath
-		//CAniNode* pInNode = pAniController->CreateNode(L"Intro1", L"anim3D\\Zed\\Spawn_Skeleton.anm");
-		//CTransition* t1 = pAniController->CreateTransition(L"Entry_Intro1", pInNode, pOutNode, true);
-		//pOutNode = pInNode;
-		//pInNode = pAniController->CreateNode(L"Intro2", L"anim3D\\Zed\\Zed_idle_LeadIn1.anm_Skeleton.anm");
-		//t1 = pAniController->CreateTransition(L"Intro1_Intro2", pInNode, pOutNode, true);
-		//pOutNode = pInNode;
-		//pInNode = pAniController->CreateNode(L"Normal_Idle", L"anim3D\\Zed\\Zed_idle1.anm_Skeleton.anm");
-		//t1 = pAniController->CreateTransition(L"Intro2_Normal_Idle", pInNode, pOutNode, true);
-		//CAniNode* IdleNode = pInNode;
+		pAniController->Init();
+		pAniController->SetName(strPath);
+		CAniNode* pAnyNode = pAniController->GetNode(L"AnyState");
+		CAniNode* pExitNode = pAniController->GetNode(L"Exit");
+		CAniNode* pOutNode = pAniController->GetNode(L"Entry");
+		//Idle_in_sheath
+		CAniNode* pInNode = pAniController->CreateNode(L"Intro1", L"anim3D\\Zed\\Spawn_Skeleton.anm",-1);
+		CTransition* t1 = pAniController->CreateTransition(L"Entry_Intro1", pInNode, pOutNode, true);
+		pOutNode = pInNode;
+		pInNode = pAniController->CreateNode(L"Intro2", L"anim3D\\Zed\\Zed_idle_LeadIn1.anm_Skeleton.anm", -1);
+		t1 = pAniController->CreateTransition(L"Intro1_Intro2", pInNode, pOutNode, true);
+		pOutNode = pInNode;
+		pInNode = pAniController->CreateNode(L"Normal_Idle", L"anim3D\\Zed\\Zed_idle1.anm_Skeleton.anm", -1);
+		t1 = pAniController->CreateTransition(L"Intro2_Normal_Idle", pInNode, pOutNode, true);
+		CAniNode* IdleNode = pInNode;
 
-		//pOutNode = pInNode;
-		//pInNode = pAniController->CreateNode(L"Battle_Move", L"anim3D\\Zed\\Zed_run.anm_Skeleton.anm");
-		//t1 = pAniController->CreateTransition(L"Battle_Idle_Move", pInNode, pOutNode, false);
-		//t1->RegisterCondition(L"Move", true,false, COMPARISON_TYPE::EQUAL);
-		//t1 = pAniController->CreateTransition(L"Battle_Move_Idle", pOutNode, pInNode, false);
-		//t1->RegisterCondition(L"Move", false,false, COMPARISON_TYPE::EQUAL);
+		pOutNode = pInNode;
+		pInNode = pAniController->CreateNode(L"Battle_Move", L"anim3D\\Zed\\Zed_run.anm_Skeleton.anm", -1);
+		t1 = pAniController->CreateTransition(L"Battle_Idle_Move", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"Move", true,false, COMPARISON_TYPE::EQUAL);
+		t1 = pAniController->CreateTransition(L"Battle_Move_Idle", pOutNode, pInNode, false);
+		t1->RegisterCondition(L"Move", false,false, COMPARISON_TYPE::EQUAL);
 
-		//pOutNode = pAnyNode;
-		//pInNode = pAniController->CreateNode(L"Battle_Attack1", L"anim3D\\Zed\\Zed_attack1.anm_Skeleton.anm");
-		//t1 = pAniController->CreateTransition(L"AnyState_Battle_Attack", pInNode, pOutNode, false);
-		//t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
-		//t1->RegisterCondition(L"Attack_Number", 0, COMPARISON_TYPE::EQUAL);
-		//t1->RegisterCondition(L"ULT", false,false, COMPARISON_TYPE::EQUAL);
-		//t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", IdleNode, pInNode, false);
-		//t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
+		pOutNode = pAnyNode;
+		pInNode = pAniController->CreateNode(L"Battle_Attack1", L"anim3D\\Zed\\Zed_attack1.anm_Skeleton.anm", -1);
+		t1 = pAniController->CreateTransition(L"AnyState_Battle_Attack", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Attack_Number", 0, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"ULT", false,false, COMPARISON_TYPE::EQUAL);
+		t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", IdleNode, pInNode, false);
+		t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
 
-		//pOutNode = pAnyNode;
-		//pInNode = pAniController->CreateNode(L"Battle_Attack2", L"anim3D\\Zed\\Zed_attack2.anm_Skeleton.anm");
-		//t1 = pAniController->CreateTransition(L"AnyState_Battle_Attack2", pInNode, pOutNode, false);
-		//t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
-		//t1->RegisterCondition(L"Attack_Number", 1, COMPARISON_TYPE::EQUAL);
-		//t1->RegisterCondition(L"ULT", false,false, COMPARISON_TYPE::EQUAL);
-		//t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", IdleNode, pInNode, false);
-		//t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
+		pOutNode = pAnyNode;
+		pInNode = pAniController->CreateNode(L"Battle_Attack2", L"anim3D\\Zed\\Zed_attack2.anm_Skeleton.anm", -1);
+		t1 = pAniController->CreateTransition(L"AnyState_Battle_Attack2", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Attack_Number", 1, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"ULT", false,false, COMPARISON_TYPE::EQUAL);
+		t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", IdleNode, pInNode, false);
+		t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
 
-		//pOutNode = pAnyNode;
-		//pInNode = pAniController->CreateNode(L"Death", L"anim3D\\Zed\\Death_Skeleton.anm");
-		//t1 = pAniController->CreateTransition(L"AnyState_Death", pInNode, pOutNode, false);
-		//t1->RegisterCondition(L"Death", true, false, COMPARISON_TYPE::EQUAL);
-		//t1 = pAniController->CreateTransition(L"Death_Exit", IdleNode, pInNode, false);
-		//t1->RegisterCondition(L"Death", false, false, COMPARISON_TYPE::EQUAL);
-
+		pOutNode = pAnyNode;
+		pInNode = pAniController->CreateNode(L"Death", L"anim3D\\Zed\\Death_Skeleton.anm", -1);
+		t1 = pAniController->CreateTransition(L"AnyState_Death", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"Death", true, false, COMPARISON_TYPE::EQUAL);
+		t1 = pAniController->CreateTransition(L"Death_Exit", IdleNode, pInNode, false);
+		t1->RegisterCondition(L"Death", false, false, COMPARISON_TYPE::EQUAL);
 	}
 	pObj->Animator3D()->SetController(pAniController);
 	pAniController->Save(strPath);
@@ -461,172 +460,172 @@ void CGameMgr::CreateCharacterPrefabs()
 #pragma region Attrox_Controller
 	if (pAniController == nullptr)
 	{
-		//Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Attrox\\Aatrox_Idle1.anm");
+		Ptr<CAniClip> pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Attrox\\Aatrox_Idle1.anm");
+		pClip->SetLoop(true);
+		pClip->Save(L"anim3D\\Attrox\\Aatrox_Idle1.anm");
+		pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Attrox\\Aatrox_ULT_Idle.anm");
+		pClip->SetLoop(true);
+		pClip->Save(L"anim3D\\Attrox\\Aatrox_ULT_Idle.anm");
+		pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Attrox\\Idle1.anm");
+		pClip->SetLoop(true);
+
+		//pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Dance_Windup.anm");
 		//pClip->SetLoop(true);
-		//pClip->Save(L"anim3D\\Attrox\\Aatrox_Idle1.anm");
-		//pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Attrox\\Aatrox_ULT_Idle.anm");
-		//pClip->SetLoop(true);
-		//pClip->Save(L"anim3D\\Attrox\\Aatrox_ULT_Idle.anm");
-		//pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Attrox\\Idle1.anm");
-		//pClip->SetLoop(true);
+		pClip->Save(L"anim3D\\Attrox\\Idle1.anm");
 
-		////pClip = CResMgr::GetInst()->FindRes<CAniClip>(L"anim3D\\Dance_Windup.anm");
-		////pClip->SetLoop(true);
-		//pClip->Save(L"anim3D\\Attrox\\Idle1.anm");
+		pAniController = new CAnimatorController();
+		CResMgr::GetInst()->AddRes<CAnimatorController>(strPath, pAniController);
+		pAniController->RegisterParam(L"Battle", false, false);
+		pAniController->RegisterParam(L"ULT", false, false);
+		pAniController->RegisterParam(L"Move", false, false);
+		pAniController->RegisterParam(L"Attack", false, false);
+		pAniController->RegisterParam(L"Death", false, false);
+		pAniController->RegisterParam(L"Dance", false, true);
+		pAniController->RegisterParam(L"End", false, true);
+		pAniController->RegisterParam(L"Attack_Number", 0);
 
-		//pAniController = new CAnimatorController();
-		//CResMgr::GetInst()->AddRes<CAnimatorController>(strPath, pAniController);
-		//pAniController->RegisterParam(L"Battle", false, false);
-		//pAniController->RegisterParam(L"ULT", false, false);
-		//pAniController->RegisterParam(L"Move", false, false);
-		//pAniController->RegisterParam(L"Attack", false, false);
-		//pAniController->RegisterParam(L"Death", false, false);
-		//pAniController->RegisterParam(L"Dance", false, true);
-		//pAniController->RegisterParam(L"End", false, true);
-		//pAniController->RegisterParam(L"Attack_Number", 0);
+		pAniController->Init();
+		pAniController->SetName(strPath);
+		CAniNode* pAnyNode = pAniController->GetNode(L"AnyState");
+		CAniNode* pExitNode = pAniController->GetNode(L"Exit");
+		CAniNode* pOutNode = pAniController->GetNode(L"Entry");
+		//Idle_in_sheath
+		CAniNode* pInNode = pAniController->CreateNode(L"Intro1", L"anim3D\\Attrox\\Aatrox_ReSheath_fullbody.anm", -1);
+		CTransition* t1 = pAniController->CreateTransition(L"Entry_Intro1", pInNode, pOutNode, true);
+		pOutNode = pInNode;
+		pInNode = pAniController->CreateNode(L"Intro2", L"anim3D\\Attrox\\Idle_in_sheath.anm", -1);
+		t1 = pAniController->CreateTransition(L"Intro1_Intro2", pInNode, pOutNode, true);
+		t1->SetBlendTime(0.1f);
+		//t1->RegisterCondition(L"Battle", 0, COMPARISON_TYPE::EQUAL);
 
-		//pAniController->Init();
-		//pAniController->SetName(strPath);
-		//CAniNode* pAnyNode = pAniController->GetNode(L"AnyState");
-		//CAniNode* pExitNode = pAniController->GetNode(L"Exit");
-		//CAniNode* pOutNode = pAniController->GetNode(L"Entry");
-		////Idle_in_sheath
-		//CAniNode* pInNode = pAniController->CreateNode(L"Intro1", L"anim3D\\Attrox\\Aatrox_ReSheath_fullbody.anm");
-		//CTransition* t1 = pAniController->CreateTransition(L"Entry_Intro1", pInNode, pOutNode, true);
-		//pOutNode = pInNode;
-		//pInNode = pAniController->CreateNode(L"Intro2", L"anim3D\\Attrox\\Idle_in_sheath.anm");
-		//t1 = pAniController->CreateTransition(L"Intro1_Intro2", pInNode, pOutNode, true);
-		//t1->SetBlendTime(0.1f);
-		////t1->RegisterCondition(L"Battle", 0, COMPARISON_TYPE::EQUAL);
+		CAniNode* NIdleNode = pInNode;
+		pOutNode = NIdleNode;
+		pInNode = pAniController->CreateNode(L"Normal_Idle", L"anim3D\\Attrox\\Aatrox_Idle1.anm", -1);
+		t1 = pAniController->CreateTransition(L"Intro2_Normal_Idle", pInNode, pOutNode, true);
 
-		//CAniNode* NIdleNode = pInNode;
-		//pOutNode = NIdleNode;
-		//pInNode = pAniController->CreateNode(L"Normal_Idle", L"anim3D\\Attrox\\Aatrox_Idle1.anm");
-		//t1 = pAniController->CreateTransition(L"Intro2_Normal_Idle", pInNode, pOutNode, true);
+		//Battle Idle
+		CAniNode* BIdleIntroNode = pAniController->CreateNode(L"Battle_Idle_Intro", L"anim3D\\Attrox\\Aatrox_unsheath.anm", -1);
+		pOutNode = pInNode;
+		t1 = pAniController->CreateTransition(L"Normal_Battle_Intro", BIdleIntroNode, pOutNode, false);
+		t1->RegisterCondition(L"Battle", true,false, COMPARISON_TYPE::EQUAL);
 
-		////Battle Idle
-		//CAniNode* BIdleIntroNode = pAniController->CreateNode(L"Battle_Idle_Intro", L"anim3D\\Attrox\\Aatrox_unsheath.anm");
-		//pOutNode = pInNode;
-		//t1 = pAniController->CreateTransition(L"Normal_Battle_Intro", BIdleIntroNode, pOutNode, false);
-		//t1->RegisterCondition(L"Battle", true,false, COMPARISON_TYPE::EQUAL);
+		pInNode = pAniController->CreateNode(L"Battle_Idle", L"anim3D\\Attrox\\Idle1.anm", -1);
+		t1 = pAniController->CreateTransition(L"Normal_Battle_Idle", pInNode, BIdleIntroNode, true);
+		t1->SetBlendTime(0.f);
 
-		//pInNode = pAniController->CreateNode(L"Battle_Idle", L"anim3D\\Attrox\\Idle1.anm");
-		//t1 = pAniController->CreateTransition(L"Normal_Battle_Idle", pInNode, BIdleIntroNode, true);
-		//t1->SetBlendTime(0.f);
+		t1 = pAniController->CreateTransition(L"Battle_Idle_Exit", pExitNode, pInNode, false);
+		t1->RegisterCondition(L"Battle", false,false, COMPARISON_TYPE::EQUAL);
 
-		//t1 = pAniController->CreateTransition(L"Battle_Idle_Exit", pExitNode, pInNode, false);
-		//t1->RegisterCondition(L"Battle", false,false, COMPARISON_TYPE::EQUAL);
+		CAniNode* BIdleNode = pInNode;
 
-		//CAniNode* BIdleNode = pInNode;
+		pOutNode = BIdleNode;
+		pInNode = pAniController->CreateNode(L"Battle_Move", L"anim3D\\Attrox\\Unsheath_run01.anm", -1);
+		t1 = pAniController->CreateTransition(L"Battle_Idle_Move", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"Move", true,false, COMPARISON_TYPE::EQUAL);
+		t1 = pAniController->CreateTransition(L"Battle_Move_Idle", pOutNode, pInNode, false);
+		t1->RegisterCondition(L"Move", false,false, COMPARISON_TYPE::EQUAL);
 
-		//pOutNode = BIdleNode;
-		//pInNode = pAniController->CreateNode(L"Battle_Move", L"anim3D\\Attrox\\Unsheath_run01.anm");
-		//t1 = pAniController->CreateTransition(L"Battle_Idle_Move", pInNode, pOutNode, false);
-		//t1->RegisterCondition(L"Move", true,false, COMPARISON_TYPE::EQUAL);
-		//t1 = pAniController->CreateTransition(L"Battle_Move_Idle", pOutNode, pInNode, false);
-		//t1->RegisterCondition(L"Move", false,false, COMPARISON_TYPE::EQUAL);
+		CAniNode* BMoveNode = pInNode;
 
-		//CAniNode* BMoveNode = pInNode;
+		CAniNode* UIdleNode;
+		pOutNode = BIdleNode;
+		pInNode = pAniController->CreateNode(L"ULT_Idle", L"anim3D\\Attrox\\Aatrox_ULT_Idle.anm", -1);
+		UIdleNode = pInNode;
 
-		//CAniNode* UIdleNode;
-		//pOutNode = BIdleNode;
-		//pInNode = pAniController->CreateNode(L"ULT_Idle", L"anim3D\\Attrox\\Aatrox_ULT_Idle.anm");
-		//UIdleNode = pInNode;
+		CAniNode* UInMoveNode;
+		pInNode = pAniController->CreateNode(L"ULT_InMove", L"anim3D\\Attrox\\Aatrox_ULT_Spell_Dash.anm", -1);
 
-		//CAniNode* UInMoveNode;
-		//pInNode = pAniController->CreateNode(L"ULT_InMove", L"anim3D\\Attrox\\Aatrox_ULT_Spell_Dash.anm");
+		CAniNode* UInNode;
+		pOutNode = UIdleNode;
+		UInMoveNode = pInNode;
+		pInNode = pAniController->CreateNode(L"ULT_In", L"anim3D\\Attrox\\ULT_Idlein.anm", -1);
+		UInNode = pInNode;
 
-		//CAniNode* UInNode;
-		//pOutNode = UIdleNode;
-		//UInMoveNode = pInNode;
-		//pInNode = pAniController->CreateNode(L"ULT_In", L"anim3D\\Attrox\\ULT_Idlein.anm");
-		//UInNode = pInNode;
+		t1 = pAniController->CreateTransition(L"ULT_In_Idle", pOutNode, pInNode, true);
+		t1 = pAniController->CreateTransition(L"Battle_Ult_In", pInNode, BIdleNode, false);
+		t1->RegisterCondition(L"ULT", true,false, COMPARISON_TYPE::EQUAL);
+		t1 = pAniController->CreateTransition(L"Ult_Idle_In_Move", UInMoveNode, pOutNode, false);
+		t1->RegisterCondition(L"Move", true,false, COMPARISON_TYPE::EQUAL);
+		UInNode = pInNode;
 
-		//t1 = pAniController->CreateTransition(L"ULT_In_Idle", pOutNode, pInNode, true);
-		//t1 = pAniController->CreateTransition(L"Battle_Ult_In", pInNode, BIdleNode, false);
-		//t1->RegisterCondition(L"ULT", true,false, COMPARISON_TYPE::EQUAL);
-		//t1 = pAniController->CreateTransition(L"Ult_Idle_In_Move", UInMoveNode, pOutNode, false);
-		//t1->RegisterCondition(L"Move", true,false, COMPARISON_TYPE::EQUAL);
-		//UInNode = pInNode;
+		CAniNode* UOutNode;
+		pOutNode = UIdleNode;
+		pInNode = pAniController->CreateNode(L"ULT_Out", L"anim3D\\Attrox\\ULT_out.anm", -1);
+		t1 = pAniController->CreateTransition(L"ULT_Idle_Out", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"ULT", false,false, COMPARISON_TYPE::EQUAL);
+		t1 = pAniController->CreateTransition(L"ULT_Out_Battle_Idle", BIdleNode, pInNode, true);
+		UOutNode = pInNode;
 
-		//CAniNode* UOutNode;
-		//pOutNode = UIdleNode;
-		//pInNode = pAniController->CreateNode(L"ULT_Out", L"anim3D\\Attrox\\ULT_out.anm");
-		//t1 = pAniController->CreateTransition(L"ULT_Idle_Out", pInNode, pOutNode, false);
-		//t1->RegisterCondition(L"ULT", false,false, COMPARISON_TYPE::EQUAL);
-		//t1 = pAniController->CreateTransition(L"ULT_Out_Battle_Idle", BIdleNode, pInNode, true);
-		//UOutNode = pInNode;
+		CAniNode* UMoveNode;
+		pOutNode = UIdleNode;
+		pInNode = pAniController->CreateNode(L"ULT_Move", L"anim3D\\Attrox\\Run_Ult.anm", -1);
 
-		//CAniNode* UMoveNode;
-		//pOutNode = UIdleNode;
-		//pInNode = pAniController->CreateNode(L"ULT_Move", L"anim3D\\Attrox\\Run_Ult.anm");
+		t1 = pAniController->CreateTransition(L"ULT_In_Move", pInNode, UInMoveNode, true);
+		t1 = pAniController->CreateTransition(L"ULT_Move_Idle_In", UInNode, pInNode, false);
+		t1->RegisterCondition(L"Move", false,false, COMPARISON_TYPE::EQUAL);
 
-		//t1 = pAniController->CreateTransition(L"ULT_In_Move", pInNode, UInMoveNode, true);
-		//t1 = pAniController->CreateTransition(L"ULT_Move_Idle_In", UInNode, pInNode, false);
-		//t1->RegisterCondition(L"Move", false,false, COMPARISON_TYPE::EQUAL);
+		UMoveNode = pInNode;
 
-		//UMoveNode = pInNode;
-
-		//pOutNode = pAnyNode;
-		//pInNode = pAniController->CreateNode(L"Dance_In", L"anim3D\\Attrox\\Dance_Windup.anm");
-		//t1 = pAniController->CreateTransition(L"AnyState_Dance_In", pInNode, pOutNode, false);
-		//t1->RegisterCondition(L"Dance", true, true, COMPARISON_TYPE::EQUAL);
-		//pOutNode = pInNode;
-		//pInNode = pAniController->CreateNode(L"Dance_Loop", L"anim3D\\Attrox\\Dance_Loop.anm");
-		//t1 = pAniController->CreateTransition(L"AnyState_Dance_Loop", pInNode, pOutNode, true);
-		//pOutNode = pInNode;
-		//t1 = pAniController->CreateTransition(L"AnyState_Dance_Exit", pExitNode, pOutNode, false);
-		//t1->RegisterCondition(L"End", true, true, COMPARISON_TYPE::EQUAL);
+		pOutNode = pAnyNode;
+		pInNode = pAniController->CreateNode(L"Dance_In", L"anim3D\\Attrox\\Dance_Windup.anm", -1);
+		t1 = pAniController->CreateTransition(L"AnyState_Dance_In", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"Dance", true, true, COMPARISON_TYPE::EQUAL);
+		pOutNode = pInNode;
+		pInNode = pAniController->CreateNode(L"Dance_Loop", L"anim3D\\Attrox\\Dance_Loop.anm", -1);
+		t1 = pAniController->CreateTransition(L"AnyState_Dance_Loop", pInNode, pOutNode, true);
+		pOutNode = pInNode;
+		t1 = pAniController->CreateTransition(L"AnyState_Dance_Exit", pExitNode, pOutNode, false);
+		t1->RegisterCondition(L"End", true, true, COMPARISON_TYPE::EQUAL);
 
 
-		//pOutNode = pAnyNode;
-		//pInNode = pAniController->CreateNode(L"Battle_Attack1", L"anim3D\\Attrox\\Attack1.anm");
-		//t1 = pAniController->CreateTransition(L"AnyState_Battle_Attack", pInNode, pOutNode, false);
-		//t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
-		//t1->RegisterCondition(L"Attack_Number", 0, COMPARISON_TYPE::EQUAL);
-		//t1->RegisterCondition(L"ULT", false,false, COMPARISON_TYPE::EQUAL);
-		//t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", BIdleNode, pInNode, false);
-		//t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
+		pOutNode = pAnyNode;
+		pInNode = pAniController->CreateNode(L"Battle_Attack1", L"anim3D\\Attrox\\Attack1.anm", -1);
+		t1 = pAniController->CreateTransition(L"AnyState_Battle_Attack", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Attack_Number", 0, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"ULT", false,false, COMPARISON_TYPE::EQUAL);
+		t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", BIdleNode, pInNode, false);
+		t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
 
-		//pOutNode = pAnyNode;
-		//pInNode = pAniController->CreateNode(L"Battle_Attack2", L"anim3D\\Attrox\\Attack2.anm");
-		//t1 = pAniController->CreateTransition(L"AnyState_Battle_Attack2", pInNode, pOutNode, false);
-		//t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
-		//t1->RegisterCondition(L"Attack_Number", 1, COMPARISON_TYPE::EQUAL);
-		//t1->RegisterCondition(L"ULT", false,false, COMPARISON_TYPE::EQUAL);
-		//t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", BIdleNode, pInNode, false);
-		//t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
+		pOutNode = pAnyNode;
+		pInNode = pAniController->CreateNode(L"Battle_Attack2", L"anim3D\\Attrox\\Attack2.anm", -1);
+		t1 = pAniController->CreateTransition(L"AnyState_Battle_Attack2", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Attack_Number", 1, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"ULT", false,false, COMPARISON_TYPE::EQUAL);
+		t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", BIdleNode, pInNode, false);
+		t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
 
-		//pOutNode = pAnyNode;
-		//pInNode = pAniController->CreateNode(L"Battle_Attack3", L"anim3D\\Attrox\\Attack3.anm");
-		//t1 = pAniController->CreateTransition(L"AnyState_Battle_Attac3", pInNode, pOutNode, false);
-		//t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
-		//t1->RegisterCondition(L"Attack_Number", 2, COMPARISON_TYPE::EQUAL);
-		//t1->RegisterCondition(L"ULT", false,false, COMPARISON_TYPE::EQUAL);
-		//t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", BIdleNode, pInNode, false);
-		//t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
+		pOutNode = pAnyNode;
+		pInNode = pAniController->CreateNode(L"Battle_Attack3", L"anim3D\\Attrox\\Attack3.anm", -1);
+		t1 = pAniController->CreateTransition(L"AnyState_Battle_Attac3", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Attack_Number", 2, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"ULT", false,false, COMPARISON_TYPE::EQUAL);
+		t1 = pAniController->CreateTransition(L"Battle_Attack_Idle", BIdleNode, pInNode, false);
+		t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
 
 
-		//pOutNode = pAnyNode;
-		//pInNode = pAniController->CreateNode(L"ULT_Attack1", L"anim3D\\Attrox\\Attack1_Ult.anm");
-		//t1 = pAniController->CreateTransition(L"AnyState_ULT_Attack1", pInNode, pOutNode, false);
-		//t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
-		//t1->RegisterCondition(L"Attack_Number", 0, COMPARISON_TYPE::EQUAL);
-		//t1->RegisterCondition(L"ULT", true,false, COMPARISON_TYPE::EQUAL);
-		//t1 = pAniController->CreateTransition(L"ULT_Attack_Idle", UIdleNode, pInNode, false);
-		//t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
+		pOutNode = pAnyNode;
+		pInNode = pAniController->CreateNode(L"ULT_Attack1", L"anim3D\\Attrox\\Attack1_Ult.anm", -1);
+		t1 = pAniController->CreateTransition(L"AnyState_ULT_Attack1", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Attack_Number", 0, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"ULT", true,false, COMPARISON_TYPE::EQUAL);
+		t1 = pAniController->CreateTransition(L"ULT_Attack_Idle", UIdleNode, pInNode, false);
+		t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
 
-		//pOutNode = pAnyNode;
-		//pInNode = pAniController->CreateNode(L"ULT_Attack2", L"anim3D\\Attrox\\Attack2_Ult.anm");
-		//t1 = pAniController->CreateTransition(L"AnyState_ULT_Attack2", pInNode, pOutNode, false);
-		//t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
-		//t1->RegisterCondition(L"Attack_Number", 1, COMPARISON_TYPE::EQUAL);
-		//t1->RegisterCondition(L"ULT", true,false, COMPARISON_TYPE::EQUAL);
-		//t1 = pAniController->CreateTransition(L"ULT_Attack_Idle", UIdleNode, pInNode, false);
-		//t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
-		////t1->RegisterCondition(L"End", true, COMPARISON_TYPE::EQUAL);
+		pOutNode = pAnyNode;
+		pInNode = pAniController->CreateNode(L"ULT_Attack2", L"anim3D\\Attrox\\Attack2_Ult.anm", -1);
+		t1 = pAniController->CreateTransition(L"AnyState_ULT_Attack2", pInNode, pOutNode, false);
+		t1->RegisterCondition(L"Attack", true, false, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"Attack_Number", 1, COMPARISON_TYPE::EQUAL);
+		t1->RegisterCondition(L"ULT", true,false, COMPARISON_TYPE::EQUAL);
+		t1 = pAniController->CreateTransition(L"ULT_Attack_Idle", UIdleNode, pInNode, false);
+		t1->RegisterCondition(L"Attack", false, false, COMPARISON_TYPE::EQUAL);
+		//t1->RegisterCondition(L"End", true, COMPARISON_TYPE::EQUAL);
 
-		//pAniController->Save(strPath);
+		pAniController->Save(strPath);
 	}
 #pragma endregion
 

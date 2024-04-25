@@ -19,10 +19,14 @@ private:
     map<wstring, CAniNode*> m_mapNode;
     map<int, CAniNode*>     m_mapIDNode;
     map<int, CTransition*>  m_mapIDTransition;
+    wstring             m_LoadEditTxtPath;
 private:
     vector<wstring> GetParamNames();
     PARAM_TYPE GetParamType(wstring _strName);
     void RegisterIDNode(const int& _iID, CAniNode* _pNode);
+    void RegisterIDTransition(const int& _iId, CTransition* _pTransition);
+    vector<CAniNode*> GetAllNode();
+    const wstring& GetEditPath() { return m_LoadEditTxtPath; }
 public:
     virtual int Load(const wstring& _strFilePath)override;
     virtual int Save(const wstring& _strFilePath)override;
@@ -42,7 +46,8 @@ public:
     
     CAniNode* GetNode(const wstring _strName);
     CAniNode* GetNode(const int& _iID);
-    CTransition* GetTransition(const int& _iID);
+    CTransition* GetTransition(const int& _iLinkID);
+    CTransition* GetTransition(const int& _startNodeId, const int& _endNodeId);
     void ChangeNode(const wstring _strName, int _iID);
     bool IsChangeNodeName(const wstring _strName, int _iID);
     ANI_NODE_RETURN NextNode(bool _bFinish,bool _bLoop,wstring _strCurName, CAnimator3D* _pAnimator);

@@ -7,6 +7,8 @@
 #include <Engine\CAnimator3D.h>
 #include <Engine\AnimatorController.h>
 #include <Engine\AniNode.h>
+#include <Engine\Transition.h>
+#include <Engine\CPathMgr.h>
 
 int ClientNode::Index = 0;
 
@@ -158,6 +160,43 @@ ClientNode* AniControllerEditUI::SpawnTreeSequenceEmptyNode()
 	++ClientNode::Index;
 
 	return &m_Nodes.back();
+}
+
+Link* AniControllerEditUI::CreateLinkAndRegister(client_ed::PinId _start, client_ed::PinId _end)
+{
+	int iID = GetNextId();
+	ClientPin* StartPin = FindPin(_start);
+	m_Links.emplace_back(Link(iID, _start, _end));
+	m_Links.back().Color = GetIconColor(StartPin->Type);
+	m_Links.back().iID = iID;
+	Ptr<CAnimatorController> pController = m_pAnimator->GetController();
+	ClientNode* StartNode = FindPin(_start)->Node;
+	int StartID = StartNode->iID;
+	ClientNode* EndNode = FindPin(_end)->Node;
+	int EndID = EndNode->iID;
+	
+	CTransition* pTransition = pController->GetTransition(StartID, EndID);
+	
+	pController->RegisterIDTransition(iID, pTransition);
+
+	return &m_Links.back();
+}
+
+Link* AniControllerEditUI::CreateLinkAndCreate(client_ed::PinId _start, client_ed::PinId _end)
+{
+	int iID = GetNextId();
+	ClientPin* StartPin = FindPin(_start);
+	m_Links.emplace_back(Link(iID, _start, _end));
+	m_Links.back().Color = GetIconColor(StartPin->Type);
+	m_Links.back().iID = iID;
+	//transition 정보 생성
+	Ptr<CAnimatorController> pController = m_pAnimator->GetController();
+	ClientNode* StartNode = FindPin(_start)->Node;
+	int StartID = StartNode->iID;
+	ClientNode* EndNode = FindPin(_end)->Node;
+	int EndID = EndNode->iID;
+	pController->CreateTransition(StartID, EndID, iID);
+	return &m_Links.back();
 }
 
 void AniControllerEditUI::DeleteSequenceNode(client_ed::NodeId _id)
@@ -556,7 +595,7 @@ void AniControllerEditUI::ShowLeftPane(float paneWidth)
 			ImGui::Dummy(ImVec2(0, (float)restoreIconHeight));
 
 			ImGui::PopID();
-			}
+		}
 		ImGui::Unindent();
 
 		static int changeCount = 0;
@@ -587,8 +626,8 @@ void AniControllerEditUI::ShowLeftPane(float paneWidth)
 			++changeCount;
 
 		ImGui::EndChild();
-		}
 	}
+}
 
 void AniControllerEditUI::OnFrame(float deltaTime)
 {
@@ -903,15 +942,7 @@ void AniControllerEditUI::OnFrame(float deltaTime)
 							showLabel("+ Create Link", ImColor(32, 45, 32, 180));
 							if (client_ed::AcceptNewItem(ImColor(128, 255, 128), 4.0f))
 							{
-								int iID = GetNextId();
-								m_Links.emplace_back(Link(iID, startPinId, endPinId));
-								m_Links.back().Color = GetIconColor(startPin->Type);
-								m_Links.back().iID = iID;
-								//transition 정보 생성
-								Ptr<CAnimatorController> pController = m_pAnimator->GetController();
-								ClientNode* StartNode = FindPin(startPinId)->Node;
-								ClientNode* EndNode = FindPin(endPinId)->Node;
-								pController->CreateTransition(StartNode->iID, EndNode->iID, iID);
+								CreateLinkAndCreate(startPinId, endPinId);
 							}
 						}
 					}
@@ -1202,17 +1233,96 @@ void AniControllerEditUI::OnFrame(float deltaTime)
 	}
 
 
-
 	//ImGui::ShowTestWindow();
 	//ImGui::ShowMetricsWindow();
 }
 
-void AniControllerEditUI::LoadControllerInfo()
+void AniControllerEditUI::SaveNodeInfo()
 {
 	Ptr<CAnimatorController> pController = m_pAnimator->GetController();
+	vector<CAniNode*> vecNodes = pController->GetAllNode();
+	vector<ImVec2> vecPos;
 
+	for (auto node : vecNodes)
+	{
+		ImVec2 position = client_ed::GetNodePosition(node->GetEditorNodeID());
+		vecPos.push_back(position);
+	}
 
+	wstring path;
+	path += pController->GetEditPath();
+	FILE* pFile = nullptr;
+	errno_t err = _wfopen_s(&pFile, path.c_str(), L"wb");
+	assert(pFile);
+	int loopSize = vecPos.size();
+	fwrite(&loopSize, sizeof(int), 1, pFile);
+	for (int i = 0; i < loopSize; ++i)
+	{
+		fwrite(&(vecPos[i]), sizeof(ImVec2), 1, pFile);
+	}
+	fclose(pFile);
 }
+
+void AniControllerEditUI::LoadNodeInfo()
+{
+	Ptr<CAnimatorController> pController = m_pAnimator->GetController();
+	vector<CAniNode*> Nodes = pController->GetAllNode();
+
+	vector<ImVec2> vecPos;
+	wstring path;
+	path += pController->GetEditPath();
+
+	FILE* pFile = NULL;
+	_wfopen_s(&pFile, path.c_str(), L"rb");
+
+	assert(pFile);
+	int loopSize = 0;
+	fread(&loopSize, sizeof(int), 1, pFile);
+	for (int i = 0; i < loopSize; ++i)
+	{
+		ImVec2 position = {};
+		fread(&position, sizeof(ImVec2), 1, pFile);
+		vecPos.push_back(position);
+	}
+	fclose(pFile);
+	int i = 0;
+	for (auto node : Nodes)
+	{
+		//create
+		ClientNode* Node = SpawnTreeSequenceEmptyNode();
+		//name
+		const wstring& Name = node->GetName();
+		string strName(Name.begin(), Name.end());
+		Node->Name = strName;
+		//position
+		ImVec2 Position = ImVec2(vecPos[i].x, vecPos[i].y);
+		client_ed::SetNodePosition(Node->ID, Position);
+		//engine node 에 id 등록
+		node->SetEditorNodeID(Node->iID);
+		pController->RegisterIDNode(Node->iID, node);
+		i++;
+	}
+	BuildNodes();
+}
+
+void AniControllerEditUI::LoadLink(CAniNode* StartNode)
+{
+	if (StartNode == nullptr)
+		return;
+
+	ClientNode* EDStartNode = GetNode(StartNode->GetEditorNodeID());
+	vector<CTransition*> vecLink = StartNode->GetOutTransitionAll();
+	for (int i = 0; i < vecLink.size(); ++i)
+	{
+		CAniNode* EndNode = vecLink[i]->GetConnectNode();
+		ClientNode* EDEndNode = GetNode(EndNode->GetEditorNodeID());
+		ClientPin StartPin = EDStartNode->Outputs[0];
+		ClientPin EndPin = EDEndNode->Inputs[0];
+
+		CreateLinkAndRegister(StartPin.ID, EndPin.ID);
+	}
+}
+
 
 void AniControllerEditUI::DefaultNode()
 {
@@ -1220,6 +1330,8 @@ void AniControllerEditUI::DefaultNode()
 	CAniNode* Entry = pController->GetNode(L"Entry");
 	CAniNode* Exit = pController->GetNode(L"Exit");
 	CAniNode* AnyState = pController->GetNode(L"AnyState");
+	if (Entry == nullptr && Exit == nullptr && AnyState == nullptr)
+		pController->Init();
 
 	ClientNode* EntryNode = SpawnTreeSequenceEmptyNode();
 	EntryNode->Name = "Entry";
@@ -1244,7 +1356,6 @@ void AniControllerEditUI::init()
 
 void AniControllerEditUI::tick()
 {
-	LoadControllerInfo();
 }
 
 void AniControllerEditUI::finaltick()
@@ -1278,7 +1389,13 @@ int AniControllerEditUI::render_update()
 void AniControllerEditUI::SetLink(CAnimator3D* _pAnimator)
 {
 	m_pAnimator = _pAnimator;
-	DefaultNode();
+	LoadNodeInfo();
+	Ptr<CAnimatorController> pController = m_pAnimator->GetController();
+	CAniNode* EntryNode = pController->GetNode(L"Entry");
+	CAniNode* AnyStateNode = pController->GetNode(L"AnyState");
+	LoadLink(EntryNode);
+	LoadLink(AnyStateNode);
+	//DefaultNode();
 }
 
 ClientNode* AniControllerEditUI::GetNode(const int& _iID)

@@ -118,12 +118,18 @@ int CAnimatorController::Load(const wstring& _strFilePath)
 		pNode->SetController(this);
 		m_mapNode.insert(std::make_pair(strKey, pNode));
 	}
-	for (auto itr = m_mapNode.begin();itr!=m_mapNode.end();++itr)
+	int strLen = 0;
+	ZeroMemory(strBuff, MAXLEN);
+	fread(&strLen, sizeof(int), 1, pFile);
+	fread(strBuff, strLen, 1, pFile);
+	m_LoadEditTxtPath = strBuff;
+
+	for (auto itr = m_mapNode.begin(); itr != m_mapNode.end(); ++itr)
 	{
 		itr->second->LoadAfterProcess();
 	}
 	Init();
-	
+
 	fclose(pFile);
 	return S_OK;
 }
@@ -132,6 +138,8 @@ int CAnimatorController::Save(const wstring& _strFilePath)
 {
 	SetRelativePath(_strFilePath);
 	wstring strFilePath = CPathMgr::GetInst()->GetContentPath() + _strFilePath;
+	m_LoadEditTxtPath = CPathMgr::GetInst()->GetContentPath();
+	m_LoadEditTxtPath = m_LoadEditTxtPath + L"editor\\" + GetKey() + L".nodeEDT";
 	FILE* pFile = nullptr;
 	errno_t err = _wfopen_s(&pFile, strFilePath.c_str(), L"wb");
 	assert(pFile);
@@ -209,23 +217,28 @@ int CAnimatorController::Save(const wstring& _strFilePath)
 		fwrite(strKey.c_str(), strLen, 1, pFile);
 		pNode->Save(pFile);
 	}
+
+	int strLen = m_LoadEditTxtPath.size() * UNICODELEN;
+	fwrite(&strLen, sizeof(int), 1, pFile);
+	fwrite(m_LoadEditTxtPath.c_str(), strLen, 1, pFile);
+
 	fclose(pFile);
 	return S_OK;
 }
 
 void CAnimatorController::Init()
 {
-	m_pEntryNode = CreateNode(L"Entry", L"",-1);
+	m_pEntryNode = CreateNode(L"Entry", L"", -1);
 	if (m_pEntryNode == nullptr)
 	{
 		m_pEntryNode = new CAniNode();
 	}
-	m_pExitNode = CreateNode(L"Exit", L"",-1);
+	m_pExitNode = CreateNode(L"Exit", L"", -1);
 	if (m_pExitNode == nullptr)
 	{
 		m_pExitNode = new CAniNode();
 	}
-	m_pAnyStateNode = CreateNode(L"AnyState", L"",-1);
+	m_pAnyStateNode = CreateNode(L"AnyState", L"", -1);
 	if (m_pAnyStateNode == nullptr)
 	{
 		m_pAnyStateNode = new CAniNode();
@@ -309,7 +322,7 @@ void CAnimatorController::CreateTransition(const int& _startID, const int& _endI
 	StartNode->AddOutTransition(pTransition);
 	EndNode->AddInTransition(pTransition);
 
-	m_mapIDTransition.insert(std::make_pair(_linkID,pTransition));
+	m_mapIDTransition.insert(std::make_pair(_linkID, pTransition));
 	return;
 }
 
@@ -341,7 +354,7 @@ void CAnimatorController::DestroyTransition(const int& _iID)
 
 	StartNode->RemoveOutTransition(pTransition);
 	EndNode->RemoveInTransition(pTransition);
-	
+
 	delete itr->second;
 	m_mapIDTransition.erase(itr);
 }
@@ -393,6 +406,14 @@ CTransition* CAnimatorController::GetTransition(const int& _iID)
 		return nullptr;
 
 	return m_mapIDTransition[_iID];
+}
+
+CTransition* CAnimatorController::GetTransition(const int& _startNodeId, const int& _endNodeId)
+{
+	CAniNode* pStart = m_mapIDNode[_startNodeId];
+	CAniNode* pEnd = m_mapIDNode[_endNodeId];
+	
+	return pStart->GetTransition(pEnd);
 }
 
 void CAnimatorController::ChangeNode(const wstring _strName, int _iID)
@@ -466,9 +487,9 @@ ANI_NODE_RETURN CAnimatorController::NextNode(bool _bFinish, bool _bLoop, wstrin
 
 	if (CurNode == nullptr)
 		return ANI_NODE_RETURN::NOTHING;
-	
+
 	//AnyState가 Change 면 CurNode 보다 우선순위가 높음.
-	ANI_NODE_RETURN eType1 = CurNode->NextNode(_bFinish,_bLoop, _pAnimator);
+	ANI_NODE_RETURN eType1 = CurNode->NextNode(_bFinish, _bLoop, _pAnimator);
 	ANI_NODE_RETURN eType2 = m_pAnyStateNode->NextNode(_bFinish, _bLoop, _pAnimator);
 
 	if (eType2 == ANI_NODE_RETURN::CHANGE)
@@ -512,6 +533,8 @@ void CAnimatorController::CopyParams(CAnimator3D* _pAnimator)
 		_pAnimator->m_AniParams.mapTriggerParams.insert(std::make_pair(key, value));
 	}
 }
+
+
 
 vector<wstring> CAnimatorController::GetParamNames()
 {
@@ -581,7 +604,27 @@ void CAnimatorController::RegisterIDNode(const int& _iID, CAniNode* _pNode)
 	if (itr != m_mapIDNode.end())
 		return;
 
-	m_mapIDNode.insert(std::make_pair(_iID,_pNode));
+	m_mapIDNode.insert(std::make_pair(_iID, _pNode));
 
 	_pNode->SetEditorNodeID(_iID);
+}
+
+void CAnimatorController::RegisterIDTransition(const int& _iId, CTransition* _pTransition)
+{
+	auto itr = m_mapIDTransition.find(_iId);
+	if (itr != m_mapIDTransition.end())
+		return;
+
+	m_mapIDTransition.insert(std::make_pair(_iId, _pTransition));
+}
+
+vector<CAniNode*> CAnimatorController::GetAllNode()
+{
+	vector<CAniNode*> Result;
+	for (auto itr = m_mapNode.begin(); itr != m_mapNode.end(); ++itr)
+	{
+		Result.push_back(itr->second);
+	}
+
+	return Result;
 }
