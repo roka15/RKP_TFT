@@ -149,8 +149,13 @@ ANI_NODE_RETURN CAniNode::NextNode(bool _bFinish, bool _bLoop, CAnimator3D* _pAn
 	wstring strName = GetName();
 	bool NoClipNode = false;
 	if (strName.compare(L"Entry") == 0 || strName.compare(L"Exit") == 0 || strName.compare(L"AnyState") == 0)
+	{
 		NoClipNode = true;
-
+	}
+	if (m_pController->GetKey() == L"controller\\Test.controller" && strName.compare(L"Exit") == 0)
+	{
+		int a = 0;
+	}
 	size_t iOutSize = m_vecOutConditions.size();
 	return NextNode(iOutSize, _bFinish, NoClipNode, _bLoop, _pAnimator);
 }
@@ -208,10 +213,18 @@ ANI_NODE_RETURN CAniNode::NextNode(int _iOutSize, bool _bFinish, bool _bCurNullN
 		if (_bFinish)
 		{
 			if (bExitTime)
-			{
+			{ 
+				if (pOutTransition->GetConnectNode()->GetName().compare(L"Exit") == 0)
+				{
+					m_pController->SetFlowLinkID(pOutTransition->GetEditID());
+					return ANI_NODE_RETURN::EXIT;
+				}
 				bool bChange = pOutTransition->RegisterCurNode(_pAnimator);
 				if (bChange)
+				{
+					m_pController->SetFlowLinkID(pOutTransition->GetEditID());
 					return ANI_NODE_RETURN::CHANGE;
+				}
 				else
 					return ANI_NODE_RETURN::NOTHING;
 			}
@@ -236,12 +249,17 @@ ANI_NODE_RETURN CAniNode::NextNode(int _iOutSize, bool _bFinish, bool _bCurNullN
 				//condition active 되면 넘어감.
 				if (bActive)
 				{
-					if (pOutTransition->GetConnectNodeName().compare(L"Exit") == 0)
+					if (pOutTransition->GetConnectNode()->GetName().compare(L"Exit") == 0)
+					{
+						m_pController->SetFlowLinkID(pOutTransition->GetEditID());
 						return ANI_NODE_RETURN::EXIT;
-
+					}
 					bool bChange = pOutTransition->RegisterCurNode(_pAnimator);
 					if (bChange)
+					{
+						m_pController->SetFlowLinkID(pOutTransition->GetEditID());
 						return ANI_NODE_RETURN::CHANGE;
+					}
 					else
 						return ANI_NODE_RETURN::NOTHING;
 				}

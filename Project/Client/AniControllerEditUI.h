@@ -143,6 +143,7 @@ static bool Splitter(bool split_vertically, float thickness, float* size1, float
 }
 class CAnimator3D;
 class CAniNode;
+class CAnimatorController;
 class AniControllerEditUI
 	:public UI
 {
@@ -218,6 +219,7 @@ private:
 	Link* CreateLinkAndRegister(client_ed::PinId _start, client_ed::PinId _end);
 	Link* CreateLinkAndCreate(client_ed::PinId _start, client_ed::PinId _end);
 	void DefaultNode();
+	void OpenEditInit();
 
 public:
 	virtual void init()override;

@@ -9,7 +9,8 @@
 #include "ListUI.h"
 
 
-AniControllerEditParamUI::AniControllerEditParamUI() : UI("##AniParameters")
+AniControllerEditParamUI::AniControllerEditParamUI() : UI("##AniParameters"),
+m_bFlow(false)
 {
 	SetName("Parameters");
 }
@@ -47,10 +48,6 @@ void AniControllerEditParamUI::finaltick()
 
 int AniControllerEditParamUI::render_update()
 {
-	if (ImGui::Button("+ Add Param",ImVec2(100,30)))
-	{
-
-	}
 	wstring wKey = GetWstrLinkKey();
 	if (wKey.size() == 0)
 		return 0;
@@ -63,6 +60,18 @@ int AniControllerEditParamUI::render_update()
 			pRes = pair.second;
 	}
 	CAnimatorController* pController = dynamic_cast<CAnimatorController*>(pRes.Get());
+
+	if (ImGui::Button("+ Add Param", ImVec2(100, 30)))
+	{
+
+	}
+	ImGui::SameLine();
+	string label = m_bFlow == true ? "> Show Flow [ON]" : "> Show Flow [OFF]";
+	if (ImGui::Button(label.c_str(), ImVec2(150, 30)))
+	{
+		m_bFlow = !m_bFlow;
+	}
+
 	t_AniParams tParams = m_pLink->GetAniParamInfo();
 	const map<wstring, int>& mapIntParam = tParams.mapIntParams;
 	for (auto itr = mapIntParam.begin(); itr != mapIntParam.end(); ++itr)

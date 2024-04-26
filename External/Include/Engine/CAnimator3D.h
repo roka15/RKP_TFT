@@ -32,7 +32,6 @@ private:
     CAnimation3D*                               m_pCurAnimation;
     CAnimation3D*                               m_pNextAnimation;
     t_AniParams                                 m_AniParams;
-
 private:
     bool ChangeAnimation(wstring _AniKey,float _fBlendTime);
   

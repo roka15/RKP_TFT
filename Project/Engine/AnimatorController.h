@@ -20,6 +20,7 @@ private:
     map<int, CAniNode*>     m_mapIDNode;
     map<int, CTransition*>  m_mapIDTransition;
     wstring             m_LoadEditTxtPath;
+    int                 m_iFlowLinkID;
 private:
     vector<wstring> GetParamNames();
     PARAM_TYPE GetParamType(wstring _strName);
@@ -27,6 +28,7 @@ private:
     void RegisterIDTransition(const int& _iId, CTransition* _pTransition);
     vector<CAniNode*> GetAllNode();
     const wstring& GetEditPath() { return m_LoadEditTxtPath; }
+    void EditInfoClear();
 public:
     virtual int Load(const wstring& _strFilePath)override;
     virtual int Save(const wstring& _strFilePath)override;
@@ -53,6 +55,8 @@ public:
     ANI_NODE_RETURN NextNode(bool _bFinish,bool _bLoop,wstring _strCurName, CAnimator3D* _pAnimator);
     void CopyParams(CAnimator3D* _pAnimator);
    
+    void SetFlowLinkID(const int& _iID) { m_iFlowLinkID = _iID; }
+    const int& GetFlowLinkID() { return m_iFlowLinkID; }
 private:
     friend class AniControllerInspector;
     friend class AniControllerEditUI;

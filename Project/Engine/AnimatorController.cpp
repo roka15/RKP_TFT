@@ -7,7 +7,8 @@
 #include "AniNode.h"
 #include "Transition.h"
 
-CAnimatorController::CAnimatorController() :CRes(RES_TYPE::ANICONTROLLER, true)
+CAnimatorController::CAnimatorController() :CRes(RES_TYPE::ANICONTROLLER, true),
+m_iFlowLinkID(-1)
 {
 }
 
@@ -316,6 +317,7 @@ void CAnimatorController::CreateTransition(const int& _startID, const int& _endI
 	CAniNode* EndNode = itr2->second;
 
 	CTransition* pTransition = new CTransition();
+	pTransition->SetEditID(_linkID);
 	pTransition->SetConnectNode(EndNode);
 	pTransition->SetOwner(StartNode);
 
@@ -627,4 +629,10 @@ vector<CAniNode*> CAnimatorController::GetAllNode()
 	}
 
 	return Result;
+}
+
+void CAnimatorController::EditInfoClear()
+{
+	m_mapIDNode.clear();
+	m_mapIDTransition.clear();
 }

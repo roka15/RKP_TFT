@@ -17,6 +17,7 @@ private:
     CAniNode*                        m_pConnectNode;
     CAniNode*                        m_pOwner;
     float                            m_fBlendTime;
+    int                              m_iEditID;
     //Load때 사용되는 변수.
     wstring                          m_strConnectNode;
     wstring                          m_strOwnerNode;
@@ -49,6 +50,8 @@ public:
     const float& GetBlendTime() { return m_fBlendTime; }
     void SetOwner(CAniNode* _pOwnerNode) { m_pOwner = _pOwnerNode; }
     CAniNode* GetOwner() { return m_pOwner; }
+    void SetEditID(const int& _iId) { m_iEditID = _iId; }
+    const int& GetEditID() { return m_iEditID; }
    
 
     bool RegisterCurNode(CAnimator3D* _pAnimator);
