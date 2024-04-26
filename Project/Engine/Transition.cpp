@@ -469,6 +469,58 @@ void CTransition::RemoveCondition(wstring _Key)
 	}
 }
 
+void CTransition::ChangeConditionName(PARAM_TYPE _eType, wstring _prev, wstring _next)
+{
+	switch (_eType)
+	{
+	case PARAM_TYPE::INT:
+	{
+		auto itr = m_mapIntConditions.find(_prev); 
+		if (itr == m_mapIntConditions.end())
+			return;
+		int Value = itr->second;
+		m_mapIntConditions.erase(itr);
+		m_mapIntConditions.insert(std::make_pair(_next, Value));
+	}
+		break;
+	case PARAM_TYPE::FLOAT:
+	{
+		auto itr = m_mapFloatConditions.find(_prev);
+		if (itr == m_mapFloatConditions.end())
+			return;
+		float Value = itr->second;
+		m_mapFloatConditions.erase(itr);
+		m_mapFloatConditions.insert(std::make_pair(_next, Value));
+	}
+		break;
+	case PARAM_TYPE::BOOL:
+	{
+		auto itr = m_mapBoolConditions.find(_prev);
+		if (itr == m_mapBoolConditions.end())
+			return;
+		bool Value = itr->second;
+		m_mapBoolConditions.erase(itr);
+		m_mapBoolConditions.insert(std::make_pair(_next, Value));
+	}
+		break;
+	case PARAM_TYPE::TRIGGER:
+	{
+		auto itr = m_mapBoolConditions.find(_prev);
+		if (itr == m_mapBoolConditions.end())
+			return;
+		bool Value = itr->second;
+		m_mapBoolConditions.erase(itr);
+		m_mapBoolConditions.insert(std::make_pair(_next, Value));
+	}
+		break;
+	}
+
+	auto itr = m_mapComparisonConditions.find(_prev);
+	COMPARISON_TYPE eType = itr->second;
+	m_mapComparisonConditions.erase(_prev);
+	m_mapComparisonConditions.insert(std::make_pair(_next, eType));
+}
+
 bool CTransition::RegisterCurNode(CAnimator3D* _pAnimator)
 {
 	return _pAnimator->ChangeAnimation(m_pConnectNode->GetAnimationKey(), m_fBlendTime);

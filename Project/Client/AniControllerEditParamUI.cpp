@@ -10,9 +10,11 @@
 
 
 AniControllerEditParamUI::AniControllerEditParamUI() : UI("##AniParameters"),
-m_bFlow(false)
+m_bFlow(false),
+m_ParamTypeNames{ "Int","Float","Bool","Trigger" }
 {
 	SetName("Parameters");
+	
 }
 
 AniControllerEditParamUI::~AniControllerEditParamUI()
@@ -61,9 +63,37 @@ int AniControllerEditParamUI::render_update()
 	}
 	CAnimatorController* pController = dynamic_cast<CAnimatorController*>(pRes.Get());
 
+	int selected_fish = -1;
 	if (ImGui::Button("+ Add Param", ImVec2(100, 30)))
-	{
+		ImGui::OpenPopup("## Ani Controller Add Param Type Popup");
 
+	ImGui::SameLine();
+	if (ImGui::BeginPopup("## Ani Controller Add Param Type Popup"))
+	{
+		for (int i = 0; i < IM_ARRAYSIZE(m_ParamTypeNames); i++)
+			if (ImGui::Selectable(m_ParamTypeNames[i]))
+				selected_fish = i;
+		ImGui::EndPopup();
+	}
+
+	switch (selected_fish)
+	{
+	case 0://int
+		pController->RegisterParam(L"Int_Param" + std::to_wstring(m_intcnt), 0);
+		pController->CopyParams(m_pLink);
+		break;
+	case 1://float
+		pController->RegisterParam(L"Float_Param" + std::to_wstring(m_floatcnt), 0.f);
+		pController->CopyParams(m_pLink);
+		break;
+	case 2://bool
+		pController->RegisterParam(L"Bool_Param" + std::to_wstring(m_boolcnt), false,false);
+		pController->CopyParams(m_pLink);
+		break;
+	case 3://trigger
+		pController->RegisterParam(L"Trigger_Param" + std::to_wstring(m_triggercnt), false,true);
+		pController->CopyParams(m_pLink);
+		break;
 	}
 	ImGui::SameLine();
 	string label = m_bFlow == true ? "> Show Flow [ON]" : "> Show Flow [OFF]";
@@ -73,59 +103,107 @@ int AniControllerEditParamUI::render_update()
 	}
 
 	t_AniParams tParams = m_pLink->GetAniParamInfo();
+	int i = 0;
 	const map<wstring, int>& mapIntParam = tParams.mapIntParams;
 	for (auto itr = mapIntParam.begin(); itr != mapIntParam.end(); ++itr)
 	{
-		wstring wParamName = itr->first;
-		string  ParamName = std::string(wParamName.begin(), wParamName.end());
+		wstring PrevParamName = itr->first;
+		string  ParamName = std::string(PrevParamName.begin(), PrevParamName.end());
 		string label = "##" + ParamName;
 		ImGui::InputText(label.c_str(), (char*)ParamName.c_str(),MAXLEN);
 		ImGui::SameLine();
-		label += "Int";
+		wstring NextParamName(ParamName.begin(), ParamName.end());
+		label = "Int" + std::to_string(i);
 		int iValue = itr->second;
 		ImGui::InputInt(label.c_str(), &iValue);
-		m_pLink->SetIntParam(wParamName, iValue);
+
+		if (CKeyMgr::GetInst()->GetKeyState(KEY::ENTER) == KEY_STATE::TAP)
+		{
+			if (PrevParamName != NextParamName)
+			{
+				pController->ChangeParamName(PARAM_TYPE::INT, PrevParamName, NextParamName);
+				pController->CopyParams(m_pLink);
+			}
+		}
+		
+		m_pLink->SetIntParam(NextParamName, iValue);
+		i++;
 	}
+	i = 0;
 	const map<wstring, float>& mapFloatParam = tParams.mapFloatParams;
 	for (auto itr = mapFloatParam.begin(); itr != mapFloatParam.end(); ++itr)
 	{
-		wstring wParamName = itr->first;
-		string  ParamName = std::string(wParamName.begin(), wParamName.end());
+		wstring PrevParamName = itr->first;
+		string  ParamName = std::string(PrevParamName.begin(), PrevParamName.end());
 		string label = "##" + ParamName;
 		ImGui::InputText(label.c_str(), (char*)ParamName.c_str(), MAXLEN);
 		ImGui::SameLine();
-		label += "Float";
+		wstring NextParamName(ParamName.begin(), ParamName.end());
+		label = "Float" + std::to_string(i);;
 		float fValue = itr->second;
 		ImGui::InputFloat(label.c_str(), &fValue);
-		m_pLink->SetFloatParam(wParamName, fValue);
+
+		if (CKeyMgr::GetInst()->GetKeyState(KEY::ENTER) == KEY_STATE::TAP)
+		{
+			if (PrevParamName != NextParamName)
+			{
+				pController->ChangeParamName(PARAM_TYPE::FLOAT, PrevParamName, NextParamName);
+				pController->CopyParams(m_pLink);
+			}
+		}
+		m_pLink->SetFloatParam(NextParamName, fValue);
+		i++;
 	}
+
+	i = 0;
 	const map<wstring, bool>& mapBoolParam = tParams.mapBoolParams;
 	for (auto itr = mapBoolParam.begin(); itr != mapBoolParam.end(); ++itr)
 	{
-		wstring wParamName = itr->first;
-		string  ParamName = std::string(wParamName.begin(), wParamName.end());
+		wstring PrevParamName = itr->first;
+		string  ParamName = std::string(PrevParamName.begin(), PrevParamName.end());
 		string label = "##" + ParamName;
 		ImGui::InputText(label.c_str(), (char*)ParamName.c_str(), MAXLEN);
 		ImGui::SameLine();
-		label += "Bool";
+		wstring NextParamName(ParamName.begin(), ParamName.end());
+	
+		label = "Bool" + std::to_string(i);;
 		bool bValue = itr->second;
-		if (bValue)
-			int a = 0;
+	
 		ImGui::Checkbox(label.c_str(), &bValue);
-		m_pLink->SetBoolParam(wParamName, bValue);
+		if (CKeyMgr::GetInst()->GetKeyState(KEY::ENTER) == KEY_STATE::TAP)
+		{
+			if (PrevParamName != NextParamName)
+			{
+				pController->ChangeParamName(PARAM_TYPE::BOOL, PrevParamName, NextParamName);
+				pController->CopyParams(m_pLink);
+			}
+		}
+		m_pLink->SetBoolParam(NextParamName, bValue);
+		i++;
 	}
+	i = 0;
 	const map<wstring, bool>& mapTriggerParam = tParams.mapTriggerParams;
 	for (auto itr = mapTriggerParam.begin(); itr != mapTriggerParam.end(); ++itr)
 	{
-		wstring wParamName = itr->first;
-		string  ParamName = std::string(wParamName.begin(), wParamName.end());
+		wstring PrevParamName = itr->first;
+		string  ParamName = std::string(PrevParamName.begin(), PrevParamName.end());
 		string label = "##" + ParamName;
 		ImGui::InputText(label.c_str(), (char*)ParamName.c_str(), MAXLEN);
 		ImGui::SameLine();
-		label += "Trigger";
+		wstring NextParamName(ParamName.begin(), ParamName.end());
+		label = "Trigger" + std::to_string(i);;
 		bool bValue = itr->second;
 		ImGui::Checkbox(label.c_str(), &bValue);
-		m_pLink->SetTriggerParam(wParamName, bValue);
+		if (CKeyMgr::GetInst()->GetKeyState(KEY::ENTER) == KEY_STATE::TAP)
+		{
+			if (PrevParamName != NextParamName)
+			{
+				pController->ChangeParamName(PARAM_TYPE::TRIGGER, PrevParamName, NextParamName);
+				pController->CopyParams(m_pLink);
+			}
+		}
+		m_pLink->SetTriggerParam(NextParamName, bValue);
+		i++;
 	}
 
 	ImGui::PushID(0);
@@ -144,5 +222,15 @@ int AniControllerEditParamUI::render_update()
 	ImGui::PopStyleColor(3);
 	ImGui::PopID();
     return S_OK;
+}
+
+void AniControllerEditParamUI::SetLink(CAnimator3D* _pAni)
+{
+	 m_pLink = _pAni; 
+	 m_bFlow = false;
+	 m_intcnt = 0;
+	 m_floatcnt = 0;
+	 m_boolcnt = 0;
+	 m_triggercnt = 0;
 }
 

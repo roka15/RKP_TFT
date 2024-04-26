@@ -52,7 +52,7 @@ public:
     CAniNode* GetOwner() { return m_pOwner; }
     void SetEditID(const int& _iId) { m_iEditID = _iId; }
     const int& GetEditID() { return m_iEditID; }
-   
+    void ChangeConditionName(PARAM_TYPE _eType, wstring _prev, wstring _next);
 
     bool RegisterCurNode(CAnimator3D* _pAnimator);
     void SetConnectNode(CAniNode* _pConnectNode);

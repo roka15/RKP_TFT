@@ -35,11 +35,26 @@
 
 void CreateTestLevel()
 {
-	CGameObject* pControllerTestObj = new CGameObject();
-	pControllerTestObj->SetName(L"ControllerTestObj");
-	pControllerTestObj->AddComponent(new CTransform());
-	pControllerTestObj->AddComponent(new CAnimator3D());
 	{
+		CGameObject* pControllerTestObj = new CGameObject();
+		CGameObject* pChild0 = new CGameObject();
+		CGameObject* pChild1 = new CGameObject();
+		pChild0->AddComponent(new CMeshRender());
+		pChild0->AddComponent(new CTransform());
+		pChild0->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"mesh\\mesh_0.mesh"));
+		pChild0->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"material\\Body.mtrl"),0);
+		pChild1->AddComponent(new CMeshRender());
+		pChild1->AddComponent(new CTransform());
+		pChild1->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"mesh\\mesh_0_1.mesh"));
+		pChild1->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"material\\FireFX.mtrl"), 0);
+
+		pControllerTestObj->AddChild(pChild0);
+		pControllerTestObj->AddChild(pChild1);
+		
+
+		pControllerTestObj->SetName(L"ControllerTestObj");
+		pControllerTestObj->AddComponent(new CTransform());
+		pControllerTestObj->AddComponent(new CAnimator3D());
 		CAnimator3D* pAnimator = pControllerTestObj->Animator3D();
 		pAnimator->RegisterAnimation(L"anim3D\\Zed\\Spawn_Skeleton.anm");
 		pAnimator->RegisterAnimation(L"anim3D\\Zed\\Zed_idle1.anm_Skeleton.anm");
@@ -50,26 +65,28 @@ void CreateTestLevel()
 		pAnimator->RegisterAnimation(L"anim3D\\Zed\\Death_Skeleton.anm");
 		Ptr<CAnimatorController> pAniController = nullptr;
 		wstring strPath = L"controller\\Test.controller";
-		Ptr<CAniClip> pClip;
-		pAniController = CResMgr::GetInst()->FindRes<CAnimatorController>(strPath);
-		if (pAniController == nullptr)
 		{
-			pAniController = new CAnimatorController();
-			CResMgr::GetInst()->AddRes<CAnimatorController>(strPath, pAniController);
-			pAniController->Save(strPath);
+			
+			Ptr<CAniClip> pClip;
+			pAniController = CResMgr::GetInst()->FindRes<CAnimatorController>(strPath);
+			if (pAniController == nullptr)
+			{
+				pAniController = new CAnimatorController();
+				pAniController->RegisterParam(L"Int0", 0);
+				pAniController->RegisterParam(L"Int1", 0);
+				pAniController->RegisterParam(L"Float0", 0.f);
+				pAniController->RegisterParam(L"Float1", 0.f);
+				pAniController->RegisterParam(L"Bool0", false, false);
+				pAniController->RegisterParam(L"Bool1", false, false);
+				pAniController->RegisterParam(L"Trigger0", false, true);
+				pAniController->RegisterParam(L"Trigger1", false, true);
+				CResMgr::GetInst()->AddRes<CAnimatorController>(strPath, pAniController);
+				pAniController->Save(strPath);
+			}
 		}
-		pAniController->RegisterParam(L"Int0", 0);
-		pAniController->RegisterParam(L"Int1", 0);
-		pAniController->RegisterParam(L"Float0", 0.f);
-		pAniController->RegisterParam(L"Float1", 0.f);
-		pAniController->RegisterParam(L"Bool0", false,false);
-		pAniController->RegisterParam(L"Bool1", false,false);
-		pAniController->RegisterParam(L"Trigger0", false, true);
-		pAniController->RegisterParam(L"Trigger1", false, true);
 		pControllerTestObj->Animator3D()->SetController(pAniController);
 		SpawnGameObject(pControllerTestObj, Vec3{ 0.f,0.f,0.f }, 0);
 	}
-
 	CGameObject* pPlayer = new CGameObject();
 	pPlayer->SetName(L"Player01");
 	pPlayer->AddComponent(new CTransform());

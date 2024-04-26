@@ -414,7 +414,7 @@ CTransition* CAnimatorController::GetTransition(const int& _startNodeId, const i
 {
 	CAniNode* pStart = m_mapIDNode[_startNodeId];
 	CAniNode* pEnd = m_mapIDNode[_endNodeId];
-	
+
 	return pStart->GetTransition(pEnd);
 }
 
@@ -511,6 +511,7 @@ void CAnimatorController::CopyParams(CAnimator3D* _pAnimator)
 		_pAnimator->m_AniParams.mapIntParams.insert(std::make_pair(key, value));
 	}
 
+	_pAnimator->m_AniParams.mapFloatParams.clear();
 	for (auto itr = m_mapFloatParams.begin(); itr != m_mapFloatParams.end(); ++itr)
 	{
 		wstring key = itr->first;
@@ -519,6 +520,7 @@ void CAnimatorController::CopyParams(CAnimator3D* _pAnimator)
 		_pAnimator->m_AniParams.mapFloatParams.insert(std::make_pair(key, value));
 	}
 
+	_pAnimator->m_AniParams.mapBoolParams.clear();
 	for (auto itr = m_mapBoolParams.begin(); itr != m_mapBoolParams.end(); ++itr)
 	{
 		wstring key = itr->first;
@@ -527,6 +529,7 @@ void CAnimatorController::CopyParams(CAnimator3D* _pAnimator)
 		_pAnimator->m_AniParams.mapBoolParams.insert(std::make_pair(key, value));
 	}
 
+	_pAnimator->m_AniParams.mapTriggerParams.clear();
 	for (auto itr = m_mapTriggerParams.begin(); itr != m_mapTriggerParams.end(); ++itr)
 	{
 		wstring key = itr->first;
@@ -597,6 +600,63 @@ PARAM_TYPE CAnimatorController::GetParamType(wstring _strName)
 		{
 			return PARAM_TYPE::TRIGGER;
 		}
+	}
+}
+
+void CAnimatorController::ChangeParamName(PARAM_TYPE _eType, wstring _prevName, wstring _nextName)
+{
+	switch (_eType)
+	{
+	case PARAM_TYPE::INT:
+	{
+		auto itr = m_mapIntParams.find(_prevName);
+		if (itr == m_mapIntParams.end())
+			return;
+		int Value = itr->second;
+		m_mapIntParams.erase(itr);
+		m_mapIntParams.insert(std::make_pair(_nextName, Value));
+		break;
+	}
+	case PARAM_TYPE::FLOAT:
+	{
+		auto itr = m_mapFloatParams.find(_prevName);
+		if (itr == m_mapFloatParams.end())
+			return;
+		float Value = itr->second;
+		m_mapFloatParams.erase(itr);
+		m_mapFloatParams.insert(std::make_pair(_nextName, Value));
+		break;
+	}
+	case PARAM_TYPE::BOOL:
+	{
+		auto itr = m_mapBoolParams.find(_prevName);
+		if (itr == m_mapBoolParams.end())
+			return;
+		bool Value = itr->second;
+		m_mapBoolParams.erase(itr);
+		m_mapBoolParams.insert(std::make_pair(_nextName, Value));
+		break;
+	}
+	case PARAM_TYPE::TRIGGER:
+	{
+		auto itr = m_mapBoolParams.find(_prevName);
+		if (itr == m_mapBoolParams.end())
+			return;
+		bool Value = itr->second;
+		m_mapBoolParams.erase(itr);
+		m_mapBoolParams.insert(std::make_pair(_nextName, Value));
+		break;
+	}
+	}
+
+	ChangeParamNameTransition(_eType,_prevName, _nextName);
+}
+
+void CAnimatorController::ChangeParamNameTransition(PARAM_TYPE _eType, wstring _prevName, wstring _nextName)
+{
+	for (auto itr = m_mapIDTransition.begin(); itr != m_mapIDTransition.end(); ++itr)
+	{
+		itr->second->ChangeConditionName(_eType, _prevName, _nextName);
 	}
 }
 

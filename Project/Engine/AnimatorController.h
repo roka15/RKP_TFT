@@ -24,6 +24,8 @@ private:
 private:
     vector<wstring> GetParamNames();
     PARAM_TYPE GetParamType(wstring _strName);
+    void ChangeParamName(PARAM_TYPE _eType,wstring _prevName , wstring _nextName);
+    void ChangeParamNameTransition(PARAM_TYPE _eType, wstring _prevName, wstring _nextName);
     void RegisterIDNode(const int& _iID, CAniNode* _pNode);
     void RegisterIDTransition(const int& _iId, CTransition* _pTransition);
     vector<CAniNode*> GetAllNode();
@@ -60,6 +62,7 @@ public:
 private:
     friend class AniControllerInspector;
     friend class AniControllerEditUI;
+    friend class AniControllerEditParamUI;
 public:
     CAnimatorController();
     virtual ~CAnimatorController();
